@@ -7,7 +7,7 @@ categories:
 tags:
 - clarinet
 - music
-- Joe Hisaishi
+- 久石譲
 slug: Spirited away
 autoThumbnailImage: false
 thumbnailImagePosition: left

@@ -6,8 +6,8 @@ categories:
 - clarinet
 tags:
 - clarinet
-- Hiroyuki Sawano
 - music
+- 澤野弘之
 slug: aesthetic
 autoThumbnailImage: false
 thumbnailImagePosition: left
