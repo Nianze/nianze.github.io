@@ -12,6 +12,9 @@ A gallery for my favorite photos.
 <br/>
 <br/>
 Total images: <strong id='total-images'>0</strong>
+<br/>
+<br/>
+Photo-gallery under construction ╮(╯_╰)╭
 </p>
 <div id='photo-gallery'></div>
 <!-- <script src="/js/photo-gallery/app.js"></script> -->
