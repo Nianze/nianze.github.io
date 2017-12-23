@@ -1,17 +1,13 @@
 ---
 title: "Nianze (Nzo) Liu"
 date: 2017-12-23
-coverImage: /images/resume-photo.jpg
+coverImage: /images/resume-picture.jpg
 showTags: false
 showPagination: false
 showSocial: false
 comments: false
 ---
 <h4 class='text-center'>
-    I am a full stack software developer.
-</h4>
-
-<h4 class='text-right'>
     <a href='https://drive.google.com/file/d/1r7-g99aMlgLqXwMPj7Kz43BUMk9iUgz4/view?usp=sharing'>Download Resume</a>
 </h4>
 
