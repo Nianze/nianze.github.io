@@ -45,13 +45,13 @@ brew install hugo
 
 ### 在Hugo中写文章
 
-硬盘中选取合适的存储位置，然后在命令行中使用如下命令生成网页本地文档：
+在硬盘中选取合适的存储路径，然后命令行中使用如下指令生成网页本地文档：
 
 ```shell
 hugo new site personal-site
 ```
 
-由此可生成如下文件目录：
+由此可得到如下文件目录：
 
 ```
 personal-site
@@ -75,13 +75,13 @@ personal-site
 |static|存放图像、CNAME、css、js等资源，发布后该目录下所有资源将处于网页根目录|
 |themes|存放下载的主题|
 
-使用下面的命令生成新的文章：
+使用下面的命令生成新的文章草稿：
 
 ```shell
 hugo new posts/first-post.md
 ```
 
-在content目录中会自动以`archetypes/default.md`为模板在`content/posts`目录下生成一篇`first-post.md`的文章：
+在content目录中会自动以`archetypes/default.md`为模板在`content/posts`目录下生成一篇名为`first-post.md`的文章草稿：
 
 ```
 ---
@@ -92,7 +92,7 @@ draft: true
 
 ```
 
-我们可以加一个标题在下面并去掉草稿标记录的这一行：`draft: true`
+我们可以加一个标题在下面并去掉标记为草稿的这一行：`draft: true`
 
 ```
 ---
@@ -121,7 +121,7 @@ echo 'theme = "ananke"' >> config.tomlecho 'theme = "ananke"' >> config.toml
 hugo server
 ```
 
-并在浏览器中输入网址`http://localhost:1313/`就可以在本地查看网页效果了：
+并在浏览器中输入网址`http://localhost:1313/`就可以在浏览器中查看网页效果了：
 
 ![local_page](/images/2017-12-26/local_page.png)
 
@@ -135,11 +135,11 @@ hugo
 
 ### 发布并托管到Github
 
-上传到Github之前，先在Github中添加一个空白repository，注意不要添加如`README`，`.gitignore`等文档。由此得到Github中repository的网址：`https://github.com/Nianze/personal-site.git`
+上传到Github之前，先在Github中添加一个空白repository，注意不要添加如`README`，`.gitignore`等文档。由此得到Github中该repository的网址：`https://github.com/Nianze/personal-site.git`
 
 ![new repo](/images/2017-12-26/repo.png)
 
-复制该网址后，在网站本地文件根目录中初始化git：
+复制该网址后，在网站本地文档根目录中初始化git：
 
 ```shell
 git init
@@ -149,12 +149,12 @@ git remote add origin https://github.com/Nianze/personal-site.git
 git push -u origin master
 ```
 
-至此所有源文档就都push到Github上了。此时Github对待这些源文档跟其他任何普通的repository中的代码并没有任何不同，并不会将public子目录中的网页托管在`Github Pages`上。
+至此所有源文档就都push到Github上了。然而此时Github对待这些源文档跟其他任何普通的repository中的代码并没有任何不同，并不会将public子目录中的网页托管在`Github Pages`上。
 
-参见[Hugo官方文档](https://gohugo.io/hosting-and-deployment/hosting-on-github/)，可以选择以下两种方式让`Github Pages`加载我们想要托管的public子目录中的网页：
+参见[Hugo官方文档](https://gohugo.io/hosting-and-deployment/hosting-on-github/)，可以选择以下两种方式让`Github Pages`加载我们想要托管的`/public`子目录中的网页：
 
-1. 配置`Hugo`将网页生成到名为`/docs`的子目录，然后直接push到`master branch`
-2. 仍然使用默认的`/public`子目录存储网页，单独建立一个`gh-pages branch`
+1. 配置`Hugo`将网页生成在名为`/docs`的子目录中，然后直接push到`master branch`
+2. 仍然使用默认的`/public`子目录存储网页，再单独建立一个`gh-pages branch`
 
 #### 使用`/docs`发布到master branch
 
@@ -164,15 +164,15 @@ git push -u origin master
 publishDir = docs
 ```
 
-自此运行hugo后生成的网页文件将保存在`/docs`子目录下。将所有文档push到Github的`master branch`，进入Github对应repository的Settings标签菜单，在`GitHub Pages`选项的Source栏选择`master branch /docs folder`:
+自此运行`hugo`命令后生成的网页文件将保存在`/docs`子目录下。将所有文档push到Github的`master branch`，进入Github对应repository的Settings标签菜单，在`GitHub Pages`选项的Source栏选择`master branch /docs folder`:
 
 ![docs](/images/2017-12-26/docs_folder.png)
 
-等待片刻即可访问`http://your_name.github.io`看到之前用hugo生成的网页了。
+等待片刻即可访问`http://your_name.github.io`看到之前用`Hugo`生成的网页了。
 
 #### 发布到gh-pages branch
 
-如果希望单独控制源文档和生成的网页文档的版本历史，可以使用单独建立一个`gh-pages branch`的方法托管到`Github Pages`。首先在本地和Github端添加一个名为`gh-pages`的branch（先将`/public`子目录添加到`.gitignore`中，让`master branch`忽略其更新）：
+如果希望单独控制源文档和生成的网页文档的版本历史，可以使用单独建立一个`gh-pages branch`的方法托管到`Github Pages`——先将`/public`子目录添加到`.gitignore`中，让`master branch`忽略其更新，然后在本地和Github端添加一个名为`gh-pages`的branch：
 
 ```shell
 //忽略public子目录
@@ -185,7 +185,7 @@ git push origin gh-pages
 git checkout master
 ```
 
-为了提高以后每次发布的效率，可以在网站本地文档根目录中将下述命令存在一个脚本文件中，每次只需要运行该脚本即可将`gh-pages branch`中的文章发布到Github的repo中：
+为了提高每次发布的效率，可以在将下述命令存在脚本中，每次只需要运行该脚本即可将`gh-pages branch`中的文章发布到Github的repo中：
 
 ```shell
 #!/bin/sh
@@ -218,7 +218,7 @@ git push origin gh-pages
 
 ```
 
-将`master branch`中的源文档和`gh-pages branch`中的网页文档分别push到Github repo中，然后进入Settings标签菜单，选择`Github Pages`项中的Source栏，点`gh-pages branch`选项：
+最后将`master branch`中的源文档和`gh-pages branch`中的网页文档分别push到Github repo中，进入Settings标签菜单，选择`Github Pages`项中的Source栏，点`gh-pages branch`选项：
 
 ![gh-pages](/images/2017-12-26/gh-pages.png)
 
@@ -226,32 +226,32 @@ git push origin gh-pages
 
 ### 配置个人域名
 
-如果觉得使用`your_name.github.io`不够酷炫，就可以考虑使用自选的个人域名了。好的个人域名自然是需要到对应服务商购买的。常见的域名如`.com`, `.net`, `.me`一般都不免费但非顶级域名的年费其实也不贵。我建网的初衷只是自娱自乐，暂时没有付费购买域名的意向，索性直接去[Freenom](http://www.freenom.com/)上找了免费域名来用。目前Freenom平台提供的免费域名后缀为`.tk`, `.ml`,`ga`,`cf`,`gq`等。购买域名很简单，先在[Freenom](http://www.freenom.com/)
+如果觉得使用`your_name.github.io`不够酷炫，还可以考虑使用自选的个人域名。好的个人域名自然是需要到对应服务商购买的。常见的域名如`.com`, `.net`, `.me`一般都不免费，但好在非顶级域名的年费其实也不贵。由于我建网的初衷只是自娱自乐，暂时并没有付费购买域名的意向，索性直接去[Freenom](http://www.freenom.com/)找了免费域名来用。目前Freenom平台提供的免费域名后缀为`.tk`, `.ml`,`ga`,`cf`,`gq`等。购买域名很简单，先在[Freenom](http://www.freenom.com/)
 网站上注册账号，然后查看自己想要的域名的价格并根据提示下单即可。考虑到现在machine leanring这么火，我就选了`nianze.ml`这个免费域名。
 
-域名买好后还需要设置下域名解析。由于默认使用的是Freenom的DNS服务器，需要在`Manage Domain`菜单中配置域名解析规则。在`Manage Freeenom DNS`选项中添加如下两条规则：
+域名买好后还需要设置下域名解析。由于默认使用的是Freenom的DNS服务器，所以需要在`Manage Domain`菜单中配置域名解析规则。在`Manage Freeenom DNS`选项中添加如下两条规则：
 
-1. 添加A记录（地址记录，用来指定域名的IP地址），主机记录（Name）栏填www，记录值(Target)那栏填Github服务器IP地址或者`your_name.github.io`的IP地址
-2. 添加CNAME记录（将域名映射到另一个域名），主机记录栏填@，记录值那栏填`your_name.github.io`
+1. 添加A记录（即地址记录，用来指定域名的IP地址），主机记录（Name）栏填www，记录值(Target)那栏填Github服务器IP地址（或者`your_name.github.io`的IP地址）
+2. 添加CNAME记录（用于将一个域名映射到另一个域名），主机记录栏填@，记录值那栏填`your_name.github.io`
 
 其中，Github服务器IP地址是`192.30.252.153`和`192.30.252.154`，而`your_name.github.io`的IP地址可以在命令行中使用ping命令得到：
 
 ![ping](/images/2017-12-26/ping.png)
 
-此时还需要在`personal-site/public`子目录中需要添加一个名为CNAME的文件，该文件只包含想要替换的个人域名，对我来说即是nianze.ml（不加http）。由于每次使用hugo
-命令生成网页子目录的时候该CNAME文件都会被删除，所以最好将该文件放在`personal-site/static`子目录中，这样运行hugo后该CNAME文件将自动复制到public根目录中。
+最后还需要在`personal-site/public`子目录中需要添加一个名为CNAME的文档，该文件只包含想要替换的个人域名，对我来说即是nianze.ml（不加http）。由于每次使用`hugo`命令
+在`/public`子目录生成网页的时候该CNAME文件都会被删除，所以最好将该文件放在`personal-site/static`子目录中，这样运行`hugo`后该CNAME文件将自动复制到`/public`目录中。
 
 等待几小时，在浏览器中访问`nianze.ml`就可以看到熟悉的个人网站页面了。
 
 ### 配置CloudFlare以使用HTTPs
 
-之所以想要使用[CloudFlare](https://www.cloudflare.com/)，是因为上一步当我们配置好个人域名后，由于`Github Pages`不支持在自定义域名中使用`HTTPs`协议，所以浏览器中访问`nianze.ml`使用的是`HTTP`协议。这造成一个弊端：每回用Chrome打开`nianze.ml`，浏览器都提示该网页不受信任，如果网页中有待加载的JS script,还必须得单独点浏览器地址栏右侧的load按钮才能正常加载全部页面，非常麻烦。何况考虑到`HTTPs`协议比`HTTP`更快更安全，显然应该想办法解决这个问题。
+之所以想要使用[CloudFlare](https://www.cloudflare.com/)，是因为上一步当我们配置好个人域名后，由于`Github Pages`不支持在自定义域名中使用`HTTPs`协议，所以浏览器中访问`nianze.ml`使用的是`HTTP`协议。这造成一个弊端：每回用Chrome打开`nianze.ml`，浏览器都提示该网页不受信任，如果网页中还有待加载的`JavaScript`代码,就得单独点浏览器地址栏右侧的`load`按钮才能正常加载全部页面，非常麻烦。再加上考虑到`HTTPs`协议比`HTTP`更快更安全，显然应该想办法解决这个问题。
 
 好在[CloudFlare](http://www.freenom.com/)为我们提供了一套方便的解决方案，而且是免费的！
 
 首先点开`CloudFlare`注册账号，输入前面选好的个人域名`nianze.ml`，`CloudFlare`会给我们提供众多服务套餐，选择免费的那个套餐即可:)
 
-此时`CloudFlare`会给我们提供其DNS服务器的IP，所以去`Freenom`的域名管理页面中更改默认DNS服务商为CloudFlare：
+此时`CloudFlare`会给我们提供其DNS服务器的IP，此时需要去`Freenom`的域名管理页面中更新默认DNS服务商到CloudFlare：
 
 ![dns_server](/images/2017-12-26/dns_server.png)
 
@@ -259,18 +259,22 @@ git push origin gh-pages
 
 ![cf_ssl](/images/2017-12-26/cf_ssl.png)
 
-然后是`DNS`标签栏配置：
+然后是`DNS`标签栏配置，跟`Freenom`设置类似：
 
 ![cf_dns](/images/2017-12-26/cf_dns.png)
 
-最后设置下`Page Rules`标签：
+最后再设置下`Page Rules`标签：
 
 ![page_rules](/images/2017-12-26/cf_page_rules.png)
 
-至此配置完毕。`CloudFlare`中还有很多别的选项可以根据个人喜好进行配置。等待几小时，再次访问`nianze.ml`，可以发现网页已经在`HTTPs`协议下加载了。至此再也不用点烦人的load按钮了。
+至此配置完毕。其实`CloudFlare`中还有很多别的选项，可以根据个人喜好进行相应配置。等待几小时，再次访问`nianze.ml`，可以发现网页已经在`HTTPs`协议下加载了。这样以来就再也不用去点那个烦人的load按钮了。
+
+### 后记
+
+至此我的新版博客就迁移完毕了，基本满足我现在写文章、摄影和音乐的各项需求。下一步准备在摄影栏目中加上一个照片墙功能。
 
 ### 参考文档
 
 1. [Hugo Tranquilpeak Theme](https://themes.gohugo.io/hugo-tranquilpeak-theme/)
 2. [Using HTTPs with Custom Domain Name](https://www.jonathan-petitcolas.com/2017/01/13/using-https-with-custom-domain-name-on-github-pages.html)
-3. [Deploy Hugo to Github]
+3. [Deploy Hugo to Github](https://gohugo.io/hosting-and-deployment/hosting-on-github/)
