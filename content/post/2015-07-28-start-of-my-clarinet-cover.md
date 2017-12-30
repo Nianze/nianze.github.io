@@ -10,7 +10,7 @@ tags:
 - music
 slug: clarinet-cover-collection
 autoThumbnailImage: false
-thumbnailImagePosition: left
+thumbnailImagePosition: right
 thumbnailImage: /images/2015-07-28-clarinet-dog.jpg
 coverImage: /images/2015-07-28-clarinet-dog.jpg
 metaAlignment: center

@@ -10,7 +10,7 @@ tags:
 - music
 slug: Halloween celebration
 autoThumbnailImage: false
-thumbnailImagePosition: left
+thumbnailImagePosition: right
 thumbnailImage: /images/2015-11-01-sunset.png
 coverImage: /images/2015-11-01-sunset.png
 metaAlignment: center

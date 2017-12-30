@@ -10,7 +10,7 @@ tags:
 - music
 slug: end of semester
 autoThumbnailImage: false
-thumbnailImagePosition: left
+thumbnailImagePosition: right
 thumbnailImage: /images/2015-12-12-inuyasha.png
 coverImage: /images/2015-12-12-inuyasha.png
 metaAlignment: center

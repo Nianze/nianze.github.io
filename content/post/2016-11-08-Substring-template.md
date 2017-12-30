@@ -9,6 +9,8 @@ tags:
 - string
 - two pointer
 slug: substring template
+thumbnailImagePosition: right
+thumbnailImage: /images/2016-11-08.jpg
 ---
 
 Two pointer template to solve substring problem.

@@ -8,6 +8,8 @@ tags:
 - algorithm
 - greedy
 slug: task schedule
+thumbnailImagePosition: right
+thumbnailImage: /images/2016-11-14.jpg
 ---
 
 Use greedy algorigthm to solve task scheduleing problem.

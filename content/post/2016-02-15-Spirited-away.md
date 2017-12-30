@@ -10,7 +10,7 @@ tags:
 - 久石譲
 slug: Spirited away
 autoThumbnailImage: false
-thumbnailImagePosition: left
+thumbnailImagePosition: right
 thumbnailImage: /images/2016-02-15-Spirited-Away.png
 coverImage: /images/2016-02-15-Spirited-Away.png
 metaAlignment: center

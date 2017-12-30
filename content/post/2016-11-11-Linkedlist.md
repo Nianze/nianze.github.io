@@ -8,6 +8,8 @@ tags:
 - algorithm
 - linkedlist
 slug: linkedlist reversing
+thumbnailImagePosition: right
+thumbnailImage: /images/2016-11-11.jpg
 ---
 
 Summary on LinkedList reversing.

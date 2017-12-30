@@ -8,7 +8,7 @@ tags:
 - photography
 slug: return to my blog
 autoThumbnailImage: false
-thumbnailImagePosition: left
+thumbnailImagePosition: right
 thumbnailImage: /images/2017-12-22/2017-12-22-sunset.jpg
 coverImage: /images/2017-12-22/2017-12-22-sunset.jpg
 metaAlignment: center

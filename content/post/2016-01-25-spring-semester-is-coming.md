@@ -9,7 +9,7 @@ tags:
 - music
 slug: new semester
 autoThumbnailImage: false
-thumbnailImagePosition: left
+thumbnailImagePosition: right
 thumbnailImage: /images/2016-01-25/2016-01-25-new-year.png
 coverImage: /images/2016-01-25/2016-01-25-new-year.png
 metaAlignment: center
