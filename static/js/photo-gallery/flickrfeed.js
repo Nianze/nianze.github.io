@@ -1,9 +1,4 @@
 (function() {
-    //Flicker API: https://www.flickr.com/services/api/
-    //User ID got via: https://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key=e10268a044bb52df0e4da75eab13a1bd&username=robinfhu
-
-    //API to fetch photo info: https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=e10268a044bb52df0e4da75eab13a1bd&format=json&nojsoncallback=1&photo_id=36802124526&secret=dd095566c8
-
 
     function PhotoManager(galleryEl) {
         this.$el = galleryEl;
@@ -16,9 +11,9 @@
             page = page || 1;
             return "https://api.flickr.com/services/rest/?" +
             "method=flickr.people.getPublicPhotos&" +
-            "api_key=e10268a044bb52df0e4da75eab13a1bd&format=json&" +
+            "api_key=8cb51a784a2bc15fa0c07a56a13b6f67&format=json&" +
             "per_page=500&page=" + page +
-            "&user_id=58092940@N03&nojsoncallback=1" +
+            "&user_id=129774362@N07&nojsoncallback=1" +
             "&extras=date_taken,description,tags";
         };
     }
@@ -60,9 +55,9 @@
     PhotoManager.prototype.renderGallery = function(photos) {
         var _this = this;
 
-        photos = photos.filter(function(photo) {
-            return photo.title.match(/\[fave\]/i);
-        });
+        // photos = photos.filter(function(photo) {
+        //     return photo.title.match(/\[fave\]/i);
+        // });
 
         var getFlickrImage = function(photo, size) {
             size = size || 'n';
@@ -114,6 +109,5 @@
 
     var manager = new PhotoManager($('#photo-gallery'));
     manager.refresh();
-
 
 })();
