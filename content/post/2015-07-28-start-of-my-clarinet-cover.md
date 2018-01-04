@@ -42,22 +42,22 @@ At that moment, I did not know how to transcribe a sheet on my own, so I simply 
 
 #### 地球最後の告白を
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Eh8NIP1-akg?list=PLWP-hWF5CaxuFF1KokTfmaXLn2Iv2QIRj" frameborder="0" allowfullscreen></iframe>
+{{< youtube Eh8NIP1-akg >}}
 
 #### Let it go
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/7ktLwr_nCuY?list=PLWP-hWF5CaxuFF1KokTfmaXLn2Iv2QIRj" frameborder="0" allowfullscreen></iframe>
+{{< youtube 7ktLwr_nCuY >}}
 
 #### Jenga (ジェンガ)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/OUc6z6D0jeI?list=PLWP-hWF5CaxuFF1KokTfmaXLn2Iv2QIRj" frameborder="0" allowfullscreen></iframe>
+{{< youtube OUc6z6D0jeI >}}
 
 #### Vogel im Käfig
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/gdtaa--NLl8?list=PLWP-hWF5CaxuFF1KokTfmaXLn2Iv2QIRj" frameborder="0" allowfullscreen></iframe>
+{{< youtube gdtaa--NLl8 >}}
 
 #### ODDS & ENDS
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Ce1CVU7w9hM?list=PLWP-hWF5CaxuFF1KokTfmaXLn2Iv2QIRj" frameborder="0" allowfullscreen></iframe>
+{{< youtube Ce1CVU7w9hM >}}
 
 [^1]: Reference from what Mozart wrote to [Stadler](https://en.wikipedia.org/wiki/Anton_Stadler) "Never should I have thought that a clarinet could be capable of imitating the human voice as it was imitated by you."

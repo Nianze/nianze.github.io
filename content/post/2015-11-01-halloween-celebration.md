@@ -27,5 +27,4 @@ Hope you enjoy!
 
 ### It's only the fairytale 
 
-<iframe width="420" height="315" src="https://www.youtube.com/embed/5xun7KD3q7k" frameborder="0" allowfullscreen></iframe>
-
+{{< youtube 5xun7KD3q7k >}}

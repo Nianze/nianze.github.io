@@ -30,5 +30,4 @@ Sometimes when I stepping out of the library building, the [Big Dipper](https://
 
 And all those days are spirited away:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/PzILtO6viiw" frameborder="0" gesture="media"
- allow="encrypted-media" allowfullscreen></iframe>
+{{< youtube PzILtO6viiw >}}

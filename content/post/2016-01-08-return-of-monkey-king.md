@@ -26,9 +26,9 @@ metaAlignment: center
 
 ### 从前的我
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/X_zKaqeRAe4" frameborder="0" allowfullscreen></iframe>
+{{< youtube X_zKaqeRAe4 >}}
 
 
 ### 红颜旧-琅琊榜插曲
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/IINa-x83zPM" frameborder="0" allowfullscreen></iframe>
+{{< youtube IINa-x83zPM >}}

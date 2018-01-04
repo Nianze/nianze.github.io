@@ -27,7 +27,8 @@ This *Aesthetic* is from his original album [Musica](http://www.sawanohiroyuki.c
 
 ### Aesthetic 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/niKDxuHvPfY" frameborder="0" allowfullscreen></iframe>
+{{< youtube niKDxuHvPfY >}}
+
 
 Longing for you day and in dream
 盼望著你白天與夜夢中

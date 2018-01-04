@@ -28,9 +28,8 @@ is full of pastorale and optimism. Every time
 I hear the song, I recall the happy daily life of Yuugo Hachiken in his
 agricultural school. May you also enjoy this happiness as I do.
 
-<iframe width="560" height="315"
-src="https://www.youtube.com/embed/sUkafIknbPc"
-frameborder="0" allowfullscreen></iframe>
+
+{{< youtube sUkafIknbPc >}}
 
 
 ## つないだ手
@@ -41,10 +40,7 @@ is her self-portray of bespectacled cow.
 
 ![Cow](/images/2016-01-25/2016-01-25-cow.png)
 
-
-<iframe width="560" height="315"
-src="https://www.youtube.com/embed/1hCsGN3_7N4"
-frameborder="0" allowfullscreen></iframe>
+{{< youtube 1hCsGN3_7N4 >}}
 
 I have to say Hiromi's manga is always my type. I can find an optimism from
 every person in her manga, which makes me think about the good side of life.
