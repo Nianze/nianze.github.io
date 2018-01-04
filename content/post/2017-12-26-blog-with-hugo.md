@@ -21,13 +21,13 @@ This article talks about how to use [Hugo](https://gohugo.io/) to build a person
 
 ### 前言
 
-最开始写博客始于2015年末，当时因为自制了几个单簧管演奏的视频，心想可以建一个简易的网站把录制背后的故事和想法集合起来。由于个人网站一般不需要太多交互，使用静态网页生成器并托管在`Github Pages`上成为了首选方案（能使用git实现版本控制更是个加分项）。彼时没想太多直接选了`Github Pages`原生支持的网页生成器[Jekyll](https://jekyllrb.com/)。随便搜了一个主题，第一版网站便这么建了起来：
+最开始写博客始于2015年末，当时因为自制了几个单簧管演奏的视频，心想可以建一个简易的网站把录制背后的故事和想法集合起来。由于个人网站一般不需要太多交互，使用静态网页生成器并托管在`Github Pages`上成为了首选方案（能使用git实现版本控制更是个加分项）。彼时没想太多直接用了`Github Pages`原生支持的网页生成器[Jekyll](https://jekyllrb.com/)。随便搜了一个主题，第一版网站便这么建了起来：
 
 {{< image classes="right nocaption fig-50" src="/images/2017-12-26/old_blog1-1.png" thumbnail="/images/2017-12-26/old_blog1-1.png" >}}
 {{< image classes="right nocaption fig-50" src="/images/2017-12-26/old_blog2.png" thumbnail="/images/2017-12-26/old_blog2.png" >}}
 {{< image classes="clear nocaption fig-50" src="/images/2017-12-26/old_blog1.png" thumbnail="/images/2017-12-26/old_blog1.png" >}}
 
-在为期一年断断续续的更新中总计写下了十余篇音乐视频和程序算法相关的博客后，第一代模板差不多也看腻了，突然觉得是时候该把网站升级下。遂决定新的博客应更简洁规整，首页加入图片预览功能并减去不必要的视觉干扰，菜单栏里应有分类、标签和归档功能。一番搜寻后，目光落在[Hugo](https://gohugo.io/)。主要原因在于`Hugo`简单易用——不需要安装太多[Hexo](https://hexo.io/)中的依赖库，更换主题也比`Jekyll`方便，生成速度还很快。以下便是我的配置过程。
+在为期一年断断续续的更新中总计写下了十余篇音乐和程序相关的（毫无营养的）文章后，第一代模板差不多也看腻了，突然觉得是时候该把网站升级下。遂决定新的博客应更简洁规整，首页加入图片预览功能并减去不必要的视觉干扰，菜单栏里应有分类、标签和归档功能。一番搜寻后，目光落在[Hugo](https://gohugo.io/)。主要原因在于`Hugo`简单易用——不需要安装太多[Hexo](https://hexo.io/)中的依赖库，更换主题也比`Jekyll`方便，生成速度还很快。以下便是我的配置过程。
 
 ### 安装Hugo
 
