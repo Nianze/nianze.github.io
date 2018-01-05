@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Substring type problem&#39;s template - 刀心の水</title>
+    <title>Machine learning overview - 刀心の水</title>
     <meta name="author" content="刀心の水">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="Two pointer template to solve substring problem.
+    <meta name="description" content="My first post in the new machine learning series.
 ">
-    <meta property="og:description" content="Two pointer template to solve substring problem.
+    <meta property="og:description" content="My first post in the new machine learning series.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Substring type problem&#39;s template">
-    <meta property="og:url" content="/2016/11/substring-template/">
+    <meta property="og:title" content="Machine learning overview">
+    <meta property="og:url" content="/2018/01/start-of-machine-learning-series/">
     <meta property="og:site_name" content="Coding|Music|Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Coding|Music|Photography">
-    <meta name="twitter:description" content="Two pointer template to solve substring problem.
+    <meta name="twitter:description" content="My first post in the new machine learning series.
 ">
     
     
@@ -52,7 +52,7 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2016-11-08.jpg">
+      <meta property="og:image" content="http://nianze.ml/images/2018-01-04-ml.jpg">
     
     
     
@@ -327,14 +327,14 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Substring type problem&#39;s template
+      Machine learning overview
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2016-11-08T00:00:00Z">
+    <time itemprop="datePublished" datetime="2018-01-04T00:00:00Z">
       
-  十一月 8, 2016
+  一月 4, 2018
 
     </time>
   
@@ -356,66 +356,89 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Two pointer template to solve substring problem.
+              <p>My first post in the new <code>machine learning</code> series.
 </p>
 
-<h3 id="lc76-minimum-window-substring">LC76 Minimum Window Substring</h3>
+<p>Although I&rsquo;ve chosen <code>https://nianze.ml</code> as my personal website domain name, I haven&rsquo;t really posted any article on <strong>M</strong>achine <strong>L</strong>earning at all, which may somehow be <em>misleading</em>. Considering it&rsquo;s new year and my website has just been re-designed, it&rsquo;s perfect time for new plans, so I&rsquo;ve made a dicision to begin a new series related to <code>ml</code>: I&rsquo;ll write down learning notes during my self-study in machine learning. Recently I&rsquo;m reading the book <a href="https://www.safaribooksonline.com/library/view/hands-on-machine-learning/9781491962282/"><em>Hands-On Machine Learning with Scikit-Learn and TensorFlow</em></a> by Aurélien Géron, which should be a good start for this new series.</p>
 
-<h4 id="method-two-pointer-with-map">Method: Two Pointer with map</h4>
+<p>At first the post is intended to be written in Chinese, but considering there&rsquo;re so many technique terms in English that I do not know the exact Chinese translation, I&rsquo;ll just start with English.</p>
 
-<ol>
-<li>Scanning from left to right, keep the head and length of minimum window substring so far.</li>
-<li>Use an <code>int[256]</code> array or a <code>HashMap</code> to store target charater counts.</li>
-</ol>
+<p>As the first post in this series, let&rsquo;s just take a overview on machine learning system.</p>
 
-<pre><code class="language-java">public String minWindow(String s, String t) {
-    int[] map = new int[256];
-    for (char c : t.toCharArray()) { map[c]++; }
-    int start = 0, end = 0, len = Integer.MAX_VALUE, head = 0, count = t.length();
-    while (end &lt; s.length()) {
-        if (map[s.charAt(end++)]-- &gt; 0) count--;
-        while (count == 0) {
-            if (end - start &lt; len) len = end - (head = start);
-            if (map[s.charAt(start++)]++ == 0) count++;
-        }
-    }
-    return len == Integer.MAX_VALUE ? &quot;&quot; : s.substring(head, head + len);
-}    
+<h2 id="types-of-machine-learning">Types of machine learning</h2>
+
+<p>There are broadly three ways to classify machine learning systems, and each of these three could be further categorized into multiple sub-categories:</p>
+
+<pre><code>Machine learning system
+├── trained with supervision or without
+│   ├── supervised learning
+│   │   ├── k-Nearest Neighbors
+│   │   ├── Linear Regression
+│   │   ├── Logistic Regression
+│   │   ├── Support Vector Machines (SVMs)
+│   │   ├── Decision Trees and Random Forests
+│   │   └── Neural networks
+│   ├── unsupervised learning
+│   │   ├── clustering
+│   │   │   ├── k-Means
+│   │   │   ├── Hierarchical Cluster Analysis (HCA)
+│   │   │   └── Expectation Maximization
+│   │   ├── Visualization and dimensionality reduction
+│   │   │   ├── Principal Component Analysis (PCA)
+│   │   │   ├── Kernel PCA
+│   │   │   ├── Locally-Linear Embedding (LLE)
+│   │   │   └── t-distributed Stochastic Neighbor Embedding (t-SNE)
+│   │   └── Association rule learning
+│   │       ├── Apriori
+│   │       └── Eclat
+│   ├── semisupervised learning
+│   └── reinforcement learning
+├── learn incrementally or in a whole batch
+│   ├── online learning (incremental learning)
+│   └── batch learning
+└── predict based on a model or not
+    ├── instance-based learning (using a similarity measure)
+    └── model-based learning
 </code></pre>
 
-<h3 id="template-1">Template<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup></h3>
+<h2 id="main-challenges-of-machine-learning">Main challenges of machine learning</h2>
 
-<p>For most substring problem, we are given a string and need to find a substring of it which satisfy some restrictions. A general way is to use a hashmap assisted with two pointers.</p>
+<ul>
+<li><a href="http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35179.pdf">Insufficient quantity</a> of training data</li>
+<li>Nonrepresentative training data</li>
+<li>Poor-quality data</li>
+<li>Irrelevant features</li>
+<li>Overfitting the training data</li>
+<li>Underfitting the training data</li>
+</ul>
 
-<p>One thing needs to be mentioned is that when asked to find maximum substring, we should update maximum after the inner while loop to guarantee that the substring is valid. On the other hand, when asked to find minimum substring, we should update minimum inside the inner while loop.</p>
+<h2 id="testing-and-validating">Testing and validating</h2>
 
-<pre><code class="language-java">int findSubstring(string s){
-    int[] map = new int[256];
-    int counter; // check whether the substring is valid
-    int start = 0, end = 0; //two pointers, one point to tail and one head
-    int d; //the length of substring
-    for() { /* initialize the hash map here */ }
-    while(end &lt; s.length()){
-        if(map[s.charAt(end++)]-- ?){  /* modify counter here */ }
-        while(/* counter condition */){              
-            /* update d here if finding minimum */
-            //increase start to make it invalid/valid again            
-            if(map[s[start++]]++ ?){ /*modify counter here*/ }
-        }  
-        /* update d here if finding maximum*/
-    }
-    return d;
-}
-</code></pre>
-<div class="footnotes">
+<p>Usually we split data into three groups:</p>
 
-<hr />
+<ul>
+<li>training set</li>
+<li>validation set</li>
+<li>test set</li>
+</ul>
+
+<p>And take following common workflow:</p>
 
 <ol>
-<li id="fn:1"><a href="https://discuss.leetcode.com/topic/30941/here-is-a-10-line-template-that-can-solve-most-substring-problems">https://discuss.leetcode.com/topic/30941/here-is-a-10-line-template-that-can-solve-most-substring-problems</a>
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li>train multiple models with various hyperparameters using the <strong>training set</strong></li>
+<li>select the model and hyperparameters tht perform best on the <strong>validation set</strong></li>
+<li>run a single final tets against the <strong>test set</strong> to get an estimate of the <em>generalization error</em> (<em>out-of-sample error</em>)</li>
 </ol>
-</div>
+
+<p>Further, we can use cross-validation technique to reuse data:</p>
+
+<ol>
+<li>split trainig set into complementary subsets</li>
+<li>train each model against a different combination of these subsets and validate against the remaining parts</li>
+<li>select the model type and hyperparameters with best performance</li>
+<li>train the final model by feeding the full training set to the chosen model and hyperparameters</li>
+<li>measure the generalized error on the test set</li>
+</ol>
               
             </div>
           </div>
@@ -427,11 +450,9 @@ ga('send', 'pageview');
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/algorithm/">algorithm</a>
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
 
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/string/">string</a>
-
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/two-pointer/">two pointer</a>
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/machine-learning/">machine learning</a>
 
                   </div>
                 
@@ -443,7 +464,7 @@ ga('send', 'pageview');
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2016/11/linkedlist-reversing/" data-tooltip="LinkedList reversing">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -451,7 +472,7 @@ ga('send', 'pageview');
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2016/11/invalid-parentheses/" data-tooltip="Remove Invalid Parentheses">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/coco/" data-tooltip="Coco(寻梦环游记)随想">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -465,7 +486,7 @@ ga('send', 'pageview');
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2016/11/substring-template/"
+          data-href="http://nianze.ml/2018/01/start-of-machine-learning-series/"
           data-layout="button_count">
         </div>
       </li>
@@ -476,12 +497,12 @@ ga('send', 'pageview');
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2016%2f11%2fsubstring-template%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fstart-of-machine-learning-series%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2016%2f11%2fsubstring-template%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fstart-of-machine-learning-series%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -514,8 +535,8 @@ ga('send', 'pageview');
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2016/11/substring-template/";  
-this.page.identifier = "Substring type problem's template"; 
+this.page.url = "http://nianze.ml/2018/01/start-of-machine-learning-series/";  
+this.page.identifier = "Machine learning overview"; 
 };
 
 (function() { 
@@ -545,7 +566,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2016/11/linkedlist-reversing/" data-tooltip="LinkedList reversing">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -553,7 +574,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2016/11/invalid-parentheses/" data-tooltip="Remove Invalid Parentheses">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/coco/" data-tooltip="Coco(寻梦环游记)随想">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -567,7 +588,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2016/11/substring-template/"
+          data-href="http://nianze.ml/2018/01/start-of-machine-learning-series/"
           data-layout="button_count">
         </div>
       </li>
@@ -578,12 +599,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2016%2f11%2fsubstring-template%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fstart-of-machine-learning-series%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2016%2f11%2fsubstring-template%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fstart-of-machine-learning-series%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -611,17 +632,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2016%2f11%2fsubstring-template%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fstart-of-machine-learning-series%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2016%2f11%2fsubstring-template%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f01%2fstart-of-machine-learning-series%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2016%2f11%2fsubstring-template%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fstart-of-machine-learning-series%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -912,9 +933,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2016\/11\/substring-template\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/01\/start-of-machine-learning-series\/';
           
-            this.page.identifier = '\/2016\/11\/substring-template\/'
+            this.page.identifier = '\/2018\/01\/start-of-machine-learning-series\/'
           
         };
         (function() {
