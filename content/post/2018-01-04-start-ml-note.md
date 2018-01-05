@@ -72,9 +72,9 @@ Machine learning system
     * Overfitting the training data
     * Underfitting the training data
 
-We reduce overfitting by constrain the degrees of freedom the model has, which is called _regularization_. The amount of regularizatoin can be controlled by a hyperparametr, which is a parameter of a learning algorithm (not of the model). The larger the hyperparameter, the smaller the model parameter, ending up with more constrain we apply to the model and less degrees of freedom.
+We reduce overfitting by constraining the degrees of freedom the model has, which is called _regularization_. The amount of regularizatoin can be controlled by a hyperparameter, which is a parameter of the learning algorithm (not of the model). The larger the hyperparameter, the smaller the model parameter, ending up with more constrain we apply to the model and less degrees of freedom.
 
-On the contrary, to solve underfitting problem, we may consider:
+On the other side, to solve underfitting problem, we may consider:
 
 * select more powerful model with more parameters
 * feed better fetures
