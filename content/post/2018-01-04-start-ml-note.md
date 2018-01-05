@@ -1,5 +1,5 @@
 ---
-title: Machine learning note 001
+title: Machine learning overview
 date: 2018-01-04
 categories:
 - article
@@ -7,20 +7,22 @@ categories:
 tags:
 - technique
 - machine learning
-slug: start of my machine learning notes
+slug: start of machine learning series
 autoThumbnailImage: false
 thumbnailImagePosition: right
-#thumbnailImage: /images/2018-01-04/?.jpg
-#coverImage: /images/2018-01-04/?.jpg
+thumbnailImage: /images/2018-01-04-ml.jpg
+#coverImage: /images/2018-01-04-ml.jpg
 #metaAlignment: center
 ---
 
-My study notes on machine learning
+My first post in the new `machine learning` series.
 <!--more-->
 
-Although I've chosen `https://nianze.ml` as my personal website domain name, I haven't really posted any article on `**m**achine **l**earning` before, which may somehow be _misleading_. Considering it's new year and my website has just been re-designed, it's perfect time for new plans, so I've made a dicision to begin a new series related to `ml`: I'll write down learning notes during my self-study in machine learning. Recently I'm reading the book [_Hands-On Machine Learning with Scikit-Learn and TensorFlow_](https://www.safaribooksonline.com/library/view/hands-on-machine-learning/9781491962282/) by Aurélien Géron, which should be a good start for this new series. I intended to write this series in Chinese, but considering there're so many technique terms in English that I do not know the exact Chinese translation, I'll start with English now.
+Although I've chosen `https://nianze.ml` as my personal website domain name, I haven't really posted any article on **M**achine **L**earning at all, which may somehow be _misleading_. Considering it's new year and my website has just been re-designed, it's perfect time for new plans, so I've made a dicision to begin a new series related to `ml`: I'll write down learning notes during my self-study in machine learning. Recently I'm reading the book [_Hands-On Machine Learning with Scikit-Learn and TensorFlow_](https://www.safaribooksonline.com/library/view/hands-on-machine-learning/9781491962282/) by Aurélien Géron, which should be a good start for this new series. 
 
-As the first post in this series, let's just take a look at the overview of machine learning.
+At first the post is intended to be written in Chinese, but considering there're so many technique terms in English that I do not know the exact Chinese translation, I'll just start with English.
+
+As the first post in this series, let's just take a overview on machine learning system.
 
 ## Types of machine learning
 
@@ -61,7 +63,7 @@ Machine learning system
 
 ## Main challenges of machine learning
 
-* [Insufficient](http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35179.pdf) quantity of training data
+* [Insufficient quantity](http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35179.pdf) of training data
 * Nonrepresentative training data
 * Poor-quality data
 * Irrelevant features
@@ -70,17 +72,19 @@ Machine learning system
 
 ## Testing and validating
 
+Usually we split data into three groups:
+
 * training set
 * validation set
 * test set
 
-Usual steps to take:
+And take following common workflow:
 
-1. train multiple models with various hyperparameters using the training set
-2. select the model and hyperparameters tht perform best on the validation set
-3. run a single final tets against the test set to get an estimate of the _generalization error_ (_out-of-sample error_)
+1. train multiple models with various hyperparameters using the **training set**
+2. select the model and hyperparameters tht perform best on the **validation set**
+3. run a single final tets against the **test set** to get an estimate of the _generalization error_ (_out-of-sample error_)
 
-Cross-validation technique:
+Further, we can use cross-validation technique to reuse data:
 
 1. split trainig set into complementary subsets
 2. train each model against a different combination of these subsets and validate against the remaining parts
