@@ -63,12 +63,22 @@ Machine learning system
 
 ## Main challenges of machine learning
 
-* [Insufficient quantity](http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35179.pdf) of training data
-* Nonrepresentative training data
-* Poor-quality data
-* Irrelevant features
-* Overfitting the training data
-* Underfitting the training data
+* Bad data
+    * [Insufficient quantity](http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35179.pdf) of training data
+    * Nonrepresentative training data
+    * Poor-quality data
+    * Irrelevant features
+* Bad algorithm
+    * Overfitting the training data
+    * Underfitting the training data
+
+We reduce overfitting by constrain the degrees of freedom the model has, which is called _regularization_. The amount of regularizatoin can be controlled by a hyperparametr, which is a parameter of a learning algorithm (not of the model). The larger the hyperparameter, the smaller the model parameter, ending up with more constrain we apply to the model and less degrees of freedom.
+
+On the contrary, to solve underfitting problem, we may consider:
+
+* select more powerful model with more parameters
+* feed better fetures
+* reduce the constraints (e.g., reducing the regularization hyperparameter)
 
 ## Testing and validating
 
