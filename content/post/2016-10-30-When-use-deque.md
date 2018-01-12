@@ -3,7 +3,7 @@ title: When use Dueque
 date: 2016-10-30
 categories:
 - article
-- programming
+- coding
 tags:
 - algorithm
 - Deque

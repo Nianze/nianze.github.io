@@ -3,7 +3,7 @@ title: LinkedList reversing
 date: 2016-11-11
 categories:
 - article
-- programming
+- coding
 tags:
 - algorithm
 - linkedlist

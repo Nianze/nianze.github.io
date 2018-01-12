@@ -3,7 +3,7 @@ title: Substring type problem's template
 date: 2016-11-08
 categories:
 - article
-- programming
+- coding
 tags:
 - algorithm
 - string

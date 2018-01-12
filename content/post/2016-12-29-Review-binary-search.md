@@ -3,7 +3,7 @@ title: Binary search review
 date: 2016-12-29
 categories:
 - article
-- programming
+- coding
 tags:
 - algorithm
 - binary search

@@ -3,7 +3,7 @@ title: Binary search basic
 date: 2016-08-05
 categories:
 - article
-- programming
+- coding
 tags:
 - algorithm
 - binary search

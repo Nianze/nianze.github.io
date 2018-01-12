@@ -3,7 +3,7 @@ title: Alien dictionary
 date: 2016-11-26
 categories:
 - article
-- programming
+- coding
 tags:
 - algorithm
 - graph

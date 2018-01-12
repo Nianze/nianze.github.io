@@ -3,9 +3,10 @@ title: 使用Hugo在GitHub Pages上搭建免费个人网站
 date: 2017-12-26
 categories:
 - article
-- programming
+- coding
 tags:
 - technique
+- hugo
 slug: personal site with hugo
 autoThumbnailImage: false
 thumbnailImagePosition: top
@@ -14,8 +15,7 @@ coverImage: /images/2017-12-26/braid.png
 metaAlignment: center
 ---
 
-This article talks about how to use [Hugo](https://gohugo.io/) to build a personal website hosted on [Github Pages](https://pages.github.com/). It also introduces how to find a free custom domain name from [Freenom](http://www.freenom.com/) and migrated the DNS server to [CloudFlare](https://www.cloudflare.com/) in order to use HTTPs with chosen custom domain name on GitHub Pages.
-
+This article talks about how to use [Hugo](https://gohugo.io/) to build a personal website hosted on [Github Pages](https://pages.github.com/). It also introduces how to find a free custom domain name from [Freenom](http://www.freenom.com/) and migrated the DNS server to [CloudFlare](https://www.cloudflare.com/) in order to use HTTPs with chosen custom domain name on GitHub Pages.  
 本文讲述了如何使用[Hugo](https://gohugo.io/)将个人网页托管在[Github Pages](https://pages.github.com/)上。同时也介绍了如何在[Freenom](http://www.freenom.com/)上找到免费个人域名并利用[CloudFlare](https://www.cloudflare.com/)的免费DNS服务在Github Pages上以HTTPs协议加载个人域名。
 <!--more-->
 

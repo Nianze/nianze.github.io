@@ -3,15 +3,15 @@ title: Machine learning overview
 date: 2018-01-04
 categories:
 - article
-- programming
+- coding
 tags:
 - technique
 - machine learning
 slug: start of machine learning series
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-04-ml.jpg
-#coverImage: /images/2018-01-04-ml.jpg
+thumbnailImage: /images/2018-01-04-ml.png
+#coverImage: /images/2018-01-04-ml.png
 #metaAlignment: center
 ---
 
