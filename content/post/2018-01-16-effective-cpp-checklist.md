@@ -1,7 +1,6 @@
 ---
-title: "Effective C++ Checklist"
+title: "Prefer const & inline to #define"
 date: 2018-01-16T18:41:58-05:00
-draft: true
 categories:
 - article
 - coding
@@ -9,22 +8,26 @@ tags:
 - technique
 - cpp
 slug: start of effective cpp series
-#autoThumbnailImage: false
-#thumbnailImagePosition: right
-#thumbnailImage: /images/2018-01-04-ml.png
+autoThumbnailImage: false
+thumbnailImagePosition: right
+thumbnailImage: /images/2018-01-16.jpg
 ---
 
 A new (hopefully) daily review on `C++`.
 <!--more-->
 
-This is another new series, which I plan to update daily (well, hopefully :P). It's mainly about `C++`, which is my current main development language. Each day I'll follow 1 item in the _Effective C++ 2nd edition_ by [Scott Meyers](https://www.aristeia.com/books.html) to review 1 aspect in `C++`. Here we go with item 1: prefer `const` & `inline` to `#define`, which can also be described as `Prefer the compiler to the preprocessor.` Let's take a closer look.
+This is another new series, which I plan to update daily (well, hopefully :P). It's mainly about `C++`, which is my current main development language. Each day I'll follow 1 item in the _Effective C++ 2nd edition_ by [Scott Meyers](https://www.aristeia.com/books.html) to discuss 1 tiny aspect in `C++`. 
+
+The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer `const` & `inline` to `#define`. Now let's take a closer look.
 
 ### Prefer `const` to `#define`
 
-If we want to define a constantant, there are two ways we may consider:
+There are two ways we may consider, when we want to define a constant:
 
 ```cpp
+// method one
 #define PI_1 3.1415926
+// method two
 const double PI_2 = 3.1415926;
 ```
 
@@ -32,7 +35,7 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
 
 #### Tricks on `const` definition
 
-1. When defining constant pointers, use two `const` to make sure both the pointer as well as content pointed by the pointer are immutable:
+1. When defining constant pointers, use two `const` to make sure both the pointer as well as the content pointed by the pointer are immutable:
 
     ```cpp
     const char * const blogger = "Nzo";
@@ -41,7 +44,7 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
 2. For class-specific constants, of which we want to limit the scope, we declare it as a `static` member, pay attention to the difference between constant declaration and constant definition:
 
     ```cpp
-    // Game.h
+    // game.h
     class GamePlayer {
     private:
         static const int NUM_TURNS = 5;  // constant declaration with initial value
@@ -51,7 +54,7 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
     ```
 
     ```cpp
-    // Game.cpp
+    // game.cpp
     const int GamePlayer::NUM_TURNS;     // constant definition in impl. file
     const double GamePlayer::PI = 3.14;  // provide initial value at definition
     ```
@@ -63,9 +66,10 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
     class GamePlayer {
     private:
         enum { NUM_TURNS = 5 };          // NUM_TURNS is a symbolic name for 5        
-        int scores[NUM_TURNS];           // fine
+        int scores[NUM_TURNS];           // fine with old compilers
     }
     ```
+
 ### Prefer `inline` to `#define`
 
 Another common (mis)use of the `#define` is using it to implement macros that look like functions:
@@ -82,13 +86,13 @@ max(++a, b);     // a increments twice
 max(++a, b+10);  // a increments once
 ```
 
-Thus, we may prefer using a regular inline function that provides both predictable behavior and typesafety:
+Thus, we may prefer using a regular inline function that provides both predictable behavior and type-safety:
 
 ```cpp
 inline int max(int a, int b) { return a > b ? a : b; }
 ```
 
-However, the above inline function only deals with `int` type. Then we just use inline template function, which nicely fixes the problem:
+If you complain that the above inline function only deals with `int` type, then we may just use inline template function, which nicely fixes the problem:
 
 ```cpp
 template<class T>
@@ -99,4 +103,4 @@ Basically, this template generates a whole family of functions, each of which ta
 
 ### When to use preprocessor
 
-We still need preprocessor for tasks such as `#include <iostream>` to include libraries, as well as `#ifdef`/`#ifndef` to control compilation.
+However, preprocessor is never dead. We still need preprocessor for tasks such as `#include` to include libraries, as well as `#ifdef`/`#ifndef` to control compilation.
