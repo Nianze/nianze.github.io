@@ -1,5 +1,5 @@
 ---
-title: "Prefer const & inline to #define"
+title: "Item-1 Prefer const & inline to #define"
 date: 2018-01-16T18:41:58-05:00
 categories:
 - article
