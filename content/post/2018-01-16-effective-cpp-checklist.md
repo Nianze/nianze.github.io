@@ -1,5 +1,5 @@
 ---
-title: "Item-1 Prefer const & inline to #define"
+title: "Item-1 Prefer consts, enums and inlines to #defines"
 date: 2018-01-16T18:41:58-05:00
 categories:
 - article
@@ -18,7 +18,7 @@ A new (hopefully) daily review on `C++`.
 
 This is another new series, which I plan to update daily (well, hopefully :P). It's mainly about `C++`, which is my current main development language. Each day I'll follow 1 item in the _Effective C++ 2nd edition_ by [Scott Meyers](https://www.aristeia.com/books.html) to discuss 1 tiny point of `C++`.
 
-The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer `const` & `inline` to `#define`. Now let's take a closer look.
+The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer `const`s, `enum`s and `inline`s to `#define`. Now let's take a closer look.
 
 ### Prefer `const` to `#define`
 
@@ -95,8 +95,10 @@ inline int max(int a, int b) { return a > b ? a : b; }
 If you complain that the above inline function only deals with `int` type, then we may just use inline template function, which nicely fixes the problem:
 
 ```cpp
-template<class T>
+template<typename T> 
 inline const T& max (const T& a, const T& b) { return a > b ? a : b; }
+// since we don't know what T is, 
+// we pass by reference-to-const, see item 20
 ```
 
 Basically, this template generates a whole family of functions, each of which takes two objects convertible to the same type and returns a reference to the greater of the two objects in const version.
