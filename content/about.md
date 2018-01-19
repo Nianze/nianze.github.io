@@ -41,18 +41,19 @@ comments: false
     <span>Java</span>
     <span>OCaml</span>
     <span>SQL</span>
+    <span>LaTex</span>    
 </div>
 
 <div class='display-card skills'>
     <h3 class='skill-category'>Tools</h3>
-    <span>Git</span>
-    <span class='tooltip--top' data-tooltip="I am a believer in Test Driven Development">Google Test</span>
-    <span>Emacs</span>
+    <span>GitHub</span>
+    <span class='tooltip--top' data-tooltip="Test Driven Development is preferred">GTest, GMock</span>
+    <span>Emacs, Vim, VSCode</span>
     <span>MacOS, Windows, Linux</span>
     <span>Bash, Shell Programming</span>
+    <span>Scikit-learn, TensorFlow</span>
     <span class='tooltip--top' data-tooltip="Tool I used to built this website">Hugo Static Site Generator</span>
 </div>
-
 
 ## Education
 
