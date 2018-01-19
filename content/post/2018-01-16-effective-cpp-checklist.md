@@ -16,7 +16,7 @@ thumbnailImage: /images/2018-01-16.jpg
 A new (hopefully) daily review on `C++`.
 <!--more-->
 
-This is another new series, which I plan to update daily (well, hopefully :P). It's mainly about `C++`, which is my current main development language. Each day I'll follow 1 item in the _Effective C++ 2nd edition_ by [Scott Meyers](https://www.aristeia.com/books.html) to discuss 1 tiny aspect in `C++`. 
+This is another new series, which I plan to update daily (well, hopefully :P). It's mainly about `C++`, which is my current main development language. Each day I'll follow 1 item in the _Effective C++ 2nd edition_ by [Scott Meyers](https://www.aristeia.com/books.html) to discuss 1 tiny point of `C++`.
 
 The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer `const` & `inline` to `#define`. Now let's take a closer look.
 

@@ -29,4 +29,4 @@ There's an interesting comparison among the four sublanguages: pass-by-value is 
 
 In summary, rules for effective C++ programming vary, depending on the part of C++ you are using.
 
->Today I found the third edition of _effective C++_ added some new items. So new posts will follow the third edition's arrangement.
+>P.S.: Today I found that the 3rd edition of _effective C++_ added some new items. So new posts will follow the third edition's arrangement. This item 0 is supposed to be item 1 in 3rd edition, but I just put it in front of the item 1 which I already wrote. After all, that's how programmers count :)
