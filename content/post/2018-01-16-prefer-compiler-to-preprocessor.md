@@ -41,7 +41,7 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
     const char * const blogger = "Nzo";
     ```
 
-2. For class-specific constants, of which we want to limit the scope, we declare it as a `static` member, pay attention to the difference between constant declaration and constant definition:
+2. For class-specific constants, of which we want to limit the scope, we declare it as a `static` member, since there's no way we may create a class-scope-specific or class-encapsulated(i.e., private) constant using a `#define` (once a macro is defined, it's in force for the rest of the compilation unless it's `#undefed` somewhere along the line). Pay attention to the difference between constant declaration and constant definition:
 
     ```cpp
     // game.h
@@ -50,7 +50,7 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
         static const int NUM_TURNS = 5;  // constant declaration with initial value
         static const double PI;          // constant declaration without initial value
         int scores[NUM_TURNS];           // use of constant
-    }
+    };
     ```
 
     ```cpp
@@ -59,7 +59,7 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
     const double GamePlayer::PI = 3.14;  // provide initial value at definition
     ```
 
-    However, older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of declaration. Most of time we may solve the problem by putting the initial value at definition time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as **the enum hack**, which takes advantage of the fact that the value of an enumerated type can be used where `int`s are expected:
+    It's worth noting that older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of _declaration_. Most of time we may solve the problem by putting the initial value at _definition_ time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as **the enum hack**, which takes advantage of the fact that the value of an enumerated type can be used where `int`s are expected:
 
     ```cpp
     // Game.h
@@ -67,8 +67,15 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
     private:
         enum { NUM_TURNS = 5 };          // NUM_TURNS is a symbolic name for 5        
         int scores[NUM_TURNS];           // fine with old compilers
-    }
+    };
     ```
+
+    There are mainly 2 reasons we may still see the enum hack today:
+    
+    1. It's legal to take the address of a `const`, but it's not legal to take the address of an enum, so if you don't want people to get a pointer or reference to your integral constants, an enum will enforce that constraint (and this makes the enum behave somewhat like a #define).
+    2. It's purely pragmatic. Lots of code (such as template metaprogramming, item 48) still employs it.
+
+    For modern compilers, on the other hand, rules change a bit in a more convenient way. Usually C++ requires that you provide a difinition for anything you use, but class-specific `constant`s that are `stitic` and of `integral type` (e.g., _integers_, _chars_, _bools_) are an exception. As long as you don't take thier address, you can declare and read them **without** providing a definition, and (good) compilers will not allocate unneccessary memory for these integral-type const objects, which will make the static const integral an lvalue.
 
 ### Prefer `inline` to `#define`
 
