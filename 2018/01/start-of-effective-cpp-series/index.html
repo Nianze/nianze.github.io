@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Item-1 Prefer const &amp; inline to #define - 刀心の水|Nzo</title>
+    <title>Item-1 Prefer consts, enums and inlines to #defines - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -34,7 +34,7 @@
     <meta property="og:description" content="A new (hopefully) daily review on C&#43;&#43;.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Item-1 Prefer const &amp; inline to #define">
+    <meta property="og:title" content="Item-1 Prefer consts, enums and inlines to #defines">
     <meta property="og:url" content="/2018/01/start-of-effective-cpp-series/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
@@ -327,7 +327,7 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-1 Prefer const &amp; inline to #define
+      Item-1 Prefer consts, enums and inlines to #defines
     </h1>
   
   <div class="postShorten-meta post-meta">
@@ -359,9 +359,9 @@ ga('send', 'pageview');
               <p>A new (hopefully) daily review on <code>C++</code>.
 </p>
 
-<p>This is another new series, which I plan to update daily (well, hopefully :P). It&rsquo;s mainly about <code>C++</code>, which is my current main development language. Each day I&rsquo;ll follow 1 item in the <em>Effective C++ 2nd edition</em> by <a href="https://www.aristeia.com/books.html">Scott Meyers</a> to discuss 1 tiny aspect in <code>C++</code>.</p>
+<p>This is another new series, which I plan to update daily (well, hopefully :P). It&rsquo;s mainly about <code>C++</code>, which is my current main development language. Each day I&rsquo;ll follow 1 item in the <em>Effective C++ 2nd edition</em> by <a href="https://www.aristeia.com/books.html">Scott Meyers</a> to discuss 1 tiny point of <code>C++</code>.</p>
 
-<p>The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer <code>const</code> &amp; <code>inline</code> to <code>#define</code>. Now let&rsquo;s take a closer look.</p>
+<p>The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer <code>const</code>s, <code>enum</code>s and <code>inline</code>s to <code>#define</code>. Now let&rsquo;s take a closer look.</p>
 
 <h3 id="prefer-const-to-define">Prefer <code>const</code> to <code>#define</code></h3>
 
@@ -383,7 +383,7 @@ const double PI_2 = 3.1415926;
 <pre><code class="language-cpp">const char * const blogger = &quot;Nzo&quot;;
 </code></pre></li>
 
-<li><p>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, pay attention to the difference between constant declaration and constant definition:</p>
+<li><p>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, since there&rsquo;s no way we may create a class-scope-specific or class-encapsulated(i.e., private) constant using a <code>#define</code> (once a macro is defined, it&rsquo;s in force for the rest of the compilation unless it&rsquo;s <code>#undefed</code> somewhere along the line). Pay attention to the difference between constant declaration and constant definition:</p>
 
 <pre><code class="language-cpp">// game.h
 class GamePlayer {
@@ -391,7 +391,7 @@ private:
     static const int NUM_TURNS = 5;  // constant declaration with initial value
     static const double PI;          // constant declaration without initial value
     int scores[NUM_TURNS];           // use of constant
-}
+};
 </code></pre>
 
 <pre><code class="language-cpp">// game.cpp
@@ -399,15 +399,24 @@ const int GamePlayer::NUM_TURNS;     // constant definition in impl. file
 const double GamePlayer::PI = 3.14;  // provide initial value at definition
 </code></pre>
 
-<p>However, older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of declaration. Most of time we may solve the problem by putting the initial value at definition time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
+<p>It&rsquo;s worth noting that older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of <em>declaration</em>. Most of time we may solve the problem by putting the initial value at <em>definition</em> time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
 
 <pre><code class="language-cpp">// Game.h
 class GamePlayer {
 private:
     enum { NUM_TURNS = 5 };          // NUM_TURNS is a symbolic name for 5        
     int scores[NUM_TURNS];           // fine with old compilers
-}
-</code></pre></li>
+};
+</code></pre>
+
+<p>There are mainly 2 reasons we may still see the enum hack today:</p>
+
+<ol>
+<li>It&rsquo;s legal to take the address of a <code>const</code>, but it&rsquo;s not legal to take the address of an enum, so if you don&rsquo;t want people to get a pointer or reference to your integral constants, an enum will enforce that constraint (and this makes the enum behave somewhat like a #define).</li>
+<li>It&rsquo;s purely pragmatic. Lots of code (such as template metaprogramming, item 48) still employs it.</li>
+</ol>
+
+<p>For modern compilers, on the other hand, rules change a bit in a more convenient way. Usually C++ requires that you provide a difinition for anything you use, but class-specific <code>constant</code>s that are <code>stitic</code> and of <code>integral type</code> (e.g., <em>integers</em>, <em>chars</em>, <em>bools</em>) are an exception. As long as you don&rsquo;t take thier address, you can declare and read them <strong>without</strong> providing a definition, and (good) compilers will not allocate unneccessary memory for these integral-type const objects, which will make the static const integral an lvalue.</p></li>
 </ol>
 
 <h3 id="prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></h3>
@@ -431,8 +440,10 @@ max(++a, b+10);  // a increments once
 
 <p>If you complain that the above inline function only deals with <code>int</code> type, then we may just use inline template function, which nicely fixes the problem:</p>
 
-<pre><code class="language-cpp">template&lt;class T&gt;
+<pre><code class="language-cpp">template&lt;typename T&gt; 
 inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a : b; }
+// since we don't know what T is, 
+// we pass by reference-to-const, see item 20
 </code></pre>
 
 <p>Basically, this template generates a whole family of functions, each of which takes two objects convertible to the same type and returns a reference to the greater of the two objects in const version.</p>
@@ -465,7 +476,7 @@ inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a :
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/tips-on-iostream/" data-tooltip="Item-2 Tips on &lt;iostream&gt;">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/tips-on-iostream/" data-tooltip="Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -537,7 +548,7 @@ inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a :
 
 var disqus_config = function () {
 this.page.url = "http://nianze.ml/2018/01/start-of-effective-cpp-series/";  
-this.page.identifier = "Item-1 Prefer const \u0026 inline to #define"; 
+this.page.identifier = "Item-1 Prefer consts, enums and inlines to #defines"; 
 };
 
 (function() { 
@@ -567,7 +578,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/tips-on-iostream/" data-tooltip="Item-2 Tips on &lt;iostream&gt;">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/tips-on-iostream/" data-tooltip="Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -707,6 +718,24 @@ s.setAttribute('data-timestamp', +new Date());
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/01/use-const-whenever-possible/">
+                <h3 class="media-heading">Item-3 Use const whenever possible</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Useful tips on using <code>const</code> in C++.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.ml/2018/01/cpp-is-multiparadigm/">
                 <h3 class="media-heading">Item-0 Federation of languages</h3>
               </a>
@@ -726,7 +755,7 @@ s.setAttribute('data-timestamp', +new Date());
             
             <div class="media-body">
               <a class="link-unstyled" href="http://nianze.ml/2018/01/tips-on-iostream/">
-                <h3 class="media-heading">Item-2 Tips on &lt;iostream&gt;</h3>
+                <h3 class="media-heading">Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;</h3>
               </a>
               <span class="media-meta">
                 <span class="media-date text-small">
@@ -744,7 +773,7 @@ s.setAttribute('data-timestamp', +new Date());
             
             <div class="media-body">
               <a class="link-unstyled" href="http://nianze.ml/2018/01/start-of-effective-cpp-series/">
-                <h3 class="media-heading">Item-1 Prefer const &amp; inline to #define</h3>
+                <h3 class="media-heading">Item-1 Prefer consts, enums and inlines to #defines</h3>
               </a>
               <span class="media-meta">
                 <span class="media-date text-small">
@@ -868,24 +897,6 @@ s.setAttribute('data-timestamp', +new Date());
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2017/01/pentax-k70/">
-                <h3 class="media-heading">宾得K70开箱</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Jan 1, 2017
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>高性价比中低端单反宾得K70开箱及像素位移模式简单测试。
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -893,7 +904,7 @@ s.setAttribute('data-timestamp', +new Date());
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         28 posts found
+         29 posts found
       </p>
     </div>
   </div>
