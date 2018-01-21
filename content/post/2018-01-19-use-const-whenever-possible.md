@@ -9,8 +9,8 @@ tags:
 - cpp
 slug: use const whenever possible
 autoThumbnailImage: false
-#thumbnailImagePosition: right
-#thumbnailImage: /images/2018-01-18.jpg
+thumbnailImagePosition: right
+thumbnailImage: /images/2018-01-19.jpg
 ---
 
 Useful tips on using `const` in C++.
