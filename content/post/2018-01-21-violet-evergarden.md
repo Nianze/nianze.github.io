@@ -36,5 +36,4 @@ metaAlignment: center
 
 これは、感情を持たない一人の少女が愛を知るまでの物語。
 
-
 {{< youtube QLvFbf-3Q8A >}}
