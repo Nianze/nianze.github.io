@@ -10,7 +10,7 @@ tags:
 slug: functions silently created
 autoThumbnailImage: false
 thumbnailImagePosition: right
-#thumbnailImage: /images/2018-01-24.jpg
+thumbnailImage: /images/2018-01-24.jpg
 ---
 
 Declare unwanted member functions _private_ without implementations to disallow functionality automatically provided by compilers.
