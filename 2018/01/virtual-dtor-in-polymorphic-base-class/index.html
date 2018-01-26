@@ -1,5 +1,9 @@
 
 
+  
+    
+  
+
 
   
 
@@ -17,25 +21,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.29">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Article - 刀心の水|Nzo</title>
+    <title>Item-7 Declare destructor virtual in polymorphic base classes - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
     <link rel="icon" href="http://nianze.ml/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://nianze.ml/categories/article/index.xml">
-    
 
     
-    <meta name="description" content="刀心の水发呆の地方">
-    <meta property="og:description" content="刀心の水发呆の地方">
+    <meta name="description" content="If a class has any virtual functions (for polymorphic purpose), it should have a virtual destructor.
+">
+    <meta property="og:description" content="If a class has any virtual functions (for polymorphic purpose), it should have a virtual destructor.
+">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Article">
-    <meta property="og:url" content="/categories/article/">
+    <meta property="og:title" content="Item-7 Declare destructor virtual in polymorphic base classes">
+    <meta property="og:url" content="/2018/01/virtual-dtor-in-polymorphic-base-class/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="刀心の水发呆の地方">
+    <meta name="twitter:description" content="If a class has any virtual functions (for polymorphic purpose), it should have a virtual destructor.
+">
     
     
 
@@ -46,6 +51,8 @@
       <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
     
 
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018-01-25.jpg">
     
     
     
@@ -90,8 +97,16 @@ ga('send', 'pageview');
   </head>
 
   <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
     <div id="blog">
-      <header id="header" data-behavior="1">
+      <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
     <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photography</a>
@@ -111,7 +126,7 @@ ga('send', 'pageview');
   
 </header>
 
-      <nav id="sidebar" data-behavior="1">
+      <nav id="sidebar" data-behavior="4">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
@@ -301,44 +316,25 @@ ga('send', 'pageview');
 </nav>
 
       
-        
 
-      
-      <div id="main" data-behavior="1"
+      <div id="main" data-behavior="4"
         class="
                hasCoverMetaIn
                ">
-          <h3 class="category-title">
-            Article
-
-            
-          </h3>
-        
-          <section class="postShorten-group main-content-wrap">
-            
-            
-              
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
-    
+    <h1 class="post-title" itemprop="headline">
+      Item-7 Declare destructor virtual in polymorphic base classes
+    </h1>
   
-
-
+  <div class="postShorten-meta post-meta">
   
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/12/binary-search-review/">
-          Binary search review
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-12-29T00:00:00Z">
+    <time itemprop="datePublished" datetime="2018-01-25T18:04:14-05:00">
       
-  十二月 29, 2016
+  一月 25, 2018
 
     </time>
   
@@ -356,413 +352,161 @@ ga('send', 'pageview');
 
 </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Detailed review on binary search.
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>If a class has any virtual functions (for polymorphic purpose), it should have a virtual destructor.
+</p>
 
-        <br>
-        <a href="http://nianze.ml/2016/12/binary-search-review/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/12/binary-search-review/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-12-29.jpg"/>
-      </div>
-    </a>
-  
-</article>
+<p>In the convention of factory functions, we use base class pointers manipulating derived class objects during runtime, which gives us the convenience of polymophism.</p>
 
+<p>Because C++ specifies that when a derived class object is deleted through a pointer to a base class with a non-virtual destructor, results are undefined, we need to declare the destructor as <em>virtual</em>. Otherwise, what typically happens at runtime is that, while base class data members get destroyed, the derived part of the object (i.e., the data members declared in the derived class) is never destroyed, ending with a curious &ldquo;partially destroyed&rdquo; object that is an excellent way to leak resources, corrupt data structures, and waste time debugging.</p>
+
+<p>Basically, the implementation of virtual functions requires that objects carry a pointer (called a <code>vptr</code>, virtual table pointer) accessible at runtime to determine which virtual functions should be invoked on the object. The <code>vptr</code> points to <code>vtbl</code> (virtual table), which is an array of function pointers to appropriate actual functions.</p>
+
+<p>Sometimes we may want to create an <em>abstract</em> class (which contains pure <em>virtual</em> functions) but don&rsquo;t have any pure virtual functions in mind, we may simply make a pure <em>virtual</em> destructor:</p>
+
+<pre><code class="language-cpp">class AWOV {  // &quot;Abstract w/o Virtuals&quot;
+public:
+    virtual ~AWOV() = 0;  // declare pure virtual destructor
+};
+</code></pre>
+
+<p>Since <code>AWOV</code> has a pure virtual function, it&rsquo;s abstract as we wish while also benifits us with not worrying about the derived class destructor problem at the same time, but there&rsquo;s one twist: <strong>a definition of the pure virtual destructor must still be provided:</strong></p>
+
+<pre><code class="language-cpp">AWOV::~AWOV() {}  // definition of pure virtual destructor
+</code></pre>
+
+<p>Otherwise the linking will complain, because compilers will generate a call from derived classes&rsquo; destructors to each base class, all the way up to <code>~AWOV</code>, yet the body of base class destructor function can&rsquo;t be found.</p>
+
+<p>However, not all base classes are designed to be used polymorphically. For classes not designed to be base classes (std::string, STL container types such as vector, list, set, etc.) or not designed to be used polymorphically (item 6, <code>Uncopyable</code> class), we should not declare <em>virtual</em> destructors. Here is an example:</p>
+
+<pre><code class="language-cpp">class Point { // a 2D point
+public:
+    Point(int xCoord, int yCoord);
+    ~Point();
+private:
+    int x, y;
+};
+</code></pre>
+
+<p>If an <code>int</code> occupies 32 bits, a <code>Point</code> object typically fits into a 64-bit register, which can be passed as a 64-bit quantity to functions written in other languages such as C or FORTRAN. However, if <code>Point</code>&rsquo;s destructor is declared <em>virtual</em>, <code>Point</code> object will increased from 64 bits (for the 2 <code>int</code>s) to 96 bits (for 2 <code>int</code>s with the <code>vptr</code>) on 32-bit architecture, or to 128 bits on 64-bit architecture (where pointers are 64 bits in size). As a result, portability decreases.</p>
+
+<p>In short words, gratuitously declaring all destructors <em>virtual</em> is just as wrong as never declaring them <em>virtual</em>; declare a <em>virtual</em> destructor in a class <strong>if and only if</strong> that class contains at least one virtual function.</p>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
             
               
-  
-    
-  
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
 
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
 
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/11/alien-dictionary/">
-          Alien dictionary
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-11-26T00:00:00Z">
-      
-  十一月 26, 2016
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Build a graph to solve alien dictionary problem via DFS/BFS.
-
-        <br>
-        <a href="http://nianze.ml/2016/11/alien-dictionary/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/11/alien-dictionary/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-11-26.jpg"/>
-      </div>
-    </a>
-  
-</article>
-
-            
+                  </div>
+                
               
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/11/task-schedule/">
-          Task schedule - greedy algorithm
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-11-14T00:00:00Z">
-      
-  十一月 14, 2016
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Use greedy algorigthm to solve task scheduleing problem.
-
-        <br>
-        <a href="http://nianze.ml/2016/11/task-schedule/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/11/task-schedule/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-11-14.jpg"/>
-      </div>
-    </a>
-  
-</article>
-
             
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/11/linkedlist-reversing/">
-          LinkedList reversing
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-11-11T00:00:00Z">
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
       
-  十一月 11, 2016
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Summary on LinkedList reversing.
-
-        <br>
-        <a href="http://nianze.ml/2016/11/linkedlist-reversing/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/11/linkedlist-reversing/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-11-11.jpg"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/11/substring-template/">
-          Substring type problem&#39;s template
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-11-08T00:00:00Z">
-      
-  十一月 8, 2016
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Two pointer template to solve substring problem.
-
-        <br>
-        <a href="http://nianze.ml/2016/11/substring-template/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/11/substring-template/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-11-08.jpg"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/11/invalid-parentheses/">
-          Remove Invalid Parentheses
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-11-06T00:00:00Z">
-      
-  十一月 6, 2016
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Several ways to remove invalid parentheses problem.
-
-        <br>
-        <a href="http://nianze.ml/2016/11/invalid-parentheses/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/11/invalid-parentheses/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-11-06.jpg"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/11/char-to-string/">
-          Convert Char to String in Java
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-11-02T00:00:00Z">
-      
-  十一月 2, 2016
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Convert Char to String.
-
-        <br>
-        <a href="http://nianze.ml/2016/11/char-to-string/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/11/char-to-string/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-11-02.jpg"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-            
-  <div class="pagination-bar">
-    <ul class="pagination">
-      
-        <li class="pagination-prev">
-          <a class="btn btn--default btn--small" href="http://nianze.ml/categories/article/page/2/">
-            <i class="fa fa-angle-left text-base icon-mr"></i>
-            <span>上一页</span>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
           </a>
         </li>
       
-      
-        <li class="pagination-next">
-          <a class="btn btn--default btn--small" href="http://nianze.ml/categories/article/page/4/">
-            <span>下一页</span>
-            <i class="fa fa-angle-right text-base icon-ml"></i>
-          </a>
-        </li>
-      
-      <li class="pagination-number">第 3 页 共 4 页</li>
     </ul>
-  </div>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/01/virtual-dtor-in-polymorphic-base-class/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fvirtual-dtor-in-polymorphic-base-class%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fvirtual-dtor-in-polymorphic-base-class%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
 
 
-          </section>
-        
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/01/virtual-dtor-in-polymorphic-base-class/";  
+this.page.identifier = "Item-7 Declare destructor virtual in polymorphic base classes"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2018 刀心の水|Nzo. All Rights Reserved
@@ -770,6 +514,96 @@ ga('send', 'pageview');
 </footer>
 
       </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/01/virtual-dtor-in-polymorphic-base-class/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fvirtual-dtor-in-polymorphic-base-class%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fvirtual-dtor-in-polymorphic-base-class%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fvirtual-dtor-in-polymorphic-base-class%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f01%2fvirtual-dtor-in-polymorphic-base-class%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fvirtual-dtor-in-polymorphic-base-class%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
     </div>
     
     <div id="about">
@@ -1047,6 +881,32 @@ $(document).ready(function() {
   });
 });
 </script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/01\/virtual-dtor-in-polymorphic-base-class\/';
+          
+            this.page.identifier = '\/2018\/01\/virtual-dtor-in-polymorphic-base-class\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
 
 
 
