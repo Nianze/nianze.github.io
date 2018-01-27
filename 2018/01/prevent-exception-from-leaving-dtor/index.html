@@ -1,5 +1,9 @@
 
 
+  
+    
+  
+
 
   
 
@@ -17,25 +21,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Graph - 刀心の水|Nzo</title>
+    <title>Item-8 Prevent exception from leaving destructor - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
     <link rel="icon" href="http://nianze.ml/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://nianze.ml/tags/graph/index.xml">
-    
 
     
-    <meta name="description" content="刀心の水发呆の地方">
-    <meta property="og:description" content="刀心の水发呆の地方">
+    <meta name="description" content="It is discouraged practice to emit exceptions from destructors.
+">
+    <meta property="og:description" content="It is discouraged practice to emit exceptions from destructors.
+">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Graph">
-    <meta property="og:url" content="/tags/graph/">
+    <meta property="og:title" content="Item-8 Prevent exception from leaving destructor">
+    <meta property="og:url" content="/2018/01/prevent-exception-from-leaving-dtor/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="刀心の水发呆の地方">
+    <meta name="twitter:description" content="It is discouraged practice to emit exceptions from destructors.
+">
     
     
 
@@ -46,6 +51,8 @@
       <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
     
 
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018-01-26.png">
     
     
     
@@ -90,8 +97,16 @@ ga('send', 'pageview');
   </head>
 
   <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
     <div id="blog">
-      <header id="header" data-behavior="1">
+      <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
     <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photography</a>
@@ -111,7 +126,7 @@ ga('send', 'pageview');
   
 </header>
 
-      <nav id="sidebar" data-behavior="1">
+      <nav id="sidebar" data-behavior="4">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
@@ -301,39 +316,25 @@ ga('send', 'pageview');
 </nav>
 
       
-        
 
-      
-      <div id="main" data-behavior="1"
+      <div id="main" data-behavior="4"
         class="
                hasCoverMetaIn
                ">
-        
-          <section class="postShorten-group main-content-wrap">
-            
-            
-              
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
-    
+    <h1 class="post-title" itemprop="headline">
+      Item-8 Prevent exception from leaving destructor
+    </h1>
   
-
-
+  <div class="postShorten-meta post-meta">
   
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/11/alien-dictionary/">
-          Alien dictionary
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-11-26T00:00:00Z">
+    <time itemprop="datePublished" datetime="2018-01-26T20:15:48-05:00">
       
-  十一月 26, 2016
+  一月 26, 2018
 
     </time>
   
@@ -351,91 +352,216 @@ ga('send', 'pageview');
 
 </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Build a graph to solve alien dictionary problem via DFS/BFS.
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>It is discouraged practice to emit exceptions from destructors.
+</p>
 
-        <br>
-        <a href="http://nianze.ml/2016/11/alien-dictionary/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/11/alien-dictionary/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-11-26.jpg"/>
-      </div>
-    </a>
-  
-</article>
+<p>Consider what should be done to create a resource-managing class for DBConnection class below:</p>
+
+<pre><code class="language-cpp">class DBConnection {
+public:
+    ...
+    static DBConnection creast();  // return DBConnection obj
+    void close();                  // close connection; throw an exception if closing fails
+};
+</code></pre>
+
+<p>To ensure clients don&rsquo;t forget to call <code>close()</code> on DBConnection objects, we may want to put <code>close()</code> inside the destructor of managing class:</p>
+
+<pre><code class="language-cpp">class DBConn {    // class to manage DBConnection object
+public:
+    ...
+    ~DBConn()     // make sure database connections are closed
+    {
+        db.close();
+    }
+private:
+    DBConnetion db;
+};
+</code></pre>
+
+<p>However, once <code>db.close()</code> yields an exception, <code>DBConn</code>&rsquo;s destructor will propogate the exception, which would be a problem: considering <code>std::vector&lt;DBConn&gt; v</code>, chances are that two simultaneously active exceptions (from calling <code>~DBConn()</code>) arise during destroying the vector <code>v</code>, and program execution will either terminate or yield undefined behavior. Moreover, premature program termination or undefined behavior can result from destructors emitting exceptions even without using containers and arrays. There are 2 ways to handle the situation:</p>
+
+<ul>
+<li>Terminate the program<br /></li>
+</ul>
+
+<pre><code class="language-cpp">DBConn::~DBConn()
+{
+    try { db.close(); }
+    catch(...) {
+        // make log entry: the call to close failed;
+        std::abort();
+    }
+}
+</code></pre>
+
+<p>This will prevent the exception from propagating out of the destructor and then leading to undefined behavior.</p>
+
+<ul>
+<li>Swallow the exception</li>
+</ul>
+
+<pre><code class="language-cpp">DBConn::~DBConn()
+{
+    try { db.close(); }
+    catch(...) {
+        // make log entry: the call to close failed;
+    }
+}
+</code></pre>
+
+<p>In general, swallowing exception is a bad idea for it suppresses imporant information, but it is preferable sometimes when the program is asked to be able to reliably continue execution even after an error has been encountered.</p>
+
+<p>A better strategy is to design <code>DBConn</code>&rsquo;s interface so that its clients have an opportunity to handle the possible exception by themselves:</p>
+
+<pre><code class="language-cpp">class DBConn {
+public:
+    ...
+    void close()         // new interface for clients
+    {                    // to handle possible exception outside dtor
+        db.close();
+        closed = true;   // keep track of whether db has been closed
+    }
+    ~DBConn()
+    {
+        if (!closed) {
+            try {              // close the connecton
+                db.close();    // if the client didn't
+            }
+        }
+        catch (...) {
+            // make log entry: the call to close failed;
+            //  terminate or swallow
+        }
+    }
+private:
+    DBConnection db;
+    bool closed;
+};
+</code></pre>
+
+<p>Under such a design, if clients decide to ignore the opportunity to close the connection and handle the possible exception by themselves for they believe that no error will occur, they can rely on <code>DBConn</code>&rsquo;s destructor to call <code>close()</code> for them. However, if <code>close()</code> does throw in <code>~DBConn</code>, they&rsquo;re in no position to complain if <code>DBConn</code> swallows the exception or terminates the program.</p>
+
+<p>In summary,<br />
+* Never emit exceptions from destructors. If functions in a destructor may throw, catch it and then either swallow it or terminate the program.<br />
+* When class clients need to be able to react to any operation that may throw exceptions, provide a non-destructor function for them to handle such exceptions.</p>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/01/prevent-exception-from-leaving-dtor/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fprevent-exception-from-leaving-dtor%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fprevent-exception-from-leaving-dtor%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
 
             
               
-  
-    
-  
+                <div id="disqus_thread"></div>
+<script>
 
 
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2016/10/valid-tree/">
-          Valid tree
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2016-10-29T00:00:00Z">
-      
-  十月 29, 2016
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
 
 
-</div>
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/01/prevent-exception-from-leaving-dtor/";  
+this.page.identifier = "Item-8 Prevent exception from leaving destructor"; 
+};
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        DFS, BFS and Union-find comparison.
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
-        <br>
-        <a href="http://nianze.ml/2016/10/valid-tree/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2016/10/valid-tree/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2016-10-29.jpg"/>
-      </div>
-    </a>
-  
-</article>
-
+              
             
-            
-
-          </section>
-        
+          </div>
+        </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2018 刀心の水|Nzo. All Rights Reserved
@@ -443,6 +569,96 @@ ga('send', 'pageview');
 </footer>
 
       </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/01/prevent-exception-from-leaving-dtor/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fprevent-exception-from-leaving-dtor%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fprevent-exception-from-leaving-dtor%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fprevent-exception-from-leaving-dtor%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f01%2fprevent-exception-from-leaving-dtor%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fprevent-exception-from-leaving-dtor%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
     </div>
     
     <div id="about">
@@ -720,6 +936,32 @@ $(document).ready(function() {
   });
 });
 </script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/01\/prevent-exception-from-leaving-dtor\/';
+          
+            this.page.identifier = '\/2018\/01\/prevent-exception-from-leaving-dtor\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
 
 
 
