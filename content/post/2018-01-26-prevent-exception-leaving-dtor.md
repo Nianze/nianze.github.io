@@ -104,6 +104,7 @@ private:
 
 Under such a design, if clients decide to ignore the opportunity to close the connection and handle the possible exception by themselves for they believe that no error will occur, they can rely on `DBConn`'s destructor to call `close()` for them. However, if `close()` does throw in `~DBConn`, they're in no position to complain if `DBConn` swallows the exception or terminates the program.
 
-In summary,   
+In summary,  
+ 
 * Never emit exceptions from destructors. If functions in a destructor may throw, catch it and then either swallow it or terminate the program.  
 * When class clients need to be able to react to any operation that may throw exceptions, provide a non-destructor function for them to handle such exceptions.
