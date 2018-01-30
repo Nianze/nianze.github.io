@@ -10,13 +10,13 @@ tags:
 slug: have assignment op return a ref
 autoThumbnailImage: false
 thumbnailImagePosition: right
-#thumbnailImage: /images/2018-01-29.jpg
+thumbnailImage: /images/2018-01-29.jpg
 ---
 
 As title suggests.
 <!--more-->
 
-Assignments is able to chain together:
+Assignment is able to chain together:
 
 ```cpp
 int x,y,z;
@@ -29,7 +29,7 @@ Basically, the chain is parsed from right to left, so the result of the updated 
 x = (y = (z = 15));
 ```
 
-In order to achieve this, We need to implement the assignment operators (as well as `+=`, `-=`, `*=`, etc) in the following convention, where we make the assignment return a reference to its left-hand argument:
+In order to achieve this, we need to implement the assignment operators (as well as `+=`, `-=`, `*=`, etc) in the following convention, where we make the assignment return a reference to its left-hand argument:
 
 ```cpp
 class Widget {
@@ -43,7 +43,7 @@ public:
     Widget& operator=(int rhs)
     {
         ...
-        return *this;  // even if the right-hand side parameter type is unconventianal
+        return *this;  // even if the right-hand side parameter type is unconventional
                        // we can still apply this convention
     }
     Widget& operator+=(const Widget& rhs)
