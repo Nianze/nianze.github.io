@@ -15,7 +15,7 @@ thumbnailImagePosition: top
 metaAlignment: center
 ---
 
-看了最近那期《十三邀》许知远对话李诞。有点意思。
+看了最近那期《十三邀》[许知远](https://v.qq.com/x/page/v0025csa5a9.html)对话[李诞](https://v.qq.com/x/page/j0025rf9fow.html)。有点意思。
 <!--more-->
 
 一
