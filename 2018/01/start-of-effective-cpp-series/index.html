@@ -19,7 +19,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Hugo 0.29">
+    <meta name="generator" content="Hugo 0.31.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
     <title>Item-1 Prefer consts, enums and inlines to #defines - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
@@ -383,7 +383,7 @@ const double PI_2 = 3.1415926;
 <pre><code class="language-cpp">const char * const blogger = &quot;Nzo&quot;;
 </code></pre></li>
 
-<li><p>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, pay attention to the difference between constant declaration and constant definition:</p>
+<li><p>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, since there&rsquo;s no way we may create a class-scope-specific or class-encapsulated(i.e., private) constant using a <code>#define</code> (once a macro is defined, it&rsquo;s in force for the rest of the compilation unless it&rsquo;s <code>#undefed</code> somewhere along the line). Pay attention to the difference between constant declaration and constant definition:</p>
 
 <pre><code class="language-cpp">// game.h
 class GamePlayer {
@@ -391,7 +391,7 @@ private:
     static const int NUM_TURNS = 5;  // constant declaration with initial value
     static const double PI;          // constant declaration without initial value
     int scores[NUM_TURNS];           // use of constant
-}
+};
 </code></pre>
 
 <pre><code class="language-cpp">// game.cpp
@@ -399,15 +399,24 @@ const int GamePlayer::NUM_TURNS;     // constant definition in impl. file
 const double GamePlayer::PI = 3.14;  // provide initial value at definition
 </code></pre>
 
-<p>However, older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of declaration. Most of time we may solve the problem by putting the initial value at definition time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
+<p>It&rsquo;s worth noting that older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of <em>declaration</em>. Most of time we may solve the problem by putting the initial value at <em>definition</em> time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
 
 <pre><code class="language-cpp">// Game.h
 class GamePlayer {
 private:
     enum { NUM_TURNS = 5 };          // NUM_TURNS is a symbolic name for 5        
     int scores[NUM_TURNS];           // fine with old compilers
-}
-</code></pre></li>
+};
+</code></pre>
+
+<p>There are mainly 2 reasons we may still see the enum hack today:</p>
+
+<ol>
+<li>It&rsquo;s legal to take the address of a <code>const</code>, but it&rsquo;s not legal to take the address of an enum, so if you don&rsquo;t want people to get a pointer or reference to your integral constants, an enum will enforce that constraint (and this makes the enum behave somewhat like a #define).</li>
+<li>It&rsquo;s purely pragmatic. Lots of code (such as template metaprogramming, item 48) still employs it.</li>
+</ol>
+
+<p>For modern compilers, on the other hand, rules change a bit in a more convenient way. Usually C++ requires that you provide a difinition for anything you use, but class-specific <code>constant</code>s that are <code>stitic</code> and of <code>integral type</code> (e.g., <em>integers</em>, <em>chars</em>, <em>bools</em>) are an exception. As long as you don&rsquo;t take thier address, you can declare and read them <strong>without</strong> providing a definition, and (good) compilers will not allocate unneccessary memory for these integral-type const objects, which will make the static const integral an lvalue.</p></li>
 </ol>
 
 <h3 id="prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></h3>
@@ -467,7 +476,7 @@ inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a :
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/tips-on-iostream/" data-tooltip="Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/start-of-effective-cpp-series/" data-tooltip="Item-1 Prefer consts, enums and inlines to #defines">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -475,7 +484,7 @@ inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a :
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/start-of-effective-cpp-series/" data-tooltip="Item-1 Prefer consts, enums and inlines to #defines">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/creation-is-fun/" data-tooltip="当谈论有趣时，我在谈论什么">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -569,7 +578,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/tips-on-iostream/" data-tooltip="Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/start-of-effective-cpp-series/" data-tooltip="Item-1 Prefer consts, enums and inlines to #defines">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -577,7 +586,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/start-of-effective-cpp-series/" data-tooltip="Item-1 Prefer consts, enums and inlines to #defines">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/creation-is-fun/" data-tooltip="当谈论有趣时，我在谈论什么">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -709,6 +718,24 @@ s.setAttribute('data-timestamp', +new Date());
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/01/handle-self-assignment/">
+                <h3 class="media-heading">Item-11 Handle self assignment in operator=</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Solve self assignment situation in operator= by comparing addresses of source and target objects, careful statement ordering, and copy-and-<code>swap</code>.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.ml/2018/01/have-assignment-op-return-a-ref/">
                 <h3 class="media-heading">Item-10 Have assignment operators return a reference to *this</h3>
               </a>
@@ -736,6 +763,24 @@ s.setAttribute('data-timestamp', +new Date());
                 </span>
               </span>
               <div class="media-content hide-xs font-merryweather"><p>不同于Java或者C#,在C++中构造函数和析构函数里的虚函数不会实现多态的效果。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/01/worth-it-or-not/">
+                <h3 class="media-heading">人间不值得。。。吗？</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>看了最近那期《十三邀》许知远对话李诞。有点意思。
 </p></div>
             </div>
             <div style="clear:both;"></div>
@@ -850,42 +895,6 @@ s.setAttribute('data-timestamp', +new Date());
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/01/use-const-whenever-possible/">
-                <h3 class="media-heading">Item-3 Use const whenever possible</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Jan 1, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Useful tips on using <code>const</code> in C++.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/01/cpp-is-multiparadigm/">
-                <h3 class="media-heading">Item-0 Federation of languages</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Jan 1, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>C++ is a multiparadigm programming langrage.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -893,7 +902,7 @@ s.setAttribute('data-timestamp', +new Date());
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         38 posts found
+         40 posts found
       </p>
     </div>
   </div>
