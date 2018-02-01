@@ -9,9 +9,9 @@ tags:
 - 荒诞
 - 意义
 slug: worth it or not
-thumbnailImagePosition: top
-#thumbnailImage: /images/2017-12-26/braid.png
-#coverImage: /images/2017-12-26/braid.png
+thumbnailImagePosition: right
+thumbnailImage: /images/2018-01-28/2018-01-28.jpg
+coverImage: /images/2018-01-28/Introspective Existentialism.jpg
 metaAlignment: center
 ---
 
