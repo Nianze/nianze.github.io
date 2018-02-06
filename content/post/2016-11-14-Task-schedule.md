@@ -7,6 +7,7 @@ categories:
 tags:
 - algorithm
 - greedy
+- java
 slug: task schedule
 thumbnailImagePosition: right
 thumbnailImage: /images/2016-11-14.jpg

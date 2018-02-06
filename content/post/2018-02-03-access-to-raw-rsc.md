@@ -10,10 +10,10 @@ tags:
 slug: provide access to raw rsc
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-02.png
+thumbnailImage: /images/2018-02-03.jpg
 ---
 
-Each RAII class should offer a wway to get at the resource it manages.
+Each RAII class should offer a way to get at the resource it manages.
 <!--more-->
 
 From time to time, some APIs require access to raw resources, so it is a good habit to design the resource-managing classes in such a way that it provides access to raw resources. For example, suppose there's a function we'd like to use with `Investment` objects, which is managed by smart pointer:
@@ -33,7 +33,7 @@ ind days = daysHeld(pInv);  // error
 We need to find a way to get the access to the raw resources, and generally there are two ways:
 
 1. Implicit conversion (convenient for clients)
-2. Explicit conversion
+2. Explicit conversion (generally preferred)
 
 ### Implicit conversion
 
@@ -56,7 +56,7 @@ public:
     explicit Font(FontHanlde fh)  // acquire resource
     : f(fh)                       // use pass-by-value because the C API does
     {}
-~ Font() { releaseFont(f); }      // release resource
+    ~Font() { releaseFont(f); }   // release resource
 
 operator FontHandle() const {return f;}  // implicit conversion function
 
@@ -81,8 +81,8 @@ However, the downsize is that implicit conversions increase the chance of errors
 ```cpp
 Font f1(getFont());
 ...
-FontHandle f2 = f1;  // meant to copy a Font object but implicitly 
-                     // converted f1 into underlying FontHandle, and copied the underlying resource
+FontHandle f2 = f1;  // meant to copy a Font object but implicitly converted f1 into 
+                     // FontHandle, and copied the underlying resource
 ```
 
 ### Explicit conversion

@@ -10,17 +10,17 @@ tags:
 slug: store newed objects in smart pointers in standalone statements
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-02.png
+thumbnailImage: /images/2018-02-05.jpg
 ---
 
 Failure to do this can lead to subtle resource leaks when exceptions are thrown.
 <!--more-->
 
-Suppose there're two functions below  and another function to :
+Suppose there're two functions:
 
 ```cpp
 int priority(); // reveal processing priority
-void processWidget(std::tr1::shared<Widget> pw, int priority); // do some processing on a dynamically allocated `Widget` in accord with the priority
+void processWidget(std::tr1::shared<Widget> pw, int priority); // do some processing on a dynamically allocated `Widget` in accord with the priority above
 ```
 
 Apparently, following code won't compile:
@@ -29,26 +29,26 @@ Apparently, following code won't compile:
 processWidget(new Widget, priority());
 ```
 
-Because `tr1::shared_ptr`'s constructor taking a raw is `explicit`, there's no implicit conversion from the raw pointer (returned by `new Widget` to the `tr1::shared_ptr` required by `processWidget`. 
+This is because `tr1::shared_ptr`'s constructor taking a raw is `explicit`, there's no implicit conversion from the raw pointer (returned by `new Widget`) to the `tr1::shared_ptr` (required by `processWidget`). 
 
-However, even though the code below does compile and seems correct, carefully using `shared_ptr` to manage resource, it may still leak resources:
+However, even though the code below does compile, seems correct, and carefully uses `shared_ptr` to manage resource, it may still leak resources:
 
 ```cpp
 processWidget(std::tr1::shared_ptr<Widget>(new Widget), priority());
 ```
 
-The two arguments as function parameters must be evaluated before generate a call to `processWidget`, and the first argument consists of two parts:
+The two arguments as function parameters must be evaluated before a call to `processWidget` is generated, and the first argument actually consists of two parts:
 
 * execution of the expression `new Widget`
 * call to the `tr1::shared_ptr` constructor
 
-Before `processWidget` can be called, following three steps must take place:
+Thus, before `processWidget` can be called, following three steps must take place:
 
 * Call `priority`
 * Execute `new Widget`
 * Call the `tr1::shared_ptr` constructor
 
-Unlike Java and C#, where function parameters are always evaluated in a particular order, C++ compilers are free to decide the order of steps above. Although `new Widget` must take place before `tr1::shared_ptr` constructor can be call, for the result of `new` operation is the argument of constructor. However, the call to `priority()` can be performed first, second, or third. If compilers choose to perform it second (maybe for better efficiency):
+Unlike Java and C#, where function parameters are always evaluated in a particular order, C++ compilers are free to decide the order of steps above. Although `new Widget` must take place before `tr1::shared_ptr` constructor can be call (for the result of `new` operation is the argument of the smart pointer's constructor), the call to `priority()` can be performed first, second, or third. If compilers choose to perform it second (maybe for efficiency consideration):
 
 1. Execute `new Widget`
 2. Call `priority`
@@ -63,4 +63,4 @@ std::tr1::shared_ptr<Widget> pw(new Widget); // standalone statement
 processWidget(pw, priority());  // won't leak
 ```
 
-Since the `new Widget` expression and the call to `tr1::shared_ptr` constructor are are in a different statement from the call to `priority`, compilers are not allowed to move the call to `priority` between them.
+Now the `new Widget` expression and the call to `tr1::shared_ptr` constructor are in a different statement from the call to `priority`, compilers are not allowed to move the call to `priority` between them.

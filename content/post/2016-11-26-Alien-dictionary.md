@@ -6,9 +6,8 @@ categories:
 - coding
 tags:
 - algorithm
-- graph
-- DFS
-- BFS
+- DFS/BFS
+- java
 slug: alien dictionary
 thumbnailImagePosition: right
 thumbnailImage: /images/2016-11-26.jpg

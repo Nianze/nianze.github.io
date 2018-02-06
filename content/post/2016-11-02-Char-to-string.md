@@ -6,7 +6,7 @@ categories:
 - coding
 tags:
 - algorithm
-- string
+- java
 slug: char to string
 thumbnailImagePosition: right
 thumbnailImage: /images/2016-11-02.jpg
