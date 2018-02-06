@@ -16,7 +16,6 @@ thumbnailImage: /images/2018-02-02.png
 Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.
 <!--more-->
 
-
 We can use `auto_ptr` and `tr1::shared_ptr` to manage heap-based resources, as introduced in item 13. However, not all resources are heap-based, and for such resources, we need to create our own resource-managing classes to deal with a general question: 
 
 >what should happen when an RAII object is copied?
