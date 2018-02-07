@@ -16,9 +16,9 @@ thumbnailImage: /images/2018-02-06.jpg
 Good interfaces are easy to use correctly and hard to use incorrectly.
 <!--more-->
 
-To design a good interface, it's always good to make the interface in consistency and behave compatibily with built-in types - clients already know how types like `int` behave, so we should strive to make our types behave the same way. A good (though not perfect) example is the interface to STL containers: every STL container has a _member function_ named `size` that tells how many objects are in the container. On the contrary, in **Java**, we use the `length` _property_ for arrays, the `length` _method_ for `String`s, and the `size` _method_ for `List`s; as for **.Net**, `Arrays` have a property named `Length`, while `ArrayList`s have a property named `Count`. No matter how convenient modern IDEs may be, inconsistency imposes mental fricition into a developer's work.
+To design a good interface, it's always good to make the interface in consistency and behave in compatibility with built-in types. After all, clients already know how types like `int` behave, so we should strive to make our types behave the same way. A good (though not perfect) example is the interface to STL containers: every STL container has a _member function_ named `size` that tells how many objects are in the container. On the contrary, in **Java**, we use the `length` _property_ for arrays, the `length` _method_ for `String`s, and the `size` _method_ for `List`s; as for **.Net**, `Arrays` have a property named `Length`, while `ArrayList`s have a property named `Count`. No matter how convenient modern IDEs may be, inconsistency imposes mental fricition into a developer's work.
 
-Another way to think of the interface design is to consider the kinds of mistakes that clients might make, and we could try the following 4 ways:
+A good way to think of the interface design is to consider the kinds of mistakes that clients might make, and we could try the following 4 ways:
 
 1. Creating new types
 2. Constraining object values
@@ -42,9 +42,11 @@ There at least two possible errors that clients might easily make:
     ```cpp
     Date d(30, 3, 1995);  // Should be "3, 30"
     ```
+
 2. the parameters might be invalid <month, day> pair:
     ```cpp
     Date d(2, 30, 1995);  // In the keyboard, `2` is next to '3', so this kind of silly error is not uncommon
+    ```
 
 To prevent such kind of client errors, we could introduce new types:
 
@@ -136,7 +138,7 @@ Moreover, returning a `tr1::shared_ptr` makes it possible to prevent a host of o
 
 For example, instead of using `delete` to release an `Investment` object resource, clients may expect to use a function called `getRidOfInvestment`. By binding `getRidOfInvestment` to `tr1::shraed_ptr` as its deleter, and return this smart pointer, clients will not make mistakes such as using the wrong resource-destruction mechanism (using `delete` instead of `getRidOfInvestment`).
 
-Thus we could implement `createInvestment` like this:
+Thus, in order to bind the deleter, we could define a null `tr1::shared_ptr` with `getRidofInvestment` as its second argument (the first argument is null because we may not be sure the resource to be managed during initialization), and implement `createInvestment` like this:
 
 ```cpp
 std::tr1::shared_ptr<Investment> createInvestment()
@@ -150,3 +152,18 @@ std::tr1::shared_ptr<Investment> createInvestment()
 ```
 
 Since `tr1::shared_ptr` insists on an actual pointer, we use a cast to solve the problem. Of course, it would be better to pass the raw pointer to the smart pointer's constructor if the raw pointer to be managed by `retVal` could be determined prior to creating `retVal`, rather than to initialize `retVal` to null and then making an assignment to it (item 26).
+
+What's more, another nice feature of `tr1::shared_ptr` is that it automatically uses its per-pointer deleter to release resource, which eliminates the "cross-DLL problem" that shows up when an object its created using `new` in one dynamically linked library (DLL) but is `deleted` in a different DLL, leading to runtime errors. For example, if `Stock` is a class derived from `Investment` and `createInvestment` is implemented like this:
+
+```cpp
+std::tr1::shared_ptr<Investment> createInvestment()
+{
+    return std::tr1::shared_ptr<Investment>(new Stock);
+}
+```
+
+the returned `tr1::shared_ptr` pointing to the `Stock` keeps track of which DLL's `delete` should be used when the reference count for the `Stock` becomes zero, so there's no more concern for the cross-DLL problem.
+
+The most common implementation of `tr1::shared_ptr` comes from Boost (item 55). Since it is such an easy way to eliminate some client errors, it's worth an overview of the cost of using it: Boost's `shared_ptr` is twice the size of a raw pointer, uses dynamically allocated memory for bookkeeping and deleter_specific data, uses a virtual function call when invoking its deleter, and incurs thread synchronization overhead when modifying the reference count in an application it believes is multithreaded. 
+
+Although compared to a raw pointer, the `tr1::shared_ptr` is bigger, slower, and uses auxiliary dynamic memory, the reduction in client errors will be apparent， and the additional runtime costs will be unnoticeable in many applications.
