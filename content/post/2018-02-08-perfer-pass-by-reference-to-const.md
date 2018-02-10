@@ -18,6 +18,7 @@ Pass by reference-to-`const` is typically more efficient than pass by value and 
 
 Pass-by-value can be an expensive operation. For example, consider the following class hierarchy:
 
+```cpp
 class Person {
 public:
     Person();  // parameters omitted for simplisity
