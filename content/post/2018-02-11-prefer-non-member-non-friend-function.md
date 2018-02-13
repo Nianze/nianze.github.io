@@ -14,5 +14,71 @@ thumbnailImage: /images/2018-02-11.jpg
 draft: true
 ---
 
-
+Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
 <!--more-->
+
+Suppose there's a class representing web browsers containing following three functions:
+
+```cpp
+class WebBrowser {
+public:
+    ...
+    void clearCache();
+    void clearHistory();
+    void removeCookies();
+    ...
+};
+```
+
+Clients may want to perform these three actions together, so `WebBrowser` might offer two ways to achieve the goal:
+
+* Add a member function
+
+```cpp
+class WebBrowser {
+public:
+    ...
+    void clearEverything(); // calls clearCache(), clearHistory(), and removeCookies()
+    ...
+};
+```
+
+* Add a non-member non-friend function
+
+```cpp
+void clearBrowser(WebBrowser& wb) 
+{
+    wb.clearCache();
+    wb.clearHistory();
+    wb.removeCookies();
+}
+```
+
+As the title suggests, the non-member approach is better, and below is the reasons:
+
+# Encapsulation
+
+If something is encapsulated, it's hidden from view. The more something is encapsulated, the fewer things can see it, the fewer impact clients get affected by potential change, and the greater flexibility we have to change the inmplementation.
+
+>As a coarse-grained measure of how much code can see a piese of data, we can count the number of functions that can access that data: the more functions that can access it, the less encapsulated the data. 
+
+According to item 22, data members should all be private, so the number of functions that can access them is the number of class member functions plus the number of friend functions. Thus, given a member function `clearEverything()` (which can access not only the private data of a class, but also private functions, enums, typedefs, etc) and a non-member non-friend function `clearBrower()`, the latter yields greater encapsulation.
+
+Two more things worth noting are:
+
+1. Friend functions have the same access to a class's private members, hence the same impact on encapsulation. So from an encapsulation point of view, the choice is between member functions and non-member non-friend functions. (BTW, under the view point of implicit type conversion, item 24, the choice is between member and non-member functions)
+2. A function being a non-member of one class can still be a member of another class. For example, `clearBrowser()` could be declared as a static member function in some utility class. As long as it is not part of (or a friend of) `WebBrowser`, it doens't affect the encapsulation of `WebBrowser`'s private members.
+
+## Packaging flexibility and extensibility
+
+In C++, rather than declared in a class, a more natural approach would be to make `clearBrowser()` a non-member function in the same namespace as `WebBrowser`:
+
+```cpp
+namespace WebBrowserStuff {
+class WebBrowser {...};
+void clearBrowser {...};
+...
+}
+```
+
+Unlike classes, namespace can be spread across multiple source file. For convenience functions like 'clearBrowser', this is important
