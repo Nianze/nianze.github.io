@@ -7,7 +7,7 @@ categories:
 tags:
 - technique
 - cpp
-slug: when to declare non-member functions 
+slug: support for a non throwing swap
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018-02-13.jpg
@@ -17,6 +17,8 @@ When `std::swap` would be inefficient for your type,provide a non-throwing `swap
 <!--more-->
 
 `swap`, since its introduction into STL, is useful for exception-safe programming (item 29) and a common mechanism for coping with the possibility of assignment to self (item 11). Due to its importance, it should be implemented properly, which is exactly what this item explores about.
+
+## Customization
 
 By default, swapping is accomplished via the standard `swap` algorithm:
 
@@ -132,4 +134,65 @@ namespace std {
 }
 ```
 
-However, rather than overloading a common function template, what we do here is overloading a function template `std::swap` in the special `std` namesapce, where it's not allowed to add _new_ templates or classes or functions or anything else into it (the contens of `std` are determined solely by the C++ standardization committee). Programs that cross the line
+However, rather than overloading a common function template, what we do here is overloading a function template `std::swap` in the special `std` namesapce, where it's not allowed to add _new_ templates or classes or functions or anything else into it (the contens of `std` are determined solely by the C++ standardization committee). Even though programs that cross the line will almost certainly compile and run, their behavior is undefined.
+
+Thus in this case, not to declare the non-member function to be a specialization or overloading of `std::swap`, we just make a normal non-member `swap` function in `Widget`-related namespace:
+
+```cpp
+namespace WidgetStuff {
+    ...  // templatized WidgetImpl, etc.
+    template<typename T> 
+    class Widget {...}; // including the swap member function
+    ...
+    template<typename T>   // non-member swap function
+    void swap(Widget<T>& a, Widget<T>& b)  // not part of the std namespace
+    {
+        a.swap(b);
+    }
+}
+```
+
+The name lookup rules in C++ (specifically the rules known as _argument-dependent lookup_ or _Koenig lookup_) will guarantee the Widget-specific version of `swap` in `WidgetStuff` will be invoked if any code calls `swap` on two `Widget` objects.
+
+## Usage
+
+Let's look from a client's point of view and see how to use the `swap`. Ideally, we want to call a T-specific version of `swap` if there is one, but to fall back on the general version in `std` if there's not. To fulfill this idea:
+
+```cpp
+template<typename T>
+void doSomething(T& obj1, T& obj2) 
+{
+    using std::swap;  // make std::swap available in this function
+    ...
+    swap(obj1, obj2);  // call the best swap for obejcts of type T
+    ...
+}
+```
+
+When compilers see the call to `swap`, they search for the best `swap` to invoke - according to C++'s name lookup rules, it follows the order below:
+
+1. Find any T-specific `swap` at global scope or in the same namespace as the type T (if T is `Widget` in the namespace `WidgetStuff`, compilers will find `swap` in `WidgetStuff` defined above)
+2. If no T-specific `swap` exists, compilers will use `swap` in `std`, thanks to the `using` declaration that makes `std::swap` visible in this function.
+    1. If there's a T-specific specialization of `std::swap`, use the specialized version
+    2. If not, use the general `swap` template function.
+
+One thing worth noting is to not qualify the call like this:
+
+```cpp
+std::swap(obj1, obj2);  // the wrong way to call swap
+```
+
+here we force compilers to consider only the `swap` in `std` (including any template specializations), thus eliminating the possibility of getting a more appropriate T-specific version defined elsewhere. Alas, some misguided programmers (or even some standard library) _do_ qualify calls to `swap` in this way. To make code work as efficiently as possible, we'd better totally specialize `std::swap` for our classes.
+
+## Summary
+
+We've discussed the default `swap`, member `swap`s, non-member `swap`s, specializations of `std::swap`, and calls to `swap`. Below is a good practice on implementing and using customized `swap`:
+
+1. If the default implementation of `swap` offers acceptable efficiency for our class or class template, nothing needs to be done to specialize the default `std::swap`.  
+2. If not (for class or template using some variation of the pimpl idiom):   
+    1. offer a public `swap` member function that efficiently swaps the value of two objects of our type. This function should never throw an exception[^1]  
+    2. offer a non-member `swap` in the same namespace as the class or template[^2]. Have it call the `swap` member function  
+    3. if it's a class (not a class template), specialize `std::swap` for the class. Have it also call the `swap` member function  
+
+[^1]: One of most useful applications of `swap` is to help classes and class templates offer the strong exception-safety guarantee (See 29 for details). Generally speaking, efficiency and non-exception are two `swap` characteristics that always go hand in hand, because highly efficient `swap`s are almost always based on operations on built-in types (such as the pointers underlying the pimpl idiom), and operations on built-in types never throw exceptions.
+[^2]: The non-exception constraint can't apply to the non-member version, because the default version of `swap` is based on copy construction and copy assignment, and generally both copy functions are allowed to throw exceptions.
