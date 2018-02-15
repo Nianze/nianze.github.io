@@ -10,13 +10,13 @@ tags:
 slug: postpone variable definitions
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-14.jpg
+thumbnailImage: /images/gif/0.gif
 ---
 
 Postponing variable definitions as long as possible increases program clarity and improves progranm efficiency.
 <!--more-->
 
-After defining a variable of a type with a constructor or destructor, there's a cost of construction when control reaches a variable's definition and a cost of destruction when the variable goes out of scope. if the variable is unused, the cost is wasted, which is the case we want to avoid.
+After defining a variable of a type with a constructor or destructor, there's a cost of construction when control reaches a variable's definition, and a cost of destruction when the variable goes out of scope. If the variable is unused, the cost is wasted, which is the case we want to avoid.
 
 Nobody declares unused variables on purpose, but chances are we may still encounter them unexpectedly: suppose there's a function that returns an encrypted version of a password as long as the password is long enough and may throw an exception of type `logic_error` (defined in standard C++ library, item 54) if the passwod is too short:
 
@@ -79,14 +79,14 @@ std::string encryptPassword(const std::string& password)
 }
 ```
 
-This gives us certain benifits: 
-1. we avoid constructing and destructing unneeded obejcts
-2. we avoid unnecessary default constructions
+This gives us certain benifits:   
+1. we avoid constructing and destructing unneeded obejcts  
+2. we avoid unnecessary default constructions  
 3. we help document the purpose of variables by initializing them in contexts in which their meaning is clear
 
 ## Loop
 
-If a variable is used only inside a loop, should we define it outside the loop and make an assignment to it on each loop iteration, or to define the variable inside the loop:
+If a variable is used only inside a loop, should we define it outside the loop and make an assignment to it on each loop iteration, or to define the variable inside the loop？
 
 ```cpp
 // Approach A: define outside loop
