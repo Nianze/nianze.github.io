@@ -10,7 +10,7 @@ tags:
 - java
 slug: binary search review
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-12-29.jpg
+thumbnailImage: /images/2016/2016-12-29.jpg
 ---
 
 Detailed review on binary search.

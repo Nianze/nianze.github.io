@@ -10,7 +10,7 @@ tags:
 slug: initialize before use
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-22.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-22.jpg
 ---
 
 Since C++ is fickle about initialization, some good coding style is suggested.

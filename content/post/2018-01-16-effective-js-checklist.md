@@ -11,7 +11,7 @@ tags:
 slug: start of effective cpp series
 #autoThumbnailImage: false
 #thumbnailImagePosition: right
-#thumbnailImage: /images/2018-01-04-ml.png
+#thumbnailImage: /images/2018/2018-01/2018-01-04-ml.png
 ---
 
 My notes on reviewing `JavaScript`.

@@ -10,7 +10,7 @@ tags:
 - java
 slug: binary search
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-08-05.jpg
+thumbnailImage: /images/2016/2016-08-05.jpg
 ---
 
 What should be noted when doing binary search.

@@ -11,8 +11,8 @@ tags:
 slug: aesthetic
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-01-01-night-with-star.jpg
-coverImage: /images/2016-01-01-night-with-star.jpg
+thumbnailImage: /images/2016/2016-01-01-night-with-star.jpg
+coverImage: /images/2016/2016-01-01-night-with-star.jpg
 metaAlignment: center
 ---
 

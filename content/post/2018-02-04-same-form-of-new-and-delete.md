@@ -10,7 +10,7 @@ tags:
 slug: use the same form in matching new and delete
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-04.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-04.jpg
 ---
 
 If you use [] in a `new` expression, use [] in the corresponding `delete` expression; If not, no [] in the matching `delete` expression.
@@ -28,10 +28,10 @@ When a `delete` is used, two other things happen:
 
 The fact is that the memory layout for single objects is generally different from the memory layout for arrays, and the memory for an array usually includes extra area for the size of the array (making it easier for `delete` to know how many destructor to call) while memory for a single object lacks this information:
 
-| Memory type   | Memory layout |
-| ------------- | ------------- |
-| Array         | \|n\|Object\|Object\|Object\|...\||
-| Single object | \|Object\|        |
+| Memory type   | Memory layout                      |
+| ------------- | ---------------------------------- |
+| Array         | \|n\|Object\|Object\|Object\|...\| |
+| Single object | \|Object\|                         |
 
 When we use `delete` on a pointer, `delete []` will assumes an array is pointed to, otherwise it assumes a single object. Let's see what will happen if the uses of `new` and `delete` is not matching:
 

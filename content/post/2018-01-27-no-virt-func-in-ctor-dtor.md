@@ -10,7 +10,7 @@ tags:
 slug: no virtual func in ctor dtor
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-27.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-27.jpg
 ---
 
 不同于Java或者C#,在C++中构造函数和析构函数里的虚函数不会实现多态的效果。

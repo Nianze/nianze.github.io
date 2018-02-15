@@ -10,7 +10,7 @@ tags:
 slug: cpp is multiparadigm
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-18.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-18.jpg
 ---
 
 C++ is a multiparadigm programming langrage.

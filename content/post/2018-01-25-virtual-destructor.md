@@ -10,7 +10,7 @@ tags:
 slug: virtual dtor in polymorphic base class
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-25.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-25.jpg
 ---
 
 If a class has any virtual functions (for polymorphic purpose), it should have a virtual destructor.

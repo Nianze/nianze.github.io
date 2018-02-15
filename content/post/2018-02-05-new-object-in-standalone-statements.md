@@ -10,7 +10,7 @@ tags:
 slug: store newed objects in smart pointers in standalone statements
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-05.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-05.jpg
 ---
 
 Failure to do this can lead to subtle resource leaks when exceptions are thrown.

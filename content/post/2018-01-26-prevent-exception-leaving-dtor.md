@@ -10,7 +10,7 @@ tags:
 slug: prevent exception from leaving dtor
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-26.png
+thumbnailImage: /images/2018/2018-01/2018-01-26.png
 ---
 
 It is discouraged practice to emit exceptions from destructors.

@@ -11,8 +11,8 @@ tags:
 slug: Spirited away
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-02-15-Spirited-Away.png
-coverImage: /images/2016-02-15-Spirited-Away.png
+thumbnailImage: /images/2016/2016-02-15-Spirited-Away.png
+coverImage: /images/2016/2016-02-15-Spirited-Away.png
 metaAlignment: center
 ---
 

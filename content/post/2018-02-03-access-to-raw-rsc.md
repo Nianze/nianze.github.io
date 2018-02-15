@@ -10,7 +10,7 @@ tags:
 slug: provide access to raw rsc
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-03.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-03.jpg
 ---
 
 Each RAII class should offer a way to get at the resource it manages.

@@ -10,7 +10,7 @@ tags:
 slug: Declare data members private
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-10.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-10.jpg
 ---
 
 Declaring data members `private` gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.

@@ -10,8 +10,8 @@ tags:
 slug: personal site with hugo
 autoThumbnailImage: false
 thumbnailImagePosition: top
-thumbnailImage: /images/2017-12-26/braid.png
-coverImage: /images/2017-12-26/braid.png
+thumbnailImage: /images/2017/2017-12-26/braid.png
+coverImage: /images/2017/2017-12-26/braid.png
 metaAlignment: center
 ---
 
@@ -23,9 +23,9 @@ This article talks about how to use [Hugo](https://gohugo.io/) to build a person
 
 最开始写博客始于2015年末，当时因为自制了几个单簧管演奏的视频，心想可以建一个简易的网站把录制背后的故事和想法集合起来。由于个人网站一般不需要太多交互，使用静态网页生成器并托管在`Github Pages`上成为了首选方案（能使用git实现版本控制更是个加分项）。彼时没想太多直接用了`Github Pages`原生支持的网页生成器[Jekyll](https://jekyllrb.com/)。随便搜了一个主题，第一版网站便这么建了起来：
 
-{{< image classes="right nocaption fig-50" src="/images/2017-12-26/old_blog1-1.png" thumbnail="/images/2017-12-26/old_blog1-1.png" >}}
-{{< image classes="right nocaption fig-50" src="/images/2017-12-26/old_blog2.png" thumbnail="/images/2017-12-26/old_blog2.png" >}}
-{{< image classes="clear nocaption fig-50" src="/images/2017-12-26/old_blog1.png" thumbnail="/images/2017-12-26/old_blog1.png" >}}
+{{< image classes="right nocaption fig-50" src="/images/2017/2017-12-26/old_blog1-1.png" thumbnail="/images/2017/2017-12-26/old_blog1-1.png" >}}
+{{< image classes="right nocaption fig-50" src="/images/2017/2017-12-26/old_blog2.png" thumbnail="/images/2017/2017-12-26/old_blog2.png" >}}
+{{< image classes="clear nocaption fig-50" src="/images/2017/2017-12-26/old_blog1.png" thumbnail="/images/2017/2017-12-26/old_blog1.png" >}}
 
 在为期一年断断续续的更新中总计写下了十余篇音乐和程序相关的（毫无营养的）文章后，第一代模板差不多也看腻了，突然觉得是时候该把网站升级下。遂决定新的博客应更简洁规整，首页加入图片预览功能并减去不必要的视觉干扰，菜单栏里应有分类、标签和归档功能。一番搜寻后，目光落在[Hugo](https://gohugo.io/)。主要原因在于`Hugo`简单易用——不需要安装太多[Hexo](https://hexo.io/)中的依赖库，更换主题也比`Jekyll`方便，生成速度还很快。以下便是我的配置过程。
 
@@ -66,14 +66,14 @@ personal-site
 
 常用目录用处如下
 
-|子目录名称|功能|
-|---|---|
-|archetypes|新文章默认模板|
-|config.toml|`Hugo`配置文档|
-|content|存放所有`Markdown`格式的文章|
-|layouts|存放自定义的`view`，可为空|
-|static|存放图像、CNAME、css、js等资源，发布后该目录下所有资源将处于网页根目录|
-|themes|存放下载的主题|
+| 子目录名称  | 功能                                                                   |
+| ----------- | ---------------------------------------------------------------------- |
+| archetypes  | 新文章默认模板                                                         |
+| config.toml | `Hugo`配置文档                                                         |
+| content     | 存放所有`Markdown`格式的文章                                           |
+| layouts     | 存放自定义的`view`，可为空                                             |
+| static      | 存放图像、CNAME、css、js等资源，发布后该目录下所有资源将处于网页根目录 |
+| themes      | 存放下载的主题                                                         |
 
 使用下面的命令生成新的文章草稿：
 
@@ -123,7 +123,7 @@ hugo server
 
 并在浏览器中输入网址`http://localhost:1313/`就可以在浏览器中查看网页效果了：
 
-![local_page](/images/2017-12-26/local_page.png)
+![local_page](/images/2017/2017-12-26/local_page.png)
 
 如果觉得没有问题了便可以使用如下命令：
 
@@ -137,7 +137,7 @@ hugo
 
 上传到Github之前，先在Github中添加一个空白repository，注意不要添加如`README`，`.gitignore`等文档。由此得到Github中该repository的网址：`https://github.com/Nianze/personal-site.git`
 
-![new repo](/images/2017-12-26/repo.png)
+![new repo](/images/2017/2017-12-26/repo.png)
 
 复制该网址后，在网站本地文档根目录中初始化git：
 
@@ -166,7 +166,7 @@ publishDir = docs
 
 自此运行`hugo`命令后生成的网页文件将保存在`/docs`子目录下。将所有文档push到Github的`master branch`，进入Github对应repository的Settings标签菜单，在`GitHub Pages`选项的Source栏选择`master branch /docs folder`:
 
-![docs](/images/2017-12-26/docs_folder.png)
+![docs](/images/2017/2017-12-26/docs_folder.png)
 
 等待片刻即可访问`http://your_name.github.io`看到之前用`Hugo`生成的网页了。
 
@@ -220,7 +220,7 @@ git push origin gh-pages
 
 最后将`master branch`中的源文档和`gh-pages branch`中的网页文档分别push到Github repo中，进入Settings标签菜单，选择`Github Pages`项中的Source栏，点`gh-pages branch`选项：
 
-![gh-pages](/images/2017-12-26/gh-pages.png)
+![gh-pages](/images/2017/2017-12-26/gh-pages.png)
 
 同样等待片刻，即可访问`https://your_name.github.io`看到之前用`Hugo`生成的网页了。
 
@@ -236,7 +236,7 @@ git push origin gh-pages
 
 其中，Github服务器IP地址是`192.30.252.153`和`192.30.252.154`，而`your_name.github.io`的IP地址可以在命令行中使用ping命令得到：
 
-![ping](/images/2017-12-26/ping.png)
+![ping](/images/2017/2017-12-26/ping.png)
 
 最后还需要在`personal-site/public`子目录中需要添加一个名为CNAME的文档，该文件只包含想要替换的个人域名，对我来说即是nianze.ml（不加http）。由于每次使用`hugo`命令
 在`/public`子目录生成网页的时候该CNAME文件都会被删除，所以最好将该文件放在`personal-site/static`子目录中，这样运行`hugo`后该CNAME文件将自动复制到`/public`目录中。
@@ -253,19 +253,19 @@ git push origin gh-pages
 
 此时`CloudFlare`会给我们提供其DNS服务器的IP，此时需要去`Freenom`的域名管理页面中更新默认DNS服务商到CloudFlare：
 
-![dns_server](/images/2017-12-26/dns_server.png)
+![dns_server](/images/2017/2017-12-26/dns_server.png)
 
 更改完DNS服务器就可以设置`CloudFlare`中的各个选项了。首先在`Crypto`选项标签下，选择使用`Full SSL`模式以`HTTPs`协议加载网页：
 
-![cf_ssl](/images/2017-12-26/cf_ssl.png)
+![cf_ssl](/images/2017/2017-12-26/cf_ssl.png)
 
 然后是`DNS`标签栏配置，跟`Freenom`设置类似：
 
-![cf_dns](/images/2017-12-26/cf_dns.png)
+![cf_dns](/images/2017/2017-12-26/cf_dns.png)
 
 最后再设置下`Page Rules`标签：
 
-![page_rules](/images/2017-12-26/cf_page_rules.png)
+![page_rules](/images/2017/2017-12-26/cf_page_rules.png)
 
 至此配置完毕。其实`CloudFlare`中还有很多别的选项，可以根据个人喜好进行相应配置。等待几小时，再次访问`nianze.ml`，可以发现网页已经在`HTTPs`协议下加载了。这样以来就再也不用去点那个烦人的load按钮了。
 

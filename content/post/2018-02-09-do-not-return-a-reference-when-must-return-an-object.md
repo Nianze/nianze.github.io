@@ -10,7 +10,7 @@ tags:
 slug: do not return a ref when must return an object
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-09.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-09.jpg
 ---
 
 Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a "counter" example that is reasonable in single-threaded environments).

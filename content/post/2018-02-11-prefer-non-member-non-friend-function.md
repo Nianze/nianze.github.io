@@ -10,7 +10,7 @@ tags:
 slug: Prefer non-member non-friend function to member function
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-11.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-11.jpg
 ---
 
 Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.

@@ -10,7 +10,7 @@ tags:
 slug: when to declare non-member functions 
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-12.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-12.jpg
 ---
 
 If we need type conversions on all parameters to a function including the one pointed to by the `this` pointer, the function must be a non-member.

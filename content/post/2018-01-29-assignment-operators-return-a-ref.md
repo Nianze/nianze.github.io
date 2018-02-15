@@ -10,7 +10,7 @@ tags:
 slug: have assignment op return a ref
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-29.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-29.jpg
 ---
 
 As title suggests.

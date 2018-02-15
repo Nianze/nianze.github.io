@@ -11,8 +11,8 @@ tags:
 slug: creation is fun
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-10-sisyphus.jpg
-#coverImage: /images/2018-01-10-sisyphus.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-10-sisyphus.jpg
+#coverImage: /images/2018/2018-01/2018-01-10-sisyphus.jpg
 #metaAlignment: center
 ---
 

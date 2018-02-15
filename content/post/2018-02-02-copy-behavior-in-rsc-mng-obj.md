@@ -10,7 +10,7 @@ tags:
 slug: copy behavior of RAII
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-02.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-02.jpg
 ---
 
 Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.

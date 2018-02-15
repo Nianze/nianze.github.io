@@ -10,8 +10,8 @@ tags:
 slug: return of monkey king
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-01-08-return-of-monkey-king.jpg
-coverImage: /images/2016-01-08-return-of-monkey-king.jpg
+thumbnailImage: /images/2016/2016-01-08-return-of-monkey-king.jpg
+coverImage: /images/2016/2016-01-08-return-of-monkey-king.jpg
 metaAlignment: center
 ---
 

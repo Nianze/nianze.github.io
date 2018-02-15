@@ -10,7 +10,7 @@ tags:
 slug: make interfaces easy to use correctly
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-06.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-06.jpg
 ---
 
 Good interfaces are easy to use correctly and hard to use incorrectly.

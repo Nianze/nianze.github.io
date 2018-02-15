@@ -10,7 +10,7 @@ tags:
 slug: 2018 roadmap
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-06-roadmap.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-06-roadmap.jpg
 ---
 
 马上春节了，来列一下新年计划吧。
@@ -32,17 +32,17 @@ thumbnailImage: /images/2018-02-06-roadmap.jpg
 | Jun  | Hands On ML, Effec. JS                                    |
 | Jul  | Designing Data-Intensive Applications                     |
 | Aug  | Clean Architecture                                        |
-| Sep  | 待定 |
-| Oct  | 待定 |
-| Nov  | 待定 |
-| Dec  | 待定 |
+| Sep  | 待定                                                      |
+| Oct  | 待定                                                      |
+| Nov  | 待定                                                      |
+| Dec  | 待定                                                      |
 
 兴趣方面的书籍只能抽每天回家睡前的时间以及周末来看了：
 
-Hobby | Items
----   | ---
-钢琴 | Hanon,Czerny  
-吉他 | 指弹  
-日语 | みんなの日本語 
-其他 | 叔本华  
+| Hobby | Items        |
+| ----- | ------------ |
+| 钢琴  | Hanon,Czerny |
+| 吉他  | 指弹         |
+| 日语  | みんなの日本語   |
+| 其他  | 叔本华       |
 

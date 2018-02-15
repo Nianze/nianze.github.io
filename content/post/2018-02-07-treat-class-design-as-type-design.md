@@ -10,7 +10,7 @@ tags:
 slug: class design is type design
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-07.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-07.jpg
 ---
 
 Before definining a new type, be sure to consider all the issues discussed in this item.

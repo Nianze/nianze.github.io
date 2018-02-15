@@ -10,7 +10,7 @@ tags:
 slug: start of effective cpp series
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-16.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-16.jpg
 ---
 
 A new (hopefully) daily review on `C++`.

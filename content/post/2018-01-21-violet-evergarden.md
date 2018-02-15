@@ -11,8 +11,8 @@ tags:
 slug: violet snow
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-21.jpg
-coverImage: /images/2018-01-21.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-21.jpg
+coverImage: /images/2018/2018-01/2018-01-21.jpg
 metaAlignment: center
 ---
 

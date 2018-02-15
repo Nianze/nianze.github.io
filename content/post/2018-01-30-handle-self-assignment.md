@@ -10,7 +10,7 @@ tags:
 slug: handle self assignment
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-30.png
+thumbnailImage: /images/2018/2018-01/2018-01-30.png
 ---
 
 Solve self assignment situation in operator= by comparing addresses of source and target objects, careful statement ordering, and copy-and-`swap`.

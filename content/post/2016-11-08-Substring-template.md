@@ -10,7 +10,7 @@ tags:
 - java
 slug: substring template
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-11-08.jpg
+thumbnailImage: /images/2016/2016-11-08.jpg
 ---
 
 Two pointer template to solve substring problem.

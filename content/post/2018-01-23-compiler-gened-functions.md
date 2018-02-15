@@ -10,7 +10,7 @@ tags:
 slug: functions silently created
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-23.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-23.jpg
 ---
 
 Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.

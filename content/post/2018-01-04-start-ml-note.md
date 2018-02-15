@@ -10,8 +10,8 @@ tags:
 slug: start of machine learning series
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-04-ml.png
-#coverImage: /images/2018-01-04-ml.png
+thumbnailImage: /images/2018/2018-01/2018-01-04-ml.png
+#coverImage: /images/2018/2018-01/2018-01-04-ml.png
 #metaAlignment: center
 ---
 

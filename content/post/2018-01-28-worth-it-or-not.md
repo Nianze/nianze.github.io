@@ -10,8 +10,8 @@ tags:
 - 意义
 slug: worth it or not
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-28/2018-01-28.jpg
-coverImage: /images/2018-01-28/Introspective Existentialism.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-28/2018-01-28.jpg
+coverImage: /images/2018/2018-01/2018-01-28/Introspective Existentialism.jpg
 metaAlignment: center
 ---
 

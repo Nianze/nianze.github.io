@@ -10,7 +10,7 @@ tags:
 slug: perfer pass-by-reference-to-const
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-08.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-08.jpg
 ---
 
 Pass by reference-to-`const` is typically more efficient than pass by value and avoids the slicing problem. 

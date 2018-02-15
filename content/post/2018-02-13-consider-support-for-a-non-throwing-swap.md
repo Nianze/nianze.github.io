@@ -10,7 +10,7 @@ tags:
 slug: support for a non throwing swap
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-13.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-13.jpg
 ---
 
 When `std::swap` would be inefficient for your type,provide a non-throwing `swap` member function, a non-member `swap` calling the member, and possibly a specialized `std::swap` for the case of classes (not templates).

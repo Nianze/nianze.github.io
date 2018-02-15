@@ -10,7 +10,7 @@ tags:
 slug: use objects to manage resources
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-02-01.jpg
+thumbnailImage: /images/2018/2018-02/2018-02-01.jpg
 ---
 
 Use RAII objects such as `tr1::shared_ptr` and `auto_ptr` to prevent resource leaks.

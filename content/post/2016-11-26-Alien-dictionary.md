@@ -10,7 +10,7 @@ tags:
 - java
 slug: alien dictionary
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-11-26.jpg
+thumbnailImage: /images/2016/2016-11-26.jpg
 ---
 
 Build a graph to solve alien dictionary problem via DFS/BFS.

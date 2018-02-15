@@ -11,7 +11,7 @@ tags:
 - java
 slug: valid tree
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-10-29.jpg
+thumbnailImage: /images/2016/2016-10-29.jpg
 ---
 
 DFS, BFS and Union-find comparison.

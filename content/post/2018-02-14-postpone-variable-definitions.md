@@ -10,7 +10,7 @@ tags:
 slug: postpone variable definitions
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/gif/0.gif
+thumbnailImage: /images/2018/2018-02/gif/0.gif
 ---
 
 Postponing variable definitions as long as possible increases program clarity and improves progranm efficiency.

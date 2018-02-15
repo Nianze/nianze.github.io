@@ -10,7 +10,7 @@ tags:
 slug: copy all parts of an object
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018-01-31.jpg
+thumbnailImage: /images/2018/2018-01/2018-01-31.jpg
 ---
 
 Be sure to copy all of an object's data members and all of its base class parts.

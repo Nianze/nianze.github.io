@@ -10,7 +10,7 @@ tags:
 - java
 slug: task schedule
 thumbnailImagePosition: right
-thumbnailImage: /images/2016-11-14.jpg
+thumbnailImage: /images/2016/2016-11-14.jpg
 ---
 
 Use greedy algorigthm to solve task scheduleing problem.

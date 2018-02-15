@@ -11,8 +11,8 @@ tags:
 slug: end of semester
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2015-12-12-inuyasha.png
-coverImage: /images/2015-12-12-inuyasha.png
+thumbnailImage: /images/2015/2015-12-12-inuyasha.png
+coverImage: /images/2015/2015-12-12-inuyasha.png
 metaAlignment: center
 ---
 
