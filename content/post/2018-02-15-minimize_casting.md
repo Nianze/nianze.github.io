@@ -1,5 +1,5 @@
 ---
-title: "Minimize_casting"
+title: "Item-27 Minimize_casting"
 date: 2018-02-15T17:43:53-05:00
 categories:
 - article
@@ -7,10 +7,10 @@ categories:
 tags:
 - technique
 - cpp
-slug: postpone variable definitions
+slug: minimize casting
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018/2018-02/gif/0.gif
+thumbnailImage: /images/2018/2018-02/2018-02-15.gif
 ---
 
 Avoid casts and develop a cast-free alternative whenever practical, especially `dynamic_cast` in performance-sensitive code.
@@ -22,15 +22,17 @@ Casts subvert the C++ type system, so it is a feature we want to approach with g
 
 There are three different ways to write the same cast:
 
-1. C-style casts:
+1. C-style casts:    
     ```cpp
     (T) expression // cast expression to be of type T
     ```
-2. Function-style casts  
+
+2. Function-style casts     
     ```cpp
-    T(expression)  // There's no difference in meaning between C-style and function-style casts. Both of them are old-style casts
+    T(expression)  // There's no difference in meaning between C-style and function-style casts. 
+                   // Both of them are old-style casts
     ```
-3. C++-style casts (new-style casts)
+3. C++-style casts (new-style casts)    
     ```cpp
     const_cast<T>(expression)
     dynamic_cast<T>(expression)
@@ -43,8 +45,8 @@ There are three different ways to write the same cast:
     * `reinterpret_cast` in intended for low-level casts that yield implementation-dependent (i.e., unportable) results, e.g., casting a pointer to an `int`. Item 50 shows once its usage.
     * `static_cast` is used to force implicit conversions (e.g., non-`const` object to `const` object (item3), `int` to `double`, etc.) as well as some reverse of such conversions (e.g., `void*` pointers to typed pointers, pointer-to-base to pointer-to-derived), but it cannot cast from `const` to non-`const` objects.
 
-The good points of using new style casts are:  
-1. new styles are much easier to identify in code for both humans and for tools like `grep`, thus simplifying the process of locating the code during debugging.
+The good points of using new style casts are:   
+1. new styles are much easier to identify in code for both humans and for tools like `grep`, thus simplifying the process of locating the code during debugging.  
 2. The more narrowly specified purpose of each cast makes it possible for compilers to diagnose usage errors.
 
 Sometimes an old-style cast may "feel" better: suppose we want to call an `explicit` constructor to pass an object to a function:
@@ -61,7 +63,7 @@ doSomeWork(Widget(15));  // create Widget from in with function-style cast
 doSomeWork(static_cast<Widget>(15)); // cast with C++-style
 ```
 
-Still, feeling is just feeling. Code that leads to a core dump feels pretty reasonable when we write it, so we'd better ognore feelings and use new-style casts all the time.
+However, feeling is just feeling. Code that leads to a core dump also feels pretty reasonable when we write it - we'd better ignore feelings and use new-style casts all the time.
 
 ## Behind cast
 
