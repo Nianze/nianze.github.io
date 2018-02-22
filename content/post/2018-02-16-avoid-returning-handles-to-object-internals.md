@@ -7,7 +7,7 @@ categories:
 tags:
 - technique
 - cpp
-slug: avoid return
+slug: avoid return handles to obejct internals
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-02/2018-02-16.gif
