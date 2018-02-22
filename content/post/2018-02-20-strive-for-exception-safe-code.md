@@ -100,7 +100,7 @@ void PrettyMenu::changeBackground(std::istream& imgSrc)
 {
     Lock ml(&mutex);
     bgImage.reset(new Image(imgSrc)); // replace bgImage's internal pointer with the
-                                     // result of the "new Image" expression
+                                      // result of the "new Image" expression
     ++imageChanges;
 }
 ```
@@ -120,8 +120,8 @@ There actually is a general design strategy for offering the strong guarantee:
 
 >**copy and swap** strategy:   
 Make a copy of the object we want to modify, then make all needed changes to the copy;   
-* If all the changes have been successfully completed, swap the modified object with the original in a non-throwing operation (item 25);   
-* If any of the modifying operations throws an exception, the original object remains unchanged. 
+- If all the changes have been successfully completed, swap the modified object with the original in a non-throwing operation (item 25);   
+- If any of the modifying operations throws an exception, the original object remains unchanged. 
 
 The strategy is usually implemented by putting all the per-object data from the "real" object into a separate implementation object, then giving the real object a pointer to its implementation object (know as the "pimpl idiom", item 31). For `PrettyMenu`, it would look something like this:
 
@@ -158,7 +158,7 @@ We don't have to make the struct `PMImpl` as a class, because the encapsulation 
 
 Even with the help of copy-and-`swap` strategy, there are two possible reasons that downgrade the overall exception safety level from strong to basic: _side effects_ and _efficiency_.
 
-##### Side effects
+##### 1. Side effects
 
 Suppose `someFunc` uses copy-and-`swap` and includes calls to two other functions, `f1` and `f2`:
 
@@ -176,6 +176,18 @@ Apparently, if `f1` or `f2` is less than strongly exception-safe, it will be har
 
 For example, if a side effect of calling `f1` is that a database is modified, and there is, in general, no way to undo a database modification that has already been committed; so after successfully calling `f1`, if `f2` then throws an exception, the state of the program is not the same as it was when calling `someFunc`, even though `f2` didn't change anything.
 
+##### 2. Efficiency 
 
+Copy and `swap` strategy requires making a copy of each object to be modified, which takes time and space we may be unable or unwilling to make available. It's just not practical 100% of the time when we want to offer the strong guarantee.
 
-##### Efficiency 
+When it's not, we'll have to offer the basic guarantee. In practice, we can usually offer the strong guarantee for some functions, but the const in efficiency or complexity will make it untenable for many others. For those functions, the basic guarantee is a perfectly resonable choice, as long as we've made a reasonable effort to offer the strong guarantee whenever it's practical.
+
+## In practice
+
+A software system is either exception-safe or it's not. There's no such thing as a partially exception-safe system. If a system has even a single function that's not exception-safe, the system as a whole is not exception-safe. Unfortunately, much C++ legacy code was written without exception safety in mind, so many system incorporating legacy code today are not exception-safe.
+
+There's no reason to perpetuate this state of affairs. When writing new code or modifying existing code, think carefully about how to make it exception-safe:
+
+1. begin by using objects to manage resources to prevent resource leaks
+2. follow by determining which of the three exception safety guarantees is the strongest we cound practically offer for each function, settling for no guarantee only if calls to legacy code leave us no choice.
+3. Document our decisions, both for clients of our functions and for future maintainers - a function's exception-safety guaranteee is a visible part of its interface, so we should choose it as deliberately as we choose all other aspects of a function's interface.
