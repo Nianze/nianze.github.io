@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>紫羅蘭永恆花園 - 刀心の水|Nzo</title>
+    <title>Item-30 Understand ins and outs of inlining - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="想いを綴る、愛を知るために。
+    <meta name="description" content="Limit most inlining to small, frequently called functions to facilitate debugging and binary upgradability, minimize potential code bloat, and maximize the chances of greater program speed.
 ">
-    <meta property="og:description" content="想いを綴る、愛を知るために。
+    <meta property="og:description" content="Limit most inlining to small, frequently called functions to facilitate debugging and binary upgradability, minimize potential code bloat, and maximize the chances of greater program speed.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="紫羅蘭永恆花園">
-    <meta property="og:url" content="/2018/01/violet-snow/">
+    <meta property="og:title" content="Item-30 Understand ins and outs of inlining">
+    <meta property="og:url" content="/2018/02/ins-and-outs-of-inlining/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="想いを綴る、愛を知るために。
+    <meta name="twitter:description" content="Limit most inlining to small, frequently called functions to facilitate debugging and binary upgradability, minimize potential code bloat, and maximize the chances of greater program speed.
 ">
     
     
@@ -52,10 +52,8 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-01/2018-01-21.jpg">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-02/2018-02-21.gif">
     
-    
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-01/2018-01-21.jpg">
     
     
 
@@ -318,23 +316,25 @@ ga('send', 'pageview');
 </nav>
 
       
-  <div class="post-header-cover
-              text-center
-              "
-       style="background-image:url('/images/2018/2018-01/2018-01-21.jpg')"
-       data-behavior="4">
-    
-      <div class="post-header main-content-wrap text-center">
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      紫羅蘭永恆花園
+      Item-30 Understand ins and outs of inlining
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2018-01-21T23:25:09-05:00">
+    <time itemprop="datePublished" datetime="2018-02-21T22:33:05-05:00">
       
-  一月 21, 2018
+  二月 21, 2018
 
     </time>
   
@@ -343,9 +343,9 @@ ga('send', 'pageview');
   
     <span>发布在</span>
     
-      <a class="category-link" href="http://nianze.ml/categories/music">music</a>, 
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
     
-      <a class="category-link" href="http://nianze.ml/categories/clarinet">clarinet</a>
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
     
   
 
@@ -353,51 +353,174 @@ ga('send', 'pageview');
 </div>
 
 </div>
-    
-  </div>
-
-
-      <div id="main" data-behavior="4"
-        class="hasCover
-               hasCoverMetaIn
-               ">
-        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
-          
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>想いを綴る、愛を知るために。
+              <p>Limit most inlining to small, frequently called functions to facilitate debugging and binary upgradability, minimize potential code bloat, and maximize the chances of greater program speed.
 </p>
 
-<p>感情を持たない一人の少女がいた。</p>
+<h2 id="performance-benifits">Performance benifits</h2>
 
-<p>彼女の名は、ヴァイオレット・エヴァーガーデン。</p>
+<p>Inline functions have some wonderful advantages:</p>
 
-<p>戦火の中で、大切な人から告げられた言葉の意味を探している。</p>
+<ol>
+<li>They act like functions.</li>
+<li>Yet we call them without having to incur the overhead of a function call.</li>
+<li>Compilers might perfom context-specific optimizations (such as stretches of the code) on the body of the inline function thanks to the lack &ldquo;outlined&rdquo; function call</li>
+<li>If an inline function body is <em>very</em> short, the code generated for the function body may be smaller than the code generated for a function call, leading to <em>smaller</em> object code and a higher instruction cache hit rate.</li>
+</ol>
 
-<p>戦争が終わり、彼女が出会った仕事は誰かの想いを言葉にして届けること。</p>
+<p>However, on the other hand, it is also likely to increase the size of our object code. Overzealous inlining can give rise to programs too big for the available space on machines with limited memory. Even with virtual memory, inline-induced code bloat can lead to additional paging, a reduced instruction cache hit rate, and the performance penalties that accompany these things.</p>
 
-<p>――戦争で生き延びた、たった一人の兄弟への手紙<br />
-――都会で働き始めた娘から故郷の両親への手紙<br />
-――飾らないありのままの恋心をつづった手紙<br />
-――去りゆく者から残される者への最期の手紙</p>
+<h2 id="details-on-inline-functions">Details on inline functions</h2>
 
-<p>手紙に込められたいくつもの想いは、ヴァイオレットの心に愛を刻んでいく。</p>
+<p>There are two ways to give such a request: implicitly or explicitly:</p>
 
-<p>これは、感情を持たない一人の少女が愛を知るまでの物語。</p>
+<ol>
+<li><p>Implicitly inline request</p>
 
+<pre><code class="language-cpp">class Person {
+public:
+    ...
+    int age() const { return theAge; } // an implicit inline request
+    ...
+private:
+    int theAge;
+};
+</code></pre>
 
-<div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
-  <iframe src="//www.youtube.com/embed/QLvFbf-3Q8A" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allowfullscreen frameborder="0" title="YouTube Video"></iframe>
- </div>
+<p>Apart from the member functions, we can also define friend functions inside classes (item 46), resulting to implicitly inline declaration.</p></li>
 
+<li><p>Explicitly inline request (and its relationship with template)</p>
+
+<p>We can explicitly daclare an inline function with the <code>inline</code> keyword, such as how the standard <code>max</code> template from <code>&lt;algorithm&gt;</code> is implemeted:</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;   // an explicit inline
+inline const T&amp; std::max(const T&amp; a, const T&amp; b) // request:: std::max is preceded by &quot;inline&quot;
+{ return a &lt; b ? b : a;}
+</code></pre>
+
+<p>It&rsquo;s true that both template and inline functions are typically defined in header files, but this doesn&rsquo;t mean that function templates must be inline. In fact, template instantiation is independent of inlining:</p>
+
+<ul>
+<li>inline functions must typically be in header files, because most build environments do inlining during compilation. In order to replace a function call with the body of the called function, compilers must know waht the function looks like <sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup>.</li>
+<li>templates are typically in header file, because compilers need to know what a template looks like in order to instantiate it when it&rsquo;s used <sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup>.</li>
+</ul>
+
+<p>Thus, when we&rsquo;re writing a template:</p>
+
+<ul>
+<li>if we belive that all the functions instantiated from the template should be inlined, declare the template <code>inline</code> just like what&rsquo;s done with the <code>std::max</code> implamentation above;</li>
+<li>if we have no reason to want inlined after considering its cost and potential code bloat (which is particularly important for template authors - see item 44), avoid declaring the template inline (either explicitly or implicitly)</li>
+</ul></li>
+</ol>
+
+<h3 id="causes-of-un-inlined-inline-function">Causes of un-inlined inline function</h3>
+
+<p>Bear in mind that <code>inline</code> is a <em>request</em> to compilers, rather than a command, so compilers may ignore it. Whether a given inline function is actually inlined depends on the build environment we&rsquo;re using - primarily on the compiler, and most compilers have a diagnostic level that will result in a warning (item 53) if they fail to inline a function we&rsquo;ve asked them to. When they refuse to inline a function, the typical reasons may be:</p>
+
+<ol>
+<li>compilers deem the function too complicated (e.g., those containing loogs or are recursive)</li>
+<li>the function is virtual (<code>virtual</code> means runtime, while <code>inline</code> usually happens before execution)</li>
+<li>when the program will take the address of an inline function:<br /></li>
+</ol>
+
+<pre><code class="language-cpp">inline void f(){...} // assume compilers are willing to inline calls to f
+void (*pf)() = f;    // pf points to f
+...
+f();                 // this call will be inlined, for it's a &quot;normal&quot; call
+pf();                // this call probably won't be, for it's through a function pointer
+</code></pre>
+
+<h4 id="inline-constructors-and-destructors">Inline constructors and destructors?</h4>
+
+<p>Note that even if we never use function pointers, sometimes compilers will generate those pointers: compilers may generate out-of-line copies of constructors and destructors so that they can get pointers to those functions for use during construction and destruction of objects in arrays. Let alone that constructors and destructors are often worse candidates of inlining than a casual examination would indicate:</p>
+
+<pre><code class="language-cpp">class Base {
+public:
+    ...
+private:
+    std::string bm1, bm2;  // base members 1 and 2
+};
+</code></pre>
+
+<pre><code class="language-cpp">class Derived: public Base {
+public:
+    Derived(){}   // Derived's ctor is empty, or is it?
+    ...
+private:
+    std::string dm1, dm2, dm3;  // derived members 1,2,3
+}
+</code></pre>
+
+<p>The constructor of <code>Derived</code> seems empty, so it may seem a good candidate for inlining. But looks can be deceiving:</p>
 
 <blockquote>
-<p>P.S.:<br />
-1. 拍完才发现糊焦了，明明选的对焦点在手办的脸上，实际焦平面却大概在钢琴的C1键位置，宾得的对焦和视频真是无力吐槽，真该灭门上大法。。。不过好在反正也没啥可看的，就这样了吧。<br />
-2. 这次尝试用了Logic Pro来录制音轨和简单后期，耽误了不少时间，不过基本熟悉了现在新的工作流程，之后录制起来应该会比之前用录音笔的方案方便不少。<br />
-3. 这次加入了哨笛收尾，感觉空灵的音色跟单簧管丝绸质感的音质还挺互补的，算是个不错的尝试吧。</p>
+<p>C++ makes various guarantees about object construction and corresponding destruction. To name a few: when we create an object, each base class of and each data member in that object is automatically constructed; if an exception is thrown during construction, any parts of the object that have already been fully constructed are automatically destroyed. Similar but reverse process will occur when an object is destroyed.</p>
 </blockquote>
+
+<p>Therefore, in the example above, extra code will be generated by compilers and added into the empty <code>Derived</code> constructor in order to offer those guarantees, ending up with some code equivalent to the following conceptual implementation (the real one will certainly be more sophisticated):</p>
+
+<pre><code class="language-cpp">Derived::Derived()  // conceptual impl. of &quot;empty&quot; Derived ctor
+{
+    Base::Base();  // init. Base part
+
+    try { dm1.std::string::string(); } // try to construct dm1
+    catch (...) {       // if it throws
+        Base::~Base();  // destroy base class part and
+        throw;          // propagate the exception
+    }
+
+    try { dm2.std::string::string();} // try to construct dm2
+    catch(...) {                      // if it throws
+        dm1.std::string::~string();   // destroy dm1,
+        Base::~Base();                // destroy base class part
+        throw;                        // and propagate the exception
+    }
+
+    try { dm3.std::string::string();}  // try to construct dm3
+    catch(...) {                       // if it throws
+        dm1.std::string::~string();    // destroy dm1,
+        dm1.std::string::~string();    // destroy dm2,
+        Base::~Base();                 // destroy base class part
+        throw;                         // and propagate the exception
+    }
+}
+</code></pre>
+
+<p>The same reasoning applies to the <code>Base</code> constructor, so if <code>Base</code>&rsquo;s constructor is inlined, and <code>string</code> constructor also happens to be inlined, the <code>Derived</code> constructor will gain <em>five</em> copies of <code>string</code>&rsquo;s constructor, one for each of the five strings in a <code>Derived</code> object - that is a big code bloat. Similar considerations apply to <code>Derived</code>&rsquo;s destructor.</p>
+
+<h2 id="other-costs-of-inlining">Other costs of inlining</h2>
+
+<p>Apart from the cost of possible code bloat, there are other impact of declaring functions <code>inline</code>:</p>
+
+<ol>
+<li><strong>on binary upgradability</strong>: for library designers, it&rsquo;s impossible to provide binary upgrades to the client visible inline functions in a library, after clients of the library compile the body of <code>inline</code> function <code>f</code> into their application. Once the imlementation of <code>f</code> changes, all clients who&rsquo;ve used <code>f</code> must recompile.</li>
+<li><strong>on debugging</strong>: most debuggers have trouble with inline functions: after all, it is hard to set a breakpoint in a function that isn&rsquo;t there<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup>.</li>
+</ol>
+
+<h2 id="to-inline-or-not-to-inline">To inline or not to inline?</h2>
+
+<p>In summary, the logical strategy of determining which functions should be declared inline and which should not:</p>
+
+<ul>
+<li>initially don&rsquo;t inline anything</li>
+<li>detect those functions that must be inline (item 46) or are truly trivial (such as <code>Person::age</code> in this item), inline them cautiously as a hand-applied optimization</li>
+<li>as the empirically determined rule of 80-20 suggests: identify the 20% of your code that can increase your program&rsquo;s overall performance, and try to tweak those critical functions with <code>inline</code> or other techniques</li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">There are exceptions: some build environments can inline during linking, and a few can actually inline at runtime (e.g., managed environments based on the .NET Common Language Infrastructure - <code>CLI</code>). Of course, such exceptions are not the rule, and inlining in most C++ programs is a compile-time activity.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2">Again, some build environments perform template instantiation during linking. However, compile-time instantiation is more common.
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3">Some build environments manage to support debugging of inlined functions, but many environments simply disable inlining for debug builds.
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+</ol>
+</div>
               
             </div>
           </div>
@@ -409,11 +532,9 @@ ga('send', 'pageview');
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/music/">music</a>
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
 
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/clarinet/">clarinet</a>
-
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/tin-whistle/">tin whistle</a>
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
 
                   </div>
                 
@@ -425,7 +546,7 @@ ga('send', 'pageview');
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -433,7 +554,7 @@ ga('send', 'pageview');
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/use-const-whenever-possible/" data-tooltip="Item-3 Use const whenever possible">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/strive-for-exception-safe-code/" data-tooltip="Item-29 Strive for exception-safe code">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -447,7 +568,7 @@ ga('send', 'pageview');
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/01/violet-snow/"
+          data-href="http://nianze.ml/2018/02/ins-and-outs-of-inlining/"
           data-layout="button_count">
         </div>
       </li>
@@ -458,12 +579,12 @@ ga('send', 'pageview');
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fviolet-snow%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fins-and-outs-of-inlining%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fviolet-snow%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fins-and-outs-of-inlining%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -496,8 +617,8 @@ ga('send', 'pageview');
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2018/01/violet-snow/";  
-this.page.identifier = "紫羅蘭永恆花園"; 
+this.page.url = "http://nianze.ml/2018/02/ins-and-outs-of-inlining/";  
+this.page.identifier = "Item-30 Understand ins and outs of inlining"; 
 };
 
 (function() { 
@@ -527,7 +648,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -535,7 +656,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/use-const-whenever-possible/" data-tooltip="Item-3 Use const whenever possible">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/strive-for-exception-safe-code/" data-tooltip="Item-29 Strive for exception-safe code">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -549,7 +670,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/01/violet-snow/"
+          data-href="http://nianze.ml/2018/02/ins-and-outs-of-inlining/"
           data-layout="button_count">
         </div>
       </li>
@@ -560,12 +681,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fviolet-snow%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fins-and-outs-of-inlining%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fviolet-snow%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fins-and-outs-of-inlining%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -593,17 +714,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fviolet-snow%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fins-and-outs-of-inlining%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f01%2fviolet-snow%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f02%2fins-and-outs-of-inlining%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fviolet-snow%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fins-and-outs-of-inlining%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -892,9 +1013,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2018\/01\/violet-snow\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/02\/ins-and-outs-of-inlining\/';
           
-            this.page.identifier = '\/2018\/01\/violet-snow\/'
+            this.page.identifier = '\/2018\/02\/ins-and-outs-of-inlining\/'
           
         };
         (function() {
