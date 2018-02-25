@@ -1,6 +1,6 @@
 ---
 title: "Item-30 Understand ins and outs of inlining"
-date: 2018-02-21T22:33:05-05:00
+date: 2018-02-21
 categories:
 - article
 - coding
