@@ -11,6 +11,7 @@ slug: avoid hiding inherited names
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-02/2018-02-26.gif
+draft: true
 ---
 
 <!--more-->
