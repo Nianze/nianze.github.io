@@ -29,15 +29,18 @@
     
 
     
-    <meta name="description" content="">
-    <meta property="og:description" content="">
+    <meta name="description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.
+">
+    <meta property="og:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.
+">
     <meta property="og:type" content="blog">
     <meta property="og:title" content="Item-32 Make sure public inheritance models &#34;Is-A&#34;">
     <meta property="og:url" content="/2018/02/make-sure-public-inheritance-models-is-a/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="">
+    <meta name="twitter:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.
+">
     
     
 
@@ -353,7 +356,76 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p></p>
+              <p>Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object <em>is</em> a base class object.
+</p>
+
+<p>There are multiple relationships that can exist between classes:</p>
+
+<ul>
+<li>&ldquo;is-a&rdquo; is talked about in this item.</li>
+<li>&ldquo;has-a&rdquo; is discussed about in item 38.</li>
+<li>&ldquo;is-implemented-in-terms-of&rdquo; is introduced in item 39.</li>
+</ul>
+
+<p>We should understand the differencea among these relationships.</p>
+
+<p>For &ldquo;is-a&rdquo;, we should understand it in this way: if the class D (&ldquo;derived&rdquo;) <strong>publicly</strong> inherits from class B (&ldquo;base), C++ compilers will assume that every object of type D is also an object of type B, but not <em>vice versa</em>. That is, every D is-a B, but not vice versa <sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup>.</p>
+
+<p>The concept of is-a sounds simple, but sometimes our intuition may mislead us. Say we want to create class <code>Square</code> and class <code>Rectangle</code>. I hear you say:</p>
+
+<blockquote>
+<p>Everybody knows that a square is a rectangle, but generally not vice versa</p>
+</blockquote>
+
+<p>Then consider this code:</p>
+
+<pre><code class="language-cpp">class Rectangle {
+public:
+    virtual void setHeight(int newHeight);
+    virtual void setWidth(int newWidth);
+
+    virtual int height() const;  // return current values
+    virtual int width() const;
+    ...
+};
+
+void makeBigger(Rectangle&amp; r)  // function to increase r's area
+{
+    int oldHeight = r.height();
+    r.setWidth(r.width() + 10);  // add 10 to r's width
+    assert(r.height() == oldHeight);  // assert that r's height is unchanged
+}
+</code></pre>
+
+<pre><code class="language-cpp">class Square: public Rectangle {...};
+
+Square s;
+...
+assert(s.width() == s.height());  // must be true for all squares
+makeBigger(s);  // by inheritance, s is-a Rectangle, so we can increase its area
+assert(s.width() == s.height());  // must be true for all squares
+</code></pre>
+
+<p>Now we face a big problem: how can we reconcile the following assertion:</p>
+
+<ul>
+<li>before calling <code>makeBigger</code>, <code>s</code>&rsquo;s height is the same as its width;</li>
+<li>inside <code>makeBigger</code>, <code>s</code>&rsquo;s width is changed, but its height is not;</li>
+<li>after returning from <code>makeBigger</code>, <code>s</code>&rsquo;s height is again the same as its width</li>
+</ul>
+
+<p>Here, the instincts we&rsquo;ve develped in mathematics does not serve well. In this case, something applies to a rectangle is not applicable to a square, but public inheritance asserts that <strong>everthing</strong> that applies to base class object also applies to derived class objects. Thus using public inheritance to model the relationship between <code>Rectangle</code> and <code>Square</code> is incorrect.</p>
+
+<p>With the knowledge of inheritance added into our arsenal of design, we&rsquo;ll have to augment our intuition with new insights to guide us in inheritance&rsquo;s proper application.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">This is true only for <em>public</em> inheritance. Private inheritance means somethign entirely different (item 39), and protected inheritance is something beyond understanding.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
               
             </div>
           </div>
@@ -629,7 +701,8 @@ s.setAttribute('data-timestamp', +new Date());
                   Feb 2, 2018
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object <em>is</em> a base class object.
+</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
