@@ -131,6 +131,28 @@ However, under private inherits (item 39), it can make sense to inherit only par
 
 ### Forwarding function
 
+```cpp
+class Base{...}; // the same
+
+class Derived: public Base {
+public:
+    virtual void mf1()  // forwarding function; implicitly inline, see item 30
+    { Base::mf1(); } 
+    ...
+};
+```
+
+```cpp
+Derived d;
+int x;
+
+d.mf1();  // fine, calls Derived::mf1
+d.mf1(x); // error! Base::mf1() is hidden
+```
+
+For ancient compilers that don't support `using` declarations, we also have to use forwarding function technique to import inherited names into the scope of derived classes.
+
+When inheritance is combined with templates, an entirely different form of the "inherited names are hidden" issue arises. See item 43 for all the angle-bracket-demarcated details.
 
 
 [^1]: In fact, in public inheritance, if we don't inherit the overloads, we're violating the is-a relationship between base and derived classes, which, as explained in item 32, is fundamental to public inheritance.
