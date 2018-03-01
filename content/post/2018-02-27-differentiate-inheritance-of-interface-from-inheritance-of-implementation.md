@@ -7,11 +7,10 @@ categories:
 tags:
 - technique
 - cpp
-slug: avoid hiding inherited names
+slug: differentiate inheritance of interface from inheritance of implementation
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-02/2018-02-27.gif
-draft: true
 ---
 
 Inheritance of interface is different from inheritance of implementatino.
@@ -48,7 +47,7 @@ For pure virtual functions, there are two features we have to note:
 
 From these feature, we can conclude that:
 
-**The purpose of declaring a pure virtual function is to have derived classes inherit a function _interface only_.**
+>**The purpose of declaring a pure virtual function is to have derived classes inherit a function _interface only_.**
 
 Here, the declaration of `Shape::draw` says to the client of the `Shape` that, "you have to provide a `draw` function, but I don't know how you're going to implement it."
 
@@ -67,7 +66,7 @@ This feature is generally of limited utility, except that it can be employed as 
 
 Simple virtual functions provide an implementation that derived classes may override, which means that
 
-**The purpose of declaring a simple virtual function is to have derived classes inherit a function _interface as well as default implementation_.**
+>**The purpose of declaring a simple virtual function is to have derived classes inherit a function _interface as well as default implementation_.**
 
 For example, the declaration of `error` function tells us that "You have to supoort an `error` function, but if you don't want to write your own, you can fall back on the default version in the `Shape` class."
 
@@ -178,13 +177,17 @@ In essence, this design breaks `fly` into two fundamental components:
 * `fly`'s declaration specifies its interface, which derived classes _must use_
 * `fly`'s definition specifies its default behavior, which derived classes _may use_ by explicitly request it
 
-However, in merging `fly` and `defaultFly`, we've lost the ability to give the two functions different protection levels: previously `protected` code in `defaultFly` is now `public` in `fly`.
+However, in merging `fly` and `defaultFly`, we have lost the ability to give the two functions different protection levels: previously `protected` code in `defaultFly` is now `public` in `fly`.
 
 ## Non-virtual function
 
 A non-virtual member function specifies an _invariant over specialization_ (a point discussed in item 36), identifying behavior that is not supposed to change, no matter how specialized a derived class becomes. Thus:
 
-**The purpose of declaring a non-virtual function is to have derived classes inherit a function _interface as well as_ a mandatory implementation.**
+>**The purpose of declaring a non-virtual function is to have derived classes inherit a function _interface as well as_ a mandatory implementation.**
 
 The declaration for `Shape::objectId` is basically say, "Every `Shape` object has a function that yields an object identifier, and that identifier is always conputed the same way. That way is determined by the definition of `Shape::objectID`, and no derived class should try to chagne how it's done."
 
+
+## Summary
+
+The differences in declarations for pure virtual, simple virtual and non-virtual functions allow us to specify with precision what we want derived classes to inherit: interface only, interface and a default implementation, or interface and a mandatory implementation, respectively.
