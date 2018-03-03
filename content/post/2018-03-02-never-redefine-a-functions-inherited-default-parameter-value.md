@@ -1,5 +1,5 @@
 ---
-title: "2018 03 02 Never Redefine an Inherited Non Virtual Function"
+title: "Item-37 Never redefine a function's inherited default parameter value"
 date: 2018-03-02T21:15:36-05:00
 categories:
 - category
