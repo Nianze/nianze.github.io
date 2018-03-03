@@ -2,13 +2,16 @@
 title: "Item-37 Never redefine a function's inherited default parameter value"
 date: 2018-03-02T21:15:36-05:00
 categories:
-- category
-- subcategory
+- article
+- coding
 tags:
-- tag1
-- tag2
-slug: new-post-name
-#thumbnailImage: //example.com/image.jpg
+- technique
+- cpp
+slug: Never redefine a functions inherited default parameter value
+autoThumbnailImage: false
+thumbnailImagePosition: right
+thumbnailImage: /images/2018/2018-03/2018-03-02.gif
+draft: true
 ---
 
 <!--more-->

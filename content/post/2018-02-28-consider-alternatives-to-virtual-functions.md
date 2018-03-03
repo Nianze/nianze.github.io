@@ -11,10 +11,9 @@ slug: consider alternatives to virtual functions
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-02/2018-02-28.gif
-draft: true
 ---
 
-Alternatives to virtual functions include the NVI idiom and various forms of the Strategy design pattern. The NVI idiom is itself an example of the Template Method design pattern.
+Alternatives to virtual functions include the NVI idiom (as an example of the Template Method design pattern) and various forms of the Strategy design pattern.
 <!--more-->
 
 Suppose we want to implement a member function named `healthValue`, which will calculate the health value for different characters in differen ways in a video game. Declaring `healthValue` virtual seems the obvious way to design things:
@@ -22,9 +21,10 @@ Suppose we want to implement a member function named `healthValue`, which will c
 ```cpp
 class GameCharacter {
 public:
-    virtual int healthValue() const;  // return character's health value rating; derived classes may redefine this
-    ...                               // impure virtual suggests there's a default impl. (item 34)
-                                    
+    // return character's health value rating; derived classes may redefine this
+    // impure virtual suggests there's a default impl. (item 34)
+    virtual int healthValue() const;  
+    ...                               
 };
 ```
 
@@ -35,7 +35,6 @@ Actually, except from this obvious design, there exists some alternatives. To na
     * Replace virtual function with **function pointer data members** - a stripped-down manifestation of Strategy design pattern
     * Replace virtual function with **tr1::function data members**, which allows use of any callable entity with a signature compatible with what we need - a more general form of the stripped-down representation of Strategy design pattern
     * Replace virtual functions in one hierarchy with **virtual functions in another hierarchy** - the conventional implementation of the Strategy design pattern
-* ...
 
 Let's take a look at the pros and cons of these alternatives.
 
@@ -72,7 +71,7 @@ The advantage of the NVI idiom is in the ""do 'before' stuff" and  "do 'after' s
 
 The NVI idiom is still using virtual functions to calculate a character's health. A more dramatic design assertion, such as the strategy pattern, says that calculating a character's health is independent of the character's type - the calculation need not to be part of the character.
 
-It is worth noting that, since the calculation is not inside the `GameCharacter` hierarchy, it has no special access to the internal parts of the object whose health it's calculating, so this design pattern works only if a character's health can be calculated based purely on information available through the character's public interface. Thus it may require that the class's encapsulation has to be weakened (e.g., make the non-member functions to be `friend`, or offer public accessor functions for class implementation that is previously hidden).
+It is worth noting that, due to its being outside the `GameCharacter` hierarchy, the calculation has no special access to the internal parts of the object whose health it's calculating, so this design pattern works only if a character's health can be calculated based purely on information available through the character's public interface. Thus it may require the class's encapsulation to be weakened (e.g., make the non-member functions to be `friend`, or offer public accessor functions for class implementation that is previously hidden).
 
 ### The strategy pattern via function pointers
 
@@ -132,13 +131,79 @@ private:
 };
 ```
 
-The advantage of this approach is that clients may have more flexibility in specifying health calculation functions:
+The advantage of this approach is that clients may have more flexibility in specifying health calculation functions with various compatible callable entities:
 
+```cpp
+short calcHealth(const GameCharacter&); // function; non-int return type
+struct HealthCalculator { // class for health calculation function objects
+    ...
+};
+class GameLevel {
+public:
+    float health(const GameCharacter&) const; // member function; non-int return type
+    ...
+};
+```
 
+To use these callable entities:
+
+```cpp
+class EvilBadGuy: public GameCharacter {
+public:
+    explicit EvilBadGuy(HealthCalcFunc hcf = defaultHealthCalc)
+    : GameCharacter(hcf)
+    {...}
+    ...
+};
+
+class EyeCandyCharacter: public GameCharacter {
+    ...  // similar constructor as EvilBadGuy
+};
+
+EvilBadGuy ebg1(calcHealth);  // character using a health calculation function
+EyeCandyCharacter ecc1(HealthCalculator()); // character using a health calculation function object
+GameLevel currentLevel;
+...
+EvilBadGuy ebg2(  // character using a health calculation member function
+    std::tr1::bind(&GameLevel::health,
+                    currentLevel,
+                    _1)
+);
+
+```
+
+Here, the purpose of calling `tr1::bind` is that:
+
+* it adapts the `GameLevel::health` member function (which takes two parameters: an implicit `GameLevel` parameter that `this` points to, as well as another reference to a `GameCharacter` parameter) into the expected function signature (which should only take a single paramter: the `GameCharacter`) 
+* by passing `_1`, it specifies that when calling `GameLevel::health` for `ebg2`, always use `currentLevel` as the first parameter of `GameLevel` object
 
 ### The "Classic" strategy pattern
 
+The conventional approach to Strategy design pattern would be to make the health-calculation function a virtual member function of a separate health-calculation hierarchy with root being `HealthCalcFunc`, so that different health calculation algorithm could be implemented in the derived classes in this inheritance hierarchy. Each object of type `GameCharacter` just contains a pointer to an object from the `HealthCalcFunc` hierarchy:
 
+```cpp
+class GameCharacter;  // forward declaration
+
+class HealthCalcFunc {
+public:
+    ...
+    virtual int calc(const GameCharacter&) const
+    {...}
+    ...  
+};
+
+HealthCalcFunc defaultHealthCalc;
+
+class GameCharacter {
+public:
+    explicit GameCharacter(HealthCalcFunc *phcf = &defaultHealthCalc)
+    : pHealthCalc(phcf)
+    {}
+    ...
+private:  
+    HealthCalcFunc *pHealthCalc;
+};
+```
 
 [^1]: Template Method design pattern has nothing to do with C++ template.
 [^2]: Here, the "target signature" is "function taking a reference to a `const GameCharacter` and returning an `int`", so any callable entity whose parameter can be implicitly converted to a `const GameCharacter&` and whose return type can be implicitly converted to an `int` is compatible with an object of the declared `tr1::function` type.
