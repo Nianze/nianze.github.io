@@ -50,7 +50,7 @@ The reason why the code above doesn't compile is that, without `typename`, it is
 
 ```cpp
 template<typename C>
-void print2nd(const C* container)
+void print2nd(const C& container)
 {
     C::const_iterator * x;
     ...
@@ -98,9 +98,9 @@ void f(const C& container,            // typename not allowed: C is not a nested
        typename C::iterator iter);    // typename required: iter is a nested dependent type name
 ```
 
-As a summary the general rule is: anytime we refer to a nested dependent type name in a template, we must immediately precede it by the word `typename`, except for the following two cases:
+In summary, the general rule is: anytime we refer to a nested dependent type name in a template, we must immediately precede it by the word `typename`, except for the following two cases:
 
-### Exceptions
+### Exception
 
 There are two exception cases where `typename` must not precede nested dependent type names:
 
