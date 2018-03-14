@@ -41,4 +41,5 @@ Rational<int> oneHalf(1, 2);
 Rational<int> result = oneHalf * 2;  // error! won't compile
 ```
 
-The problem here is that implicit type conversion functions are _never_ considered during template argument deduction. Let's view this problem in the perspective of compilers: for some function named `operator*` taking two parameters of type `Rational<T>`, compilers found a type of `Rational<int>`   thus C++ compilers can't figure out what T is, thus unable to do the instantiation . before we can call a function, we have to know which functions exist. In order to know that, we have to deduce parameter types for the relevant function templates so that we can instantiate the appropriate functions
+The problem here is that **implicit type conversion functions are _never_ considered during template argument deduction**. This means it is impossible for the compilers to convert the second parameter `2` into a `Rational<int>` using non-explicit constructor, so compilers can't figure out what `T` is for this function template named `operator*` taking two parameters of type `Rational<T>`, can't deduce parameter types for this function templates, and thus can't instantiate the appropriate functions. In the end, the function we want to call fails to be generated before we could apply implicit type conversions during a later function call.
+
