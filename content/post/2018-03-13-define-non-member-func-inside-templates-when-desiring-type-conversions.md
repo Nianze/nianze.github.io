@@ -41,11 +41,11 @@ Rational<int> oneHalf(1, 2);
 Rational<int> result = oneHalf * 2;  // error! won't compile
 ```
 
-The problem here is that **implicit type conversion functions are _never_ considered during template argument deduction**. This means it is impossible for the compilers to convert the second parameter `2` into a `Rational<int>` using non-explicit constructor, so compilers can't figure out what `T` is for this function template named `operator*` taking two parameters of type `Rational<T>`, can't deduce parameter types for this function templates, and thus can't instantiate the appropriate functions. In the end, the function we want to call fails to be declared in the first place, before we could apply implicit type conversions during a later function call.
+The problem here is that **implicit type conversion functions are _never_ considered during template argument deduction**. This means it is impossible for the compilers to convert the second parameter `2` into a `Rational<int>` using non-explicit constructor, so compilers can't figure out what `T` is for this function template named `operator*` taking two parameters of type `Rational<T>`, can't deduce parameter types for this function templates, and thus can't instantiate the appropriate functions. In the end, the function we want to call fails to be declared, before we could apply implicit type conversions during a later function call.
 
 ### Solve the compiling issue
 
-How to declare the `operator*` properly? Notice that class templates don't depend on template argument deduction (this process only applies to function templates), so `T` is always known at the time the class `Rational<T>` is instantiated. Combine this knowledge with another fact that a `friend` declaration in a template class refers to a specific _function_ (not a function _template_), so as part of the class instantiation process, the friend function will be automatically declared. Taking advantage of this point, we could update the code to a new version[^1]:
+How to declare the `operator*` properly? Notice that class templates don't depend on template argument deduction (this process only applies to function templates), so `T` is always known at the time the class `Rational<T>` is instantiated. Combine this knowledge with another fact that a `friend` declaration in a template class refers to a specific _function_ (not a function _template_), so as part of the class instantiation process, the friend function will be automatically declared. Taking advantage of these 2 points, we could update the code to a new version[^1]:
 
 ```cpp
 template<typename T>
@@ -92,13 +92,13 @@ public:
 
 This works as intended: mixed-mode calls to `operator*` now compiles, link, and run.
 
-This design is, in some sense, kind of unconventional, because the use of friendship has nothing to da with a need to access non-public parts of the class. We declared it as `friend` because it is the only choise we have:
+This design is, in some sense, kind of unconventional, because the use of friendship has nothing to do with a need to access non-public parts of the class. We declared it as `friend` because it is the only choise we have:
 
 * to make type conversions possible on all arguments, we need a non-member function (item 24)
 * to have the proper function automatically instantiated, we need to declare the function inside the class
 * the only way to declare a non-member function inside a class is to make it a friend
 
-### More general design: have the friend call a helper
+### Have the friend call a helper
 
 Such functions as `operator*` defined inside a class are implicitly declared `inline` (item 30), so we may minimize the impact of such `inline` declarations by having `operator*` do nothing but call a helper function defined outside of the class, especially when the function body is complex.
 
@@ -128,7 +128,7 @@ const Rational<T> doMultiply(const Rational<T>& lhs,
                              const Rational<T>& rhs)
 {
     return Rational<T>(lhs.numerator() * rhs.numerator(),
-                    lhs.denominator() * rhs.denominator());
+                       lhs.denominator() * rhs.denominator());
 }
 ```
 
