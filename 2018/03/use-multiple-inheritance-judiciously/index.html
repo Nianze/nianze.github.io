@@ -19,7 +19,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Hugo 0.31.1">
+    <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
     <title>Item-40 Use multiple inheritance judiciously - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
@@ -449,7 +449,7 @@ InputFile       OutputFile
 
 <ul>
 <li>Use non-virtual by default, and don&rsquo;t use virtual bases unless we need to</li>
-<li>If we must use a virtual base classes, avoid putting data in them<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup></li>
+<li>If we must use a virtual base classes, avoid putting data in them<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></li>
 </ul>
 
 <h2 id="example-of-legitimate-mi-usecase">Example of legitimate MI usecase</h2>
@@ -513,7 +513,7 @@ const char * PersonInfo::theName() const
 
 <p>This design of <code>PersonInfo::theName</code> is antiquated indeed: it use a fix-size static buffer, which is rife for both overrun and threading problems (item 21). Let&rsquo;s set such imperfection aside, and focus on <code>theName</code>, which calls virtual function <code>valueDelimOpen</code> and <code>valueDelimClose</code>, so the result returnd by <code>theName</code> is dependent not only on <code>PersonInfo</code> but also on the classes derived from <code>PersonInfo</code>.</p>
 
-<p>Apparently, the relationship between <code>CPerson</code> and <code>PersonInfo</code> is <code>is-implemented-in-terms-of</code> (we just want to re-use some of the code. That&rsquo;s all). Also, suppose that we want our target class <code>CPerson</code> to return unadorned values (return &ldquo;Name&rdquo; instead of &ldquo;[Name]&ldquo;), which requires redefining of the virtual functions in <code>PersonInfo</code>. Thus between the composition (item 38) and private inheritance (item 39) we prefer private inheritance, because simple composition will not let us redefine the virtual functions in <code>PersonInfo</code><sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup>.</p>
+<p>Apparently, the relationship between <code>CPerson</code> and <code>PersonInfo</code> is <code>is-implemented-in-terms-of</code> (we just want to re-use some of the code. That&rsquo;s all). Also, suppose that we want our target class <code>CPerson</code> to return unadorned values (return &ldquo;Name&rdquo; instead of &ldquo;[Name]&ldquo;), which requires redefining of the virtual functions in <code>PersonInfo</code>. Thus between the composition (item 38) and private inheritance (item 39) we prefer private inheritance, because simple composition will not let us redefine the virtual functions in <code>PersonInfo</code><sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
 
 <p>Thus, we could make following reasonable multiple inheritance:</p>
 
@@ -824,6 +824,42 @@ s.setAttribute('data-timestamp', +new Date());
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/03/define-non-member-function-inside-templates-when-type-conversions-are-desired/">
+                <h3 class="media-heading">Item-46 Define non-member function inside templates when type conversions are desired</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>When writing a class template that offers functions related to the template that support implicit type conversions on all parameters, define those functions as friends inside the class template.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/03/use-member-function-templates-to-accept-all-compatible-types/">
+                <h3 class="media-heading">Item-45 Use member function templates to accept all compatible types</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>In order to implicitly convert all compatible types for a template class, we neet not a constructor <em>function</em> but a constructor <em>template</em> - <em>member functoin templates</em> that generate member functions of a class.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.ml/2018/03/factor-parameter-independent-code-out-of-templates/">
                 <h3 class="media-heading">Item-44 Factor parameter-independent code out of templates</h3>
               </a>
@@ -965,42 +1001,6 @@ s.setAttribute('data-timestamp', +new Date());
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/03/never-redefine-an-inherited-non-virtaul-function/">
-                <h3 class="media-heading">Item-36 Never redefine an inherited non-virtaul function</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Mar 3, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>A generalized basic rule from item 7.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/02/consider-alternatives-to-virtual-functions/">
-                <h3 class="media-heading">Item-35 Consider Alternatives to Virtual Functions</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Feb 2, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Alternatives to virtual functions include the NVI idiom (as an example of the Template Method design pattern) and various forms of the Strategy design pattern.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1008,7 +1008,7 @@ s.setAttribute('data-timestamp', +new Date());
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         73 posts found
+         75 posts found
       </p>
     </div>
   </div>

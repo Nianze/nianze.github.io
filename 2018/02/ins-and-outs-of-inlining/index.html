@@ -19,7 +19,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Hugo 0.31.1">
+    <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
     <title>Item-30 Understand ins and outs of inlining - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
@@ -403,8 +403,8 @@ inline const T&amp; std::max(const T&amp; a, const T&amp; b) // request:: std::m
 <p>It&rsquo;s true that both template and inline functions are typically defined in header files, but this doesn&rsquo;t mean that function templates must be inline. In fact, template instantiation is independent of inlining:</p>
 
 <ul>
-<li>inline functions must typically be in header files, because most build environments do inlining during compilation. In order to replace a function call with the body of the called function, compilers must know waht the function looks like <sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup>.</li>
-<li>templates are typically in header file, because compilers need to know what a template looks like in order to instantiate it when it&rsquo;s used <sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup>.</li>
+<li>inline functions must typically be in header files, because most build environments do inlining during compilation. In order to replace a function call with the body of the called function, compilers must know waht the function looks like <sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.</li>
+<li>templates are typically in header file, because compilers need to know what a template looks like in order to instantiate it when it&rsquo;s used <sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</li>
 </ul>
 
 <p>Thus, when we&rsquo;re writing a template:</p>
@@ -496,7 +496,7 @@ private:
 
 <ol>
 <li><strong>on binary upgradability</strong>: for library designers, it&rsquo;s impossible to provide binary upgrades to the client visible inline functions in a library, after clients of the library compile the body of <code>inline</code> function <code>f</code> into their application. Once the imlementation of <code>f</code> changes, all clients who&rsquo;ve used <code>f</code> must recompile.</li>
-<li><strong>on debugging</strong>: most debuggers have trouble with inline functions: after all, it is hard to set a breakpoint in a function that isn&rsquo;t there<sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup>.</li>
+<li><strong>on debugging</strong>: most debuggers have trouble with inline functions: after all, it is hard to set a breakpoint in a function that isn&rsquo;t there<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>.</li>
 </ol>
 
 <h2 id="to-inline-or-not-to-inline">To inline or not to inline?</h2>
@@ -788,6 +788,42 @@ s.setAttribute('data-timestamp', +new Date());
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/03/define-non-member-function-inside-templates-when-type-conversions-are-desired/">
+                <h3 class="media-heading">Item-46 Define non-member function inside templates when type conversions are desired</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>When writing a class template that offers functions related to the template that support implicit type conversions on all parameters, define those functions as friends inside the class template.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/03/use-member-function-templates-to-accept-all-compatible-types/">
+                <h3 class="media-heading">Item-45 Use member function templates to accept all compatible types</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>In order to implicitly convert all compatible types for a template class, we neet not a constructor <em>function</em> but a constructor <em>template</em> - <em>member functoin templates</em> that generate member functions of a class.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.ml/2018/03/factor-parameter-independent-code-out-of-templates/">
                 <h3 class="media-heading">Item-44 Factor parameter-independent code out of templates</h3>
               </a>
@@ -929,42 +965,6 @@ s.setAttribute('data-timestamp', +new Date());
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/03/never-redefine-an-inherited-non-virtaul-function/">
-                <h3 class="media-heading">Item-36 Never redefine an inherited non-virtaul function</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Mar 3, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>A generalized basic rule from item 7.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/02/consider-alternatives-to-virtual-functions/">
-                <h3 class="media-heading">Item-35 Consider Alternatives to Virtual Functions</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Feb 2, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Alternatives to virtual functions include the NVI idiom (as an example of the Template Method design pattern) and various forms of the Strategy design pattern.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -972,7 +972,7 @@ s.setAttribute('data-timestamp', +new Date());
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         73 posts found
+         75 posts found
       </p>
     </div>
   </div>
