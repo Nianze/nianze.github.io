@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Item-21 Don&#39;t return a reference when we have to return an object - 刀心の水|Nzo</title>
+    <title>Item-47 Use traits classes for information about types - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a &ldquo;counter&rdquo; example that is reasonable in single-threaded environments).
+    <meta name="description" content="Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time if...else tests on types.
 ">
-    <meta property="og:description" content="Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a &ldquo;counter&rdquo; example that is reasonable in single-threaded environments).
+    <meta property="og:description" content="Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time if...else tests on types.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Item-21 Don&#39;t return a reference when we have to return an object">
-    <meta property="og:url" content="/2018/02/do-not-return-a-ref-when-must-return-an-object/">
+    <meta property="og:title" content="Item-47 Use traits classes for information about types">
+    <meta property="og:url" content="/2018/03/use-traits-classes-for-information-about-types/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a &ldquo;counter&rdquo; example that is reasonable in single-threaded environments).
+    <meta name="twitter:description" content="Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time if...else tests on types.
 ">
     
     
@@ -52,7 +52,7 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-02/2018-02-09.jpg">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-03/2018-03-14.gif">
     
     
     
@@ -327,14 +327,14 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-21 Don&#39;t return a reference when we have to return an object
+      Item-47 Use traits classes for information about types
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2018-02-09T18:02:23-05:00">
+    <time itemprop="datePublished" datetime="2018-03-14T18:49:03-04:00">
       
-  二月 9, 2018
+  三月 14, 2018
 
     </time>
   
@@ -356,129 +356,190 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a &ldquo;counter&rdquo; example that is reasonable in single-threaded environments).
+              <p>Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time <code>if...else</code> tests on types.
 </p>
 
-<p>There are some situations where we <strong>must</strong> return an object, no matter how much effort we want to put into rooting out the evil of pass-by-value to pursue the heighest efficiency. Otherwise, we may invariably make a fatal mistake: pass references to objects that don&rsquo;t exist.</p>
+<p>In this item, let&rsquo;s look at how STL supports the utility template <code>advance</code>, which moves a specified iterator a specified distance:</p>
 
-<p>Consider following class for representing rational numbers with a multiplying function:</p>
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;  
+void advance(IterT&amp; iter, DistT d); // move iter d units forward; if d &lt; 0, move iter backward
+</code></pre>
 
-<pre><code class="language-cpp">class Rational {
-public:
-    Rational(int numerator = 0,     // see item 24 for why this
-            int denominator = 1);   // ctor isn't declared explicit
-...
-private:
-    int n,d; // numerator and denominator
-friend:
-    const Rational  // see item 3 for why the return type is const
-    operator**(const Rational&amp; lhs,
-               const Rational&amp; rhs);
+<p>Before we step into the field of <code>advance</code> implementation, we should be familiar about STL iterator categoryies, because different iterators support different operations.</p>
+
+<h2 id="five-iterator-categories">Five iterator categories</h2>
+
+<p>According to the operations they support, there are five categories of iterators<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
+
+<ul>
+<li><strong><em>Input iterators</em></strong> can move only one step forward at a time, can only read, and can read what they&rsquo;re pointing to only once (e.g., <code>istream_iterator</code>)</li>
+<li><strong><em>Output iterators</em></strong> can move only one step forwrad at a time, can only write, and can write what they&rsquo;re pointing to only once (e.g., <code>ostream_iterator</code>)</li>
+<li><strong><em>Forward iterators</em></strong> can do whatever input and output iterators can do, and they can read or write what they point to momre than once (e.g., singly linked list or iterators into TR1&rsquo;s hashed containers (item 54) may be in the forward category)</li>
+<li><strong><em>Bidirectional iterators</em></strong> add to forward iterators the ability to move backward as well as forward (e.g., iterators for <code>list</code>, <code>set</code>, <code>multiset</code>, <code>map</code>, <code>multimap</code> in STL)</li>
+<li><strong><em>Random access iterators</em></strong> are the most powerful ones: they add to bidirectional iterators the ability to perform &ldquo;iterator arithmetic&rdquo; - to jump forward or backward an arbitrary distance in constant time, which is similar to pointer arithmetic (e.g., iterators for <code>vector</code>, <code>deque</code>, <code>string</code>)</li>
+</ul>
+
+<p>For each of the five iterator categories, C++ has a &ldquo;tag struct&rdquo; in the standard library that serves to identify it:</p>
+
+<pre><code class="language-cpp">struct input_iterator_tag {};
+struct output_iterator_tag {};
+struct forward_iterator_tag: public input_iterator_tag {};
+struct bidirectional_iterator_tag: public forward_iterator_tag {};
+struct random_access_iterator_tag: public bidirectional_iterator_tag {};
+</code></pre>
+
+<h2 id="pseudocode-for-advance">Pseudocode for <code>advance</code></h2>
+
+<p>Knowing that different categories support different operations, <code>advance</code> will essentially be implemented like this:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
+{
+    if (iter is a random access iterator) {
+        iter += d; // use iterator arithmetic for random access iters
+    }
+    else {
+        if (d &gt;= 0) { while (d--) ++iter; } // use iterative calls 
+        else { while (d++) --iter; }        // to ++ or -- for other iterator categories
+    }
+}
+</code></pre>
+
+<p>How to determine whether <code>iter</code> is a random access iterator? Here comes the technique of <em>traits</em>, which allow us to get type information during compilation.</p>
+
+<h2 id="traits">Traits</h2>
+
+<p>Traits aren&rsquo;t a keyword or a predefined construct in C++, but simply a technique and a convention followed by C++ programmers. It has some requirements, one of which asks that it has to work as well for built-in types as it does for user-defined types. This demand leads to the conclusion that the traits information for a type must be external to the type<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
+
+<h4 id="for-user-defined-types">For user-defined types</h4>
+
+<p>The standard technique is to put the information into a template and one or more specializations of that template. For iterators, the template in the standard library is named <code>iterator_traits</code><sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>:</p>
+
+<pre><code class="language-cpp">// the iterator_category for type IterT is whatever IterT says it is
+// see item 42 for info on the use of &quot;typedef typename&quot;
+template&lt;typename IterT&gt;
+struct iterator_traits {
+    typedef typename IterT::iterator_category iterator_category;
+    ...
 };
 </code></pre>
 
-<p>We may want to remove the cost of construction and destruction from return-by-value, considering using return by reference instead. However, a reference is just a name for some <em>existing</em> object. In the case of <code>opeartor*</code>, the product of the two object does not exist before we call the function, so if <code>operator*</code> want to return a reference to the product, it must create the result itself.</p>
+<p>How does <code>iterator_traits</code> work? Since <code>iterator_traits</code> just parrots back a typedef called <code>iterator_category</code> inside the iterator class, it requires that any user-defined iterator type must contain this nested typedef named <code>iterator_category</code>, which identifies the appropriate tag struct. For example, <code>deque</code> iterators belong to random access category, and <code>list</code>&rsquo;s iterators are bidirectional:</p>
 
-<p>A function can create a new object in only two ways: on the stack or on the heap.</p>
+<pre><code class="language-cpp">template&lt;...&gt;
+class deque {
+public:
+    class iterator {
+    public:
+        typedef random_access_iterator_tag iterator_category;
+        ...
+    };
+    ...
+};
+</code></pre>
 
-<h2 id="return-a-pointer-or-reference-to-a-local-stack-object">Return a pointer or reference to a local stack object</h2>
+<pre><code class="language-cpp">template&lt;...&gt;
+class list {
+public:
+    class iterator {
+    public:
+        typedef bidirectional_iterator_tag iterator_category;
+        ...
+    };
+    ...
+};
+</code></pre>
 
-<p>Creation on the stack is accomplished by defining a local variable:</p>
+<h4 id="for-pointer-types">For pointer types</h4>
 
-<pre><code class="language-cpp">const Rational&amp; operator*(const Rational&amp; lhs, const Rational&amp; rhs) // bad code !
+<p>The code above works well for user-defined types, but it doasn&rsquo;t work for iterators that are pointers, since there&rsquo;s no such thing as a nested typedef inside a built-in pointer. To make it work, <code>iterator_traits</code> need to offer a <em>partial template specialization</em> for pointer types:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT&gt;  // partial template specialization
+struct iterator_traits&lt;IterT*&gt; // for built-in pointer types
 {
-    Rational result(lhs.n * rhs.n, lhs.d * rhs.d);
-    return result;
+    typedef random_access_iterator_tag iterator_category; // pointers act as random access iterators
+    ...
 }
 </code></pre>
 
-<p>There&rsquo;s a serious problem: the function returns a reference to <code>result</code>, which is a local object, and local objects are destroyed when the function exits, ending to return a reference to an ex-<code>Rational</code>. Any caller glancing at this return value would instantly enter the realm of undefined behavior.</p>
-
-<p>The fact is, any function returning a reference (or a pointer) to a local object is brocken.</p>
-
-<h2 id="return-a-reference-to-a-heap-allocated-object">Return a reference to a heap-allocated object</h2>
-
-<p>Heap-based objects come into being through the use of <code>new</code>, so the heap-based <code>opearator*</code> looks like this:</p>
-
-<pre><code class="language-cpp">const Rational&amp; operation*(const Rational&amp; lhs, const Rational&amp; rhs) // bad code !
-{
-    Rational *result = new Raional(lhs.n * rhs.n, lhs.d * rhs.d);
-    return *result;
-}
-</code></pre>
-
-<p>Now comes a different problem: who will apply <code>delete</code> matching the use of <code>new</code>?</p>
-
-<p>Even if callers are conscientious and well intentioned, there&rsquo;s not much they can do to prevent leaks in reasonable usage scenarios like this:</p>
-
-<pre><code class="language-cpp">Rational x, y, z;
-
-Rational w = x * y * z; // same as operator*(operator*(x,y),z)
-</code></pre>
-
-<p>There are twoe uses of <code>new</code> that need to be undone with uses of <code>delete</code>. Yet there&rsquo;s no reasonable way for clients to get at the pointers hidden behind the references being returned from the calls to <code>operator*</code> and make calls to <code>delete</code>. This is a guaranteed resource leak.</p>
-
-<h2 id="return-a-reference-to-a-local-static-object">Return a reference to a local static object</h2>
-
-<p>If, however, we jump outside of the box, considering returning a reference to a <em>static</em> <code>Rational</code>, and think that this will avoid all but one initial constructor call without suffering from calling a constructor for each product result returned from <code>operatior*</code> in above on-the-stack and on-the-heap approaches:</p>
-
-<pre><code class="language-cpp">const Rational&amp; operator*(const Rational&amp; lhs, const Rational&amp; rhs) // bad code !
-{
-    static Rational result;  // static object
-    result = ...; // put the product inside result
-    return result;
-}
-</code></pre>
-
-<p>Like all designs employing the use of static objects, this one immediately raises thread-safety hackles, but there&rsquo;s a deeper flaw: consider following perfectly reasonable client code:</p>
-
-<pre><code class="language-cpp">bool operator==(const Rational&amp; lhs, const Rational&amp; rhs); 
-Rational a,b,c,d;
-...
-if ((a * b) == (c * d)) {
-    // do whatever appropriate when the products are equal
-} else {
-    // do whatever appropriate when the products are unequal
-}
-</code></pre>
-
-<p>Problem here is that the expression <code>((a * b) == (c * d))</code> will <em>always</em> evaluate to <code>true</code>, regardless of the values of a, b, c, and d.</p>
-
-<p>Let&rsquo;s rewrite the code in its equivalent functional form to understand what happened:</p>
-
-<pre><code class="language-cpp">if (operator==(operator*(a, b), operator*(c, d)))
-</code></pre>
-
-<p>When <code>operator==</code> is called, there will already be two active calls to <code>opearator*</code>, each of which will return a reference to the static <code>Rational</code> object inside <code>opeartion*</code>, which, as is a static local object, will always be the exact one, with same value.</p>
-
-<p>Some may ask,</p>
-
-<blockquote>
-<p>Well, if <em>one</em> static isn&rsquo;t enough, maybe a static <em>array</em> will do the trick&hellip;</p>
-</blockquote>
-
-<p>The problem is, however, it is very hard to implement this arry of size <code>n</code>:</p>
+<h3 id="workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</h3>
 
 <ul>
-<li>if <code>n</code> is too small, we may run out of places to store return values and fall back to the single-static design situation;</li>
-<li>if <code>n</code> is too big, we&rsquo;ll decrease the performance of the program, because every object in the array will be constructed the first time the function is called - a cost of <code>n</code> constructors and equally <code>n</code> destructors even if the function is called only once.</li>
-<li>how to put the values we need into the array&rsquo;s objects and what is the cost. The most direct way is via assignment, which cost the same as a call to a destructor (to destroy the old value) plus a call to a constructor (to copy over the new value)</li>
-<li>how to decide the position of target result in the array</li>
+<li>Identify some information about types we&rsquo;d like to make available (e.g., iterator category for iterator types)</li>
+<li>Choose a name to identify that information (e.g., <code>iterator_category</code>)</li>
+<li>Provide a template and set of specializations (e.g., <code>iterator_traits</code>) that contain the information for the types we want to support</li>
 </ul>
 
-<h2 id="the-right-way-return-by-value">The right way: return by value</h2>
+<h2 id="implementing-advance">Implementing <code>advance</code></h2>
 
-<p>The right way to write a function that must return a new object is to have that function reutrn a new object like this or something essentially equivalent:</p>
+<p>Given <code>std::iterator_traits</code>, we can refine our pseudocode for <code>advance</code>:</p>
 
-<pre><code class="language-cpp">inline const Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs)
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
 {
-    return Rational(lhs.n * rhs.n, lhs.d * rhs.d);
+    if (typeid(typename std::iterator_traits&lt;IterT&gt;::iterator_category) ==
+        typeid(std::random_access_iterator_tag))
+        ...
 }
 </code></pre>
 
-<p>In the long run, the cost of constructing and destructing <code>operator*</code>&rsquo;s return value is a small price to pay for correct behavior. What&rsquo;s more, since C++ allows compiler implementers to apply optimizations to immprove the performance of the generated code, it turns out that in some cases, construction and destruction of <code>operator*</code>&rsquo;s return value can be safely eliminated, so the program will run faster than we expect and still behave correctly as it&rsquo;s supposed to be.</p>
+<p>Sadly, this is not what we want: for one thing, it will lead to compilation problems (refer to item 48); anther issue, which is more fundamental, is that <code>if</code> statement is evaluated at runtime but <code>iterator_traits&lt;IterT&gt;::iterator_category</code> can be determined during compilation already. There&rsquo;s no point to move the evaluation from compile-time to runtime to waste time and bloat the executable.</p>
 
-<p>In summary, when deciding between returning a reference and returning an object, we should make choice that offers correct behavior.</p>
+<h3 id="template-metaprogramming">Template metaprogramming</h3>
+
+<p>What we want is a conditional construct for types that is evaluated during compilation. Actually this demand brings us to the realm of template metaprogramming (item 48), but the technique we&rsquo;ll use turns out to be quit familiar: <em>overloading</em>:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt; // use this impl for random access iterators
+void doAdvance(IterT&amp; iter, DistT d, std::random_access_iterator_tag)
+{
+    iter += d;
+}
+
+template&lt;typename IterT, typename DistT&gt; // use this impl for bidirectional iterators
+void doAdvance(IterT&amp; iter, DistT d, std::bidirectional_iterator_tag)
+{
+    if (d &gt;= 0) { while(d--) ++iter; }
+    else { while(d++) --iter; }
+}
+
+template&lt;typename IterT, typename DistT&gt; // use this impl for input iterators, also applies to inherited forward_iterator_tag
+void doAdvance(IterT&amp; iter, DistT d, std::input_iterator_tag)
+{
+    if (d &lt; 0) {
+        throw std::out_of_range(&quot;Negative distance&quot;); 
+    }
+    while(d--) ++iter;
+}
+
+template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
+{
+    doAdvance(iter, d, 
+        typename std::iterator_traits&lt;IterT&gt;::iterator_category());
+};
+</code></pre>
+
+<h3 id="summary">Summary</h3>
+
+<p>How to use a traits class:</p>
+
+<ul>
+<li>Create a set of overloaded &ldquo;worker&rdquo; functions or function templates (e.g., doAdvance) that differ in a traits parameter. Implement each function in accrod with the traits information passed.</li>
+<li>Create a &ldquo;master&rdquo; function or function template (e.g., advance) that calls the workers, passing information provided by a traits class.</li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Input and output iterators, as two least powerful iterator categories, are modeled on the read (into an input file) and write (into an output file) pointer, suitable only for one-pass algorithm. Forward (and higher level iterators) can do multi-pass algoritms. The most powerful random access iterators are modeled on built-in pointers.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2">For example, if <code>advance</code> is called with a pointer <code>const char*</code> and an <code>int</code>, since traits technique must apply to built-in types like <code>const char*</code>, and there&rsquo;s no way to nesting information inside pointers, thus the traits information for a type must be external to the type.
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3">By convention, traits are always implemented as structs, but that  structs are called &ldquo;traits classes&rdquo; - not joking.
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+</ol>
+</div>
               
             </div>
           </div>
@@ -504,7 +565,7 @@ if ((a * b) == (c * d)) {
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/declare-data-members-private/" data-tooltip="Item-22 Declare data members private">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -512,7 +573,7 @@ if ((a * b) == (c * d)) {
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/perfer-pass-by-reference-to-const/" data-tooltip="Item-20 Perfer pass-by-reference-to-const to pass-by-value">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/define-non-member-function-inside-templates-when-type-conversions-are-desired/" data-tooltip="Item-46 Define non-member function inside templates when type conversions are desired">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -526,7 +587,7 @@ if ((a * b) == (c * d)) {
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/02/do-not-return-a-ref-when-must-return-an-object/"
+          data-href="http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/"
           data-layout="button_count">
         </div>
       </li>
@@ -537,12 +598,12 @@ if ((a * b) == (c * d)) {
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdo-not-return-a-ref-when-must-return-an-object%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdo-not-return-a-ref-when-must-return-an-object%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -575,8 +636,8 @@ if ((a * b) == (c * d)) {
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2018/02/do-not-return-a-ref-when-must-return-an-object/";  
-this.page.identifier = "Item-21 Don't return a reference when we have to return an object"; 
+this.page.url = "http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/";  
+this.page.identifier = "Item-47 Use traits classes for information about types"; 
 };
 
 (function() { 
@@ -606,7 +667,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/declare-data-members-private/" data-tooltip="Item-22 Declare data members private">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -614,7 +675,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/perfer-pass-by-reference-to-const/" data-tooltip="Item-20 Perfer pass-by-reference-to-const to pass-by-value">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/define-non-member-function-inside-templates-when-type-conversions-are-desired/" data-tooltip="Item-46 Define non-member function inside templates when type conversions are desired">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -628,7 +689,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/02/do-not-return-a-ref-when-must-return-an-object/"
+          data-href="http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/"
           data-layout="button_count">
         </div>
       </li>
@@ -639,12 +700,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdo-not-return-a-ref-when-must-return-an-object%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdo-not-return-a-ref-when-must-return-an-object%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -672,17 +733,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdo-not-return-a-ref-when-must-return-an-object%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdo-not-return-a-ref-when-must-return-an-object%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdo-not-return-a-ref-when-must-return-an-object%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -971,9 +1032,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2018\/02\/do-not-return-a-ref-when-must-return-an-object\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/03\/use-traits-classes-for-information-about-types\/';
           
-            this.page.identifier = '\/2018\/02\/do-not-return-a-ref-when-must-return-an-object\/'
+            this.page.identifier = '\/2018\/03\/use-traits-classes-for-information-about-types\/'
           
         };
         (function() {
