@@ -34,11 +34,11 @@ To take a glimpse into how things work in TMP, let's look at two examples.
 
 ### Examples
 
-* `if...else` conditionals in TMP
+* **Ex1: `if...else` conditionals in TMP**
 
-As item 47 shows, `if...else1` conditionals in TMP are expressed via templates and template specializations[^2]. Let's take a comparason between the "normal" C++ (using `typeid`) and TMP (using traits) based on implementing the pseudo part of `if (iter is a random access iterator)` from STL's `advance`.
+    As item 47 shows, `if...else` conditionals in TMP are expressed via templates and template specializations[^2]. Let's take a comparason between the "normal" C++ (using `typeid`) and TMP (using traits) based on implementing the pseudo part of `if (iter is a random access iterator)` from STL's `advance`
 
-    * "normal" C++ approach: evaluate at runtime
+    Below is the "normal" C++ approach, which evaluates at runtime:
 
     ```cpp
     template<typename IterT, typename DistT>
@@ -54,12 +54,13 @@ As item 47 shows, `if...else1` conditionals in TMP are expressed via templates a
         }
     }
     ```
+
     Compared to the one using traits, the `typeid`-based approach has following issues:
 
     1. less efficient: testing occurs at runtime; executable is larger (since the code to do the testing must be present in the executable)
     2. introduce compilation problems: if `iter` isn't a random access iterator, `iter` will not support operator `+=`, so `iter += d` will not be valid, but compilers will still check this part of code and complain about its invalidation, because they are obliged to make sure that all source code is valid, even if it's not executed.
 
-* Loops in TMP
+* **Ex2: loops in TMP**
 
     TMP has no real looping construct, so the effect of loops is accomplished via recursion, or more specifically, recursive _template instantiations_. As an example, TMP factorial computation demonstates how it works:
 
@@ -93,11 +94,11 @@ As item 47 shows, `if...else1` conditionals in TMP are expressed via templates a
 
 ## What can be accomplished in TMP
 
-### Ensuring dimensional unit correctness
+### 1. Ensuring dimensional unit correctness
 
 In scientific and engineering applications, it's essential that dimensional units (e.g., mass, distance, time, etc.) be combined correctly. Using TMP, it's possible to ensure (during compilation) that all dimensional unit combinations in a program are correct, no matter how complex the calculations - good example for early error detection.
 
-### Optimizang matrix operations
+### 2. Optimizang matrix operations
 
 Consider the following code,
 
@@ -112,7 +113,7 @@ Calculating `result` in the "normal" way calls for the creation of four temporar
 
 Using an advanced template technology related to TMP called _expression templates_, it's possible to eliminate the temporaries and merge the loops, without changing the syntax of the client code above while enabling the program consume less memory and run dramatically fast.
 
-### Generating custom design pattern implementations
+### 3. Generating custom design pattern implementations
 
 Design patterns like Strategy (item 35), Observer, Visitor, etc. can be implemented in many ways. Using a TMP-based technology called `policy-based design`, it's possible to create templates representing independent design choices ("policies") that can be combined in arbitrary ways to yield pattern implementations with custom behavior.
 
@@ -120,4 +121,4 @@ Generalized beyond the domain of programming artifacts like design patterns, thi
 
 [^1]: Programs using TMP may take _much_ longer to compile than their non-TMP counterparts.
 
-[^2]: Such basic constructs as declaring variables, performing loops, and calling function may look very different from their "normal" C++ counterparts, but that's assembly-level TMP - it's worth to know that libraries for TMP (e.g., Boost's MPL, item 55) offer a higher-level syntax.
+[^2]: Basic constructs, such as declaring variables, performing loops, and calling function, may look very different from their "normal" C++ counterparts, but that's assembly-level TMP - it's worth to know that libraries for TMP (e.g., Boost's MPL, item 55) offer a higher-level syntax.
