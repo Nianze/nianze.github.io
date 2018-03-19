@@ -1,5 +1,9 @@
 
 
+  
+    
+  
+
 
   
 
@@ -17,25 +21,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Cpp - 刀心の水|Nzo</title>
+    <title>Item-49 Understand the behavior of the new handler - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
     <link rel="icon" href="http://nianze.ml/favicon.png">
     
-      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://nianze.ml/tags/cpp/index.xml">
-    
 
     
-    <meta name="description" content="刀心の水发呆の地方">
-    <meta property="og:description" content="刀心の水发呆の地方">
+    <meta name="description" content="set-new-handler allows you to specify a function to be called when memory allocation requests cannot be satisfied.
+">
+    <meta property="og:description" content="set-new-handler allows you to specify a function to be called when memory allocation requests cannot be satisfied.
+">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Cpp">
-    <meta property="og:url" content="/tags/cpp/">
+    <meta property="og:title" content="Item-49 Understand the behavior of the new handler">
+    <meta property="og:url" content="/2018/03/understand-the-behavior-of-the-new-handler/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="刀心の水发呆の地方">
+    <meta name="twitter:description" content="set-new-handler allows you to specify a function to be called when memory allocation requests cannot be satisfied.
+">
     
     
 
@@ -46,6 +51,8 @@
       <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
     
 
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-03/2018-03-16.gif">
     
     
     
@@ -90,8 +97,16 @@ ga('send', 'pageview');
   </head>
 
   <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
     <div id="blog">
-      <header id="header" data-behavior="1">
+      <header id="header" data-behavior="4">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
     <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photography</a>
@@ -111,7 +126,7 @@ ga('send', 'pageview');
   
 </header>
 
-      <nav id="sidebar" data-behavior="1">
+      <nav id="sidebar" data-behavior="4">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
@@ -301,39 +316,25 @@ ga('send', 'pageview');
 </nav>
 
       
-        
 
-      
-      <div id="main" data-behavior="1"
+      <div id="main" data-behavior="4"
         class="
                hasCoverMetaIn
                ">
-        
-          <section class="postShorten-group main-content-wrap">
-            
-            
-              
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
-    
+    <h1 class="post-title" itemprop="headline">
+      Item-49 Understand the behavior of the new handler
+    </h1>
   
-
-
+  <div class="postShorten-meta post-meta">
   
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2018/02/consider-alternatives-to-virtual-functions/">
-          Item-35 Consider Alternatives to Virtual Functions
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2018-02-28T20:27:02-05:00">
+    <time itemprop="datePublished" datetime="2018-03-16T19:52:09-04:00">
       
-  二月 28, 2018
+  三月 16, 2018
 
     </time>
   
@@ -351,413 +352,274 @@ ga('send', 'pageview');
 
 </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Alternatives to virtual functions include the NVI idiom (as an example of the Template Method design pattern) and various forms of the Strategy design pattern.
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p><code>set-new-handler</code> allows you to specify a function to be called when memory allocation requests cannot be satisfied.
+</p>
 
-        <br>
-        <a href="http://nianze.ml/2018/02/consider-alternatives-to-virtual-functions/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2018/02/consider-alternatives-to-virtual-functions/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2018/2018-02/2018-02-28.gif"/>
-      </div>
-    </a>
-  
-</article>
+<h2 id="the-basic">The basic</h2>
 
+<p>If <code>operator new</code> can&rsquo;t satisfy a memory allocation request, it will call a client-specifiable error-handling function called a <code>new-handler</code> before throwing a <code>bad_alloc</code> exception. To specify this out-of-memory-handling function, clients call <code>set_new_handler</code>, a standard library function declared in <code>&lt;new&gt;</code>:</p>
+
+<pre><code class="language-cpp">namespace std {
+    typedef void (*new_handler)();
+    new_handler set_new_handler(new_handler p) throw();
+}
+</code></pre>
+
+<p>The <code>throw()</code> here is an exception specification, telling us that function <code>set_new_handler</code> won&rsquo;t throw any exceptions (though there&rsquo;s more truth, refer to item 29).</p>
+
+<p><code>set_new_handler</code>&rsquo;s parameter is the new <code>new_handler</code> we want to specify, which is a pointer to the function <code>operator new</code> should call if it fails to allocate the requested memory, and the return value if the previous <code>new_handler</code>. Once <code>operator new</code> fails to fulfill a memory request, it calls the <code>new_handler</code> function repeatedly until it <em>succeeds</em> to find enough memory (more details in item 51), so this default behavior gives us following conclusion - a well-designed new-handler function must do one of the following:</p>
+
+<ul>
+<li><strong>Make more memory available</strong> to allow the next memory allocation attempt inside <code>operator new</code> to succeed<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.</li>
+<li><strong>Install a different new-handler</strong> that may be capable to make more memory <sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>. A variation is to modify the behavior of current <code>new-handler</code> (via modifying static, namespace specific, or global data the affects the new-handler&rsquo;s behavior)</li>
+<li><strong>Deinstall the new-handler</strong>, i.e., pass the null pointer to <code>set_new_handler</code>, which leads to <code>operator new</code> throwing a <code>bad_alloc</code> exception.</li>
+<li><strong>Throw an exception</strong> of type <code>bad_alloc</code> or some type derived from <code>bad_alloc</code>, which will firstly be caught by <code>operator new</code> and then propagate to the site originating the request for memory.</li>
+<li><strong>Not return</strong>, typically by calling <code>abort</code> or <code>exit</code>.</li>
+</ul>
+
+<p>For example, to use <code>set-new-handler</code>:</p>
+
+<pre><code class="language-cpp">// new handler to install
+void outOfMem()
+{
+    std::cerr &lt;&lt; &quot;Unable to satisfy request for memory\n&quot;;
+    std::about();
+}
+
+int main()
+{
+    std::set_new_handler(outOfMem);
+    int *pBigDataArray = new int[100000000L];
+}
+</code></pre>
+
+<h2 id="customize-the-new-handler-per-class">Customize the <code>new-handler</code> per class</h2>
+
+<p>C++ has no support for class-specific new-handlers, so we implement this by ourselves: we have each class provide its own versions of <code>set_new_handler</code> (which allows clients to specify the customized <code>new-handler</code>) and <code>operator new</code> (which ensures the class-specific <code>new-handler</code> is used in place of the global <code>new-handler</code> when memory allocation request fails).</p>
+
+<p>To make thie ensurance confirmed, this class-specific <code>operator new</code> should do the following stuff:</p>
+
+<ol>
+<li>Call the standard <code>set_new_handler</code> to install <code>Widget</code>&rsquo;s own error-handling function as the global new-handler.</li>
+<li>Call the global <code>operator new</code> to perform the actual memory allocation. Two things may happen during this step:
+
+<ul>
+<li>if allocation ultimately fails and a <code>bad_alloc</code> is thrown by the global <code>operator new</code>, restore the original global new-handler, and then propagate the exception</li>
+<li>if allocation succeeds, return a pointer to the allocated memory, and then restore the original global new-handler prior to the call to <code>Widget::operator new</code>.</li>
+</ul></li>
+</ol>
+
+<p>To ensure that the original new-handler is always reinstalled, we can treat the global new-handler as a resource and follow the advice of item 13 to use resource-managing objects to prevent resource leaks:</p>
+
+<pre><code class="language-cpp">class NewHandlerHolder {
+public:
+    explicit NewHandlerHolder(std::new_handler nh) // aquire the original new-handler
+    :handler(nh) {}
+    ~NewHandlerHolder()
+    { std::set_new_handler(handler); }  // release the original new-handler
+private:
+    std::new_handler handler;  // remember the original new-handler
+    NewHandlerHolder(const NewHandlerHolder&amp;); // prevent copying see item 14
+    NewHandlerHolder&amp; operator=(const NewHandlerHolder&amp;); // prevent copying see item 14
+};
+</code></pre>
+
+<p>Since the behavior of setting a class-specific new-handler is the same regardless of the class, we can reuse the setting procedure by creating a &ldquo;mixin-style&rdquo; base class (i.e., a base class that&rsquo;s designed to allow derived classes to inherit a single specific capability), so that each derived class not only inherits the <code>set_new_handler</code> and <code>operator new</code> functions from the base class, but also gets a different class-specific <code>new-handler</code> from the template.</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;      // &quot;mixin-style&quot; base class 
+class NewHandlerSupport { // for class-specific set_new_handler support
+public:
+    static std::new_handler set_new_handler(std::new_handler p) throw();
+    static void* operator new(std::size_t size) throw(std::bad_alloc);
+    ... // other versions of op. new - see item 52
+private:
+    static std::new_handler currentHandler;
+};
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+std::new_handler NewHandlerSupport&lt;T&gt;::set_new_handler(std::new_handler p) throw()
+{
+    std::new_handler oldHandler = currentHandler;
+    currentHandler = p;
+    return oldHandler;
+}
+
+template&lt;typename T&gt;
+void* NewHandlerSupport&lt;T&gt;::operator new(std::size_t size) throw(std::bad_alloc)
+{
+    NewHandlerHolder h(std::set_new_handler(currentHandler)); // install new-handler
+    return ::operator new(size);  // allocate memory or throw
+} // restore global new-handler
+
+template&lt;typename T&gt;
+std::new_handler NewHanderSupport&lt;T&gt;::currentHandler = 0; // init.  currentHandler to null
+</code></pre>
+
+<p>With this class template, adding <code>set_new_handler</code> support to <code>Widget</code> is easy: <code>Widget</code> just inherits from <code>NewHandlerSupport&lt;Widget&gt;</code>:</p>
+
+<pre><code class="language-cpp">class Widget: public NewHandlerSupport&lt;Widget&gt; {
+public:
+    ... // without declaration for set_new_handler or operator new
+};
+</code></pre>
+
+<p>One interesting point for this design is that  <code>Widget</code> inheriting from a templatized base class that takes <code>Widget</code> itself as a type parameter, and this technique has a straightforwart name: <em>curiously recurring template pattern (CRTP)</em>.</p>
+
+<p>Another point worth noting is that the <code>NewHandlerSupport</code> template never uses its type parameter <code>T</code>, because it doesn&rsquo;t need to: all we need is a different copy of static data member <code>currentHJandler</code> for each class inheriting from <code>NewHandlerSupport</code>, and template parameter <code>T</code> just makes it possible to distinguish these derived classes - the template mechanism automatically generates a copy of <code>currentHandler</code> for each <code>T</code> with which <code>NewHandlerSupport</code> is instantiated.</p>
+
+<p>Finally, let&rsquo;s take a look at how to use the new-handling capabilities in <code>Widget</code>:</p>
+
+<pre><code class="language-cpp">void outOfMem(); // decl. of class-specific new-handler func.
+Widget::set_new_handler(outOfMem); // set outOfMem as Widget's new-handler
+Widget *pw1 = new Widget; // if mem. alloc. fails, call outOfMem
+std::string *ps = new std::string; // if mem. alloc. fails, call the original global new-handler (if there is one)
+Widget::set_new_handler(0);  // set the Widget-specific new-handler to nothing (null)
+Widget *pw2 = new Widget;  // there's no new-handling func. for Widget now, so if mem. alloc. fails, throw an exception immediately
+</code></pre>
+
+<h2 id="traditional-failure-yields-null-alternative-for-operator-new">Traditional failure-yields-null alternative for <code>operator new</code></h2>
+
+<p>Althought now it is specified to throw a <code>bad_alloc</code> exception, until 1993, C++ required that <code>operator new</code> return null when it way unable to allocate the requested memory. Unwilling to abandon the traditional behavior, the C++ standardization committee provided an alternative form of <code>operator new</code> called &ldquo;nothrow&rdquo; forms, in part because the forms employ <code>nothrow</code> objects defined in the header <code>&lt;new&gt;</code>:</p>
+
+<pre><code class="language-cpp">class Widget {...};
+Widget *pw1 = new Widget;  // throws bad_alloc if allocation fails
+if (pw1 == 0) ... // this test must fail
+Widget *pw2 = new (std::nothrow) Widget; // returns 0 if allocation fails
+if (pw2 == 0) ... // this test may succeed
+</code></pre>
+
+<p>However, using <code>new (std::nothrow) Widget</code> only guarantees that <code>operator new</code> won&rsquo;t throw, not the whole expression: after the nothrow versoin of <code>operator new</code> succeeds to allocate enough memory for a <code>Widget</code> object, and then the <code>Widget</code> constructor is called, chances are that the <code>Widget</code> constructor might itself new up some memory and throw, and then the exception will be propagated as usual.</p>
+
+<p>Conclusion: we never have a need for nothrow new.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">One way to achieve this strategy is to allocate a large block of memory at program start-up, then release it for use in the program the first time the new-handler is invoked.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2">The strategy may be implemented by calling <code>set_new_handler</code> inside current <code>new-handler</code>. The next time <code>operator new</code> call the <code>new-handler</code> function, it will get the one most recently installed.
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+</ol>
+</div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
             
               
-  
-    
-  
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
 
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
 
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2018/02/differentiate-inheritance-of-interface-from-inheritance-of-implementation/">
-          Item-34 Differentiate between inheritance of interface and inheritance of implementation
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2018-02-27T20:53:53-05:00">
-      
-  二月 27, 2018
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Inheritance of interface is different from inheritance of implementatino.
-
-        <br>
-        <a href="http://nianze.ml/2018/02/differentiate-inheritance-of-interface-from-inheritance-of-implementation/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2018/02/differentiate-inheritance-of-interface-from-inheritance-of-implementation/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2018/2018-02/2018-02-27.gif"/>
-      </div>
-    </a>
-  
-</article>
-
-            
+                  </div>
+                
               
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2018/02/avoid-hiding-inherited-names/">
-          Item-33 Avoid hiding inherited names
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2018-02-26T20:18:55-05:00">
-      
-  二月 26, 2018
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Names in derived classes hide names in base classes, which is not desirable in public inheritance. To fix it, employ <code>using</code> declarations or forwarding functions to make hidden names visible again.
-
-        <br>
-        <a href="http://nianze.ml/2018/02/avoid-hiding-inherited-names/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2018/02/avoid-hiding-inherited-names/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2018/2018-02/2018-02-26.gif"/>
-      </div>
-    </a>
-  
-</article>
-
             
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2018/02/make-sure-public-inheritance-models-is-a/">
-          Item-32 Make sure public inheritance models &#34;Is-A&#34;
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2018-02-23T12:59:53-05:00">
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
       
-  二月 23, 2018
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object <em>is</em> a base class object.
-
-        <br>
-        <a href="http://nianze.ml/2018/02/make-sure-public-inheritance-models-is-a/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2018/02/make-sure-public-inheritance-models-is-a/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2018/2018-02/2018-02-23.gif"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2018/02/minimize-compilation-dependencies-between-files/">
-          Item-31 Minimize compilation dependencies between files
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2018-02-22T00:00:00Z">
-      
-  二月 22, 2018
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        To minimize compilation dependencies, depend on declarations instead of definitions via techniques such as Handle classes and Interface classes.
-
-        <br>
-        <a href="http://nianze.ml/2018/02/minimize-compilation-dependencies-between-files/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2018/02/minimize-compilation-dependencies-between-files/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2018/2018-02/2018-02-22.gif"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2018/02/ins-and-outs-of-inlining/">
-          Item-30 Understand ins and outs of inlining
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2018-02-21T00:00:00Z">
-      
-  二月 21, 2018
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Limit most inlining to small, frequently called functions to facilitate debugging and binary upgradability, minimize potential code bloat, and maximize the chances of greater program speed.
-
-        <br>
-        <a href="http://nianze.ml/2018/02/ins-and-outs-of-inlining/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2018/02/ins-and-outs-of-inlining/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2018/2018-02/2018-02-21.gif"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-              
-  
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-right" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="http://nianze.ml/2018/02/strive-for-exception-safe-code/">
-          Item-29 Strive for exception-safe code
-        </a>
-      </h1>
-      <div class="postShorten-meta post-meta">
-  
-    <time itemprop="datePublished" datetime="2018-02-20T18:23:38-05:00">
-      
-  二月 20, 2018
-
-    </time>
-  
-  
-  
-  
-    <span>发布在</span>
-    
-      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
-    
-      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
-    
-  
-
-
-</div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      <p>
-        Exception-safe functions leak no resources and allow no data structures to become corrupted, even when exceptions are thrown. Such functions offer the basic, strong, and nothrow guarantees.
-
-        <br>
-        <a href="http://nianze.ml/2018/02/strive-for-exception-safe-code/" class="postShorten-excerpt_link link">阅读全文</a>
-        
-      </p>
-    </div>
-  </div>
-  
-    <a href="http://nianze.ml/2018/02/strive-for-exception-safe-code/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="http://nianze.ml/images/2018/2018-02/2018-02-20.gif"/>
-      </div>
-    </a>
-  
-</article>
-
-            
-            
-  <div class="pagination-bar">
-    <ul class="pagination">
-      
-        <li class="pagination-prev">
-          <a class="btn btn--default btn--small" href="http://nianze.ml/tags/cpp/page/2/">
-            <i class="fa fa-angle-left text-base icon-mr"></i>
-            <span>上一页</span>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/be-aware-of-template-metaprogramming/" data-tooltip="Item-48 Be aware of template metaprogramming">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
           </a>
         </li>
       
-      
-        <li class="pagination-next">
-          <a class="btn btn--default btn--small" href="http://nianze.ml/tags/cpp/page/4/">
-            <span>下一页</span>
-            <i class="fa fa-angle-right text-base icon-ml"></i>
-          </a>
-        </li>
-      
-      <li class="pagination-number">第 3 页 共 8 页</li>
     </ul>
-  </div>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/03/understand-the-behavior-of-the-new-handler/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-behavior-of-the-new-handler%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-behavior-of-the-new-handler%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
 
 
-          </section>
-        
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/03/understand-the-behavior-of-the-new-handler/";  
+this.page.identifier = "Item-49 Understand the behavior of the new handler"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
     &copy; 2018 刀心の水|Nzo. All Rights Reserved
@@ -765,6 +627,96 @@ ga('send', 'pageview');
 </footer>
 
       </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/be-aware-of-template-metaprogramming/" data-tooltip="Item-48 Be aware of template metaprogramming">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/03/understand-the-behavior-of-the-new-handler/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-behavior-of-the-new-handler%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-behavior-of-the-new-handler%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-behavior-of-the-new-handler%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-behavior-of-the-new-handler%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-behavior-of-the-new-handler%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
     </div>
     
     <div id="about">
@@ -1042,6 +994,32 @@ $(document).ready(function() {
   });
 });
 </script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/03\/understand-the-behavior-of-the-new-handler\/';
+          
+            this.page.identifier = '\/2018\/03\/understand-the-behavior-of-the-new-handler\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
 
 
 
