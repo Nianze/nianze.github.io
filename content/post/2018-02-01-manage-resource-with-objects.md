@@ -34,7 +34,7 @@ Investment* createInvestment();  // factory function, return ptr to dynamically 
 
 void f() 
 {
-    std::auto_ptr<Investment> pInv(createInvestent()); // call factory function
+    std::auto_ptr<Investment> pInv(createInvestment()); // call factory function
     ...  // use pInv like a pointer
 }        // automatically delete pInv via auto_ptr's dtor
 ```
