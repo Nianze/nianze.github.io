@@ -45,7 +45,7 @@ And we call it this to log allocation informatino to `cerr` when dynamically cre
 Widget *pw = new (std::cerr) Widget; // call operator new, passing cerr as the ostream; cause memory leak when Widget constructor throws
 ```
 
-Let's consider a special subtle situation: if memory allocation succeeds and the `Widget` constructor throws an exception, since `pw` not yet assigned and client code can't deallocate the memory, the runtime system is responsible for undoing the allocation that `operator new` performed. However, we're now using a non-normal version of `operator new`, unless the runtime system finds a version of `operator delete` that takes _the same number and types of extra arguments_ as `operator new`, it does nothing, and no `operator delete` will be called.
+Let's consider a special subtle situation: if memory allocation succeeds and the `Widget` constructor throws an exception, since `pw` not yet assigned and client code can't deallocate the memory, the runtime system is responsible for undoing the allocation that `operator new` performed. However, we're now using a non-normal version of `operator new`, unless it finds a version of `operator delete` that takes _the same number and types of extra arguments_ as `operator new`, the runtime system choose to do nothing, so no `operator delete` will be called, ending up with memory leak.
 
 To eliminate the memory leak in this situation, we need to match the placement `new` with a placement `delete`:
 
@@ -134,8 +134,8 @@ Clients who want to augment the standard forms with custom forms can just use in
 ```cpp
 class Widget: public StandardNewDeleteForms { // inherit std forms
 public:
-    using StandardNewDeleteForms::operator new;     // make std forms visible
-    using StandardNewDeleteForms::operator delete;  // make std forms visible
+    using StandardNewDeleteForms::operator new;     // make std forms of new visible
+    using StandardNewDeleteForms::operator delete;  // make std forms of delete visible
 
     static void* operator new(std::size_t size, std::ostream& logStream) throw(std::bad_alloc);  // custom placement new
     static void operator delete(void *pMemory, std::ostream& logStream) throw(); // corresponding placement delete
