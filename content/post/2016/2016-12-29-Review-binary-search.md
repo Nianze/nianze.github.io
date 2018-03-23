@@ -198,7 +198,7 @@ In this example, we used a greedy algorithm to evaluate the predicate. In other 
 * Design a predicate which can be efficiently evaluated and so that binary search can be applied
 * Decide on what you’re looking for and code so that the search space always contains that (if it exists)
 * If the search space consists only of integers, test your algorithm on a two-element set to be sure it doesn’t lock up
-* Verify that the lower and upper bounds are not overly constrained: it’s usually better to relax them as long as it doesn’t break the predicate. An all-around template looks like this according to my previous [post](http://nianze.ml/Binary-Search) on binary search:
+* Verify that the lower and upper bounds are not overly constrained: it’s usually better to relax them as long as it doesn’t break the predicate. An all-around template looks like this according to my previous [post](https:nianze.ml/2016/08/binary-search) on binary search:
 
 ```java 
 public class Solution {
