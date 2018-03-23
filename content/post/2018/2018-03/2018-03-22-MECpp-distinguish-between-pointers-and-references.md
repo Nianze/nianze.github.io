@@ -1,5 +1,5 @@
 ---
-title:  "MECpp Distinguish Between Pointers and References"
+title:  "[MECpp]Item-1 Distinguish Between Pointers and References"
 date: 2018-03-22T16:47:15-04:00
 categories:
 - article
@@ -7,7 +7,7 @@ categories:
 tags:
 - technique
 - cpp
-slug: write placement delete if you write placement new
+slug: Distinguish Between Pointers and References
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-03/2018-03-22.gif
