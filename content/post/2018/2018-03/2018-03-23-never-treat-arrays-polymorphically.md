@@ -7,7 +7,7 @@ categories:
 tags:
 - technique
 - cpp
-slug: Never Treat Arrays Polymorphically"
+slug: Never Treat Arrays Polymorphically
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-03/2018-03-23.gif
