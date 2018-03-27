@@ -64,7 +64,7 @@ EquipmentPiece *bestPieces = new EquipmentPiece[10];  // error! same problem
 
 There are three ways to get around the restriction:
 
-    1. Provide the necessary arguments when array is defined
+1. Provide the necessary arguments when array is defined
 
     This solution works only for non-heap arrays:
 
@@ -79,13 +79,13 @@ There are three ways to get around the restriction:
     }
     ```
 
-    2. Use an array of _pointers_ instead of an array of objects
+2. Use an array of _pointers_ instead of an array of objects
 
     ```cpp
     typedef EquipmentPiece* PEP;     // a PEP is a pointer to an EuipmentPiece
     PEP bestPieces[10];              // fine, no ctor called
     PEP *bestPieces = new PEP[10];   // fine, no ctor called
-    
+
     for (int i = 0; i < 10; ++i) {
         bestPieces[i] = new EquipmentPiece( ID Number );
     }
@@ -96,7 +96,7 @@ There are three ways to get around the restriction:
     * We have to remember to delete all the objects pointed to by the array. Otherwise there's resource leak.
     * The total amount of memory increases due to the extra space for the pointers
 
-    3. Use "placement `new`" (item 8)
+3. Use "placement `new`" (item 8)
 
     ```cpp
     // allocate enough memory for an array of 10 EuipmentPiece obj.
