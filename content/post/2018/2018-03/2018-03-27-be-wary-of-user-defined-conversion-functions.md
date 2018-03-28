@@ -91,8 +91,7 @@ for (int i = 0; i < 10; ++i) {  // oops! "a" should be "a[i]"
 Here, we mistakenly omitted the subscripting syntax when typing `a`. We expect this will cause compilers complaining, but they will not:
 
 * Compilers see a call to `operator==` taking type `Array<int>` (for `a`) and `int` (for `b[i]`), and fail to find the corresponding function
-* There's a `operator==` taking two `Array<int>` type arguments, and compilers are able to convert the `int` into an `Array<int>` object by calling `Array<int>` constructor that taking a single `int` as an argument
-* Ending up with something like this[^1]:
+* There's a `operator==` taking two `Array<int>` type arguments, and compilers are able to convert the `int` into an `Array<int>` object by calling `Array<int>` constructor that taking a single `int` as an argument, ending up with something like this[^1]:
 
     ```cpp
     for (int i = 0; i < 10; ++i) {
@@ -104,7 +103,7 @@ Each iteration through the loop compares the contents of `a` with the contents o
 
 There are two solutions: use keyword `explicit` or creating proxy classes.
 
-### Keyword `explicit`
+### Solution 1: Keyword `explicit`
 
 ```cpp
 template<class T>
@@ -116,7 +115,7 @@ public:
 };
 ```
 
-### Proxy classes
+### Solution 2: Proxy classes
 
 ```cpp
 template<class T>
