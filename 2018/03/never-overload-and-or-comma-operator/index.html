@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Item-10 Have assignment operators return a reference to *this - 刀心の水|Nzo</title>
+    <title>[MECpp]Item-7 Never Overload &#39;&amp;&amp;&#39;, &#39;||&#39;, or &#39;,&#39; - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="As title suggests.
+    <meta name="description" content="If we don&rsquo;t have a good reason for overloading an operator, don&rsquo;t overload it. In the case of &amp;&amp;, ||, and ,, it&rsquo;s difficult to have a good reason: we can&rsquo;t make them behave the way they&rsquo;re supposed to.
 ">
-    <meta property="og:description" content="As title suggests.
+    <meta property="og:description" content="If we don&rsquo;t have a good reason for overloading an operator, don&rsquo;t overload it. In the case of &amp;&amp;, ||, and ,, it&rsquo;s difficult to have a good reason: we can&rsquo;t make them behave the way they&rsquo;re supposed to.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Item-10 Have assignment operators return a reference to *this">
-    <meta property="og:url" content="/2018/01/have-assignment-op-return-a-ref/">
+    <meta property="og:title" content="[MECpp]Item-7 Never Overload &#39;&amp;&amp;&#39;, &#39;||&#39;, or &#39;,&#39;">
+    <meta property="og:url" content="/2018/03/never-overload-and-or-comma-operator/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="As title suggests.
+    <meta name="twitter:description" content="If we don&rsquo;t have a good reason for overloading an operator, don&rsquo;t overload it. In the case of &amp;&amp;, ||, and ,, it&rsquo;s difficult to have a good reason: we can&rsquo;t make them behave the way they&rsquo;re supposed to.
 ">
     
     
@@ -52,7 +52,7 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-01/2018-01-29.jpg">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-03/2018-03-29.gif">
     
     
     
@@ -327,14 +327,14 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-10 Have assignment operators return a reference to *this
+      [MECpp]Item-7 Never Overload &#39;&amp;&amp;&#39;, &#39;||&#39;, or &#39;,&#39;
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2018-01-29T18:17:34-05:00">
+    <time itemprop="datePublished" datetime="2018-03-29T11:18:24-04:00">
       
-  一月 29, 2018
+  三月 29, 2018
 
     </time>
   
@@ -356,44 +356,191 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>As title suggests.
+              <p>If we don&rsquo;t have a good reason for overloading an operator, don&rsquo;t overload it. In the case of <code>&amp;&amp;</code>, <code>||</code>, and <code>,</code>, it&rsquo;s difficult to have a good reason: we can&rsquo;t make them behave the way they&rsquo;re supposed to.
 </p>
 
-<p>Assignment is able to chain together:</p>
+<h2 id="overloading-operator-and-operator">Overloading <code>operator&amp;&amp;</code> and <code>operator||</code></h2>
 
-<pre><code class="language-cpp">int x,y,z;
-x = y = z = 15;  // chain of assignment
+<p>C++ employs short-circuit evaluation of boolean expressions: once the truth or falsehood of an expression has been determined, evaluation of the expression ceases, even if somem parts of the expression haven&rsquo;t yet been examined.</p>
+
+<p>The operators associated with short-circuit evaluation are <code>||</code> and <code>&amp;&amp;</code>, which C++ allows us to customize for user-defined types. However, once we overloading the functions <code>operator&amp;&amp;</code> and <code>operator||</code> (at the global scope or on a  per-class basis), we are replacing short-circuit semantics with <em>function call</em> semantics, ending up changing the rules of the game quite radically. For example, after we overload <code>operator&amp;&amp;</code>, the following code:</p>
+
+<pre><code class="language-cpp">if (expression1 &amp;&amp; expression2)  ...
 </code></pre>
 
-<p>Basically, the chain is parsed from right to left, so the result of the updated <code>z</code> is assigned to y, then the result of the second assignment (the updated <code>y</code>) is assigned to <code>x</code>:</p>
+<p>looks to compilers like one of these:</p>
 
-<pre><code class="language-cpp">x = (y = (z = 15));
+<pre><code class="language-cpp">if (expression1.operator&amp;&amp;(expression2)) ... // when operator&amp;&amp; is a member function
+
+if (operator&amp;&amp;(expression1, expression2)) ... // when operator&amp;&amp; is a global function
 </code></pre>
 
-<p>In order to achieve this, we need to implement the assignment operators (as well as <code>+=</code>, <code>-=</code>, <code>*=</code>, etc) in the following convention, where we make the assignment return a reference to its left-hand argument:</p>
+<p>In two crucial ways, the funciton call semantics differ from short-circuit semantics:</p>
 
-<pre><code class="language-cpp">class Widget {
-public:
-    ...
-    Widget&amp; operator=(const Widget&amp; rhs)  // return type is a reference to the current class
+<ol>
+<li>when a funciton all is made, <em>all</em> parameters must be evaluated. Thus there is no short circuit.</li>
+<li>the order of evaluation of parameters to a function all is undefined, so there is no way of knowing whether <code>expression1</code> or <code>expression2</code> will be evaluated first.</li>
+</ol>
+
+<p>As a result, overloaded <code>&amp;&amp;</code> or <code>||</code> will never offer programmers the behavior they both exprect and have come to depend on. So do not overload <code>&amp;&amp;</code> or <code>||</code>.</p>
+
+<h2 id="overloading-operator">Overloading <code>operator,</code></h2>
+
+<p>The comma operator is used for <em>expressions</em>, and we&rsquo;re most likely to run across it in the update part of a <code>for</code> loop:</p>
+
+<pre><code class="language-cpp">void reverse(char s[]) 
+{
+    for (int i = 0, j = strlen(s)-1;
+    i &lt; j;
+    ++i, --j)  // the comma operator
     {
-        ...
-        return *this;  // return the left-hand object
+        int c = s[i];
+        s[i] = s[j];
+        s[j] = c;
     }
-    Widget&amp; operator=(int rhs)
-    {
-        ...
-        return *this;  // even if the right-hand side parameter type is unconventional
-                       // we can still apply this convention
-    }
-    Widget&amp; operator+=(const Widget&amp; rhs)
-    {
-        ...
-        return *this;
-    }
-    ...
-};
+}
 </code></pre>
+
+<p>An expression containing a comma is evaluated by first evaluating the part of the expression to the left of the comma, then evaluating the expression to the right of the comma; the result of the overall comma expression is the value of the expression on the right. So the result for <code>++i, --j</code> is the value returned from <code>--j</code>.</p>
+
+<p>Unfortunately, when writing our own comma operator, we can&rsquo;t mimic this behavior for the same reason as the case in overriding <code>||</code> and <code>&amp;&amp;</code>:</p>
+
+<ul>
+<li>if we write <code>operator,</code> as a non-member function, then both operands around <code>,</code> will be passed as arguments in a function call, and there&rsquo;s no way to control over the order in which a funciton&rsquo;s arguments are evaluated.</li>
+<li>if we write <code>operator,</code> as a member function, we still can&rsquo;t rely on the left-hand operand to the comma being evaluated first, because compilers are not constrained to do thing that way.</li>
+</ul>
+
+<h2 id="limits-on-operator-overloading">Limits on operator overloading</h2>
+
+<p>According to C++, following operators can&rsquo;t be overloaded:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><code>.</code></td>
+<td align="center"><code>.*</code></td>
+<td align="center"><code>::</code></td>
+<td align="center"><code>?:</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>new</code></td>
+<td align="center"><code>delete</code></td>
+<td align="center"><code>sizeof</code></td>
+<td align="center"><code>typeid</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>static_cast</code></td>
+<td align="center"><code>dynamic_cast</code></td>
+<td align="center"><code>const_cast</code></td>
+<td align="center"><code>reinterpret_cast</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>We can overload these:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+<th align="center"></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><code>operator new</code></td>
+<td align="center"><code>operator delete</code></td>
+<td align="center"><code>operator new[]</code></td>
+<td align="center"><code>operator delete[]</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>+</code></td>
+<td align="center"><code>-</code></td>
+<td align="center"><code>*</code></td>
+<td align="center"><code>/</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>%</code></td>
+<td align="center"><code>^</code></td>
+<td align="center"><code>&amp;</code></td>
+<td align="center">|</td>
+</tr>
+
+<tr>
+<td align="center"><code>~</code></td>
+<td align="center"><code>!</code></td>
+<td align="center"><code>&lt;</code></td>
+<td align="center"><code>&gt;</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>+=</code></td>
+<td align="center"><code>-=</code></td>
+<td align="center"><code>*=</code></td>
+<td align="center"><code>/=</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>%=</code></td>
+<td align="center"><code>^=</code></td>
+<td align="center"><code>&amp;</code></td>
+<td align="center">`</td>
+</tr>
+
+<tr>
+<td align="center"><code>&lt;&lt;</code></td>
+<td align="center"><code>&gt;&gt;</code></td>
+<td align="center"><code>&gt;&gt;=</code></td>
+<td align="center"><code>&lt;&lt;=</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>==</code></td>
+<td align="center"><code>!=</code></td>
+<td align="center"><code>&lt;=</code></td>
+<td align="center"><code>&gt;=</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>-&gt;*</code></td>
+<td align="center"><code>-&gt;</code></td>
+<td align="center"><code>++</code></td>
+<td align="center"><code>--</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>,</code></td>
+<td align="center"><code>&amp;&amp;</code></td>
+<td align="center">||</td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center"><code>()</code></td>
+<td align="center"><code>[]</code></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+
+<p>Just because we can overload there operators is no reason to run off and do it. The purpose of operator overloading is to make programs easier to read, write, and understand. If we don&rsquo;t have a good reason for overloading an operator, don&rsquo;t overload it, as is the case for <code>&amp;&amp;</code>, <code>||</code>, and <code>,</code>.</p>
               
             </div>
           </div>
@@ -419,7 +566,7 @@ public:
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/handle-self-assignment/" data-tooltip="Item-11 Handle self assignment in operator=">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -427,7 +574,7 @@ public:
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/no-virtual-func-in-ctor-dtor/" data-tooltip="Item-9 不要在构造函数和析构函数中触发虚函数">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/distinguish-between-prefix-and-postfix-forms-of-increment-and-decrement-operators/" data-tooltip="[MECpp]Item-6 Distinguish Between Prefix and Postfix Forms of Increment and Decrement Operators">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -441,7 +588,7 @@ public:
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/01/have-assignment-op-return-a-ref/"
+          data-href="http://nianze.ml/2018/03/never-overload-and-or-comma-operator/"
           data-layout="button_count">
         </div>
       </li>
@@ -452,12 +599,12 @@ public:
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fhave-assignment-op-return-a-ref%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fnever-overload-and-or-comma-operator%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fhave-assignment-op-return-a-ref%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fnever-overload-and-or-comma-operator%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -490,8 +637,8 @@ public:
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2018/01/have-assignment-op-return-a-ref/";  
-this.page.identifier = "Item-10 Have assignment operators return a reference to *this"; 
+this.page.url = "http://nianze.ml/2018/03/never-overload-and-or-comma-operator/";  
+this.page.identifier = "[MECpp]Item-7 Never Overload '\u0026\u0026', '||', or ','"; 
 };
 
 (function() { 
@@ -521,7 +668,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/handle-self-assignment/" data-tooltip="Item-11 Handle self assignment in operator=">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -529,7 +676,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/no-virtual-func-in-ctor-dtor/" data-tooltip="Item-9 不要在构造函数和析构函数中触发虚函数">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/distinguish-between-prefix-and-postfix-forms-of-increment-and-decrement-operators/" data-tooltip="[MECpp]Item-6 Distinguish Between Prefix and Postfix Forms of Increment and Decrement Operators">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -543,7 +690,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/01/have-assignment-op-return-a-ref/"
+          data-href="http://nianze.ml/2018/03/never-overload-and-or-comma-operator/"
           data-layout="button_count">
         </div>
       </li>
@@ -554,12 +701,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fhave-assignment-op-return-a-ref%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fnever-overload-and-or-comma-operator%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fhave-assignment-op-return-a-ref%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fnever-overload-and-or-comma-operator%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -587,17 +734,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fhave-assignment-op-return-a-ref%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fnever-overload-and-or-comma-operator%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f01%2fhave-assignment-op-return-a-ref%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f03%2fnever-overload-and-or-comma-operator%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fhave-assignment-op-return-a-ref%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fnever-overload-and-or-comma-operator%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -886,9 +1033,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2018\/01\/have-assignment-op-return-a-ref\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/03\/never-overload-and-or-comma-operator\/';
           
-            this.page.identifier = '\/2018\/01\/have-assignment-op-return-a-ref\/'
+            this.page.identifier = '\/2018\/03\/never-overload-and-or-comma-operator\/'
           
         };
         (function() {
