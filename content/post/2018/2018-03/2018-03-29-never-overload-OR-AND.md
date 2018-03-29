@@ -1,5 +1,5 @@
 ---
-title: "[MECpp]Item-7 Never Overload &&, ||, or ,"
+title: "[MECpp]Item-7 Never Overload \'&&\', \'||\', or \',\'"
 date: 2018-03-29T11:18:24-04:00
 categories:
 - article
@@ -70,24 +70,26 @@ Unfortunately, when writing our own comma operator, we can't mimic this behavior
 
 According to C++, following operators can't be overloaded:
 
-:---: |:----:  | :---: | :---:
-|`.` | `.*` | `::` |  `?:`|
+ | | | 
+|:---:|:---:|:---:|:---:|
+|`.`   | `.*`     | `::`     |  `?:`   |
 |`new` | `delete` | `sizeof` | `typeid`|
 |`static_cast` | `dynamic_cast` | `const_cast` | `reinterpret_cast`|
 
 We can overload these:
 
-|:---: |:----:  | :---: | :---:|
+ | | | 
+|:---:|:---:|:---:|:---:|
 |`operator new` | `operator delete` | `operator new[]` | `operator delete[]`|
 |`+` | `-` | `*` | `/`|
-|`%` | `^` | `&` | `|`|
+|`%` | `^` | `&` | \| |
 |`~` | `!` | `<` | `>`|
-|`+=` | `-=` | `*=` | `/=`| 
-|`%=` | `^=` | `&` | `|=`|
-|`<<`|`>>` | `>>=` | `<<=`|
-|`==` | `!=` | `<=` | `>=`|
-|`&&` | `||` | `++` | `--`|
-|`,` | `->*` | `->` ||
+|`+=` | `-=` | `*=` | `/=` | 
+|`%=` | `^=` | `&`  | `|=` |
+|`<<` | `>>` | `>>=`| `<<=`|
+|`==` | `!=` | `<=` | `>=` |
+|`->*`| `->` | `++` | `--` |
+|`,`  |`&&`  | \|\| |
 | `()`| `[]`|
 
 Just because we can overload there operators is no reason to run off and do it. The purpose of operator overloading is to make programs easier to read, write, and understand. If we don't have a good reason for overloading an operator, don't overload it, as is the case for `&&`, `||`, and `,`.
