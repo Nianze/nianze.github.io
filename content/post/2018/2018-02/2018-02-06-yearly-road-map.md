@@ -23,10 +23,10 @@ thumbnailImage: /images/2018/2018-02/2018-02-06-roadmap.jpg
 下面准备按照时间进度把今年想看的技术相关的书列在下面，争取每天都写一篇文章来总结进度吧：
 
 | Time | Book                                                      |
-| ---- | --------------------------------------------------------- |
+| :----| :-------------------------------------------------------- |
 | Jan  | Effective C++ (item1-12)                                  |
 | Feb  | Effective C++ (item13-40)                                 |
-| Mar  | Effec. C++ (item41-55), More Effec. C++ (item1-16)        |
+| Mar  | Effec. C++ (item41-55), More Effec. C++ (item1-16), Eloquent JS|
 | Apr  | More Effec. C++ (item17-35), Modern Effec. C++ (item1-12) |
 | May  | Modern Effec. C++ (item13-42)                             |
 | Jun  | Hands On ML, Effec. JS                                    |
@@ -43,6 +43,6 @@ thumbnailImage: /images/2018/2018-02/2018-02-06-roadmap.jpg
 | ----- | ------------ |
 | 钢琴  | Hanon,Czerny |
 | 吉他  | 指弹         |
-| 日语  | みんなの日本語   |
+| 日语  | みんなの日本語|
 | 其他  | 叔本华       |
 
