@@ -42,9 +42,7 @@ So if we want to create an object on the heap, use the `new` operator and it bot
 
 However, if we want to do some customized behaviors, we may consider following options:
 
-1. if we only want to allocate memory
-
-    Just call `operator new` directly:
+1. if we only want to allocate memory, just call `operator new` directly:
 
     ```cpp
     void *rawMemory = operator new(sizeof(string));
@@ -52,9 +50,7 @@ However, if we want to do some customized behaviors, we may consider following o
 
 2. if we want to customize the memory allocation that takes place when heap objects are created, write our own version of `operator new` and use the `new` operator, which will automatically invoke the custom version of `operator new`
 
-3. if we want to construct an object in memory we've already got a pointer to, use placement `new`.
-    
-    * Placement `new`
+3. if we want to construct an object in memory we've already got a pointer to, use **placement `new`**.
 
     A special version of `oeprator new` called _placement `new`_ allows us to construct an object in the memory that's already been allocated, which is helpful for applications using shared memory or memory-mapped I/O, where objects must be placed at specific addresses or in memory allocated by special routines:
 
