@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>End of my first semester in Cornell - 刀心の水|Nzo</title>
+    <title>[MECpp]Item-8 Understand the Different Meanings of New and Delete - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="A mark on the end of my first semester in Cornell.
+    <meta name="description" content="The behaviors of new operator and operator new is different.
 ">
-    <meta property="og:description" content="A mark on the end of my first semester in Cornell.
+    <meta property="og:description" content="The behaviors of new operator and operator new is different.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="End of my first semester in Cornell">
-    <meta property="og:url" content="/2015/12/end-of-semester/">
+    <meta property="og:title" content="[MECpp]Item-8 Understand the Different Meanings of New and Delete">
+    <meta property="og:url" content="/2018/03/understand-the-different-meanings-of-new-and-delete/">
     <meta property="og:site_name" content="Code.Music.Photography">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photography">
-    <meta name="twitter:description" content="A mark on the end of my first semester in Cornell.
+    <meta name="twitter:description" content="The behaviors of new operator and operator new is different.
 ">
     
     
@@ -52,10 +52,8 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2015/2015-12-12-inuyasha.png">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-03/2018-03-30.gif">
     
-    
-      <meta property="og:image" content="http://nianze.ml/images/2015/2015-12-12-inuyasha.png">
     
     
 
@@ -318,23 +316,25 @@ ga('send', 'pageview');
 </nav>
 
       
-  <div class="post-header-cover
-              text-center
-              "
-       style="background-image:url('/images/2015/2015-12-12-inuyasha.png')"
-       data-behavior="4">
-    
-      <div class="post-header main-content-wrap text-center">
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      End of my first semester in Cornell
+      [MECpp]Item-8 Understand the Different Meanings of New and Delete
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2015-12-12T00:00:00Z">
+    <time itemprop="datePublished" datetime="2018-03-30T17:09:04-04:00">
       
-  十二月 12, 2015
+  三月 30, 2018
 
     </time>
   
@@ -343,9 +343,9 @@ ga('send', 'pageview');
   
     <span>发布在</span>
     
-      <a class="category-link" href="http://nianze.ml/categories/music">music</a>, 
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
     
-      <a class="category-link" href="http://nianze.ml/categories/clarinet">clarinet</a>
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
     
   
 
@@ -353,39 +353,136 @@ ga('send', 'pageview');
 </div>
 
 </div>
-    
-  </div>
-
-
-      <div id="main" data-behavior="4"
-        class="hasCover
-               hasCoverMetaIn
-               ">
-        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
-          
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>A mark on the end of my first semester in Cornell.
+              <p>The behaviors of <code>new</code> operator and <code>operator new</code> is different.
 </p>
 
-<h2 id="finally">Finally&hellip;</h2>
+<h2 id="relationship-between-new-operator-and-operator-new">Relationship between &lsquo;<code>new</code> operator&rsquo; and &lsquo;<code>operator new</code>&lsquo;</h2>
 
-<p>After a busy semester, finally I have some time to try some new pieces of music:</p>
+<p>Consider the following code:</p>
 
-<h3 id="運命と恋心">運命と恋心</h3>
+<pre><code class="language-cpp">string *ps = new string(&quot;Memory Management&quot;);
+</code></pre>
 
+<p>The <code>new</code> operator here is built into the language and always does the same two things:</p>
 
-<div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
-  <iframe src="//www.youtube.com/embed/8ZVSWYU10H8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allowfullscreen frameborder="0" title="YouTube Video"></iframe>
- </div>
+<ul>
+<li>first, it calls <code>operator new</code> to allocate enough memory to hold an object of the type requested.</li>
+<li>second, it calls a constructor to initialize an object in the memory that was allocated.</li>
+</ul>
 
+<p>Thus, when compiler sees the code above, they must generate code equivalent to this:</p>
 
-<p>Hope this winter be a productive one!</p>
+<pre><code class="language-cpp">void *memory = operator new(sizeof(string)); // get raw memory for a string object
+call string::string(&quot;Memory Management&quot;) on *memory // init. the object in the memory. 
+                                                    // as programmer, directly calling the ctor is prohibited
+string *ps = static_cast&lt;stirng*&gt;(memory);  // make ps point to the new object
+</code></pre>
 
-<p>BTW, the cover image is credit to pixiv user 駒＠ついった:</p>
+<p>So if we want to create an object on the heap, use the <code>new</code> operator and it both allocates memory and calls a constructor for the object.</p>
 
-<p><script src="http://source.pixiv.net/source/embed.js" data-id="43731455_4caeca1d1a29caec94dd37ded1c92ad0" data-size="large" data-border="off" charset="utf-8"></script><noscript><p><a href="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id=43731455" target="_blank">呪縛</a> by <a href="http://www.pixiv.net/member.php?id=23122" target="_blank">駒＠ついった</a> on <a href="http://www.pixiv.net/" target="_blank">pixiv</a></p></noscript></p>
+<p>However, if we want to do some customized behaviors, we may consider following options:</p>
+
+<ol>
+<li><p>if we only want to allocate memory, just call <code>operator new</code> directly:</p>
+
+<pre><code class="language-cpp">void *rawMemory = operator new(sizeof(string));
+</code></pre></li>
+
+<li><p>if we want to customize the memory allocation that takes place when heap objects are created, write our own version of <code>operator new</code> and use the <code>new</code> operator, which will automatically invoke the custom version of <code>operator new</code></p></li>
+
+<li><p>if we want to construct an object in memory we&rsquo;ve already got a pointer to, use <strong>placement <code>new</code></strong>.</p>
+
+<p>A special version of <code>oeprator new</code> called <em>placement <code>new</code></em> allows us to construct an object in the memory that&rsquo;s already been allocated, which is helpful for applications using shared memory or memory-mapped I/O, where objects must be placed at specific addresses or in memory allocated by special routines:</p>
+
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget(int widgetSize);
+    ...
+};
+
+Widget * constructWidgetInBuffer(void *buffer, int widgetSize)
+{
+    return new (buffer) Widget(widgetSize);
+}
+</code></pre>
+
+<p>Here, an additional argument (<code>buffer</code>) is being specified for the implicit call that the <code>new</code> operator makes to a special version of <code>operator new</code> known as placement <code>new</code> in standard C++ library<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
+
+<pre><code class="language-cpp">void * operator new(size_t, void *location)
+{
+    return location;
+}
+</code></pre>
+
+<p>All placement <code>new</code> has to do is return the pointer that&rsquo;s passed into it, because the memory for the object is already known. The unused (but mandatory) <code>size_t</code> parameter has no name to keep compilers from complaining about its not being used (MECpp item 6).</p></li>
+</ol>
+
+<h2 id="deletion-and-memory-deallocation">Deletion and memory deallocation</h2>
+
+<p>The <code>delete</code> operator also includes two steps: destructing the object and deallocating the memory occupied by that object. The second part of memory deallocation is performed by the <code>operator delete</code> function:</p>
+
+<pre><code class="language-cpp">void operator delete(void *memoryToBeDeallocated);
+</code></pre>
+
+<p>Hence, for a pointer to string <code>ps</code>, <code>delete ps;</code> causes compilers to generate code that approximately corresponds to this:</p>
+
+<pre><code class="language-cpp">ps-&gt;~string();         // call the object's dtor
+operator delete(ps);   // deallocate the memory the object occupied
+</code></pre>
+
+<p>Some implications:</p>
+
+<ul>
+<li><strong>If we want to deal with raw, uninitialized memory</strong>, we should call <code>operator new</code> to get memory and <code>operator delete</code> to return it to the system (the C++ equivalent of calling <code>malloc</code> and <code>free</code>):</li>
+</ul>
+
+<pre><code class="language-cpp">void *buffer = operator new (50*sizeof(char)); // allocate enough memory to hold 50 chars, call no ctor
+...
+operator delete(buffer); // deallocate the memory; call no dtor
+</code></pre>
+
+<ul>
+<li><strong>If we use placement <code>new</code> to create an object in some memory</strong>, we should avoid using the <code>delete</code> operator on that memory:</li>
+</ul>
+
+<pre><code class="language-cpp">// function to allocating and deallocating memory in shared memory
+void * mallocShared(size_t size);
+void freeShared(void *memory);
+
+void *sharedMemory = mallocShared(sizeof(Widget));
+Widget *pw = constructWidgetInBuffer(sharedMemory, 10); // as above
+...
+delete pw; // undefined! sharedMemory came from mallocShared, not operator new
+pw-&gt;~Widget();  // fine. destructs the Widget pointed to by pw, no memory deallocation performed
+freeShared(pw);  // fine, deallocate the memory pointed to by pw, but calls no dtor
+</code></pre>
+
+<h2 id="arrays">Arrays</h2>
+
+<p>For array allocation:</p>
+
+<pre><code class="language-cpp">string *ps = new string[10]; // allocate an array of objects
+</code></pre>
+
+<p>The <code>new</code> being used is still the <code>new</code> operator, but the behavior here is slightly different from the case for single-object creation:
+* in the first step, memory is allocated by <code>operator new[]</code> instead of <code>operator new</code>
+* in the second step, the constructor is called for <em>each object</em> in the array, so here the default constructor for <code>string</code> is called 10 times.</p>
+
+<p>Similarly, when the <code>delete</code> operator is used on an array, it calls a destructor for each array element and then calls <code>operator delete[]</code> to deallocate the memory.</p>
+
+<p>Just as we can replace or overload <code>operator new</code> and <code>operator delete</code>, we can do the same trick to <code>operator new []</code> and <code>operator delete []</code> to seize the control of memrory allocation and deallocation for arrays.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">To use placement <code>new</code>, all we have to do is is <code>#include &lt;new&gt;</code>.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
               
             </div>
           </div>
@@ -397,11 +494,9 @@ ga('send', 'pageview');
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">标签</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/clarinet/">clarinet</a>
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
 
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/%E6%A2%B6%E6%B5%A6%E7%94%B1%E7%BA%AA/">梶浦由纪</a>
-
-  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/music/">music</a>
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
 
                   </div>
                 
@@ -413,7 +508,7 @@ ga('send', 'pageview');
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2016/01/aesthetic/" data-tooltip="New year cover - Aesthetic">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -421,7 +516,7 @@ ga('send', 'pageview');
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2015/11/halloween-celebration/" data-tooltip="Halloween celebration">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/never-overload-and-or-comma-operator/" data-tooltip="[MECpp]Item-7 Never Overload &#39;&amp;&amp;&#39;, &#39;||&#39;, or &#39;,&#39;">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -435,7 +530,7 @@ ga('send', 'pageview');
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2015/12/end-of-semester/"
+          data-href="http://nianze.ml/2018/03/understand-the-different-meanings-of-new-and-delete/"
           data-layout="button_count">
         </div>
       </li>
@@ -446,12 +541,12 @@ ga('send', 'pageview');
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2015%2f12%2fend-of-semester%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-different-meanings-of-new-and-delete%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2015%2f12%2fend-of-semester%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-different-meanings-of-new-and-delete%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -484,8 +579,8 @@ ga('send', 'pageview');
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2015/12/end-of-semester/";  
-this.page.identifier = "End of my first semester in Cornell"; 
+this.page.url = "http://nianze.ml/2018/03/understand-the-different-meanings-of-new-and-delete/";  
+this.page.identifier = "[MECpp]Item-8 Understand the Different Meanings of New and Delete"; 
 };
 
 (function() { 
@@ -515,7 +610,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2016/01/aesthetic/" data-tooltip="New year cover - Aesthetic">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -523,7 +618,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2015/11/halloween-celebration/" data-tooltip="Halloween celebration">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/never-overload-and-or-comma-operator/" data-tooltip="[MECpp]Item-7 Never Overload &#39;&amp;&amp;&#39;, &#39;||&#39;, or &#39;,&#39;">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -537,7 +632,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2015/12/end-of-semester/"
+          data-href="http://nianze.ml/2018/03/understand-the-different-meanings-of-new-and-delete/"
           data-layout="button_count">
         </div>
       </li>
@@ -548,12 +643,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2015%2f12%2fend-of-semester%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-different-meanings-of-new-and-delete%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2015%2f12%2fend-of-semester%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-different-meanings-of-new-and-delete%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -581,17 +676,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2015%2f12%2fend-of-semester%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-different-meanings-of-new-and-delete%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2015%2f12%2fend-of-semester%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-different-meanings-of-new-and-delete%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2015%2f12%2fend-of-semester%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2funderstand-the-different-meanings-of-new-and-delete%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -880,9 +975,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2015\/12\/end-of-semester\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/03\/understand-the-different-meanings-of-new-and-delete\/';
           
-            this.page.identifier = '\/2015\/12\/end-of-semester\/'
+            this.page.identifier = '\/2018\/03\/understand-the-different-meanings-of-new-and-delete\/'
           
         };
         (function() {
