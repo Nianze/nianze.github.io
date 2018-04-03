@@ -10,7 +10,7 @@ tags:
 slug: Use Destructors to Prevent Resource Leaks
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018/2018-03/2018-04-01.gif
+thumbnailImage: /images/2018/2018-04/2018-04-01.gif
 ---
 
 To avoid resource leaks in the presence of exceptions, we can encapsulate resources inside objects.

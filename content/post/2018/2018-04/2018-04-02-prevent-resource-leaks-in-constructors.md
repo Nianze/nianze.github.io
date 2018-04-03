@@ -10,7 +10,7 @@ tags:
 slug: Prevent Resource Leaks in Constructors
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018/2018-03/2018-04-02.gif
+thumbnailImage: /images/2018/2018-04/2018-04-02.gif
 ---
 
 Replace pointer class members with their corresponding smart pointer objects to fortify the constructors against resource leaks in the presence of exceptions, to eliminate the need to manually deallocate resources in destructors, and to allow `const` member pointers to be handled in the smae graceful fashion as non-`const` pointers.
@@ -173,7 +173,9 @@ BookEntry::~BookEntry()
 }
 ```
 
-## For `constant` pointers
+---
+
+## For both `constant` and non-`const` pointers
 
 What if `BookEntry` class interface is designed differently, with `theImage` and `theAudioClip` defined as `constant` pointers, which must be initialized via the member initialization lists:
 
