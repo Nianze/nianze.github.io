@@ -115,8 +115,68 @@ catch (Widget& w) ... // catch by reference
 catch (const Widget& w) ... // catch by reference-to-const
 ```
 
-Note that a thrown object (which is always a copied temporary) may be caught by simple reference, but passing a temporary object to a non-`const` reference parameter is not allowed for function calls (item 19).
+A few points to note:
+
+* A thrown object (which is always a copied temporary) may be caught by simple reference, but it is not allowed in function calls (item 19) to pass a temporary object to a non-`const` reference parameter.
+* The first statement (catch by value) leads to _two_ copies of the thrown object, one to create the temporary that all exceptions generate, the other to copy that temporary into `w`.
+* For the catch by reference and catch by reference-to-const, we expect to pay for one copy of the exception. In contrast, when we pass function parameters by reference (or reference-to-const), no copying takes place.
+* Throw by pointer is equivalent to pass by pointer. Either way, a copy of the pointer is passed. Just remember not to throw a pointer to a local object.
 
 ### Difference in type matching
 
+Implicit conversions (such from `int` to `double`) are not applied when matching exceptions to `catch` clauses:
+
+```cpp
+void f(int value)
+{
+    try {
+        if (someFunction()) {
+            throw value;
+        }
+        ...
+    }
+    catch (double d) { // handle double type exceptions
+        ...
+    }
+    ...
+}
+```
+
+In this case, the `int` exception thrown in `try` block will never be caught by the `catch` clause taking a `double`.
+
+Basically, two kinds of conversions are applied during `catch` matching:
+
+1. inheritance-based conversions
+    For example, `range_error`, `underflow_error`, and `overflow_error` are derived types from `runtime_error`:
+    ```cpp
+    catch (runtime_error) ...         // can catch errors of type
+    catch (runtime_error&) ...        // runtime_error,
+    catch (const runtime_error&) ...  // range_error, or overflow_error
+    
+    catch (runtime_error*) ...        // can catch errors of type runtime_error*
+    catch (const runtime_error*) ...  // range_error*, or overflow_error*
+    ```
+
+2. from a typed to an untyped pointer
+    
+    ```cpp
+    catch (const void*) ...   // catches any exception that's a pointer
+    ```
+
 ### Difference in fitting strategy
+
+Catch clauses are always tried in the order of their appearance (employing a "first fit" strategy). For exampel:
+
+```cpp
+try {
+    ...
+}
+catch (logic_error& ex) {  // this block will catch all logic_error exceptions
+    ...                    // including invalid_argument exception, which is derived type
+}
+catch (invalid_argument& ed) {
+    ...
+}
+```
+
+on the contrary, when we call a virtual function, the function invoked is the one in the class `closest` to the dynamica type of the object invoking the function (employing a "best fit" algorithm).

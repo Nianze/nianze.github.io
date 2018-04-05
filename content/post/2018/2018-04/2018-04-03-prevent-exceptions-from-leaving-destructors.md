@@ -10,7 +10,7 @@ tags:
 slug: Prevent Exceptions From Leaving Destructors
 autoThumbnailImage: false
 thumbnailImagePosition: right
-thumbnailImage: /images/2018/2018-04/2018-04-02.gif
+thumbnailImage: /images/2018/2018-04/2018-04-03.gif
 ---
 
 Keep exceptions from propagating out of destructors to prevent C++ calling `terminate` during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.
