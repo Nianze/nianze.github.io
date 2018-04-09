@@ -185,7 +185,7 @@ git push origin gh-pages
 git checkout master
 ```
 
-为了提高每次发布的效率，可以在将下述命令存在脚本中，每次只需要运行该脚本即可将`gh-pages branch`中的文章发布到Github的repo中：
+为了提高每次发布的效率，可以将下述命令存在脚本中，每次只需要运行该脚本即可将`gh-pages branch`中的文章发布到Github的repo中：
 
 ```shell
 #!/bin/sh
