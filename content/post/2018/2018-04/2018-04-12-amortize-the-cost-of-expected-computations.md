@@ -57,7 +57,6 @@ T& DynArray<T>::operator[](int index)
     }
     if (index > the current maximum index value) {
         int diff = index - the current maximum index value;
-
         call new to allocate enough additional memory so that (index+diff) is valid;
     }
     return the indexth element of the array;
@@ -70,7 +69,7 @@ This `operator[]` function allocates twice as much memory as needed each time th
 DynArray<double> a;  // only a[0] is valid
 a[22] = 3.5;         // new is called to expand a's storage through index 44, 
                      // a's logical size is 23
-a[32] = 0;           // a's logical size is 33, without new being called
+a[32] = 0;           // a's logical size is now 33, without new being called
 ```
 
 [^1]: Not always. Using large objects means fewer fit on a virtual memory or cache page. In rare cases, making objects bigger _reduces_ the performance of the software due to the increased paging activity and/or the decreased cache hit rate.

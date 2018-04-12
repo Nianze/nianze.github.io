@@ -46,7 +46,7 @@ class LargeObject {
 public:
     LargeObject(ObjectID id);
 
-    const string& field1() const; value of field1
+    const string& field1() const;
     int field2() const;
     double field3() const;
     const string& field4() const;
@@ -54,14 +54,14 @@ public:
 private:
     ObjectID oid;
     mutable string *field1Value;
-    mutalbe int *field2Value;
+    mutable int *field2Value;
     mutable double *field3Value;
-    mutalbe string *field4Value;
+    mutable string *field4Value;
     ...    
 };
 
 LargeObject::LargeObject(ObjectID id)
-: oid(id), field1Value(0), field2Value(0), field3Value(0), ...
+: oid(id), field1Value(0), field2Value(0), field3Value(0), field4Value(0)...
 {}
 
 const string& LargeObject::field1() const
