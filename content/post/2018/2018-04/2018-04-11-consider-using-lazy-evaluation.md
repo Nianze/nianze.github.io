@@ -2,7 +2,7 @@
 title: "[MECpp]Item-17 Consider Using Lazy Evaluation"
 date: 2018-04-11T14:02:18-04:00
 categories:
-- article7
+- article
 - coding
 tags:
 - technique
