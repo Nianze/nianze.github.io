@@ -31,7 +31,7 @@ const Rational operator*(const Rational& lhs, const Rational& rhs)
 }
 ```
 
-Here we're creating a temporary `Rational` object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of `operator*` under the use case below:
+Here we're creating an anonymous temporary `Rational` object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of `operator*` under the use case below:
 
 ```cpp
 Rational a = 10;
@@ -40,11 +40,7 @@ Rational b(1, 2);
 Rational c = a * b;  // operator* is called
 ```
  
-The rules for C++ allow compilers to optimize temporary objects out of existence: 
-
->Compilers can construct the object defined by the `return` expression _inside the memory allotted for the object_ `c`.
-
-If compilers do this optimization, both the temporary inside `operator*` and the temporary returned by `operator*` are eliminated, and we only pay for one constructor call - the one to create `c`.
+The rules for C++ allow compilers to optimize such _anonymous_ temporary objects out of existence by constructing the temporary _inside the memory allotted for the object_ `c`. Thus, if compilers do this optimization, both the temporary inside `operator*` and the temporary returned by `operator*` are eliminated, and we only pay for one constructor call - the one to create `c`.
 
 Further more, we can eliminate the overhead of the call to `operator*` by declaring this function `inline`:
 
