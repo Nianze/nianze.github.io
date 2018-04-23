@@ -1,0 +1,1006 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>[MECpp]Item-25 Virtualizing Constructors and Non-Member Functions - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="Depending on the different input or dynamic types of function parameters, &ldquo;virtualization&rdquo; is a useful technique to construct new objects of different types accordingly, or to conceive of non-member functions whose behavior changes accordingly.
+">
+    <meta property="og:description" content="Depending on the different input or dynamic types of function parameters, &ldquo;virtualization&rdquo; is a useful technique to construct new objects of different types accordingly, or to conceive of non-member functions whose behavior changes accordingly.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="[MECpp]Item-25 Virtualizing Constructors and Non-Member Functions">
+    <meta property="og:url" content="/2018/04/virtualizing-constructors-and-non-member-functions/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="Depending on the different input or dynamic types of function parameters, &ldquo;virtualization&rdquo; is a useful technique to construct new objects of different types accordingly, or to conceive of non-member functions whose behavior changes accordingly.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-04/2018-04-23.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>I&rsquo;m a software developer who loves producing music and photography.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [MECpp]Item-25 Virtualizing Constructors and Non-Member Functions
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-04-23T13:30:56-04:00">
+      
+  四月 23, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>Depending on the different input or dynamic types of function parameters, &ldquo;virtualization&rdquo; is a useful technique to construct new objects of different types accordingly, or to conceive of non-member functions whose behavior changes accordingly.
+</p>
+
+<p>Constructors and non-member functions can&rsquo;t really be virtual. We just make them act &ldquo;virtually&rdquo; so that it is easier to use. The term &ldquo;virtual&rdquo; means that a function will achieve type-specific behavior when we have a pointer or reference to an object without knowing its dynamic type in advance.</p>
+
+<h2 id="virtual-constructor">Virtual constructor</h2>
+
+<p>Suppose we write applications for working with newsletters, where a newsletter consists of components that are either textual or graphical:</p>
+
+<pre><code class="language-cpp">class NLComponent {  // abstract base class for newsletter components
+public:
+    // constain at least one pure virtual function
+    virtual NLComponet * clone() const = 0; // virtual copy constructor
+    ...
+};
+
+class TextBlocks: public NLComponent { // 
+public:
+    virtual TextBlock * clone() const  // virtual copy constructor
+    { return new TextBlock(*this); }  
+    ...                                // constain no pure virtual function
+};
+
+class Graphic: public NLComponent {
+public:
+    virtual Graphic * clone() const  // virtual copy constructor
+    { return new Graphic(*this); } 
+    ...                                // constain no pure virtual function    
+};
+
+class NewsLetter {  // a newsletter object consists of a list of NLComponent objects
+public:
+    NewsLetter(istream&amp; str);
+    NewsLetter(const NewsLetter&amp; rhs);  // normal copy constructor
+    ...
+private:
+    list&lt;NLComponet*&gt; components; 
+    static NLComponet * readComponet(istream&amp; str); // read the data for the next NLComponet from str, create the component and return a pointer to it
+};
+</code></pre>
+
+<p>The classes relate in this way:</p>
+
+<pre><code>NewsLetter object
+┌───────────────┐
+│     ...       │
+├───────────────┤                    ┌──────────────┐
+│[list object]--│-----pointers------&gt;│  NLComponent │
+└───────────────┘                    └──────────────┘
+                       public inheritance ↗   ↖ public inheritance
+                             ┌───────────┐      ┌──────────┐
+                             │ TextBlock │      │  Graphic │
+                             └───────────┘      └──────────┘
+</code></pre>
+
+<p>Suppose <code>NewsLetter</code> objects are stored on disk, it is convevient that <code>NewsLetter</code>  takes an <code>istream</code> to read information from the stream as it creates the necessary in-core data structures. Depending on the data it reads, we need to create either a <code>TextBlock</code> or a <code>Graphic</code>, which are different types of objects. Here comes the <code>readComponent</code>, which acts like constructor for its creating new objects, while it is also able to create different types of objects according to the iput it is given. Thus we call such a constructor as the <em>virtual constructor</em>, which are useful in many constexts.</p>
+
+<p>Given <code>readComponent</code> acting as a virtual constructor, it is easy to implement the constructor for <code>NewsLetter</code>:</p>
+
+<pre><code class="language-cpp">NewsLetter::NewsLetter(istream&amp; str)
+{
+    while (str) {
+        componets.push_back(readComponet(str));
+    }
+}
+</code></pre>
+
+<p>Among all kinds of virtual functions, there is another widely useful one: the <em>virtual copy constructor</em>, which returns a pointer to a new copy of the object invoking the function, and is typically named like <code>copySelf</code>, <code>cloneSelf</code>, or simply <code>clone</code>. These virtual copy constructors just calls its real copy constructor, so that the meaning of &ldquo;copy&rdquo; keeps the same for both functions<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> - consistency.</p>
+
+<p>Notice that a derived class&rsquo;s redefinition of a base class&rsquo;s virtual function declare different return types here: if the function&rsquo;s return type is a pointer (or a reference) to a base class, the derived class&rsquo;s function may return a pointer (or reference)  to a class derived from that base class. Thus <code>TextBlock</code>&rsquo;s <code>clone</code> returns a <code>TextBlock*</code> and <code>Graphic</code>&rsquo;s <code>clone</code> returns a <code>Graphic*</code> while the return type of <code>NLComponent</code>&rsquo;s <code>clone</code> is <code>NLComponent*</code>.</p>
+
+<p>Taking advantage of the virtual copy constructor in <code>NLComponent</code>, <code>NewsLetter</code> only need to implement a normal copy constructor:</p>
+
+<pre><code class="language-cpp">NewsLetter::NewsLetter(const NewsLetter&amp; rhs); // normal copy constructor impl. in terms of virtual copy constructor
+{
+    for (list&lt;NLComponent*&gt;::const_iterator it = rhs.components.begin();
+         it != rhs.componets.end();
+         ++it) {
+             componets.push_back((*it)-&gt;clone());
+         }
+}
+</code></pre>
+
+<h2 id="virtual-non-member-functions">Virtual Non-member functions</h2>
+
+<p>Suppose we&rsquo;d like to implement output operators for the <code>TextBlock</code> and <code>Graphic</code> classes. Given that the defaultly output operator <code>operator&lt;&lt;</code> takes an <code>ostream&amp;</code> as its left-hand argument, we can not make it a member function of the <code>TextBlock</code> or <code>Graphic</code> classes, so it can&rsquo;t be declared as <code>virtual</code>. On the other hand, if we insist on declaring a virtual function for printing (e.g., <code>print</code>), and thus define a <code>print</code> for the <code>TextBlock</code> and <code>Graphic</code>, the syntax for printing <code>TextBlock</code> and <code>Graphic</code> objects is inconsistent with that for the other types in the language, which makes our clients unhappy.</p>
+
+<p>What we want it a non-member function called <code>operator&lt;&lt;</code> that exhibits the behavior of a virtual function like <code>print</code>. The solution? We define both <code>operator&lt;&lt;</code> and <code>print</code> and have the former call the latter, and we get the virtual-acting non-member function:</p>
+
+<pre><code class="language-cpp">class NLComponent {
+public:
+    virtual ostream&amp; print(ostream&amp; s) const = 0;
+    ...
+};
+
+class TextBlock: public NLComponent {
+public:
+    virtual ostream&amp; print(ostream&amp; s) const;
+    ...
+}
+
+class Graphic: public NLComponent {
+public:
+    virtual ostream&amp; print(ostream&amp; s) const;
+    ...
+}
+
+iinline ostream&amp; operator&lt;&lt;(ostream&amp; s, const NLComponent&amp; c)
+{
+    return c.print(s);
+}
+</code></pre>
+
+<p>Since the non-virtual function does nothing but call the virtual function that does the real work, we inline the non-virtual function to avoid the cost of a function call.</p>
+
+<p>Note that, although not easy, it is possible to make non-member functions act virtually on more than one of their arguments - details in MECpp item 31.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">If the real copy constructor performs a deep copy, so does the virtual copy constructor. If the real copy constructor does something fancy like reference counting or copy-on-write (MECpp item 29), so does the virtual copy constructor.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/04/lemon/" data-tooltip="[米津玄师]Lemon">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/04/virtualizing-constructors-and-non-member-functions/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f04%2fvirtualizing-constructors-and-non-member-functions%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f04%2fvirtualizing-constructors-and-non-member-functions%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/04/virtualizing-constructors-and-non-member-functions/";  
+this.page.identifier = "[MECpp]Item-25 Virtualizing Constructors and Non-Member Functions"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/04/lemon/" data-tooltip="[米津玄师]Lemon">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/04/virtualizing-constructors-and-non-member-functions/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f04%2fvirtualizing-constructors-and-non-member-functions%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f04%2fvirtualizing-constructors-and-non-member-functions%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f04%2fvirtualizing-constructors-and-non-member-functions%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f04%2fvirtualizing-constructors-and-non-member-functions%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f04%2fvirtualizing-constructors-and-non-member-functions%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>I&rsquo;m a software developer who loves producing music and photography.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/virtualizing-constructors-and-non-member-functions/">
+                <h3 class="media-heading">[MECpp]Item-25 Virtualizing Constructors and Non-Member Functions</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Depending on the different input or dynamic types of function parameters, &ldquo;virtualization&rdquo; is a useful technique to construct new objects of different types accordingly, or to conceive of non-member functions whose behavior changes accordingly.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/lemon/">
+                <h3 class="media-heading">[米津玄师]Lemon</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Unnatural里每次片尾曲神插入时都让人心头一颤。。。不愧是除了生孩子什么都会的ハチ
+谨以此曲献给米津玄師。嗯，以及石原里美🙂
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/costs-of-virtual-functions-multiple-inheritance-virtual-base-classes-and-rtti/">
+                <h3 class="media-heading">[MECpp]Item-24 Understand the Costs of Virtual Functions, Multiple Inheritance, Virtual Base Classes, and RTTI</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>It&rsquo;s important to have a basic understanding of the cost of some C++ features that can have a noticeable impact on the size of objects and the speed at which member functions execute.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/consider-alternative-libraries/">
+                <h3 class="media-heading">[MECpp]Item-23 Consider Alternative Libraries</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Different libraries offering similar functionality often feature different performance trade-offs, so we might be able to remove bottlenecks by replacing one library with another.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/consider-using-op-instead-of-stand-alone-op/">
+                <h3 class="media-heading">[MECpp]Item-22 Consider Using op= Instead of Stand Alone op</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Assignment versions of operators (such as <code>operator+=</code>) tend to be more efficient than stand-alone versions of those operators (e.g., <code>operator+</code>).
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/overload-to-avoid-implicit-type-conventions/">
+                <h3 class="media-heading">[MECpp]Item-21 Overload to Avoid Implicit Type Conventions</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Overloading to avoid temporaries.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/facilitate-the-return-value-optimization/">
+                <h3 class="media-heading">[MECpp]Item-20 Facilitate the Return Value Optimization</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Take use of the <em>return value optimization</em> in compilers.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/understand-the-origin-of-temporary-objects/">
+                <h3 class="media-heading">[MECpp]Item-19 Understand the Origin of Temporary Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Unnamed non-heap objects are invisible temporary objects in C++.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/amortize-the-cost-of-expected-computations/">
+                <h3 class="media-heading">[MECpp]Item-18 Amortize the Cost of Expected Computations</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The old Computer Science story: trade space for time<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/consider-using-lazy-evaluation/">
+                <h3 class="media-heading">[MECpp]Item-17 Consider Using Lazy Evaluation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The best computations are those we never perform at all.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         107 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/04\/virtualizing-constructors-and-non-member-functions\/';
+          
+            this.page.identifier = '\/2018\/04\/virtualizing-constructors-and-non-member-functions\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+
