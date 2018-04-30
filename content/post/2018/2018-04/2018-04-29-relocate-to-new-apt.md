@@ -15,7 +15,7 @@ metaAlignment: center
 搬一次家，掉一层皮
 <!--more-->
 
-{{< image classes="fancybox nocaption fig-100" src="/images/2018/2018-04/2018-04-29/outside.jpg" thumbnail="/images/2018/2018-04/2018-04-29/outside-small.jpg" >}}
+{{< image classes="fancybox nocaption fig-100" src="/images/2018/2018-04/2018-04-29/outside-small.jpg" thumbnail="/images/2018/2018-04/2018-04-29/outside-small.jpg" >}}
 
 总算是把新公寓布置好了，累得要死，按照之前的设想，这次把钢琴安排在了临近电脑的右侧，方便之后随时练习。至此工作室也就基本搭建好了。
 
