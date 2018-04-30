@@ -8,7 +8,7 @@ tags:
 - machine learning
 - music
 - AI
-slug: I have a dream
+slug: a big step
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-04/2018-04-25-nyu-phd.jpg
 coverImage: /images/2018/2018-04/2018-04-25-nyu-phd.jpg
