@@ -19,7 +19,7 @@ comments: false
     <h6 class='description'>
         Full stack software developer
         <br/>
-        Building Trader Access Manager service that manages user privileges for Bloomberg termianl clients
+        Building Trader Access Manager service that manages user privileges for Bloomberg terminal clients
     </h6>
 </div>
 
