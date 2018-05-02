@@ -11,6 +11,7 @@ slug: Requiring or Prohibiting Heap Based Objects
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-04/2018-04-25.gif
+draft: true
 ---
 
 Techniques for requiring or prohibiting heap-based objects
