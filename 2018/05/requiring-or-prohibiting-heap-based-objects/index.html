@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Item-27 Minimize_casting - 刀心の水|Nzo</title>
+    <title>[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.
+    <meta name="description" content="Techniques for requiring or prohibiting heap-based objects
 ">
-    <meta property="og:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.
+    <meta property="og:description" content="Techniques for requiring or prohibiting heap-based objects
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Item-27 Minimize_casting">
-    <meta property="og:url" content="/2018/02/minimize-casting/">
+    <meta property="og:title" content="[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects">
+    <meta property="og:url" content="/2018/05/requiring-or-prohibiting-heap-based-objects/">
     <meta property="og:site_name" content="Code.Music.Photo">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photo">
-    <meta name="twitter:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.
+    <meta name="twitter:description" content="Techniques for requiring or prohibiting heap-based objects
 ">
     
     
@@ -52,7 +52,7 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-02/2018-02-15.gif">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-05/2018-05-01.gif">
     
     
     
@@ -327,14 +327,14 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-27 Minimize_casting
+      [MECpp]Item-27 Requiring or Prohibiting Heap Based Objects
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2018-02-15T17:43:53-05:00">
+    <time itemprop="datePublished" datetime="2018-05-01T00:00:00Z">
       
-  二月 15, 2018
+  五月 1, 2018
 
     </time>
   
@@ -356,220 +356,222 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Avoid casts and develop a cast-free alternative whenever practical, especially <code>dynamic_cast</code> in performance-sensitive code.
+              <p>Techniques for requiring or prohibiting heap-based objects
 </p>
 
-<p>Casts subvert the C++ type system, so it is a feature we want to approach with great respect.</p>
+<h2 id="requiring-heap-based-objects">Requiring Heap-Based Objects</h2>
 
-<h3 id="cast-style">Cast style</h3>
+<h3 id="1-the-straightforward-way">1. The straightforward way</h3>
 
-<p>There are three different ways to write the same cast:</p>
+<p>The brutle way is to declare the constructors and the destructor <code>private</code>, but this is overkill. Either one of them need to be private to ensure objects only be created on the heap. Since there are usually many constructors but only one destructor per class, a more elegant way is to make the destructor private and the constructors public, prividing privileged pseudo-destructor function (which has access to the real destructor) for clients to call, as suggested in MECpp item 26.</p>
 
-<ol>
-<li><p>C-style casts:</p>
+<p>Example:</p>
 
-<pre><code class="language-cpp">(T) expression // cast expression to be of type T
-</code></pre></li>
-
-<li><p>Function-style casts</p>
-
-<pre><code class="language-cpp">T(expression)  // There's no difference in meaning between C-style and function-style casts. 
-               // Both of them are old-style casts
-</code></pre></li>
-
-<li><p>C++-style casts (new-style casts)</p>
-
-<pre><code class="language-cpp">const_cast&lt;T&gt;(expression)
-dynamic_cast&lt;T&gt;(expression)
-reinterpret_cast&lt;T&gt;(expression)
-static_cast&lt;T&gt;(expression)
+<pre><code class="language-cpp">class UPNumber { // unlimited precision numbers that should only exist on the heap
+public:
+    UPNumber();
+    UPNumber(int initValue);
+    UPNumber(double initValue);
+    UPNumber(const UPNumber&amp; rhs);
+    // pseudo-destructor (a const member function, because even const obj. may be destroyed)
+    void destroy() const { delete this; }
+    ...
+private:
+    ~UPNumber();
+};
 </code></pre>
 
-<p>Each serves a distinct purpose:</p>
+<p>Clients would program like this:</p>
+
+<pre><code class="language-cpp">UPNumber n; // error! (legal here, but illegal when n's dtor is implicitly invoked later)
+UPNumber *p = new UPNumber; // fine
+...
+delete p; // error! attempt to call private dtor
+p-&gt;destroy(); // fine
+</code></pre>
+
+<h3 id="2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</h3>
+
+<p>Restricting access to a class&rsquo;s destructor or constructors prevents the creation of not only non-heap objects, but also both inheritance and containment. To work this out:</p>
 
 <ul>
-<li><code>const_cast</code> is used to cast away the constness of objects, which is the only C++-style cast that can do this.</li>
-<li><code>dynamic_cast</code> is primarily used to perform &ldquo;safe downcasting,&rdquo; i.e., to determine whether an object is of a particular type in an inheritance hierarchy. This is the only cast that cannot be performed using the old-style syntax. It is also the only cast that may have a significant runtime cost.</li>
-<li><code>reinterpret_cast</code> in intended for low-level casts that yield implementation-dependent (i.e., unportable) results, e.g., casting a pointer to an <code>int</code>. Item 50 shows once its usage.</li>
-<li><code>static_cast</code> is used to force implicit conversions (e.g., non-<code>const</code> object to <code>const</code> object (item3), <code>int</code> to <code>double</code>, etc.) as well as some reverse of such conversions (e.g., <code>void*</code> pointers to typed pointers, pointer-to-base to pointer-to-derived), but it cannot cast from <code>const</code> to non-<code>const</code> objects.</li>
-</ul></li>
-</ol>
+<li>To be friendly for inheritance, we declare <code>protected</code> for <code>UPNumber</code>&rsquo;s destructor.</li>
+<li>To be friendly for containment, classes that need objects of type <code>UPNumber</code> can be modified to contain pointers to <code>UPNumber</code> object instead:</li>
+</ul>
 
-<p>The good points of using new style casts are:<br />
-1. new styles are much easier to identify in code for both humans and for tools like <code>grep</code>, thus simplifying the process of locating the code during debugging.<br />
-2. The more narrowly specified purpose of each cast makes it possible for compilers to diagnose usage errors.</p>
+<pre><code class="language-cpp">class UPNumer {...};  // declare dtor protected
+class NonNegativeUPNumber: public UPNumber {...}; // okay to access protected members
 
-<p>Sometimes an old-style cast may &ldquo;feel&rdquo; better: suppose we want to call an <code>explicit</code> constructor to pass an object to a function:</p>
-
-<pre><code class="language-cpp">class Widget {
+class Asset {
 public:
-    explicit Widget(int size);
+    Asset(int initValue);
+    ~Asset();
     ...
+private:
+    UPNumber *value;
 };
-void doSomeWork(const Widget&amp; w);
 
-doSomeWork(Widget(15));  // create Widget from in with function-style cast
-doSomeWork(static_cast&lt;Widget&gt;(15)); // cast with C++-style
+Asset::Asset(int initValue)
+: value(new UPNumber(initValue)) // fine
+{...}
+
+Asset::~Asset()
+{ value-&gt;destroy(); }  // fine
 </code></pre>
 
-<p>However, feeling is just feeling. Code that leads to a core dump also feels pretty reasonable when we write it - we&rsquo;d better ignore feelings and use new-style casts all the time.</p>
+<h3 id="3-determining-whether-an-object-is-on-the-heap">3. Determining Whether an Object is On The Heap</h3>
 
-<h2 id="behind-cast">Behind cast</h2>
+<p>It&rsquo;s hard to tell whether an object is on the heap. For example, given the class definition above, it&rsquo;s ligal to define a non-heap <code>NonNegativeUPNumber</code> object, which will not construct its base <code>UPNumber</code> part on the heap. There is no way to detect whether a constructor is being invoked as the base class part of a heap-based object, which means for the following contexts, it is not possible for the <code>UPNumber</code> constructor to detect the difference:</p>
 
-<p>Type conversions often lead to code that is executed at runtime, more than simply telling compilters to treat one type as another:</p>
-
-<pre><code class="language-cpp">int x, y;
-...
-double d = static_cast&lt;double&gt;(x) / y;  // divide x by y using floating point division
+<pre><code class="language-cpp">NonNegativeUPNumber *n1 = new NonNegativeUPNumber; // on heap
+NonNegativeUPNumber n2; // not on heap
 </code></pre>
 
-<p>the cast from the <code>int x</code> to a <code>double</code> almost certainly generates code, because on most architectures, the underlying representation for an <code>int</code> is different from that for a <code>double</code>.</p>
+<p>Sadly, there&rsquo;s no portable way to determine whether an object is on the heap, and there isn&rsquo;t even a semi-portable way that works most of the time. Detailed dicussion on this topic could be found at <a href="http://www.aristeia.com/BookErrata/M27Comments.html">Comments on Item 27 of More Effective C++</a>.</p>
 
-<p>Let&rsquo;s see another example:</p>
+<p>We&rsquo;ll have to turn to unportable, implementation-dependent system calls if we absolutely have to tell whether an address is on the heap. That being the case, we&rsquo;d better off trying to redesign the software so we don&rsquo;t need to determine whether an object is on the heap in the first place.</p>
 
-<pre><code class="language-cpp">class Base {...};
-class Derived: public Base {...};
+<h4 id="4-determine-whether-it-s-safe-to-delete-a-pointer">4. Determine whether it&rsquo;s safe to delete a pointer</h4>
 
-Derived d;
-Base *pb = &amp;d;  // implicitly convert Derived* to Base*
-</code></pre>
+<p>To answer this easier question, all we need to do is to create a collection of addresses that have been returned by <code>operator new</code>. One possible solution is to provide an abstract mixin base class that offers derived classes the ability to determine whether a pointer was allocated from <code>operator new</code>:</p>
 
-<p>When creating the base class pointer to a derived class object, sometimes, depending on the various compilers, an offset may be applied at runtime to the <code>Derived*</code> pointer to get the correct <code>Base*</code> pointer value, and now a single object of type <code>Derived</code> now have more than one address! This can&rsquo;t happen in Java, or C#, or C, but it <em>does</em> happen in C++, virtually all the time in the case of multiple inheritance, and some of the times under single inheritance.</p>
-
-<p>The lesson we learn:</p>
-
-<blockquote>
-<p>we should generally avoid making assumptions about how things are laid out in C++, and certainly not perform casts based on such assumptions.</p>
-</blockquote>
-
-<p>For example: casting object addresses to <code>char*</code> pointers and then using pointer arithmetic on them almost always yields undefined behavior.</p>
-
-<p>Another lesson we may learn from: many application frameworks requires that virtual member function implementations in derived classes call their base class conterparts first, and below is a wrong version to make the <code>SpecialWindow::onResize()</code> (derived class virtual function) to invoke its base class <code>Window</code>&rsquo;s conterparts:</p>
-
-<pre><code class="language-cpp">class Window {  // baes class
+<pre><code class="language-cpp">class HeapTracked { // mixin class; keeps track of ptrs returned from op. new
 public:
-    virtual void onResize();  // base on Resize impl
-    ...
+    class MissingAddress();  // exception class
+    virtual ~HeapTracked() = 0;
+
+    static void *operator new(size_t size);
+    static void operator delete(void *ptr);
+
+    bool isOnHeap() const;
+private:
+    typedef const void* RawAddress;
+    static list&lt;RawAddress&gt; addresses;
 };
-class SpecialWindow: public Window {  // derived class
-public:
-    virtual void onResize() {  // derived onResize impl
-        static_cast&lt;Window&gt;(*this).onResize(); // cast *this to Window, then call its onResize
-        ... // do SpecialWindow-specific stuff
+</code></pre>
+
+<pre><code class="language-cpp">// mandatory definition of static class member
+list&lt;RawAddress&gt; HeapTracked::address;
+// tho being pure virtual, dtor still needs to be defined
+HEapTracked::~HeapTracked() {}
+
+void * HeapTracked::operator new(size_t size)
+{
+    void *memPtr = ::operator new(size); // get the memory
+    addresses.push_front(memPtr);
+    return memPtr;
+}
+
+void HeapTracked::operator delete(void *ptr)
+{
+    // gracefully handle null pointer
+    if (ptr == 0) return;
+    list&lt;RawAddress&gt;::iterator it = 
+        find(addresses.begin(), addresses.end(), ptr);
+    if (it != addresses.end()) {
+        addresses.erase(it);     // remove the entry
+        ::operator delete(ptr);  // deallocate the memory
+    } else {
+        throw MissingAddress();  // ptr wasn't allocated by op. new. throw an exception
     }
-    ...
-};
-</code></pre>
+}
 
-<p>The code casts <code>*this</code> to a <code>Windnow</code>, so the call to <code>onResize</code> will invoke <code>Window::onResize</code>. However, surprisingly, the cast will secretly create a new, temporary <em>copy</em> of the base class part of <code>*this</code>, then invoke <code>onResize</code> on the copy - the <code>Window::onResize</code> does not apply on the current object, while the <code>SpecialWindow</code>-specific actions apply on that object, leading to the prospect that the code will leave the current object in an invalid state, if the base class virtual function is supposed to do some modifications on current object but fails to do so.</p>
-
-<p>The solution is to eliminate the cast, and call the base class version of <code>onResize</code> on the current object:</p>
-
-<pre><code class="language-cpp">class SpecialWindow: public Window {
-public:
-    virtual void onResize() {
-        Window::onResize();  // call Window::onResize on *this
-        ...
-    }
-    ...
+bool HeapTracked::isOnHeap() const
+{
+    // get a pointer to the beginning of the memory occupied by *this
+    const void *rawAddress = dynamic_cast&lt;cosnt void*&gt;(this);
+    list&lt;RawAddress&gt;::iterator it = 
+        find(addresses.begin(), addresses.end(), rawAddress);
+    return it != addresses.end();  // return whether it was found
 }
 </code></pre>
 
-<h2 id="cost-of-dynamic-cast">Cost of <code>dynamic_cast</code></h2>
+<p>Note that <code>dynamic_cast</code> is applicable only to pointers to objects that have at least one virtual function, and <code>dynamic_cast</code>ing a pointer to <code>void*</code> (or <code>const void*</code> or <code>volatile void*</code> or <code>const volatile void*</code>) yields a pointer to the beginning of the memory for the object pointed to by the pointer. Here <code>dynamic_cast</code>ing <code>this</code> to <code>const void*</code> gives us a pointer to the beginning of the memory for the current object, which is the pointer previously returned by <code>HeapTracked::operator new</code> as long as the memory for the current object was allocated by <code>HeapTracked::operator new</code> in the first place.</p>
 
-<p>One common implementatino of <code>dynamic_cast</code> is based in part on string comparisons of class names, so if we&rsquo;re performing a <code>dynamic_cast</code> on an object in a single-inheritance hierarchy four levels deep, each <code>dynamic_cast</code> could cost us up to four calls to <code>strcmp</code>. A deeper hierarchy or one using multiple inheritance would be more expensive. So for performance-sensitive code, we should be especially leery of <code>dynamic_cast</code>.</p>
+<p>To use this basic class, say we want to be able to determine whether a pointer to an <code>Asset</code> object points to a heap-based object, simply modify <code>Asset</code>&rsquo;s class definition to specify <code>HeapTracked</code> as a base class:</p>
 
-<p>When we need <code>dynamic_cast</code>? Generally, the need arises because we want to perform derived class operations on a derived class object via a base pointer or base reference. Say in our <code>Window</code>/<code>SpecialWindow</code> hierarchy, only <code>SpecialWindow</code> supports blinking, so we may use <code>dynamic_cast</code> this way:</p>
-
-<pre><code class="language-cpp">class Window {...};
-class SpecialWindow: public Window {
-public:
-    void blink();
+<pre><code class="language-cpp">class Asset: public HeapTracked {
+private:
+    UPNumber value;
     ...
 };
-typedef std::vector&lt;std::tr1::shared_ptr&lt;Window&gt;&gt; VPW; // item 13 on tr1::shared_ptr
-
-VPW winPtrs;
-...
-for (VPW::iterator iter = winPtrs.begin();
-    iter != winPtrs.end();
-    ++iter) {
-        if (SpecialWindow *psw = dynamic_cast&lt;SpecialWindow*&gt;(iter-&gt;get())) {
-            psw-&gt;blink();
-        }
-    }
 </code></pre>
 
-<p>In order to eliminate the <code>dynamic_cast</code>, there are two approaches:</p>
+<p>And we could query <code>Asset*</code> pointers as follows:</p>
+
+<pre><code class="language-cpp">void inventoryAsset(const Asset *ap)
+{
+    if (ap-&gt;isOnHeap()) {
+        as is a heap-based asset -- inventory it as such
+    } 
+    else {
+        ap is non-heap-based  asset  -- record it that way
+    }
+}
+</code></pre>
+
+<p>Since built-in types such as <code>int</code> and <code>char</code> can&rsquo;t inherit from anything, <code>HeapTracked</code> can&rsquo;t be used with these built-in types. Still, the most common reason for wanting to use a class like <code>HeapTracked</code> is to determine whether it&rsquo;s okay to <code>delete this</code>, and we don&rsquo;t want to do that with a built-in type because such types have no <code>this</code> pointer.</p>
+
+<h2 id="prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</h2>
+
+<p>To preventing objects from being allocated on the heap, there are three cases:</p>
 
 <ol>
-<li><p>Use specific containers<br />
-We could use containers that store pointers to derived class objects directly, so that there&rsquo;s no need to manipulate derived class through base class interfaces:</p>
-
-<pre><code class="language-cpp">typedef std::vector&lt;std::tr1::shared_ptr&lt;SpecialWindow&gt;&gt; VPSW;
-
-VPSW winPtrs;
-...
-for (VPSW::iterator iter = winPtrs.begin();
-    iter != winPtrs.end();
-    ++iter) {
-        (*iter)-&gt;blink();
-    }
-</code></pre>
-
-<p>Of course, we cannot store all possible <code>Window</code> derivatives in the same container under this approach, instead, we may work with multiple type-safe containers.</p></li>
-
-<li><p>Use virtual functions<br />
-If we insist on manipulating all possible <code>Window</code> derivatives through a base class interface, we could declare a useless <code>blink</code> as a virtual functions in base class (if it makes sense):</p>
-
-<pre><code class="language-cpp">class Window {
-public:
-    virtual void blink() {}  // default impl is no-op; see item 34 for why a default impl may be a bad idea
-    ...
-};
-class SpecialWindow: public Window {
-public:
-    virtual void blink() {...};  // do something in blink
-    ...
-};
-typedef std::vector&lt;std::tr1::shared_ptr&lt;Window&gt;&gt; VPW;
-
-VPW winPtrs;  // container holds ptrs to all possible Window types
-...
-for (VPW::iterator iter = winPtrs.begin();
-    iter != winPtrs.end();
-    ++iter) {
-        (*iter)-&gt;blink();  // no dynamic_cast
-    }
-</code></pre></li>
+<li>objects that are directly instantiated</li>
+<li>objects instantiated as base class parts of derived class objects</li>
+<li>objects embedded inside other objects</li>
 </ol>
 
-<p>Neigther of two approaches above are universally applicable, but they do provide a viable alternative to <code>dynamic_cast</code>. As long as they work, we should embrace them.</p>
+<h4 id="1-preventing-directly-instantiation-on-heap">1. Preventing directly instantiation on heap</h4>
 
-<p>Another thing we want to avoid about <code>dynamic_casts</code> is designs that involve cascading <code>dynamic_casts</code>:</p>
+<p>To prevent clients from directly instantiating objects on the heap: we can declare <code>operator new</code> (and possibly <code>operator new[]</code>) as <code>private</code>:</p>
 
-<pre><code class="language-cpp">class Window {...};
-...  // derived clases
-typedef std::vector&lt;std::tr1::shard_ptr&lt;Window&gt;&gt; VPW;
-
-VPW winPtrs;
-...
-for (VPW::iterator iter = winPtrs.begin(); 
-    iter != winPtrs.end(); 
-    ++iter) {
-        if (SpecialWindow1 *psw1 = 
-            dynamic_cast&lt;SpecialWindow1*&gt;(iter-&gt;get())) {...}
-        else if (SpecialWindow2 *psw2 = 
-            dynamic_cast&lt;SpecialWindow2*&gt;(iter-&gt;get())) {...}
-        else if (SpecialWindow3 *psw3 = 
-            dynamic_cast&lt;SpecialWindow3*&gt;(iter-&gt;get())) {...} 
-        ...        
-    }
+<pre><code class="language-cpp">class UPNumber {
+private:
+    static void *operator new(size_t size);
+    static void operator delete(void *ptr);
+    ...
+};
 </code></pre>
 
-<p>This design generates code that is big and slow, and is hard to maintain, for we have to update the condition branch every time we update the base class <code>Window</code>. Code like this should almost always be replaced with something based on virtual funciton calls.</p>
+<pre><code class="language-cpp">UPNumber n1;  // okay
+static UPNumber n2;  // okay
+UPNumber *p = new UPNumber; // error! attempt to call private operator new
+</code></pre>
 
-<p>In summary, although it&rsquo;s generally not practical to get rid of casts, we should use as few as possible. If we have to use them, like most suspicious constructs, we should isolate casts as much as possible, typically hide them inside functions whose interfaces shiled callers from the work inside.</p>
+<p>Declaring <code>operator new</code> private often also prevents <code>UPNumber</code> objects from being instantiated as base class parts of heap-based derived class objects, because <code>operator new</code> and <code>operator delete</code> are inherited, so if these functions aren&rsquo;t declared public in a derived class, that class inherits the private versions declared in its base(s):</p>
+
+<pre><code class="language-cpp">class UPNumber {...}; // as above
+class NonNegativeUPNumber: public UPNumber { // declares no operator new
+    ...
+};
+
+NonNegativeUPNumber n1; // okay
+static NonNegativeUPNumber n2; // okay
+NonNegativeUPNumber *p = new NonNegativeUPNumber; // error! attempt to call private operator new
+</code></pre>
+
+<h4 id="2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</h4>
+
+<p>However, if the derived class declares an <code>operator new</code> of its own, which will be called when allocating derived class objects on the heap, it is hard to prevent <code>UPNumber</code> base class parts from winding up there.</p>
+
+<h4 id="3-preventing-base-class-parts-instantiated-on-heap">3. Preventing base class parts instantiated on heap</h4>
+
+<p>Similarly, the fact that <code>UPNumber</code>&rsquo;s <code>operator new</code> is private has no effect on attempts to allocate objects containing <code>UPNumber</code> objects as members:</p>
+
+<pre><code class="language-cpp">class Asset {
+public:
+    Asset(int initValue);
+    ...
+private:
+    UPNumber value;
+};
+
+Asset *pa = new Asset(100);  // fine, calls Asset::operator new or ::operator new,
+                             // not UPNumber::operator new
+</code></pre>
+
+<p>Just as there&rsquo;s no portable way to determine if an address is on the heap, however, there is no portable way to determine that it is not on the heap, so we can&rsquo;t throw an exception in the <code>UPNumber</code> constructors if a to-be-tested <code>UPNumber</code> object being constructed is on the heap. We&rsquo;re out of luck.</p>
               
             </div>
           </div>
@@ -595,7 +597,7 @@ for (VPW::iterator iter = winPtrs.begin();
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/avoid-return-handles-to-obejct-internals/" data-tooltip="Item-28 Avoid returning handles to object internals">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -603,7 +605,7 @@ for (VPW::iterator iter = winPtrs.begin();
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/postpone-variable-definitions/" data-tooltip="Item-26 Postpone variable definitions as long as possible">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/04/relocation-to-m2/" data-tooltip="搬了个家">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -617,7 +619,7 @@ for (VPW::iterator iter = winPtrs.begin();
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/02/minimize-casting/"
+          data-href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/"
           data-layout="button_count">
         </div>
       </li>
@@ -628,12 +630,12 @@ for (VPW::iterator iter = winPtrs.begin();
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-casting%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-casting%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -666,8 +668,8 @@ for (VPW::iterator iter = winPtrs.begin();
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2018/02/minimize-casting/";  
-this.page.identifier = "Item-27 Minimize_casting"; 
+this.page.url = "http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/";  
+this.page.identifier = "[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects"; 
 };
 
 (function() { 
@@ -697,7 +699,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/avoid-return-handles-to-obejct-internals/" data-tooltip="Item-28 Avoid returning handles to object internals">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -705,7 +707,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/postpone-variable-definitions/" data-tooltip="Item-26 Postpone variable definitions as long as possible">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/04/relocation-to-m2/" data-tooltip="搬了个家">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -719,7 +721,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/02/minimize-casting/"
+          data-href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/"
           data-layout="button_count">
         </div>
       </li>
@@ -730,12 +732,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-casting%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-casting%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -763,17 +765,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-casting%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-casting%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-casting%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -1063,9 +1065,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2018\/02\/minimize-casting\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/05\/requiring-or-prohibiting-heap-based-objects\/';
           
-            this.page.identifier = '\/2018\/02\/minimize-casting\/'
+            this.page.identifier = '\/2018\/05\/requiring-or-prohibiting-heap-based-objects\/'
           
         };
         (function() {

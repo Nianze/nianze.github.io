@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Item-6 Disallow unwanted compiler-generated functions - 刀心の水|Nzo</title>
+    <title>Item-5 What functions C&#43;&#43; silently generates - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.
+    <meta name="description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
 ">
-    <meta property="og:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.
+    <meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Item-6 Disallow unwanted compiler-generated functions">
+    <meta property="og:title" content="Item-5 What functions C&#43;&#43; silently generates">
     <meta property="og:url" content="/2018/01/functions-silently-created/">
     <meta property="og:site_name" content="Code.Music.Photo">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photo">
-    <meta name="twitter:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.
+    <meta name="twitter:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
 ">
     
     
@@ -52,7 +52,7 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-01/2018-01-24.jpg">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-01/2018-01-23.jpg">
     
     
     
@@ -327,14 +327,14 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-6 Disallow unwanted compiler-generated functions
+      Item-5 What functions C&#43;&#43; silently generates
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2018-01-24T16:18:59-05:00">
+    <time itemprop="datePublished" datetime="2018-01-23T18:42:07-05:00">
       
-  一月 24, 2018
+  一月 23, 2018
 
     </time>
   
@@ -356,52 +356,77 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Declare unwanted member functions <em>private</em> without implementations to disallow functionality automatically provided by compilers.
+              <p>Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
 </p>
 
-<p>If we want to prevent functions such as copy constructor being generated in order to maintain the object uniqueness, explicitly declare the copy constructor and the copy assignment operator <em>private</em>, so that the client of the class will not be able to copy the object.</p>
+<p>All the compiler generated functions will be both <code>public</code> and <code>inline</code> (item 30). An empty class declared like this:</p>
 
-<p>To make it foolproof, declare member functions <em>private</em> and deliberately not implemente them so that member and friend functions will not be able to copy the object, either.</p>
-
-<p>Another possible solution to prevent copying is to inherit from a well-designed base class such as this:</p>
-
-<pre><code class="language-cpp">class Uncopyable {
-protected:
-    Uncopyable() {}    // allow construction of derived objects
-    ~Uncopyable() {}   // allow destruction of derived objects
-private:
-    Uncopyable(const Uncopyable&amp;);            // prevent copying
-    Uncopyable&amp; operator=(const Uncopyable&amp;); // prevent copying
-};
+<pre><code class="language-cpp">class Empty{};
 </code></pre>
 
-<p>To inherit from the base class, simply:</p>
+<p>is essentially equivalent to:</p>
 
-<pre><code class="language-cpp">class HomeForSale: private Uncopyable {
-... // no copy ctor or copy assign. operator declaration
-};
-</code></pre>
-
-<p>This will be the same effect as the following design:</p>
-
-<pre><code class="language-cpp">class HomeForSale{
+<pre><code class="language-cpp">class Empty {
 public:
-...
-private:
-...
-HomeForSale(const HomeForSale&amp;);
-HomeForSale&amp; operator=(const HomeForSale&amp;);
+    Empty() { ... } // default constructor
+    Empty(const Empty&amp; rhs) { ... } // copy constructor
+    ~Empty() { ... }  // destructor
+                      // will be _virtual_ only if inheriting 
+                      // from a base class with virtual destructor
+    Empty&amp; operator=(const Empty&amp; rhs) { ... } // copy assignment operator
 };
 </code></pre>
 
-<p>There are some subtleties about the implementation and use of <code>Uncopyable</code>:</p>
+<p>These functions are generated only if they are needed:</p>
+
+<pre><code class="language-cpp">Empty e1;     // default constructor and destructor generated
+Empty e2(e1); // copy constructor generated
+e2 = e1;      // copy assignment operator generated
+</code></pre>
+
+<p>Basically, the generated default <code>constructor</code> and the <code>destructor</code> will invocate constructors and destructors of base classes and non-static data members, while the <code>copy constructor</code> will simply copy each non-static data member of the source object to the target object.</p>
+
+<blockquote>
+<p>specifically,<br />
+1. for data member of user-defined type, call the data member&rsquo;s copy constructor with source object&rsquo;s corresponding member&rsquo;s value as argument<br />
+2. for data member of built-in type, directly copy the corresponding source data member&rsquo;s bits</p>
+</blockquote>
+
+<p>Copy assignment operator behaves generally the same as copy constructor, but the code is only generated when the resulting code is both legal and has a reasonable chance of making sense. For example:</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class NamedObject {
+public:
+    NamedObject(std::string&amp; name, const T&amp; value);
+    ...
+private:
+    std::string&amp; nameValue;  // a reference
+    const T objectValue;     // a const
+}
+</code></pre>
+
+<p>In below situation, implicitly generated copy assignment operator will make no sense for nameValue and illegal for objectValue:</p>
+
+<pre><code class="language-cpp">std::string youngMan(&quot;child&quot;);
+std::string oldMan(&quot;adult&quot;);
+
+NamedObject&lt;int&gt; p(youngMan, 10);
+NamedObject&lt;int&gt; s(oldMan, 50);
+
+p = s; // nameValue assignment will make no sense!
+       // objectValue assignment will be illegal due to its constness
+</code></pre>
+
+<p>Since p.nameValue and s.nameValue refer to different string object, the assignment will be in a conundrum:</p>
 
 <ol>
-<li>inheritance from <code>Uncopyable</code> needn&rsquo;t be public (item 32 and 39)</li>
-<li><code>Uncopyable</code> destructor needn&rsquo;t be <em>virtual</em> (item 7: the base class is not designed to be used polymorphically)</li>
-<li>it&rsquo;s eligible for the empty bass class optimization described in item 39, but use of this technique could lead to multiple inheritance (item 40), which will sometimes in turn disable the empty base class optimization (item 39)</li>
-<li>Boost (item 55) provides a similar class named <code>noncopyable</code></li>
+<li>should compiler choose to let p.nameValue refer to new string object? (actually C++ does not allow reference referring to different one)?</li>
+<li>should compiler choose to change the string content &ldquo;child&rdquo; to &ldquo;adult&rdquo;? (this will affect other objects that hold pointers or references to original string &ldquo;child&rdquo;)</li>
 </ol>
+
+<p>Neither will be sensible, so C++ refuses to compile the code. In this situation, a copy assignment operator must be defined manually.</p>
+
+<p>Finally, derived classes will not be able to have generated implicit copy assignment operators if base classes declare the copy assignment operator <em>private</em>, for derived copy assignment operators are supposed to handle base class parts, but they don&rsquo;t have the right to invoke the base member functions in this situation.</p>
               
             </div>
           </div>
@@ -427,7 +452,7 @@ HomeForSale&amp; operator=(const HomeForSale&amp;);
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -435,7 +460,7 @@ HomeForSale&amp; operator=(const HomeForSale&amp;);
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/functions-silently-created/" data-tooltip="Item-5 What functions C&#43;&#43; silently generates">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -499,7 +524,7 @@ HomeForSale&amp; operator=(const HomeForSale&amp;);
 
 var disqus_config = function () {
 this.page.url = "http://nianze.ml/2018/01/functions-silently-created/";  
-this.page.identifier = "Item-6 Disallow unwanted compiler-generated functions"; 
+this.page.identifier = "Item-5 What functions C++ silently generates"; 
 };
 
 (function() { 
@@ -529,7 +554,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -537,7 +562,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/functions-silently-created/" data-tooltip="Item-5 What functions C&#43;&#43; silently generates">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -665,6 +690,24 @@ s.setAttribute('data-timestamp', +new Date());
       <div class="no-result text-color-light text-center"></div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/">
+                <h3 class="media-heading">[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Techniques for requiring or prohibiting heap-based objects
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -829,24 +872,6 @@ s.setAttribute('data-timestamp', +new Date());
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/04/facilitate-the-return-value-optimization/">
-                <h3 class="media-heading">[MECpp]Item-20 Facilitate the Return Value Optimization</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Apr 4, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Take use of the <em>return value optimization</em> in compilers.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -854,7 +879,7 @@ s.setAttribute('data-timestamp', +new Date());
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         110 posts found
+         111 posts found
       </p>
     </div>
   </div>
