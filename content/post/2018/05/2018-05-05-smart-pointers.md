@@ -4,7 +4,7 @@ date: 2018-05-05T16:38:03-04:00
 categories:
 - article
 - coding
-tags
+tags:
 - technique
 - cpp
 slug: Smart Pointers

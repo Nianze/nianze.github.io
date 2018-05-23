@@ -14,8 +14,7 @@ thumbnailImage: /images/2018/2018-04/2018-04-25-nyu-phd.jpg
 coverImage: /images/2018/2018-04/2018-04-25-nyu-phd.jpg
 metaAlignment: center
 ---
-
-我有一个大胆的想法。
+突然有一个想法。
 <!--more-->
 
 之前跟组里印度裔小哥闲聊，聊到过自己想用midi结合AI做些有趣的项目。今天他给我发来一个[链接](https://richardyang40148.github.io/TheBlog/)，我看了下博主的[经历](https://richardyang40148.github.io/)，突然有了一个大胆的想法。
