@@ -271,9 +271,162 @@ When a dump pointer is expected for some lagacy libraries (say `normalize(Tuple 
 normalize(&*pt);  // gross, but legal
 ```
 
+but apparently this is not elegant.
 
+A dangerous solution will be to add to the smart pointer-to-T template an implicit conversion operator to a dumb pointer-to-T:
+
+```cpp
+template<class T>
+class DBPtr{
+public:	
+	...
+	operator T*() { return pointee; }
+	...
+};
+
+DBPtr<Tuple> pt;
+...
+normalize(pt);  // this now works
+if (pt == 0) ...  // fine, too
+if (pt) ... // fine, too
+if (!pt) ...  // fine, too
+```
+
+However, as stated in MECpp item 5, there's dark side to such conversion function: it's so easy for clients to get access to dumb pointers that they bypass all the smart behavior (such as reference-counting ability) our pointer-like objects designed to provide, which will almost certainly lead to disaster (such as bookkeeping errors that corrupt the reference-counting data structures):
+
+```cpp
+void processTuple(DBPtr<Tuple>& pt)
+{
+	Tuple *rawTuplePtr = pt;  // convert DBPtr<Tuple> to Tuple*
+	use rawTuplePtr to modify the tuple;
+}
+```
+
+Besides, even we provide such implicit conversion operator, our smart pointer will never be truly interchangeable with the dumb pointer: the conversion from a smart pointer to a dumb pointer is a user-defined conversion, and compilers are forbidden from applying more than one user-defined conversion at a time. Following example shows this difference, where conversion from `DBPtr<Tuple>` to `TupleAccessors` calls for two user-defined conversions (1. `DBTpr<Tuple>` -> `Tuple*`; 2. `Tuple*` -> `TupleAccessors`), which are prohibited by the language:
+
+```cpp
+class TupleAccessors {
+public:
+	TupleAccessors(const Tuple *pt); // this ctor also acts as a type-conversion operator
+	...
+};
+TupleAccessors merge(const TupleAccessors& ta1, const TupleAccessors& ta2);
+...
+Tuple *pt1, *pt2;
+merge(pt1, pt2);  // fine, both pointers are converted to TupleAccessors objects
+...
+DBPtr<Tuple> smart_pt1, smart_pt2;
+merge(smart_pt1, smart_pt2);  // error! no way to convert smart_pt1 and smart_pt2 to TupleAccessors implicitly
+```
+
+Moreover, implicit conversion functino makes it possible to let evil statement compile, which will almost certainly break our program later[^1]:
+
+```cpp
+DBPtr<Tuple> pt = new Tuple;
+...
+delete pt;  // this compiles
+```
+
+All in all, keep in mind the bottom line: don't provide implicit conversion operators to dumb pointers unless there is a compelling reason to do so.
 
 ## Smart pointers and inheritance-based type conversions
+
+Given the following public inheritance hierarchy:
+
+```cpp
+class MusicProduct {
+public:
+	MusicProduct(const string& title);
+	virtual void play() const = 0;
+	virtual void displayTitle() const = 0;
+};
+class Cassette: public MusicProduct {
+public:
+	Cassette(const string& title);
+	virtual void play() const;
+	vitual void displayTitle() const;
+	...
+};
+class CD: public MusicProduct {
+public:
+	CD(const string& title);
+	virtual void play() const;
+	virtual void displayTitle() const;
+	...
+};
+```
+
+It is expected that the virtual function will work properly with dumb pointers:
+
+```cpp
+void displayAndPlay(const MusicProduct* pmp, int numTimes)
+{
+	for (int i = 1; i <= numTimes; ++i)
+	{
+		pmp->displayTitle();
+		pmp->play();
+	}
+}
+
+Cassette *funMusic = new Cassette("Alapalooza");
+CD *nightmareMusic = new CD("Disco Hits of the 70s");
+
+displayAndPlay(funMusic, 10);
+displayAndPlay(nightmareMusic, 0);
+```
+
+However, as far as compilers are converned, `SmartPtr<CD>`, `SmartPtr<Cassette>`, and `SmartPtr<MusicProduct>` are three seperate classes without any relationship to one another, so if we pass an object of type `SmartPtr<CD>` into a function with signature `void displayAndPlay(const SmartPtr<MusicProduct>, int)`, there will be error.
+
+#### Manually adding implicit conversion operator
+
+A naive solution: adding into each smart pointer class an implicit type conversion operator. Take `SmartPtr<Cassette>` for example:
+
+```cpp
+class SmartPtr<Cassette> {
+public:
+	operator SmartPtr<MusicProduct>()
+	{ return SmartPtr<MusicProduct>(pointee); }
+	...
+};
+```
+
+Yet there are two drawbacks in this design:
+
+1. manually adding the necessary implicit type conversion operators specializes the `SmartPtr` class instantiations, which defeats the purpose of templates
+2. too many conversion operators to add - given a deep inheritance hierarchy, we must provide a conversion operator for _each_ base class from that object directly or indirectly inherits (again, compilers are prohibited from employing more than one user-defined type conversion function at a time.)
+
+#### Generating conversion operators via member templates
+
+The right way to take is to take advantage of _member function templates_ (or just _member templates_):
+
+```cpp
+template<class T>
+class SmartPtr {
+public:
+	SmartPtr(T* realPtr = 0);
+	T* operator->() const;
+	T* operator*() const;
+
+	template<class newType>      // template function for
+	operator SmartPtr<newType>() // implicit conversion ops.
+	{
+		return SmartPtr<newType>(pointee);
+	}
+};
+```
+
+Here's what happens:
+
+* Compiler needs to convert a smart pointer-to-`T` object into a smart pointer-to-base-class-of-`T`
+* Compiler checks the class definition for `SmartPtr<T>` to see if the requisite conversion operator is declared -> it is not
+* Compiler then checks to see if there's a member function template it can instantiate that would perform the wanted conversion -> it finds a template
+* Compiler instantiates the template with `newType` bound to the base class of `T`
+* Given this instantiated member function, compiler finds it legal to pass the dumb pointer `pointee` to the constructor for the smart pointer-to-base-of-`T`, because `T`-type `pointee` is legal to be converted into a pointer to its (public or protected) base classes
+* The code compiles -> the implicit conversion from smart pointer-to-`T` to smart pointer-to-base-of-`T` succeeds
+
+Note that this implicit conversion will succeed for _any_ legal implicit conversion between pointer types: if (and only if) a dumb pointer type `T1*` can be implicitly converted to another pointer type `T2*`, we can implicitly convert a smart pointer-to-`T1` to a smart pointer-to-`T2`.
+
+However, there's still a drawback: suppose 
 
 ## Smart pointers and const
 
@@ -283,3 +436,4 @@ normalize(&*pt);  // gross, but legal
 
 
 
+[^1]: It is possible that, after `delete pt;`, `pt`'s destructor (or some true owner of `pt`) will invoke `delete pt;` for a second time, and double deletion yields undefined behavior.
