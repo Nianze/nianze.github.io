@@ -426,7 +426,34 @@ Here's what happens:
 
 Note that this implicit conversion will succeed for _any_ legal implicit conversion between pointer types: if (and only if) a dumb pointer type `T1*` can be implicitly converted to another pointer type `T2*`, we can implicitly convert a smart pointer-to-`T1` to a smart pointer-to-`T2`.
 
-However, there's still a drawback: suppose 
+However, there's still a drawback: suppose following augmented `MusicProduct` hierarchy:
+
+```
+                  ┌──────────────┐
+ 				  │ MusicProduct │
+                  └──────────────┘
+   					  ↗     ↖ 
+             ┌──────────┐      ┌────┐
+             │ Cassette │      │ CD │
+             └──────────┘      └────┘
+                   ↑
+             ┌───────────┐
+             │ CasSingle │
+             └───────────┘
+```
+
+```cpp
+template<class T>      // as above, including member tempate
+class SmartPtr {...};
+
+void displayAndPlay(const SmartPtr<MusicProduct>& pmp, int howMany);
+void displayAndPaly(const SmartPtr<Cassette>& pc, int howMany);
+
+SamrtPtr<CasSingle> dumbMusic(new CasSingle("Achy Breaky Heart"));
+displayAndPlay(dumbMusic, 1);  // error!
+```
+
+When invoking `displayAndPlay` with a `SmartPtr<CasSingle>`, according to the inheritance hierarchy, we may expect the `SmartPtr<Cassette>` function to be chosen, because `CasSingle` inherits directly from `Casssette` and only indirectly from `MusicProduct`. However, it will only work in the case of dumb pointers. For our smart pointers, as far as C++ compilers are concerned, both calls to conversion functions here are equally good (the conversion from `SmartPtr<CasSingle>` to `SmartPtr<Cassette>` is no better than the conversion to `SmartPtr<MusicProduct>`), leading to an error of ambiguous call to `displayAndPlay`. The best we can do, then, is to use casts (MECpp item 2) in this ambiguous case.
 
 ## Smart pointers and const
 
