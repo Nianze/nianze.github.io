@@ -457,10 +457,16 @@ When invoking `displayAndPlay` with a `SmartPtr<CasSingle>`, according to the in
 
 ## Smart pointers and const
 
+To mimic the flexibility of constness in terms of smart pointers, we use follwoing ways to create four combinations of `const` and non-`const` objects and pointers:
 
+```cpp
+CD goodCD("Flood");
+SmartPtr<CD> p;  // non-const object, non-const pointer
+SmartPtr<const CD> p;  // const object, non-const pointer
+const SmartPtr<CD> p = &goodCD;  // non-const object, const pointer
+const SmartPtr<const CD> p = &goodCD;  // const object, const pointer
+```
 
-
-
-
+Moreover, we can use the member templates technique shown above for automatically generating the implicit type conversion operators from `SmartPtr<CD>` to `SmartPtr<const CD>` - this technique works anytime the corresponding conversion for dumb pointers would work， and conversions involving `const` are no exception.
 
 [^1]: It is possible that, after `delete pt;`, `pt`'s destructor (or some true owner of `pt`) will invoke `delete pt;` for a second time, and double deletion yields undefined behavior.
