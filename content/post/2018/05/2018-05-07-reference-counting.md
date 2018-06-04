@@ -307,10 +307,71 @@ private:
 ```
 
 ```cpp
-。。。
+RCObject::RCObject()
+: refCount(0), shareable(true) {}
+
+RCObject::RCObject(const RCObject&)
+: refCount(0), shareable(true) {}
+
+RCObject& RCObject::operator=(const RCObject&)
+{ return *this; }
+
+RCObject::~RCObject() {} // pure virtual dtor still need to be impl. see MECpp item 33
+
+void RCObject::addReference() { ++refCount; }
+
+void RCObject::removeReference() 
+{ if(--refCount == 0) delete this; }
+
+void RCObject::markUnshareable()
+{ shareable = false; }
+
+bool RCObject::isShareable() const
+{ return shareable; }
+
+bool RCObject::isShared() const
+{ return refCount > 1; }
 ```
 
+In this design, there are a few things worth noting:
+
+1. The `refCount` is set to 0 in both constructors to simplifies the set up process for the creaters of `RCObject`s when they set `refCount` to 1 themselves
+2. Copy constructor sets `refCount` to 0, because this function is meant to create a new object representing a value, which is always unshared and referenced only by their creator (who will set up `refCount` properly later).
+3. The assignment operator is unlikely to be called, since `RCObject` is a base class for a shared _value_ object, which means in a reference counting system, it is usually the object pointing to these base-class objects that are assigned to one another, with only `refCount` being modified as a result. We don't declare assignment operator `private`, because there's a chance that someone does have a reason to allow assignment of reference-counted values(e.g., change the string value stored inside `StringValue` in the example above), so we adopt this "do nothing" implementation, which is exactly the right thing to do, because the assignment of value objects doesn't affect the reference count of objects pointing to either `lhs` or `rhs` of assignment operation: this base-class level assignment is meant to change `lhs`'s value, meaning all the objects pointing to `lhs` now pointing to a new value.
+4. Here we use `delete this;` for `removeReference`, which is safe only if we know that `*this` is a heap object. In order to ensure this, we need techniches discussed in MECpp item 27 to restrict `RCObject` to be created only on the heap. 
+
+Now taking advantage of this new reference-counting base class, we modify `StringValue` to inherit its reference counting capabilities from `RCObject`:
+
+```cpp
+class String {
+private:
+    struct StringValue: public RCObject {
+        char *data;
+        StringValue(const char *initValue);
+        ~StringValue();
+    };
+...
+};
+
+String::StringValue::StringValue(const char *initValue)
+{
+    data = new char[strlen(initValue) + 1];
+    strcpy(data, initValue);
+}
+
+String::StringValue::~StringValue()
+{
+    delete [] data;
+}
+```
+
+After this change, `RCObject` now provide the manipulation ability of the `refCount` field, instead of `StringValue`.
+
 ## Automating Reference Count Manipulations
+
+The `RCObject` class only gives us a place to store a reference count, as well as the member functions to manipulate the `refCount` field. However, the _calls_ to these functions must still be mannually inserted in other classes: `String` copy constructor and assignment operator need to call `addReference` and `removeReference` on `StringValue` objects, which is not good practice for reuse.
+
+To remove (most of) such manual work, we introduce _smart pointer_ for help.
 
 ## Puting Everyting Together
 
