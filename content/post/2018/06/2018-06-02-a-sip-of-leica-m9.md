@@ -22,7 +22,7 @@ metaAlignment: center
 
 {{< image classes="fancybox fig-100" src="/images/2018/2018-06/02/title-image-1.jpg" title="↑M9 with VM35 F/1.4" >}}
 
-## 前沿：为什么是徕卡
+## 前言：为什么是徕卡
 
 作为35mm画幅的开创者，历史中有太多精彩的[决定性瞬间](https://www.zhihu.com/question/25875082/answer/31671331)出自徕卡相机，也让徕卡这家“手工作坊”在上百年的历史积淀中塑造了属于自己的摄影哲学。
 
