@@ -637,10 +637,72 @@ private:
 };
 </code></pre>
 
-<pre><code class="language-cpp">。。。
+<pre><code class="language-cpp">RCObject::RCObject()
+: refCount(0), shareable(true) {}
+
+RCObject::RCObject(const RCObject&amp;)
+: refCount(0), shareable(true) {}
+
+RCObject&amp; RCObject::operator=(const RCObject&amp;)
+{ return *this; }
+
+RCObject::~RCObject() {} // pure virtual dtor still need to be impl. see MECpp item 33
+
+void RCObject::addReference() { ++refCount; }
+
+void RCObject::removeReference() 
+{ if(--refCount == 0) delete this; }
+
+void RCObject::markUnshareable()
+{ shareable = false; }
+
+bool RCObject::isShareable() const
+{ return shareable; }
+
+bool RCObject::isShared() const
+{ return refCount &gt; 1; }
 </code></pre>
 
+<p>In this design, there are a few things worth noting:</p>
+
+<ol>
+<li>The <code>refCount</code> is set to 0 in both constructors to simplifies the set up process for the creaters of <code>RCObject</code>s when they set <code>refCount</code> to 1 themselves</li>
+<li>Copy constructor sets <code>refCount</code> to 0, because this function is meant to create a new object representing a value, which is always unshared and referenced only by their creator (who will set up <code>refCount</code> properly later).</li>
+<li>The assignment operator is unlikely to be called, since <code>RCObject</code> is a base class for a shared <em>value</em> object, which means in a reference counting system, it is usually the object pointing to these base-class objects that are assigned to one another, with only <code>refCount</code> being modified as a result. We don&rsquo;t declare assignment operator <code>private</code>, because there&rsquo;s a chance that someone does have a reason to allow assignment of reference-counted values(e.g., change the string value stored inside <code>StringValue</code> in the example above), so we adopt this &ldquo;do nothing&rdquo; implementation, which is exactly the right thing to do, because the assignment of value objects doesn&rsquo;t affect the reference count of objects pointing to either <code>lhs</code> or <code>rhs</code> of assignment operation: this base-class level assignment is meant to change <code>lhs</code>&rsquo;s value, meaning all the objects pointing to <code>lhs</code> now pointing to a new value.</li>
+<li>Here we use <code>delete this;</code> for <code>removeReference</code>, which is safe only if we know that <code>*this</code> is a heap object. In order to ensure this, we need techniches discussed in MECpp item 27 to restrict <code>RCObject</code> to be created only on the heap.</li>
+</ol>
+
+<p>Now taking advantage of this new reference-counting base class, we modify <code>StringValue</code> to inherit its reference counting capabilities from <code>RCObject</code>:</p>
+
+<pre><code class="language-cpp">class String {
+private:
+    struct StringValue: public RCObject {
+        char *data;
+        StringValue(const char *initValue);
+        ~StringValue();
+    };
+...
+};
+
+String::StringValue::StringValue(const char *initValue)
+{
+    data = new char[strlen(initValue) + 1];
+    strcpy(data, initValue);
+}
+
+String::StringValue::~StringValue()
+{
+    delete [] data;
+}
+</code></pre>
+
+<p>After this change, <code>RCObject</code> now provide the manipulation ability of the <code>refCount</code> field, instead of <code>StringValue</code>.</p>
+
 <h2 id="automating-reference-count-manipulations">Automating Reference Count Manipulations</h2>
+
+<p>The <code>RCObject</code> class only gives us a place to store a reference count, as well as the member functions to manipulate the <code>refCount</code> field. However, the <em>calls</em> to these functions must still be mannually inserted in other classes: <code>String</code> copy constructor and assignment operator need to call <code>addReference</code> and <code>removeReference</code> on <code>StringValue</code> objects, which is not good practice for reuse.</p>
+
+<p>To remove (most of) such manual work, we introduce <em>smart pointer</em> for help.</p>
 
 <h2 id="puting-everyting-together">Puting Everyting Together</h2>
 
@@ -920,7 +982,7 @@ s.setAttribute('data-timestamp', +new Date());
                   Jun 6, 2018
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想理论上用卡西欧自拍神器也能后期出那味道来。
+              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。
 </p></div>
             </div>
             <div style="clear:both;"></div>
