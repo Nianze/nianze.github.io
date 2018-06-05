@@ -371,7 +371,31 @@ After this change, `RCObject` now provide the manipulation ability of the `refCo
 
 The `RCObject` class only gives us a place to store a reference count, as well as the member functions to manipulate the `refCount` field. However, the _calls_ to these functions must still be mannually inserted in other classes: `String` copy constructor and assignment operator need to call `addReference` and `removeReference` on `StringValue` objects, which is not good practice for reuse.
 
-To remove (most of) such manual work, we introduce _smart pointer_ for help.
+To remove such manual works, we introduce _smart pointer_ for help:
+
+```cpp
+// template class for smart pointers-to-T object. T must
+// support the RCObject interface, typically by inheriting from RCObject
+template<class T>
+class RCPtr {
+public:
+    RCPtr(T* realPtr = 0);
+    RCPtr(const RCPtr& rhs);
+    ~RCPtr();
+
+    RCPtr& operator=(const RCPtr& rhs);
+
+    T* operator->() const;
+    T& operator*() const;
+private:
+    T *pointee;  // dumb pointer this object is emulating
+    void init(); // common init. code
+};
+```
+
+```cpp
+
+```
 
 ## Puting Everyting Together
 
