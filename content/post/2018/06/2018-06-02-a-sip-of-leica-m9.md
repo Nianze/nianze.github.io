@@ -64,7 +64,7 @@ metaAlignment: center
 
 {{< image classes="fancybox fig-100" src="/images/2018/2018-06/02/open-box-15.jpg" title="↑入得是多层镀膜版本" >}}
 
-本来想入徕卡家那枚久仰大名的Summilux 35，不过感觉体积会有点大，就开始纠结Summicron。最后决定先搞个实惠的福伦达VM 35 F/1.4练练手再说(翻译下：其实就是穷)。
+本来准备一步到位11663，不过感觉体(qian)积(bao)偏(tai)大(xiao)，就开始纠结Summicron。最后决定先搞个实惠的福伦达VM 35 F/1.4练练手再说(翻译下：其实就是穷)。
 
 {{< image classes="fancybox fig-33" src="/images/2018/2018-06/02/open-box-10.jpg" title="↑VM 35mm F/1.4" >}}
 {{< image classes="fancybox fig-33" src="/images/2018/2018-06/02/open-box-13.jpg" title="↑没加遮光罩" >}}
