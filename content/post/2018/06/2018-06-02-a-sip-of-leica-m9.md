@@ -38,7 +38,7 @@ metaAlignment: center
 {{< image classes="fancybox fig-25" src="/images/2018/2018-06/02/open-box-4.jpg" thumbnail="/images/2018/2018-06/02/open-box-4.jpg" title="↑专门装机身的中间层" >}}
 {{< image classes="fancybox fig-25" src="/images/2018/2018-06/02/open-box-5.jpg" thumbnail="/images/2018/2018-06/02/open-box-5.jpg" title="↑机身就这么静静躺着" >}}
 
-徕卡的盒子很大，分了三层，上层是说明书，应带Lightroom的正版软件，不过我入的二手，并没有看到那个光盘。相机在中间那层，底层是充电器，电池，肩带等配件。
+徕卡的盒子很大，分了三层，上层是说明书，小册子里会送Lightroom正版软件注册号。相机在中间那层，底层是充电器，电池，肩带等配件。
 
 ## 外观
 
