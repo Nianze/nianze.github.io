@@ -394,9 +394,241 @@ private:
 ```
 
 ```cpp
+template<class T>
+RCPtr<T>::RCPtr(T* realPtr): pointee(realPtr)
+{
+    init();
+}
 
+template<class T>
+RCPtr<T>::RCPtr(const RCPtr& rhs): pointee(rhs.pointee)
+{
+    init();
+}
+
+template<class T>
+void RCPtr<T>::init()
+{
+    if (pointee == 0) {
+        return;
+    }
+    if (pointee->isShareable() == false) {
+        pointee = new T(*pointee);
+    }
+    pointee->addReference(); // always add a new reference to the value
+}
+
+template<class T>
+RCPtr<T>& RCPtr<T>::operator=(const RCPtr& rhs)
+{
+    if (pointee != rhs.pointee)
+        T *oldPointee = pointee;
+        pointee = rhs.pointee;
+        init();  // if possible, share it; else make own copy
+        if (oldPointee) {
+            oldPointee->removeReference();
+        }
+    }
+    return *this;
+}
+
+template<class T>
+RCPtr<T>::~RCPtr()
+{
+    if (pointee) pointee->removeReference();
+}
+
+template<class T>
+T* RCPtr::operator->() const { return pointee; }
+
+template<class T>
+T& RCPtr::operator*() const { return *pointee; }
 ```
+
+There are three assumptions in this implementation:
+
+1. `T` has a deep-copying constructor, because `pointee = new T(*pointee);` will call `T`'s copy constructor. In the example above, `String::StringValue` lack such a user-defined copy constructor, and compiler generated default copy constructor will not copy `char*` string `data` points to, so we need to add a customized version of copy constructor:
+```cpp
+String::StringValue::StirngValue(const StringValue& rhs)
+{
+    data = new char(strlen(rhs.data) + 1);
+    strcpy(data, rhs.data);
+}
+```
+2. For the same statement calling `T`'s copy constructor, we assume the type of `*pointee` is `T` rather than `T`'s derived class. If, however, chances are `poinee` might point to `T`'s derived class instances, we need to use a virtual copy constructor.
+3. `T` should prove all the functionality that `RCObject` does, either or not by inheriting from `RCObject`.
 
 ## Puting Everyting Together
 
+```
+```
+
+The class declaration looks like this:
+
+```cpp
+template<class T>
+class RCPtr {
+public:
+    RCPtr(T* realPtr = 0);
+    RCPtr(const RCPtr& rhs);
+    RCPtr& operator=(const RCPtr& rhs);
+    ~RCPtr();
+
+    T* operator->() const;
+    T& operator*() const;
+private:
+    T *pointee;
+    void init();
+};
+
+class RCObject {
+public:
+    RCObjet();
+    RCObject(const RCObject& rhs);
+    RCObject& operator=(const RCOBject& rhs);
+    virtual ~RCObject() = 0;
+
+    void addReference();
+    void removeReference();
+
+    void markUnshareable();
+    bool isShareable() const;
+    bool isShared() const;
+private:
+    size_t refCount;
+    bool shareable;
+};
+
+class String {
+public:
+    String(const char *value = "");
+
+    const char& operator[](int index) const;
+    char& operator[](int index);
+private:
+    // class representing string value
+    struct StringValue: public RCObject {
+        char *data;
+
+        StringValue(const char *initValue);
+        StringValue(const StringValue& rhs);
+        void init(const char *initValue);
+        ~StringValue();
+    };
+    RCPtr<StringValue> value;
+```
+
+It is worth to note that we don't need the copy constructor or assignment operator for `String` anymore: compiler-generated copy constructor for `Stirng` will automatically call the copy constructor for `Stirng`'s `RCPtr` member, and the copy constructor for _that_ class will perform all the necessary manipulations of the `StringValue` object, including its reference count, and the same goes for assignment and destruction. That's why it is called _smart_ pointer.
+
+Now here is all the implementation:
+
+```cpp
+RCObject::RCObject()
+: refCount(0), shareable(true) {}
+
+RCObject::RCObject(const RCObject&)
+: refCount(0), shareable(true) {}
+
+RCObject& RCObject::operator=(const RCObject&)
+{ return *this; }
+
+RCObject::~RCObject() {}
+
+void RCObject::addReference() { ++refCount; }
+
+void RCObject::removeReference() 
+{ if (--refCount == 0) delete this; }
+
+void RCObject::markUnshareable()
+{ shareable = false; }
+
+bool RCObject::isShareable() const
+{ return shareable; }
+
+bool RCObject::isShared() const
+{ return refCount > 1; }
+```
+
+```cpp
+template<class T>
+void RCPtr<T>::init()
+{
+    if (pointee == 0) {
+        return;
+    }
+    if (pointee->isShareable() == false) {
+        pointee = new T(*pointee);
+    }
+    pointee->addReference(); 
+}
+template<class T>
+RCPtr<T>::RCPtr(T* realPtr): pointee(realPtr)
+{ init(); }
+
+template<class T>
+RCPtr<T>::RCPtr(const RCPtr& rhs): pointee(rhs.pointee)
+{ init(); }
+
+
+template<class T>
+RCPtr<T>& RCPtr<T>::operator=(const RCPtr& rhs)
+{
+    if (pointee != rhs.pointee)
+        T *oldPointee = pointee;
+        pointee = rhs.pointee;
+        init();  // if possible, share it; else make own copy
+        if (oldPointee) {
+            oldPointee->removeReference();
+        }
+    }
+    return *this;
+}
+
+template<class T>
+RCPtr<T>::~RCPtr()
+{ if (pointee) pointee->removeReference(); }
+
+template<class T>
+T* RCPtr::operator->() const { return pointee; }
+
+template<class T>
+T& RCPtr::operator*() const { return *pointee; }
+```
+
+```cpp
+void String::StringValue::init(const char *initValue) // ctor and deep copy ctor share this same init function
+{
+    data = new char[strlen(initValue) + 1];
+    strcpy(data, initValue);
+}
+
+String::StringValue::StringValue(const char *initValue)
+{ init(initValue); }
+
+String::StringValue::StringValue(const StringValue& rhs)
+{ init(rhs.data); }
+
+String::StringValue::~StringValue()
+{ delete [] data; }
+```
+
+```cpp
+String::String(const char *initValue)
+: value(new StringValue(initValue)) {}
+
+const char& String::operator[](int index) const
+{ return value->data[index]; }
+
+char& String::operator[](int index)
+{
+    if (value->isShared()) {
+        value = new StirngValue(value->data);
+    }
+    value->markUnshareable();
+    return value->data[index];
+}
+```
+
 ## Adding Refenrence Counting to Existing Classes
+
+
