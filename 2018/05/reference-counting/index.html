@@ -702,7 +702,29 @@ String::StringValue::~StringValue()
 
 <p>The <code>RCObject</code> class only gives us a place to store a reference count, as well as the member functions to manipulate the <code>refCount</code> field. However, the <em>calls</em> to these functions must still be mannually inserted in other classes: <code>String</code> copy constructor and assignment operator need to call <code>addReference</code> and <code>removeReference</code> on <code>StringValue</code> objects, which is not good practice for reuse.</p>
 
-<p>To remove (most of) such manual work, we introduce <em>smart pointer</em> for help.</p>
+<p>To remove such manual works, we introduce <em>smart pointer</em> for help:</p>
+
+<pre><code class="language-cpp">// template class for smart pointers-to-T object. T must
+// support the RCObject interface, typically by inheriting from RCObject
+template&lt;class T&gt;
+class RCPtr {
+public:
+    RCPtr(T* realPtr = 0);
+    RCPtr(const RCPtr&amp; rhs);
+    ~RCPtr();
+
+    RCPtr&amp; operator=(const RCPtr&amp; rhs);
+
+    T* operator-&gt;() const;
+    T&amp; operator*() const;
+private:
+    T *pointee;  // dumb pointer this object is emulating
+    void init(); // common init. code
+};
+</code></pre>
+
+<pre><code class="language-cpp">
+</code></pre>
 
 <h2 id="puting-everyting-together">Puting Everyting Together</h2>
 
