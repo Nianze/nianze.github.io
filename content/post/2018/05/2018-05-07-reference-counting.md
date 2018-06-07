@@ -338,7 +338,7 @@ In this design, there are a few things worth noting:
 1. The `refCount` is set to 0 in both constructors to simplifies the set up process for the creaters of `RCObject`s when they set `refCount` to 1 themselves
 2. Copy constructor sets `refCount` to 0, because this function is meant to create a new object representing a value, which is always unshared and referenced only by their creator (who will set up `refCount` properly later).
 3. The assignment operator is unlikely to be called, since `RCObject` is a base class for a shared _value_ object, which means in a reference counting system, it is usually the object pointing to these base-class objects that are assigned to one another, with only `refCount` being modified as a result. We don't declare assignment operator `private`, because there's a chance that someone does have a reason to allow assignment of reference-counted values(e.g., change the string value stored inside `StringValue` in the example above), so we adopt this "do nothing" implementation, which is exactly the right thing to do, because the assignment of value objects doesn't affect the reference count of objects pointing to either `lhs` or `rhs` of assignment operation: this base-class level assignment is meant to change `lhs`'s value, meaning all the objects pointing to `lhs` now pointing to a new value.
-4. Here we use `delete this;` for `removeReference`, which is safe only if we know that `*this` is a heap object. In order to ensure this, we need techniches discussed in MECpp item 27 to restrict `RCObject` to be created only on the heap. 
+4. Here we use `delete this;` for `removeReference`, which is safe only if we know that `*this` is a heap object. In order to ensure this, we might need technichs discussed in MECpp item 27 to restrict `RCObject` to be created only on the heap[^1].
 
 Now taking advantage of this new reference-counting base class, we modify `StringValue` to inherit its reference counting capabilities from `RCObject`:
 
@@ -461,6 +461,15 @@ String::StringValue::StirngValue(const StringValue& rhs)
 ## Puting Everyting Together
 
 ```
+                     ┌──────────┐  
+┌──────────┐         │ RCObject │ 
+│  String  │         │  class   │
+│  object  │         └──────────┘
+│          │              ↑ public inheritance
+│ ┌─────┐  │         ┌───────────┐         ┌────────────┐
+│ │RCPtr├──┼────────>│StringValue├────────>| Heap Memory|
+│ └─────┘  │ pointer │  object   | pointer └────────────┘
+└──────────┘         └───────────┘ 
 ```
 
 The class declaration looks like this:
@@ -631,4 +640,136 @@ char& String::operator[](int index)
 
 ## Adding Refenrence Counting to Existing Classes
 
+Given some class `Widget` that's in a library we can't modify, and suppose we want to apply the benefits of reference counting to `Widget` without being able to inherit `Widget` from `RCObject`, we solve the problem with an additional level of indirection by adding a new class `CountHolder`, which does three jobs:
 
+1. Hold the reference
+2. Inherit from `RCObject`
+3. Contain a pointer to a `Widget`
+
+The only thing left to do is just an equivalent smart pointer as `RCPtr`, and we call it `RCIPtr`, where "I" stands for "indirect". Thus, we get someting like this:
+
+```
+                     ┌──────────┐  
+┌──────────┐         │ RCObject │ 
+│ RCWidget │         │  class   │
+│  object  │         └──────────┘
+│ ┌──────┐ │              ↑ public inheritance
+│ |RCIPtr| │         ┌───────────┐         ┌─────────────┐
+│ |Object├─┼────────>│CountHolder├────────>|Widget Object|
+│ └──────┘ │ pointer │  object   | pointer └─────────────┘
+└──────────┘         └───────────┘ 
+```
+
+Since here `CountHolder` is just an implementation detial of `RCIPtr`, we can simply nested it inside `RCIPtr`, just as how `StringValue` relates with `String`.
+
+```cpp
+template<class T>
+class RCIPtr {
+public:
+    RCIPtr(T* realPtr = 0);
+    RCIPtr(const RCIPtr& rhs);
+    ~RCIPtr();
+
+    RCIPtr& operator=(const RCIPtr& rhs);
+
+    T* operator->() const;
+    T& operator*() const;
+
+    RCObject& getRCObject();  // give clients access
+    { return *counter; }      // isShared, etc.
+private:
+    struct CountHolder: public RCObject {
+        ~CountHolder() { delete pointee; }
+        T *pointee;
+    };
+    CountHolder *counter;
+    void init();
+};
+
+template<class T>
+void RCIPtr<T>::init()
+{
+    if (counter->iShareable() == false) {
+        T *oldValue = counter->pointee;
+        counter = new CountHolder;
+        counter->pointee = oldValue ? new T(*oldValue) : 0;
+    }
+    counter->addReference();
+}
+
+template<class T>
+RCIPtr<T>::RCIPtr(T* realPtr)
+: counter(new CountHolder)
+{
+    counter->ponitee = realPtr;
+    init();
+}
+
+template<class T>
+RCIPtr<T>::RCIPtr(const RCIPtr& rhs)
+: counter(rhs.counter)
+{ init(); }
+
+template<class T>
+RCIPtr<T>::~RCIPtr()
+{ counter->removeReference(); }
+
+template<class T>
+RCIPtr<T>& RCIPtr<T>::operator=(const RCIPtr& rhs)
+{
+    if (counter != rhs.counter) {
+        counter->removeReference();
+        counter = rhs.counter;
+        init();
+    }
+    return *this;
+}
+
+template<class T>
+T* RCIPtr<T>::operator->() const
+{ return counter->pointee; }
+
+template<class T>
+T& RCIPtr<T>::operator*() const
+{ return *(counter->pointee); }
+```
+
+Then, for a library class `Widget` with following interface:
+
+```cpp
+class Widget {
+public:
+    Widget(int size);
+    Widget(const Widget& rhs);
+    ~Widget();
+
+    Widge& operator=(const Widget& rhs);
+
+    void doThis();
+    int showThat() const;
+};
+```
+
+We can implementing wrapper `RCWidget` by simply forwarding the call through underlying `RCIPtr` to a `Widget`object:
+
+```cpp
+class RCWidget {
+public:
+    RCWidget(int size): value(new Widget(size)) {}
+
+    void doThis()
+    {
+        if (value.getRCObject().isShared()) {
+            value = new Widget(*value);
+        }
+        value->doThis();
+    }
+    int showThat() const { return value->showThat(); }
+private:
+    RCIPtr<Widget> value;
+};
+```
+
+As with `Stirng` class, there's no need to write copy constructor, assignment operator, or destructor, because the default versions do the right thing.
+
+[^1]: In this example, we guarantee the value objects should be created only via `new` by declaring `StringValue` as `private` in `String`, so only `String` can create `StringValue` objects and the auther of the `String` class is able to ensure all such objects are allocated via `new`.
