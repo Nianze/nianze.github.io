@@ -1,0 +1,985 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>Item-9 不要在构造函数和析构函数中触发虚函数 - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="不同于Java或者C#,在C&#43;&#43;中构造函数和析构函数里的虚函数不会实现多态的效果。
+">
+    <meta property="og:description" content="不同于Java或者C#,在C&#43;&#43;中构造函数和析构函数里的虚函数不会实现多态的效果。
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Item-9 不要在构造函数和析构函数中触发虚函数">
+    <meta property="og:url" content="/2018/01/no-virtual-func-in-ctor-dtor/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="不同于Java或者C#,在C&#43;&#43;中构造函数和析构函数里的虚函数不会实现多态的效果。
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-01/2018-01-27.jpg">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Item-9 不要在构造函数和析构函数中触发虚函数
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-01-27T21:03:05-05:00">
+      
+  一月 27, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>不同于Java或者C#,在C++中构造函数和析构函数里的虚函数不会实现多态的效果。
+</p>
+
+<p>假设我们想要构造一个类来记录股票交易的数据，每次有新交易都应把交易信息记录到文档里。由于交易种类多种多样，我们希望用一个统一的抽象基类<code>Transaction</code>里相同的接口<code>logTransaction()</code>来记录不同的派生类信息：</p>
+
+<pre><code class="language-cpp">class Transaction {   // 所有交易记录的基类，含纯虚函数所以是抽象类
+public:
+    Transaction();
+    virtual void logTransaction() const = 0;  // 根据不同交易派生类的类型重载对应函数，此处定义为纯虚函数
+    ...
+};
+
+Transaction::Transaction()
+{
+    ...
+    logTransaction();   // 在构造函数中触发虚函数，记录派生类的交易信息
+}
+</code></pre>
+
+<p>对应不同交易的派生类定义如下：</p>
+
+<pre><code class="language-cpp">class BuyTransaction: public Transaction {
+public:
+    virtual void logTransaction() const;  // 记录买方交易信息
+    ...
+}
+
+class SellTransaction: public Transaction {
+public:
+    virtual void logTransaction() const;  // 记录卖方交易信息
+}
+</code></pre>
+
+<p>按照上述函数申明和定义，如果我们构造一个买方派生类的实例：</p>
+
+<pre><code class="language-cpp">BuyTransaction buy;
+</code></pre>
+
+<p>此时<code>BuyTransaction</code>派生类的构造函数会被触发，但是在执行派生类构造函数之前，基类的构造函数会先被触发以构造新实例基类那部分的成员变量。当执行到基类构造函数最后一行的<code>logTransaction()</code>时，即使此时创建的实例属于派生类<code>BuyTransaction</code>，执行的虚函数依然是基类<code>Transaction</code>里面定义的版本。原因有二：</p>
+
+<ol>
+<li>理论上讲，派生类的虚函数可能会用到派生类里多出来的成员变量，而这些成员变量在最开始执行基类的构造函数时还没有被分配资源初始化，为了杜绝这种危险操作所以C++选择执行基类的虚函数。</li>
+<li>更底层的原因在于，在第一阶段执行基类构造函数的时候，<code>buy</code>在运行时(<code>runtime</code>)里的类型信息本来就是被标记为基类的类型<code>Transaction</code>的。只有到第二阶段执行派生类<code>BuyTransaction</code>的构造函数时，<code>buy</code>实例才成为<code>BuyTransaction</code>类型。</li>
+</ol>
+
+<p>基于相同的道理，执行析构函数的时候，一旦最开始触发的派生类析构函数开始运行，派生类部分的成员变量就被标记为未定义（<code>undefined</code>）；而第二阶段进入基类的析构函数，<code>buy</code>实例的类型就被标记为基类，此时在虚函数和<code>dynamic_cast</code>等运行时相关的操作看来这就是一个<code>Transaction</code>类型的实例。</p>
+
+<p>接着讲上述的例子：如果按照上述定义编译，部分编译器会提出警告(某些则不会，见Item 53)；即使没有警告，由于<code>logTransaction()</code>是纯虚函数，没有定义函数体，所以即使通过了编译器这关，在下个阶段由于链接器找不到函数的定义所以也不会生成最终的可执行文件。但如果有人鸡贼的这样定义：</p>
+
+<pre><code class="language-cpp">class Transaction {
+public:
+    Transaction()
+    { init(); }   // 构造函数里“没有”直接触发虚函数
+private:
+    void init()
+    {
+        ...
+        logTransaction();  // 但虚函数在第三方函数init()中被调用
+    }
+};
+</code></pre>
+
+<p>虽然本质上跟之前的程序没有区别，但这样写很可能可以蒙混过链接器这关。一旦程序开始运行，执行到纯虚函数<code>logTransaction()</code>的时候程序就会崩溃并停止运行（<code>abort</code>）；而如果<code>logTransaction()</code>是添加了函数实体定义的普通虚函数，虽然程序可以运行，但无论之后怎样花式捉虫（<code>debug</code>），最后在创建实例<code>buy</code>时log记录文档里留下的也都是基类<code>Transaction</code>版本的交易记录。</p>
+
+<hr />
+
+<p>所以问题来了：</p>
+
+<blockquote>
+<p>要怎么实现根据不同派生类以多态方式自动记录交易信息的功能呢？</p>
+</blockquote>
+
+<p>方法有很多。讲一个常见的：既然不可以在基类构造函数中使用派生类版本的虚函数，那就让派生类在构造实例的时候把自己的交易信息传回基类的(非虚)构造函数中：</p>
+
+<pre><code class="language-cpp">class Transaction {
+public:
+    explicit Transaction(const std::string&amp; logInfo); // “explicit”关键词防止隐式转换
+    void logTransaction(const std::string&amp; logInfo) const; // 不再是虚函数了
+    ...
+};
+
+Transaction::Transaction(const std::string&amp; logInfo)
+{
+    ...
+    logTransaction(logInfo);  // 不是虚函数，放心call
+}
+
+class BuyTransaction: public Transaction {
+public:
+    BuyTransaction( parameters )
+    : Transaction(createLogString( parameters )) // 将交易信息以传参方式传给基类构造函数
+    {...}
+private:
+    static std::string createLogString( parameters ); // 静态函数，杜绝使用派生类中新定义的成员变量的可能性
+};
+</code></pre>
+
+<p>注意上述<code>createLogString()</code>函数定义为<code>static</code>可以防止出现在构造函数第一阶段（触发基类构造函数的阶段）中使用处于<code>undefine</code>状态的派生类成员变量的情形（这也正是上述第一点C++不让在基类构造函数中使用派生类虚函数的原因）。</p>
+
+<blockquote>
+<p>P.S.:<br />
+今天是周六，脑抽想试着用中文写下C++复习笔记。。。<br />
+然后发现写这篇花费的时间是之前的至少两倍，主要是寻找各种英文技术术语对应的中文翻译很心累，思维还得在英文和中文中相互转换，翻译真是个累人的活。。。<br />
+以后还是用回英文吧，省心太多。</p>
+</blockquote>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/have-assignment-op-return-a-ref/" data-tooltip="Item-10 Have assignment operators return a reference to *this">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/worth-it-or-not/" data-tooltip="人间不值得。。。吗？">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/01/no-virtual-func-in-ctor-dtor/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fno-virtual-func-in-ctor-dtor%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fno-virtual-func-in-ctor-dtor%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/01/no-virtual-func-in-ctor-dtor/";  
+this.page.identifier = "Item-9 不要在构造函数和析构函数中触发虚函数"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/have-assignment-op-return-a-ref/" data-tooltip="Item-10 Have assignment operators return a reference to *this">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/01/worth-it-or-not/" data-tooltip="人间不值得。。。吗？">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/01/no-virtual-func-in-ctor-dtor/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fno-virtual-func-in-ctor-dtor%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fno-virtual-func-in-ctor-dtor%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f01%2fno-virtual-func-in-ctor-dtor%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f01%2fno-virtual-func-in-ctor-dtor%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f01%2fno-virtual-func-in-ctor-dtor%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-sip-of-leica-m9/">
+                <h3 class="media-heading">徕卡M9初体验</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-simple-calculation/">
+                <h3 class="media-heading">一个油腻中年大叔在儿童节的胡思乱想</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>张爱玲说，出名要趁早。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/music-generation-archive/">
+                <h3 class="media-heading">A simple archive for music generation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>A random collection of recent works on music generation.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/understand-how-to-combine-c---and-c-in-the-same-program/">
+                <h3 class="media-heading">[MECpp]Item-34 Understand How to Combine C&#43;&#43; and C in the Same Program</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>There are five points worth noting if we want to mix C++ and C in the same program.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/make-non-leaf-classes-abstract/">
+                <h3 class="media-heading">[MECpp]Item-33 Make Non-Leaf Classes Abstract</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/program-in-the-future-tense/">
+                <h3 class="media-heading">[MECpp]Item-32 Program in the Future Tense</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Things change. Future tense thinking increases the reusability of the code we write, enhances its maintainability, makes it more robust, and facilitates gracefully in an environment where change is a certainty.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/reference-counting/">
+                <h3 class="media-heading">[MECpp]Item-29 Reference Counting</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/smart-pointers/">
+                <h3 class="media-heading">[MECpp]Item-28 Smart Pointers</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Smart pointers</em> are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/">
+                <h3 class="media-heading">[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Techniques for requiring or prohibiting heap-based objects
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/relocation-to-m2/">
+                <h3 class="media-heading">搬了个家</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>搬一次家，掉一层皮
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         119 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/01\/no-virtual-func-in-ctor-dtor\/';
+          
+            this.page.identifier = '\/2018\/01\/no-virtual-func-in-ctor-dtor\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

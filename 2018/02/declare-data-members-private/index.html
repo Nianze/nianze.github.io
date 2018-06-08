@@ -1,0 +1,956 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>Item-22 Declare data members private - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="Declaring data members private gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.
+">
+    <meta property="og:description" content="Declaring data members private gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Item-22 Declare data members private">
+    <meta property="og:url" content="/2018/02/declare-data-members-private/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="Declaring data members private gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-02/2018-02-10.jpg">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Item-22 Declare data members private
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-02-10T00:00:00Z">
+      
+  二月 10, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>Declaring data members <code>private</code> gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.
+</p>
+
+<h2 id="syntactic-consistency">Syntactic consistency</h2>
+
+<p>If data member aren&rsquo;t public, the only way for clients to access an object is via member functions. If everything in the public interface is a function, clients know they will always use parentheses when accessing a member of the class, which is called &ldquo;sysntactic consistency&rdquo;.</p>
+
+<h2 id="pricise-control-over-the-accessibility">Pricise control over the accessibility</h2>
+
+<p>If we use functions to get or set data member&rsquo;s value, we can implement multiple levels of accessibility:</p>
+
+<pre><code class="language-cpp">class AccessLevels {
+public:
+    ...
+    int getReadOnly() const { return readOnly; }
+    int getReadWrite() const { return readWrite; }
+    void setReadWrite(int value) { readWrite = value; }
+    void setWriteOnly(int value) { writeOnly = value; }
+private:
+    int noAccess;   // no access to this int
+    int readOnly;   // read-only access to this int
+    int readWrite;  // read-write access to this int
+    int writeOnly;  // write-only access to this int
+};
+</code></pre>
+
+<p>Since it is rare that every data member need a getter and setter, such fine-grained access control is important.</p>
+
+<h2 id="encapsulation">Encapsulation</h2>
+
+<p>Encapsulation offers class authors implementation flexibility. Through a function, we can replace a data member with a computationi while nobody using the interface notice the change. For example, suppose we are writing an application monitoring the speed of passing cars, and each passing car&rsquo;s speed will be collected into the class:</p>
+
+<pre><code class="language-cpp">class SpeedDataCollection {
+    ...
+public:
+    void addValue(int speed);    // add a new data value
+    double averageSoFar() const; // return average speed
+    ...
+};
+</code></pre>
+
+<p>There are two ways to implement the member function <code>averageSoFar</code>:</p>
+
+<ol>
+<li>have a data member in the classs that is a running average of all the speed data so far collected. <code>averageSoFar</code> will simply return the value of this data member.</li>
+<li>have <code>averageSoFar</code> compute its value anew each time it&rsquo;s called by examining each data value in the collection</li>
+</ol>
+
+<p>Both approaches have pros and cons, and decision on which to use depends on the specific use case:</p>
+
+<ul>
+<li>Method one makes each <code>SpeedDataCollection</code> object bigger for the extra data member holding the running average, the accumulated total, and the number of data points, but <code>averageSoFar</code> will be very efficient (it is just an inline function, see item 30). For an application where averages are needed frequently, and memory is not an issue, keeping a running average will be preferable.<br /></li>
+<li>Method two will make <code>averageSoFar</code> run slower, but each <code>SpeedDataCollection</code> object will be smaller. Thus it is preferable in applications where memory is tight (e.g., an embedded roadside device), and where averages are needed only infrequently</li>
+</ul>
+
+<p>The point is, by encapsulating the average through a member function, we can interchange different implementations, and clients will only have to, at most, recompile (we can even eliminate recompilation by the technique described in item 31). Since only member functions can affect data members, it is ensured that the class invariants are always maintained. Moreover, through function interfaces, we have flexibility for extra capabilities with ease (similar concept of &ldquo;properties&rdquo; in Delphi and C#, albeit with the need to type an extra set of parentheses):</p>
+
+<ul>
+<li>to notify other objects when data members are read or written</li>
+<li>to verify class invariants and function pre-and postconditions</li>
+<li>to perform synchronization in threaded environments</li>
+</ul>
+
+<p>On the other side, if we don&rsquo;t encapsulate data members from clients, we give up the right to change our future implementation decisions. Even if we own the source code to a class, our ability to chagne anything public is extremely restricted, because too much client code will be broken. Public means unencapsulated, and unencapsulated means unchangeable, which is especailly true for widely used classes.</p>
+
+<h2 id="protected-data-members"><code>protected</code> data members</h2>
+
+<p>The argument above is also applicable for <code>protected</code> data members. In fact, no only the reasoning about syntactic consistency and fine-grained access control is applicable, the argument on encapsulation is also true for them:<br />
+suppose we eliminate a <code>protected</code> data member, and then all the derived classes using it, typically in an unknowably large amount of size, will be broken, which is exactly the same case for <code>public</code> data members used by large number of different clients.</p>
+
+<p>Thus, from an encapsulation point of view, there are really only two access levels:</p>
+
+<ol>
+<li><code>private</code>, which offers encapsulation</li>
+<li>everything else, which doesn&rsquo;t</li>
+</ol>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/prefer-non-member-non-friend-function-to-member-function/" data-tooltip="Item-23 Prefer non-member non-friend function to member function">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/do-not-return-a-ref-when-must-return-an-object/" data-tooltip="Item-21 Don&#39;t return a reference when we have to return an object">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/02/declare-data-members-private/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdeclare-data-members-private%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdeclare-data-members-private%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/02/declare-data-members-private/";  
+this.page.identifier = "Item-22 Declare data members private"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/prefer-non-member-non-friend-function-to-member-function/" data-tooltip="Item-23 Prefer non-member non-friend function to member function">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/do-not-return-a-ref-when-must-return-an-object/" data-tooltip="Item-21 Don&#39;t return a reference when we have to return an object">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/02/declare-data-members-private/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdeclare-data-members-private%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdeclare-data-members-private%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdeclare-data-members-private%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdeclare-data-members-private%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fdeclare-data-members-private%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-sip-of-leica-m9/">
+                <h3 class="media-heading">徕卡M9初体验</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-simple-calculation/">
+                <h3 class="media-heading">一个油腻中年大叔在儿童节的胡思乱想</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>张爱玲说，出名要趁早。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/music-generation-archive/">
+                <h3 class="media-heading">A simple archive for music generation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>A random collection of recent works on music generation.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/understand-how-to-combine-c---and-c-in-the-same-program/">
+                <h3 class="media-heading">[MECpp]Item-34 Understand How to Combine C&#43;&#43; and C in the Same Program</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>There are five points worth noting if we want to mix C++ and C in the same program.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/make-non-leaf-classes-abstract/">
+                <h3 class="media-heading">[MECpp]Item-33 Make Non-Leaf Classes Abstract</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/program-in-the-future-tense/">
+                <h3 class="media-heading">[MECpp]Item-32 Program in the Future Tense</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Things change. Future tense thinking increases the reusability of the code we write, enhances its maintainability, makes it more robust, and facilitates gracefully in an environment where change is a certainty.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/reference-counting/">
+                <h3 class="media-heading">[MECpp]Item-29 Reference Counting</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/smart-pointers/">
+                <h3 class="media-heading">[MECpp]Item-28 Smart Pointers</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Smart pointers</em> are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/">
+                <h3 class="media-heading">[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Techniques for requiring or prohibiting heap-based objects
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/relocation-to-m2/">
+                <h3 class="media-heading">搬了个家</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>搬一次家，掉一层皮
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         119 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/02\/declare-data-members-private\/';
+          
+            this.page.identifier = '\/2018\/02\/declare-data-members-private\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

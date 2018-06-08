@@ -1,0 +1,1331 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>[MECpp]Item-28 Smart Pointers - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="Smart pointers are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+">
+    <meta property="og:description" content="Smart pointers are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="[MECpp]Item-28 Smart Pointers">
+    <meta property="og:url" content="/2018/05/smart-pointers/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="Smart pointers are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-05/2018-05-05.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [MECpp]Item-28 Smart Pointers
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-05-05T16:38:03-04:00">
+      
+  五月 5, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p><em>Smart pointers</em> are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+</p>
+
+<h2 id="advantages-of-smart-pointers">Advantages of smart pointers</h2>
+
+<p>With the help of smart pointers, we gain control over the following aspects of pointer behavior:</p>
+
+<ol>
+<li>Construction and destrucrtion (default value, reference counting, etc)</li>
+<li>Copying and assignment (deep copy, not allowed to copy, etc)</li>
+<li>Dereferencing (lazy fetching, etc)</li>
+</ol>
+
+<h3 id="using-smart-pointer-in-client-perspective">Using smart pointer in client perspective</h3>
+
+<p>Consider a distributed system in which some objects are local and some are remote. We can use smart pointer to manage the local and remote objects handling in order to offer such an illusion that all objects appear to be located in the same place.</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;            // template for smart ptrs
+class DBPtr {                // to obj. in a distributed DB
+public:
+	DBPtr(T *realPtr = 0);   // create a smart ptr to a DB obj given a local dumb pointer
+	DBPtr(DataBaseID id);    // create a smart ptr to a DB obj given its unique DB identifier
+	...                      // other smart ptr functions
+};
+
+class Tuple { // class for database tuples
+public:
+	...
+	void displayEditDialog();  // present a graphical dialog box allowing a user to edit the typle
+	bool isValid() const;  // return whether *this passes validity check
+};
+
+// class template for making log entries whenever a T object is modified
+template&lt;class T&gt;
+class LogEntry {
+public:
+	LogEntry(const T&amp; objectToBeModified);
+	~LogEntry();
+};
+
+void editTuple(DBPtr&lt;Tuple&gt;&amp; pt)
+{
+	LogEnty&lt;Tuple&gt; entry(*pt); // make log entry for this editing operation
+	// repeatedly display edit dialog until valid values are provided
+	do {
+		pt-&gt;displayEditDialog();
+	} while (pt-&gt;isValid() == false)
+}
+</code></pre>
+
+<p>The tuple to ber edited inside <code>editTuple</code> may be physically located on a remote machine, but the programmer writing <code>editTuple</code> need not be converned with such matters. Wrapped by objects, all kinds of tuples are accessed through smart pointers, which act just like built-in pointers (except for how they&rsquo;re declared).</p>
+
+<p>Notice the use of <code>LogEntry</code> object here is to take the advantage of <code>LogEntry</code>&rsquo;s constructor and destructor to begin and end the log entry, which is more robust in the face of exceptions than explicitly calling functions (MECpp item 9).</p>
+
+<p>In a word, clients of smart pointers are <em>supposed</em> to be able to treat them as dumb pointers.</p>
+
+<h2 id="construction-assignment-and-destruction-of-smart-pointers">Construction, assignment, and destruction of smart pointers</h2>
+
+<p>Construction of a smart pointer is usually straightforward: locate an object to point to, then make the smart pointer&rsquo;s internal dumb pointer point there. If no object can be located, set the internal pointer to 0 or signal an error (by throwing an exception).</p>
+
+<p>However, the issue of <em>ownership</em> makes it complicated to implement a smart pointer&rsquo;s copy constructor, assignment operator(s), and destructor: depending on wheter a smart pointer <em>owns</em> the object it points to, should it delete the object when the smart pointer itself is destroyed?</p>
+
+<ul>
+<li><p>if we just copied the internal dumb pointer in copy constructor and call <code>delete</code> in destructor, we end up with two smart pointers pointing to the same object, resulting to multiple deletes, which is undefined behavior.</p></li>
+
+<li><p>if we create a new copy of what was pointed to by calling <code>new</code> in the copy constructor, we may have to face an unacceptable performance hit for the creation (and later destruction) of the new object. Further more, we wouldn&rsquo;t know what type of object to create, because a smart pointer of type <code>T</code> might point to an object of a type derived from <code>T</code>. Virtual constructors can help solve this problem, but it seems inappropriate to require their use in a general-purpose smart pointer class.</p></li>
+</ul>
+
+<p>The problem would vanish if we prohibit copying and assignment, but a more flexible solution was adopted by the <code>auto_ptr</code> template from the standard C++ library: object ownership is <em>transferred</em> when an <code>auto_ptr</code> is copied or assigned:</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class auto_ptr {
+public:
+	auto_ptr(T *ptr = 0): pointee(ptr) {}
+	auto_ptr(auto_ptr&lt;T&gt;&amp; rhs);  // copy constructor
+	auto_ptr&lt;T&gt;&amp; operator=(auto_ptr&lt;T&gt;&amp; rhs); // assignment operator
+	~auto_ptr&lt;T&gt;() { delete pointee; }
+private:
+	T *pointee;
+};
+
+template&lt;class T&gt;
+auto_ptr&lt;T&gt;::auto_ptr(auto_ptr&lt;T&gt;&amp; rhs)
+{
+	pointee = rhs.pointee;
+	rhs.pointee = 0;
+}
+
+template&lt;class T&gt;
+auto_ptr&lt;T&gt;&amp; auto_ptr&lt;T&gt;::operator=(auto_ptr&lt;T&gt;&amp; rhs)
+{
+	if (this == &amp;rhs)
+		return *this;
+	delete pointee;
+
+	pointee = rhs.pointee;
+	rhs.pointee = 0;
+
+	return *this;
+}
+</code></pre>
+
+<p>For this design, there are three points woth noting:</p>
+
+<h4 id="1-pass-by-reference-to-const">1. Pass by reference to const</h4>
+
+<p>Because object ownership is transferred when <code>auto_ptr</code>&rsquo;s copy constructor is called, passing <code>auto_ptr</code>s by value is often a very bad idea:</p>
+
+<pre><code class="language-cpp">void printTreeNode(ostream&amp; s, auto_ptr&lt;TreeNode&gt; p)
+{ s &lt;&lt; *p; }
+
+int main()
+{
+	auto_ptr&lt;TreeNode&gt; ptn(new TreeNode);
+	...
+	printTreeNode(cout, ptn);  // pass auto_ptr by value
+}
+</code></pre>
+
+<p>When <code>printTreeNode</code>&rsquo;s parameter <code>p</code> is initialized by calling <code>auto_ptr</code>&rsquo;s copy constructor, ownership of the object pointed to by <code>ptn</code> is transferred to <code>p</code>. After <code>printTreeNode</code> finishes execution, <code>p</code> goes out of scope and its destructor deletes what it points to, so <code>ptn</code> no longer points to anything (its underlying dumb pointer is null). This is rarely what we want to do.</p>
+
+<p>Instead, pass-by-reference-to-const:</p>
+
+<pre><code class="language-cpp">// this function behaves much more intuitively
+void printTreeNode(ostream&amp; s, const auto_ptr&lt;TreeNode&gt;&amp; p)
+{ s &lt;&lt; *p; }
+</code></pre>
+
+<p>Since this is pass by reference, no constructor is called to initialize <code>p</code>, and <code>ptn</code> retains ownership of the object it points after function execution.</p>
+
+<h4 id="2-unconventional-copy-constructor-and-assignment-operator">2. Unconventional copy constructor and assignment operator</h4>
+
+<p>Normally the copy constructor and assignment operator take <code>const</code> parameters during the copy or the assignment. However, <code>auto_ptr</code> objects are modified if they are copied or are the source of an assignment, so we don&rsquo;t declare <code>const</code> here for the copy constructor and assignment operator in <code>auto_ptr</code>.</p>
+
+<h4 id="3-no-ownership-testing-in-desturctor">3. No ownership testing in desturctor</h4>
+
+<p>An <code>auto_ptr</code> always owns what it points to, so there is no need for the ownership test in destructor. However, a smart pointers that employs reference counting (MECpp item 29) must adjust a reference count before detrmining whether it has the right to delete what it points to, so their destructor often looks like this:</p>
+
+<pre><code class="language-cpp">tempalte&lt;class T&gt;
+SmartPtr&lt;T&gt;::~SmartPtr()
+{
+	if (*this owns *pointee) {
+		delete pointee;
+	}
+}
+</code></pre>
+
+<h2 id="implementing-the-dereferencing-operators">Implementing the dereferencing operators</h2>
+
+<h4 id="operator"><code>operator*</code></h4>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+T&amp; SmartPtr&lt;T&gt;::operator*() const
+{
+	perform &quot;smart pointer&quot; processing;
+	return *pointee;	
+}
+</code></pre>
+
+<p>A few things woth noting:</p>
+
+<ol>
+<li>The &ldquo;smart pointer&rdquo; processing does whatever is needed to initialize or otherwise make <code>pointee</code> valid. For example, if lazy fetching is being used (MECpp item 17), the process may conjure up a new object for <code>pointee</code> to point to.</li>
+<li>The <code>operator*</code> returns a <em>reference</em> to the pointed-to object, instead of an <em>object</em>. This is for concerns of both correctness and efficiency.
+
+<ul>
+<li>Correctness: if returning an <em>object</em>, this is possible for <em>slicing problem</em> - see MECpp item 13 - where a <code>T</code> object is returned instead of an actual derived class object that is expected.</li>
+<li>Efficiency: there is no need to construcrt a temporary object (MECpp 19), so returning a reference is more efficient.</li>
+</ul></li>
+<li>The result of dereferencing a null pointer is undefined, so we are free to do anything we want if <code>operator*</code> is invoked with a null smart pointer. (i.e., throw an exception, call <code>abort</code>, etc)</li>
+</ol>
+
+<h4 id="operator-1"><code>operator-&gt;</code></h4>
+
+<p>When we call <code>operator-&gt;</code> in the statement <code>pt-&gt;displayEditDialog();</code>, the compilers treat it as:</p>
+
+<pre><code class="language-cpp">(pt.operator-&gt;())-&gt;displayEditDialog();
+</code></pre>
+
+<p>This means it must be legal to apply the member-selection operator(-&gt;) to whatever <code>operator-&gt;</code> returns, leading to only two options:</p>
+
+<ul>
+<li>a dumb pointer to an object</li>
+<li>another smart pointer object</li>
+</ul>
+
+<p>Most of the time we want to return an ordinary dumb pointer, so the implementation for <code>operator-&gt;</code> is:</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+T* SmartPtr::operator-&gt;() const
+{
+	perform &quot;smart pointer&quot; processing
+	return pointee;
+}
+</code></pre>
+
+<p>Note that since this function returns a pointer, virtual function calls via <code>operator-&gt;</code> will behave the way they&rsquo;re supposed to.</p>
+
+<h2 id="testing-smart-pointers-for-nullness">Testing smart pointers for nullness</h2>
+
+<p>So far we can not do the following operation to find out if a smart pointer is null:</p>
+
+<pre><code class="language-cpp">SmartPtr&lt;TreeNode&gt; ptn;
+...
+if (ptn == 0) ... // error!
+if (ptn) ...      // error!
+if (!ptn) ...     // error!
+</code></pre>
+
+<p>If we want to make smart pointer act like dumb pointers when testing for nullness, an additional <code>isNull</code> member function will not be ideal solution. We may be attempted to provide an implicit conversion operator: <code>operator void*()</code>, but this will also introduce the draback of letting function calls succeed that most programmers would expect to fail (see MECpp item 5). In particular, it allows comparisons of smart pointers of completely different types:</p>
+
+<pre><code class="language-cpp">SmartPtr&lt;Apple&gt; pa;
+SmartPtr&lt;Orange&gt; po;
+...
+if (pa == po) ... // this compiles!
+</code></pre>
+
+<p>This compiles because both smart pointers can be implicitly converted into <code>void*</code> pointers, and there is a built-in comparison function for built-in pointers. Similarly, even if we advocate conversion to <code>const void*</code> or <code>bool</code>, neither of these variations eliminates the problem of allowing mixed-type comparisons. There is simply too much conversion freedom in this wild solution.</p>
+
+<p>There is a middle middle ground that allows us to offer a reasonable syntactic form for testing for nullness while minimizing the chances of accidentally comparing smart pointers of of different types. That is to overload <code>operator!</code> to return true if and only if the smart pointer on which it&rsquo;s invoked is null:</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class SmartPtr {
+public:
+	...
+	bool operator!() const; // returns true if and only if the smart ptr is null
+};
+</code></pre>
+
+<p>This will lead to:</p>
+
+<pre><code class="language-cpp">if (!ptn) ...  // fine
+if (ptn == 0)  ...  // still an error
+if (ptn) ...  // still an error
+</code></pre>
+
+<p>And the only risk for mixed-type comparisons is statements such as this:</p>
+
+<pre><code class="language-cpp">...
+if (!pa == !po) ...  // this still compiles
+```	
+
+Fortunately, programmers usually don't write code like this.
+
+## Converting smart pointers to dumb pointers
+
+When a dump pointer is expected for some lagacy libraries (say `normalize(Tuple *pt);`), we can not simply call the library function with a smart pointer-to-`Tuple`, because there is no way to convert a `DBPtr&lt;Tuple&gt;` to a `Tuple*`. We can make it work by doing this:
+
+```cpp
+normalize(&amp;*pt);  // gross, but legal
+</code></pre>
+
+<p>but apparently this is not elegant.</p>
+
+<p>A dangerous solution will be to add to the smart pointer-to-T template an implicit conversion operator to a dumb pointer-to-T:</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class DBPtr{
+public:	
+	...
+	operator T*() { return pointee; }
+	...
+};
+
+DBPtr&lt;Tuple&gt; pt;
+...
+normalize(pt);  // this now works
+if (pt == 0) ...  // fine, too
+if (pt) ... // fine, too
+if (!pt) ...  // fine, too
+</code></pre>
+
+<p>However, as stated in MECpp item 5, there&rsquo;s dark side to such conversion function: it&rsquo;s so easy for clients to get access to dumb pointers that they bypass all the smart behavior (such as reference-counting ability) our pointer-like objects designed to provide, which will almost certainly lead to disaster (such as bookkeeping errors that corrupt the reference-counting data structures):</p>
+
+<pre><code class="language-cpp">void processTuple(DBPtr&lt;Tuple&gt;&amp; pt)
+{
+	Tuple *rawTuplePtr = pt;  // convert DBPtr&lt;Tuple&gt; to Tuple*
+	use rawTuplePtr to modify the tuple;
+}
+</code></pre>
+
+<p>Besides, even we provide such implicit conversion operator, our smart pointer will never be truly interchangeable with the dumb pointer: the conversion from a smart pointer to a dumb pointer is a user-defined conversion, and compilers are forbidden from applying more than one user-defined conversion at a time. Following example shows this difference, where conversion from <code>DBPtr&lt;Tuple&gt;</code> to <code>TupleAccessors</code> calls for two user-defined conversions (1. <code>DBTpr&lt;Tuple&gt;</code> -&gt; <code>Tuple*</code>; 2. <code>Tuple*</code> -&gt; <code>TupleAccessors</code>), which are prohibited by the language:</p>
+
+<pre><code class="language-cpp">class TupleAccessors {
+public:
+	TupleAccessors(const Tuple *pt); // this ctor also acts as a type-conversion operator
+	...
+};
+TupleAccessors merge(const TupleAccessors&amp; ta1, const TupleAccessors&amp; ta2);
+...
+Tuple *pt1, *pt2;
+merge(pt1, pt2);  // fine, both pointers are converted to TupleAccessors objects
+...
+DBPtr&lt;Tuple&gt; smart_pt1, smart_pt2;
+merge(smart_pt1, smart_pt2);  // error! no way to convert smart_pt1 and smart_pt2 to TupleAccessors implicitly
+</code></pre>
+
+<p>Moreover, implicit conversion functino makes it possible to let evil statement compile, which will almost certainly break our program later<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
+
+<pre><code class="language-cpp">DBPtr&lt;Tuple&gt; pt = new Tuple;
+...
+delete pt;  // this compiles
+</code></pre>
+
+<p>All in all, keep in mind the bottom line: don&rsquo;t provide implicit conversion operators to dumb pointers unless there is a compelling reason to do so.</p>
+
+<h2 id="smart-pointers-and-inheritance-based-type-conversions">Smart pointers and inheritance-based type conversions</h2>
+
+<p>Given the following public inheritance hierarchy:</p>
+
+<pre><code class="language-cpp">class MusicProduct {
+public:
+	MusicProduct(const string&amp; title);
+	virtual void play() const = 0;
+	virtual void displayTitle() const = 0;
+};
+class Cassette: public MusicProduct {
+public:
+	Cassette(const string&amp; title);
+	virtual void play() const;
+	vitual void displayTitle() const;
+	...
+};
+class CD: public MusicProduct {
+public:
+	CD(const string&amp; title);
+	virtual void play() const;
+	virtual void displayTitle() const;
+	...
+};
+</code></pre>
+
+<p>It is expected that the virtual function will work properly with dumb pointers:</p>
+
+<pre><code class="language-cpp">void displayAndPlay(const MusicProduct* pmp, int numTimes)
+{
+	for (int i = 1; i &lt;= numTimes; ++i)
+	{
+		pmp-&gt;displayTitle();
+		pmp-&gt;play();
+	}
+}
+
+Cassette *funMusic = new Cassette(&quot;Alapalooza&quot;);
+CD *nightmareMusic = new CD(&quot;Disco Hits of the 70s&quot;);
+
+displayAndPlay(funMusic, 10);
+displayAndPlay(nightmareMusic, 0);
+</code></pre>
+
+<p>However, as far as compilers are converned, <code>SmartPtr&lt;CD&gt;</code>, <code>SmartPtr&lt;Cassette&gt;</code>, and <code>SmartPtr&lt;MusicProduct&gt;</code> are three seperate classes without any relationship to one another, so if we pass an object of type <code>SmartPtr&lt;CD&gt;</code> into a function with signature <code>void displayAndPlay(const SmartPtr&lt;MusicProduct&gt;, int)</code>, there will be error.</p>
+
+<h4 id="manually-adding-implicit-conversion-operator">Manually adding implicit conversion operator</h4>
+
+<p>A naive solution: adding into each smart pointer class an implicit type conversion operator. Take <code>SmartPtr&lt;Cassette&gt;</code> for example:</p>
+
+<pre><code class="language-cpp">class SmartPtr&lt;Cassette&gt; {
+public:
+	operator SmartPtr&lt;MusicProduct&gt;()
+	{ return SmartPtr&lt;MusicProduct&gt;(pointee); }
+	...
+};
+</code></pre>
+
+<p>Yet there are two drawbacks in this design:</p>
+
+<ol>
+<li>manually adding the necessary implicit type conversion operators specializes the <code>SmartPtr</code> class instantiations, which defeats the purpose of templates</li>
+<li>too many conversion operators to add - given a deep inheritance hierarchy, we must provide a conversion operator for <em>each</em> base class from that object directly or indirectly inherits (again, compilers are prohibited from employing more than one user-defined type conversion function at a time.)</li>
+</ol>
+
+<h4 id="generating-conversion-operators-via-member-templates">Generating conversion operators via member templates</h4>
+
+<p>The right way to take is to take advantage of <em>member function templates</em> (or just <em>member templates</em>):</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class SmartPtr {
+public:
+	SmartPtr(T* realPtr = 0);
+	T* operator-&gt;() const;
+	T* operator*() const;
+
+	template&lt;class newType&gt;      // template function for
+	operator SmartPtr&lt;newType&gt;() // implicit conversion ops.
+	{
+		return SmartPtr&lt;newType&gt;(pointee);
+	}
+};
+</code></pre>
+
+<p>Here&rsquo;s what happens:</p>
+
+<ul>
+<li>Compiler needs to convert a smart pointer-to-<code>T</code> object into a smart pointer-to-base-class-of-<code>T</code></li>
+<li>Compiler checks the class definition for <code>SmartPtr&lt;T&gt;</code> to see if the requisite conversion operator is declared -&gt; it is not</li>
+<li>Compiler then checks to see if there&rsquo;s a member function template it can instantiate that would perform the wanted conversion -&gt; it finds a template</li>
+<li>Compiler instantiates the template with <code>newType</code> bound to the base class of <code>T</code></li>
+<li>Given this instantiated member function, compiler finds it legal to pass the dumb pointer <code>pointee</code> to the constructor for the smart pointer-to-base-of-<code>T</code>, because <code>T</code>-type <code>pointee</code> is legal to be converted into a pointer to its (public or protected) base classes</li>
+<li>The code compiles -&gt; the implicit conversion from smart pointer-to-<code>T</code> to smart pointer-to-base-of-<code>T</code> succeeds</li>
+</ul>
+
+<p>Note that this implicit conversion will succeed for <em>any</em> legal implicit conversion between pointer types: if (and only if) a dumb pointer type <code>T1*</code> can be implicitly converted to another pointer type <code>T2*</code>, we can implicitly convert a smart pointer-to-<code>T1</code> to a smart pointer-to-<code>T2</code>.</p>
+
+<p>However, there&rsquo;s still a drawback: suppose following augmented <code>MusicProduct</code> hierarchy:</p>
+
+<pre><code>                  ┌──────────────┐
+ 				  │ MusicProduct │
+                  └──────────────┘
+   					  ↗     ↖ 
+             ┌──────────┐      ┌────┐
+             │ Cassette │      │ CD │
+             └──────────┘      └────┘
+                   ↑
+             ┌───────────┐
+             │ CasSingle │
+             └───────────┘
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;class T&gt;      // as above, including member tempate
+class SmartPtr {...};
+
+void displayAndPlay(const SmartPtr&lt;MusicProduct&gt;&amp; pmp, int howMany);
+void displayAndPaly(const SmartPtr&lt;Cassette&gt;&amp; pc, int howMany);
+
+SamrtPtr&lt;CasSingle&gt; dumbMusic(new CasSingle(&quot;Achy Breaky Heart&quot;));
+displayAndPlay(dumbMusic, 1);  // error!
+</code></pre>
+
+<p>When invoking <code>displayAndPlay</code> with a <code>SmartPtr&lt;CasSingle&gt;</code>, according to the inheritance hierarchy, we may expect the <code>SmartPtr&lt;Cassette&gt;</code> function to be chosen, because <code>CasSingle</code> inherits directly from <code>Casssette</code> and only indirectly from <code>MusicProduct</code>. However, it will only work in the case of dumb pointers. For our smart pointers, as far as C++ compilers are concerned, both calls to conversion functions here are equally good (the conversion from <code>SmartPtr&lt;CasSingle&gt;</code> to <code>SmartPtr&lt;Cassette&gt;</code> is no better than the conversion to <code>SmartPtr&lt;MusicProduct&gt;</code>), leading to an error of ambiguous call to <code>displayAndPlay</code>. The best we can do, then, is to use casts (MECpp item 2) in this ambiguous case.</p>
+
+<h2 id="smart-pointers-and-const">Smart pointers and const</h2>
+
+<p>To mimic the flexibility of constness in terms of smart pointers, we use follwoing ways to create four combinations of <code>const</code> and non-<code>const</code> objects and pointers:</p>
+
+<pre><code class="language-cpp">CD goodCD(&quot;Flood&quot;);
+SmartPtr&lt;CD&gt; p;  // non-const object, non-const pointer
+SmartPtr&lt;const CD&gt; p;  // const object, non-const pointer
+const SmartPtr&lt;CD&gt; p = &amp;goodCD;  // non-const object, const pointer
+const SmartPtr&lt;const CD&gt; p = &amp;goodCD;  // const object, const pointer
+</code></pre>
+
+<p>Moreover, we can use the member templates technique shown above for automatically generating the implicit type conversion operators from <code>SmartPtr&lt;CD&gt;</code> to <code>SmartPtr&lt;const CD&gt;</code> - this technique works anytime the corresponding conversion for dumb pointers would work， and conversions involving <code>const</code> are no exception.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">It is possible that, after <code>delete pt;</code>, <code>pt</code>&rsquo;s destructor (or some true owner of <code>pt</code>) will invoke <code>delete pt;</code> for a second time, and double deletion yields undefined behavior.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/05/reference-counting/" data-tooltip="[MECpp]Item-29 Reference Counting">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/" data-tooltip="[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/05/smart-pointers/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2fsmart-pointers%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2fsmart-pointers%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/05/smart-pointers/";  
+this.page.identifier = "[MECpp]Item-28 Smart Pointers"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/05/reference-counting/" data-tooltip="[MECpp]Item-29 Reference Counting">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/" data-tooltip="[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/05/smart-pointers/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2fsmart-pointers%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2fsmart-pointers%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2fsmart-pointers%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f05%2fsmart-pointers%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2fsmart-pointers%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-sip-of-leica-m9/">
+                <h3 class="media-heading">徕卡M9初体验</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-simple-calculation/">
+                <h3 class="media-heading">一个油腻中年大叔在儿童节的胡思乱想</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>张爱玲说，出名要趁早。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/music-generation-archive/">
+                <h3 class="media-heading">A simple archive for music generation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>A random collection of recent works on music generation.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/understand-how-to-combine-c---and-c-in-the-same-program/">
+                <h3 class="media-heading">[MECpp]Item-34 Understand How to Combine C&#43;&#43; and C in the Same Program</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>There are five points worth noting if we want to mix C++ and C in the same program.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/make-non-leaf-classes-abstract/">
+                <h3 class="media-heading">[MECpp]Item-33 Make Non-Leaf Classes Abstract</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/program-in-the-future-tense/">
+                <h3 class="media-heading">[MECpp]Item-32 Program in the Future Tense</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Things change. Future tense thinking increases the reusability of the code we write, enhances its maintainability, makes it more robust, and facilitates gracefully in an environment where change is a certainty.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/reference-counting/">
+                <h3 class="media-heading">[MECpp]Item-29 Reference Counting</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/smart-pointers/">
+                <h3 class="media-heading">[MECpp]Item-28 Smart Pointers</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Smart pointers</em> are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/">
+                <h3 class="media-heading">[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Techniques for requiring or prohibiting heap-based objects
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/relocation-to-m2/">
+                <h3 class="media-heading">搬了个家</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>搬一次家，掉一层皮
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         119 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/05\/smart-pointers\/';
+          
+            this.page.identifier = '\/2018\/05\/smart-pointers\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

@@ -1,0 +1,1096 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="Techniques for requiring or prohibiting heap-based objects
+">
+    <meta property="og:description" content="Techniques for requiring or prohibiting heap-based objects
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects">
+    <meta property="og:url" content="/2018/05/requiring-or-prohibiting-heap-based-objects/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="Techniques for requiring or prohibiting heap-based objects
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-05/2018-05-01.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [MECpp]Item-27 Requiring or Prohibiting Heap Based Objects
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-05-01T00:00:00Z">
+      
+  五月 1, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>Techniques for requiring or prohibiting heap-based objects
+</p>
+
+<h2 id="requiring-heap-based-objects">Requiring Heap-Based Objects</h2>
+
+<h3 id="1-the-straightforward-way">1. The straightforward way</h3>
+
+<p>The brutle way is to declare the constructors and the destructor <code>private</code>, but this is overkill. Either one of them need to be private to ensure objects only be created on the heap. Since there are usually many constructors but only one destructor per class, a more elegant way is to make the destructor private and the constructors public, prividing privileged pseudo-destructor function (which has access to the real destructor) for clients to call, as suggested in MECpp item 26.</p>
+
+<p>Example:</p>
+
+<pre><code class="language-cpp">class UPNumber { // unlimited precision numbers that should only exist on the heap
+public:
+    UPNumber();
+    UPNumber(int initValue);
+    UPNumber(double initValue);
+    UPNumber(const UPNumber&amp; rhs);
+    // pseudo-destructor (a const member function, because even const obj. may be destroyed)
+    void destroy() const { delete this; }
+    ...
+private:
+    ~UPNumber();
+};
+</code></pre>
+
+<p>Clients would program like this:</p>
+
+<pre><code class="language-cpp">UPNumber n; // error! (legal here, but illegal when n's dtor is implicitly invoked later)
+UPNumber *p = new UPNumber; // fine
+...
+delete p; // error! attempt to call private dtor
+p-&gt;destroy(); // fine
+</code></pre>
+
+<h3 id="2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</h3>
+
+<p>Restricting access to a class&rsquo;s destructor or constructors prevents the creation of not only non-heap objects, but also both inheritance and containment. To work this out:</p>
+
+<ul>
+<li>To be friendly for inheritance, we declare <code>protected</code> for <code>UPNumber</code>&rsquo;s destructor.</li>
+<li>To be friendly for containment, classes that need objects of type <code>UPNumber</code> can be modified to contain pointers to <code>UPNumber</code> object instead:</li>
+</ul>
+
+<pre><code class="language-cpp">class UPNumer {...};  // declare dtor protected
+class NonNegativeUPNumber: public UPNumber {...}; // okay to access protected members
+
+class Asset {
+public:
+    Asset(int initValue);
+    ~Asset();
+    ...
+private:
+    UPNumber *value;
+};
+
+Asset::Asset(int initValue)
+: value(new UPNumber(initValue)) // fine
+{...}
+
+Asset::~Asset()
+{ value-&gt;destroy(); }  // fine
+</code></pre>
+
+<h3 id="3-determining-whether-an-object-is-on-the-heap">3. Determining Whether an Object is On The Heap</h3>
+
+<p>It&rsquo;s hard to tell whether an object is on the heap. For example, given the class definition above, it&rsquo;s ligal to define a non-heap <code>NonNegativeUPNumber</code> object, which will not construct its base <code>UPNumber</code> part on the heap. There is no way to detect whether a constructor is being invoked as the base class part of a heap-based object, which means for the following contexts, it is not possible for the <code>UPNumber</code> constructor to detect the difference:</p>
+
+<pre><code class="language-cpp">NonNegativeUPNumber *n1 = new NonNegativeUPNumber; // on heap
+NonNegativeUPNumber n2; // not on heap
+</code></pre>
+
+<p>Sadly, there&rsquo;s no portable way to determine whether an object is on the heap, and there isn&rsquo;t even a semi-portable way that works most of the time. Detailed dicussion on this topic could be found at <a href="http://www.aristeia.com/BookErrata/M27Comments.html">Comments on Item 27 of More Effective C++</a>.</p>
+
+<p>We&rsquo;ll have to turn to unportable, implementation-dependent system calls if we absolutely have to tell whether an address is on the heap. That being the case, we&rsquo;d better off trying to redesign the software so we don&rsquo;t need to determine whether an object is on the heap in the first place.</p>
+
+<h4 id="4-determine-whether-it-s-safe-to-delete-a-pointer">4. Determine whether it&rsquo;s safe to delete a pointer</h4>
+
+<p>To answer this easier question, all we need to do is to create a collection of addresses that have been returned by <code>operator new</code>. One possible solution is to provide an abstract mixin base class that offers derived classes the ability to determine whether a pointer was allocated from <code>operator new</code>:</p>
+
+<pre><code class="language-cpp">class HeapTracked { // mixin class; keeps track of ptrs returned from op. new
+public:
+    class MissingAddress();  // exception class
+    virtual ~HeapTracked() = 0;
+
+    static void *operator new(size_t size);
+    static void operator delete(void *ptr);
+
+    bool isOnHeap() const;
+private:
+    typedef const void* RawAddress;
+    static list&lt;RawAddress&gt; addresses;
+};
+</code></pre>
+
+<pre><code class="language-cpp">// mandatory definition of static class member
+list&lt;RawAddress&gt; HeapTracked::address;
+// tho being pure virtual, dtor still needs to be defined
+HEapTracked::~HeapTracked() {}
+
+void * HeapTracked::operator new(size_t size)
+{
+    void *memPtr = ::operator new(size); // get the memory
+    addresses.push_front(memPtr);
+    return memPtr;
+}
+
+void HeapTracked::operator delete(void *ptr)
+{
+    // gracefully handle null pointer
+    if (ptr == 0) return;
+    list&lt;RawAddress&gt;::iterator it = 
+        find(addresses.begin(), addresses.end(), ptr);
+    if (it != addresses.end()) {
+        addresses.erase(it);     // remove the entry
+        ::operator delete(ptr);  // deallocate the memory
+    } else {
+        throw MissingAddress();  // ptr wasn't allocated by op. new. throw an exception
+    }
+}
+
+bool HeapTracked::isOnHeap() const
+{
+    // get a pointer to the beginning of the memory occupied by *this
+    const void *rawAddress = dynamic_cast&lt;cosnt void*&gt;(this);
+    list&lt;RawAddress&gt;::iterator it = 
+        find(addresses.begin(), addresses.end(), rawAddress);
+    return it != addresses.end();  // return whether it was found
+}
+</code></pre>
+
+<p>Note that <code>dynamic_cast</code> is applicable only to pointers to objects that have at least one virtual function, and <code>dynamic_cast</code>ing a pointer to <code>void*</code> (or <code>const void*</code> or <code>volatile void*</code> or <code>const volatile void*</code>) yields a pointer to the beginning of the memory for the object pointed to by the pointer. Here <code>dynamic_cast</code>ing <code>this</code> to <code>const void*</code> gives us a pointer to the beginning of the memory for the current object, which is the pointer previously returned by <code>HeapTracked::operator new</code> as long as the memory for the current object was allocated by <code>HeapTracked::operator new</code> in the first place.</p>
+
+<p>To use this basic class, say we want to be able to determine whether a pointer to an <code>Asset</code> object points to a heap-based object, simply modify <code>Asset</code>&rsquo;s class definition to specify <code>HeapTracked</code> as a base class:</p>
+
+<pre><code class="language-cpp">class Asset: public HeapTracked {
+private:
+    UPNumber value;
+    ...
+};
+</code></pre>
+
+<p>And we could query <code>Asset*</code> pointers as follows:</p>
+
+<pre><code class="language-cpp">void inventoryAsset(const Asset *ap)
+{
+    if (ap-&gt;isOnHeap()) {
+        as is a heap-based asset -- inventory it as such
+    } 
+    else {
+        ap is non-heap-based  asset  -- record it that way
+    }
+}
+</code></pre>
+
+<p>Since built-in types such as <code>int</code> and <code>char</code> can&rsquo;t inherit from anything, <code>HeapTracked</code> can&rsquo;t be used with these built-in types. Still, the most common reason for wanting to use a class like <code>HeapTracked</code> is to determine whether it&rsquo;s okay to <code>delete this</code>, and we don&rsquo;t want to do that with a built-in type because such types have no <code>this</code> pointer.</p>
+
+<h2 id="prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</h2>
+
+<p>To preventing objects from being allocated on the heap, there are three cases:</p>
+
+<ol>
+<li>objects that are directly instantiated</li>
+<li>objects instantiated as base class parts of derived class objects</li>
+<li>objects embedded inside other objects</li>
+</ol>
+
+<h4 id="1-preventing-directly-instantiation-on-heap">1. Preventing directly instantiation on heap</h4>
+
+<p>To prevent clients from directly instantiating objects on the heap: we can declare <code>operator new</code> (and possibly <code>operator new[]</code>) as <code>private</code>:</p>
+
+<pre><code class="language-cpp">class UPNumber {
+private:
+    static void *operator new(size_t size);
+    static void operator delete(void *ptr);
+    ...
+};
+</code></pre>
+
+<pre><code class="language-cpp">UPNumber n1;  // okay
+static UPNumber n2;  // okay
+UPNumber *p = new UPNumber; // error! attempt to call private operator new
+</code></pre>
+
+<p>Declaring <code>operator new</code> private often also prevents <code>UPNumber</code> objects from being instantiated as base class parts of heap-based derived class objects, because <code>operator new</code> and <code>operator delete</code> are inherited, so if these functions aren&rsquo;t declared public in a derived class, that class inherits the private versions declared in its base(s):</p>
+
+<pre><code class="language-cpp">class UPNumber {...}; // as above
+class NonNegativeUPNumber: public UPNumber { // declares no operator new
+    ...
+};
+
+NonNegativeUPNumber n1; // okay
+static NonNegativeUPNumber n2; // okay
+NonNegativeUPNumber *p = new NonNegativeUPNumber; // error! attempt to call private operator new
+</code></pre>
+
+<h4 id="2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</h4>
+
+<p>However, if the derived class declares an <code>operator new</code> of its own, which will be called when allocating derived class objects on the heap, it is hard to prevent <code>UPNumber</code> base class parts from winding up there.</p>
+
+<h4 id="3-preventing-base-class-parts-instantiated-on-heap">3. Preventing base class parts instantiated on heap</h4>
+
+<p>Similarly, the fact that <code>UPNumber</code>&rsquo;s <code>operator new</code> is private has no effect on attempts to allocate objects containing <code>UPNumber</code> objects as members:</p>
+
+<pre><code class="language-cpp">class Asset {
+public:
+    Asset(int initValue);
+    ...
+private:
+    UPNumber value;
+};
+
+Asset *pa = new Asset(100);  // fine, calls Asset::operator new or ::operator new,
+                             // not UPNumber::operator new
+</code></pre>
+
+<p>Just as there&rsquo;s no portable way to determine if an address is on the heap, however, there is no portable way to determine that it is not on the heap, so we can&rsquo;t throw an exception in the <code>UPNumber</code> constructors if a to-be-tested <code>UPNumber</code> object being constructed is on the heap. We&rsquo;re out of luck.</p>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/05/smart-pointers/" data-tooltip="[MECpp]Item-28 Smart Pointers">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/04/relocation-to-m2/" data-tooltip="搬了个家">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/";  
+this.page.identifier = "[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/05/smart-pointers/" data-tooltip="[MECpp]Item-28 Smart Pointers">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/04/relocation-to-m2/" data-tooltip="搬了个家">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f05%2frequiring-or-prohibiting-heap-based-objects%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-sip-of-leica-m9/">
+                <h3 class="media-heading">徕卡M9初体验</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-simple-calculation/">
+                <h3 class="media-heading">一个油腻中年大叔在儿童节的胡思乱想</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>张爱玲说，出名要趁早。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/music-generation-archive/">
+                <h3 class="media-heading">A simple archive for music generation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>A random collection of recent works on music generation.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/understand-how-to-combine-c---and-c-in-the-same-program/">
+                <h3 class="media-heading">[MECpp]Item-34 Understand How to Combine C&#43;&#43; and C in the Same Program</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>There are five points worth noting if we want to mix C++ and C in the same program.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/make-non-leaf-classes-abstract/">
+                <h3 class="media-heading">[MECpp]Item-33 Make Non-Leaf Classes Abstract</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/program-in-the-future-tense/">
+                <h3 class="media-heading">[MECpp]Item-32 Program in the Future Tense</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Things change. Future tense thinking increases the reusability of the code we write, enhances its maintainability, makes it more robust, and facilitates gracefully in an environment where change is a certainty.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/reference-counting/">
+                <h3 class="media-heading">[MECpp]Item-29 Reference Counting</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/smart-pointers/">
+                <h3 class="media-heading">[MECpp]Item-28 Smart Pointers</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Smart pointers</em> are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/">
+                <h3 class="media-heading">[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Techniques for requiring or prohibiting heap-based objects
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/relocation-to-m2/">
+                <h3 class="media-heading">搬了个家</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>搬一次家，掉一层皮
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         119 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/05\/requiring-or-prohibiting-heap-based-objects\/';
+          
+            this.page.identifier = '\/2018\/05\/requiring-or-prohibiting-heap-based-objects\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

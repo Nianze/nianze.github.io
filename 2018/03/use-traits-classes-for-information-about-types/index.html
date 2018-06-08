@@ -1,0 +1,1064 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>Item-47 Use traits classes for information about types - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time if...else tests on types.
+">
+    <meta property="og:description" content="Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time if...else tests on types.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Item-47 Use traits classes for information about types">
+    <meta property="og:url" content="/2018/03/use-traits-classes-for-information-about-types/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time if...else tests on types.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-03/2018-03-14.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Item-47 Use traits classes for information about types
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-03-14T18:49:03-04:00">
+      
+  三月 14, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time <code>if...else</code> tests on types.
+</p>
+
+<p>In this item, let&rsquo;s look at how STL supports the utility template <code>advance</code>, which moves a specified iterator a specified distance:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;  
+void advance(IterT&amp; iter, DistT d); // move iter d units forward; if d &lt; 0, move iter backward
+</code></pre>
+
+<p>Before we step into the field of <code>advance</code> implementation, we should be familiar about STL iterator categoryies, because different iterators support different operations.</p>
+
+<h2 id="five-iterator-categories">Five iterator categories</h2>
+
+<p>According to the operations they support, there are five categories of iterators<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
+
+<ul>
+<li><strong><em>Input iterators</em></strong> can move only one step forward at a time, can only read, and can read what they&rsquo;re pointing to only once (e.g., <code>istream_iterator</code>)</li>
+<li><strong><em>Output iterators</em></strong> can move only one step forwrad at a time, can only write, and can write what they&rsquo;re pointing to only once (e.g., <code>ostream_iterator</code>)</li>
+<li><strong><em>Forward iterators</em></strong> can do whatever input and output iterators can do, and they can read or write what they point to momre than once (e.g., singly linked list or iterators into TR1&rsquo;s hashed containers (item 54) may be in the forward category)</li>
+<li><strong><em>Bidirectional iterators</em></strong> add to forward iterators the ability to move backward as well as forward (e.g., iterators for <code>list</code>, <code>set</code>, <code>multiset</code>, <code>map</code>, <code>multimap</code> in STL)</li>
+<li><strong><em>Random access iterators</em></strong> are the most powerful ones: they add to bidirectional iterators the ability to perform &ldquo;iterator arithmetic&rdquo; - to jump forward or backward an arbitrary distance in constant time, which is similar to pointer arithmetic (e.g., iterators for <code>vector</code>, <code>deque</code>, <code>string</code>)</li>
+</ul>
+
+<p>For each of the five iterator categories, C++ has a &ldquo;tag struct&rdquo; in the standard library that serves to identify it:</p>
+
+<pre><code class="language-cpp">struct input_iterator_tag {};
+struct output_iterator_tag {};
+struct forward_iterator_tag: public input_iterator_tag {};
+struct bidirectional_iterator_tag: public forward_iterator_tag {};
+struct random_access_iterator_tag: public bidirectional_iterator_tag {};
+</code></pre>
+
+<h2 id="pseudocode-for-advance">Pseudocode for <code>advance</code></h2>
+
+<p>Knowing that different categories support different operations, <code>advance</code> will essentially be implemented like this:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
+{
+    if (iter is a random access iterator) {
+        iter += d; // use iterator arithmetic for random access iters
+    }
+    else {
+        if (d &gt;= 0) { while (d--) ++iter; } // use iterative calls 
+        else { while (d++) --iter; }        // to ++ or -- for other iterator categories
+    }
+}
+</code></pre>
+
+<p>How to determine whether <code>iter</code> is a random access iterator? Here comes the technique of <em>traits</em>, which allow us to get type information during compilation.</p>
+
+<h2 id="traits">Traits</h2>
+
+<p>Traits aren&rsquo;t a keyword or a predefined construct in C++, but simply a technique and a convention followed by C++ programmers. It has some requirements, one of which asks that it has to work as well for built-in types as it does for user-defined types. This demand leads to the conclusion that the traits information for a type must be external to the type<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
+
+<h4 id="for-user-defined-types">For user-defined types</h4>
+
+<p>The standard technique is to put the information into a template and one or more specializations of that template. For iterators, the template in the standard library is named <code>iterator_traits</code><sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>:</p>
+
+<pre><code class="language-cpp">// the iterator_category for type IterT is whatever IterT says it is
+// see item 42 for info on the use of &quot;typedef typename&quot;
+template&lt;typename IterT&gt;
+struct iterator_traits {
+    typedef typename IterT::iterator_category iterator_category;
+    ...
+};
+</code></pre>
+
+<p>How does <code>iterator_traits</code> work? Since <code>iterator_traits</code> just parrots back a typedef called <code>iterator_category</code> inside the iterator class, it requires that any user-defined iterator type must contain this nested typedef named <code>iterator_category</code>, which identifies the appropriate tag struct. For example, <code>deque</code> iterators belong to random access category, and <code>list</code>&rsquo;s iterators are bidirectional:</p>
+
+<pre><code class="language-cpp">template&lt;...&gt;
+class deque {
+public:
+    class iterator {
+    public:
+        typedef random_access_iterator_tag iterator_category;
+        ...
+    };
+    ...
+};
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;...&gt;
+class list {
+public:
+    class iterator {
+    public:
+        typedef bidirectional_iterator_tag iterator_category;
+        ...
+    };
+    ...
+};
+</code></pre>
+
+<h4 id="for-pointer-types">For pointer types</h4>
+
+<p>The code above works well for user-defined types, but it doasn&rsquo;t work for iterators that are pointers, since there&rsquo;s no such thing as a nested typedef inside a built-in pointer. To make it work, <code>iterator_traits</code> need to offer a <em>partial template specialization</em> for pointer types:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT&gt;  // partial template specialization
+struct iterator_traits&lt;IterT*&gt; // for built-in pointer types
+{
+    typedef random_access_iterator_tag iterator_category; // pointers act as random access iterators
+    ...
+}
+</code></pre>
+
+<h3 id="workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</h3>
+
+<ul>
+<li>Identify some information about types we&rsquo;d like to make available (e.g., iterator category for iterator types)</li>
+<li>Choose a name to identify that information (e.g., <code>iterator_category</code>)</li>
+<li>Provide a template and set of specializations (e.g., <code>iterator_traits</code>) that contain the information for the types we want to support</li>
+</ul>
+
+<h2 id="implementing-advance">Implementing <code>advance</code></h2>
+
+<p>Given <code>std::iterator_traits</code>, we can refine our pseudocode for <code>advance</code>:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
+{
+    if (typeid(typename std::iterator_traits&lt;IterT&gt;::iterator_category) ==
+        typeid(std::random_access_iterator_tag))
+        ...
+}
+</code></pre>
+
+<p>Sadly, this is not what we want: for one thing, it will lead to compilation problems (refer to item 48); anther issue, which is more fundamental, is that <code>if</code> statement is evaluated at runtime but <code>iterator_traits&lt;IterT&gt;::iterator_category</code> can be determined during compilation already. There&rsquo;s no point to move the evaluation from compile-time to runtime to waste time and bloat the executable.</p>
+
+<h3 id="template-metaprogramming">Template metaprogramming</h3>
+
+<p>What we want is a conditional construct for types that is evaluated during compilation. Actually this demand brings us to the realm of template metaprogramming (item 48), but the technique we&rsquo;ll use turns out to be quit familiar: <em>overloading</em>:</p>
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt; // use this impl for random access iterators
+void doAdvance(IterT&amp; iter, DistT d, std::random_access_iterator_tag)
+{
+    iter += d;
+}
+
+template&lt;typename IterT, typename DistT&gt; // use this impl for bidirectional iterators
+void doAdvance(IterT&amp; iter, DistT d, std::bidirectional_iterator_tag)
+{
+    if (d &gt;= 0) { while(d--) ++iter; }
+    else { while(d++) --iter; }
+}
+
+template&lt;typename IterT, typename DistT&gt; // use this impl for input iterators, also applies to inherited forward_iterator_tag
+void doAdvance(IterT&amp; iter, DistT d, std::input_iterator_tag)
+{
+    if (d &lt; 0) {
+        throw std::out_of_range(&quot;Negative distance&quot;); 
+    }
+    while(d--) ++iter;
+}
+
+template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
+{
+    doAdvance(iter, d, 
+        typename std::iterator_traits&lt;IterT&gt;::iterator_category());
+};
+</code></pre>
+
+<h3 id="summary">Summary</h3>
+
+<p>How to use a traits class:</p>
+
+<ul>
+<li>Create a set of overloaded &ldquo;worker&rdquo; functions or function templates (e.g., doAdvance) that differ in a traits parameter. Implement each function in accrod with the traits information passed.</li>
+<li>Create a &ldquo;master&rdquo; function or function template (e.g., advance) that calls the workers, passing information provided by a traits class.</li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Input and output iterators, as two least powerful iterator categories, are modeled on the read (into an input file) and write (into an output file) pointer, suitable only for one-pass algorithm. Forward (and higher level iterators) can do multi-pass algoritms. The most powerful random access iterators are modeled on built-in pointers.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2">For example, if <code>advance</code> is called with a pointer <code>const char*</code> and an <code>int</code>, since traits technique must apply to built-in types like <code>const char*</code>, and there&rsquo;s no way to nesting information inside pointers, thus the traits information for a type must be external to the type.
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3">By convention, traits are always implemented as structs, but that  structs are called &ldquo;traits classes&rdquo; - not joking.
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+</ol>
+</div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/be-aware-of-template-metaprogramming/" data-tooltip="Item-48 Be aware of template metaprogramming">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/define-non-member-function-inside-templates-when-type-conversions-are-desired/" data-tooltip="Item-46 Define non-member function inside templates when type conversions are desired">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/";  
+this.page.identifier = "Item-47 Use traits classes for information about types"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/be-aware-of-template-metaprogramming/" data-tooltip="Item-48 Be aware of template metaprogramming">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/define-non-member-function-inside-templates-when-type-conversions-are-desired/" data-tooltip="Item-46 Define non-member function inside templates when type conversions are desired">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fuse-traits-classes-for-information-about-types%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-sip-of-leica-m9/">
+                <h3 class="media-heading">徕卡M9初体验</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-simple-calculation/">
+                <h3 class="media-heading">一个油腻中年大叔在儿童节的胡思乱想</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>张爱玲说，出名要趁早。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/music-generation-archive/">
+                <h3 class="media-heading">A simple archive for music generation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>A random collection of recent works on music generation.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/understand-how-to-combine-c---and-c-in-the-same-program/">
+                <h3 class="media-heading">[MECpp]Item-34 Understand How to Combine C&#43;&#43; and C in the Same Program</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>There are five points worth noting if we want to mix C++ and C in the same program.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/make-non-leaf-classes-abstract/">
+                <h3 class="media-heading">[MECpp]Item-33 Make Non-Leaf Classes Abstract</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/program-in-the-future-tense/">
+                <h3 class="media-heading">[MECpp]Item-32 Program in the Future Tense</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Things change. Future tense thinking increases the reusability of the code we write, enhances its maintainability, makes it more robust, and facilitates gracefully in an environment where change is a certainty.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/reference-counting/">
+                <h3 class="media-heading">[MECpp]Item-29 Reference Counting</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/smart-pointers/">
+                <h3 class="media-heading">[MECpp]Item-28 Smart Pointers</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Smart pointers</em> are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/">
+                <h3 class="media-heading">[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Techniques for requiring or prohibiting heap-based objects
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/relocation-to-m2/">
+                <h3 class="media-heading">搬了个家</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>搬一次家，掉一层皮
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         119 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/03\/use-traits-classes-for-information-about-types\/';
+          
+            this.page.identifier = '\/2018\/03\/use-traits-classes-for-information-about-types\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+

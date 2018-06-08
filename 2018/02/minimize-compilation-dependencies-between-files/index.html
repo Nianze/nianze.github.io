@@ -1,0 +1,1151 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>Item-31 Minimize compilation dependencies between files - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="To minimize compilation dependencies, depend on declarations instead of definitions via techniques such as Handle classes and Interface classes.
+">
+    <meta property="og:description" content="To minimize compilation dependencies, depend on declarations instead of definitions via techniques such as Handle classes and Interface classes.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Item-31 Minimize compilation dependencies between files">
+    <meta property="og:url" content="/2018/02/minimize-compilation-dependencies-between-files/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="To minimize compilation dependencies, depend on declarations instead of definitions via techniques such as Handle classes and Interface classes.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-02/2018-02-22.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Item-31 Minimize compilation dependencies between files
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-02-22T00:00:00Z">
+      
+  二月 22, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>To minimize compilation dependencies, depend on declarations instead of definitions via techniques such as Handle classes and Interface classes.
+</p>
+
+<p>C++ doesn&rsquo;t do a very good job of separating interfaces from implementations. A  class definition specifies not only a class interface but also a fair number of implementation details. For example:</p>
+
+<pre><code class="language-cpp">class Person {
+public:
+    Person(const std::string&amp; name, cnost Data&amp; birthday, const Address&amp; addr);
+    std::string name() const;
+    std::string birthDate() const;
+    std::string address() const;
+    ...
+private:
+    std::string theName; // implementation detail
+    Date theBirthdate;   // implementation detail
+    Address theAddress;  // implementation detail
+};
+</code></pre>
+
+<p>Here, to compile <code>Person</code>, definitions for the data members <code>string</code>, <code>Date</code>, and <code>Address</code> that <code>Person</code> uses must be provided, typically through <code>#include</code> directives:</p>
+
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &quot;date.h&quot;
+#include &quot;address.h&quot;
+</code></pre>
+
+<p>Unfortunately, this inclusion sets up a compilation dependency between the file defining <code>Person</code> and these header files. If any of these header files or the header files&rsquo; dependent header files is changed, the file containing the <code>Person</code> class must be recompiled, as must any files that use <code>Person</code>. Such cascading compilation dependencies are annoying, but C++ insists on putting the implementation details of a class in the class definition - we can&rsquo;t separate the implementation details of the class definition simply by forward-declaring everything like this:</p>
+
+<pre><code class="language-cpp">namespace std {
+    class string; // incorrect way of forward declaration
+}
+class Date;  // forward declaration
+class Address;  // forward declaration
+
+class Person {
+public:
+    Person(const std::string&amp; name, const Date&amp; birthday, const Address&amp; addr);
+    std::string name() const;
+    std::string birthDate() const;
+    std::string address() const;
+    ...
+};
+</code></pre>
+
+<p>There&rsquo;re two problems with this idea:<br />
+1. The minor one: <code>string</code> is not a class but a <code>typedef</code> for <code>basic_string&lt;char&gt;</code>. Thus the forward declaration for <code>string</code> is incorrect<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.<br />
+2. The more significant one: compilers need to know the size of objects to allocate enough space (typically on the stack) when they see a difinition for object <code>p</code>, so the implementation details can not be omited:</p>
+
+<pre><code>```cpp
+int main()
+{
+    ...
+    Person p(params);  // define a Person
+    ...
+}
+```
+</code></pre>
+
+<p>The essence of minimizing compilation dependencies it to truly separate interface from implementation, which means we have to replace dependencies on <em>definitions</em> with dependencies on <em>declarations</em>.</p>
+
+<h2 id="handle-classes">Handle classes</h2>
+
+<p>One way to hide the object implementation is through a pointer, in which case compilers allocate only enough space for a <code>pointer</code> when an object is defined:</p>
+
+<pre><code class="language-cpp">int main()
+{
+    ...
+    Person *p;  // define a pointer to a Person
+    ...
+}
+</code></pre>
+
+<p>This is how languages like Smaltalk and Java deal with the object difinition, which is also totally legal in C++: we simply separate <code>Person</code> into two classes, one offering only an interface, the other implementing that interface:</p>
+
+<pre><code class="language-cpp">#include &lt;string&gt;  // standard library components
+#include &lt;memory&gt;  // for tr1::shared_ptr
+class PersonImpl;  // forward decl of Person impl. class
+class Date;        // forward decls of classes used in Person interface
+class Address;
+
+class Person{
+public:
+    Perosn(const std::string&amp; name, const Date&amp; birthday, const Address&amp; addr);
+    std::string name() const;
+    std::string birthDate() const;
+    std::string address() const;
+    ...
+private:  // ptr to implementation
+    std::tr1::shared_ptr&lt;PersonImpl&gt; pImpl; // see item 13 for shared_ptr
+};
+</code></pre>
+
+<p>This design is often said to be using the <em>pimpl idiom</em> (&ldquo;pointer to implementation&rdquo;). With such a design, clients of <code>Person</code> are divorced from the details of dates, address, and persons. Now, even if the implementations of those classes have been modified, <code>Person</code>&rsquo;s clients need not recompile.</p>
+
+<p>In summary:</p>
+
+<ul>
+<li><p>Avoid using objects when object references and poinnters will do (defining <em>objects</em> of a type necessitates the presence of the type&rsquo;s definition).</p></li>
+
+<li><p>Depend on class declarations instead of class definitions whenever we can:</p>
+
+<pre><code class="language-cpp">class Date:  // class declaration
+Date today();  // fine without class definition
+void clearAppointments(Date d); // fine. No definition of Date is needed
+</code></pre>
+
+<p>Of course, if anybody <em>calls</em> function <code>today</code> or <code>clearAppointments</code>, <code>Date</code>&rsquo;s definition must have been seen prior to the call. But the point here is:</p>
+
+<p>By moving the onus of providing class definitions from our library header file of function <em>declarations</em> to clients&rsquo; files containing function <em>calls</em>, the client dependiencies on type definitions they don&rsquo;t really need could be eliminated (especially when we have a library containing dozens of function declarations that not everybody calls all of them).</p></li>
+
+<li><p>Provide separate header files for declarations and definitions.</p>
+
+<p>Instead of forward-declaring something, library clients should always <code>#include</code> a declaration file, so library authors should provide two header files: one for declarations, the other for definitions. For example,</p>
+
+<pre><code class="language-cpp">#include &quot;detefwd.h&quot;   // header file declaring (but not defining) class Date
+Date today();  // as before
+void clearAppointments(Date d);
+</code></pre>
+
+<p>Here, the name of the declaration-only header file &ldquo;datefwd.h&rdquo; is based on the header <iosfwd><sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> from the standard C++ library (item 54).</p></li>
+</ul>
+
+<p>To employ the pimpl idiom, we just let forward all the function calls in the <em>handle class</em> <code>Person</code> to the corresponding implementation class <code>PersonImpl</code>, which will do the real work. Below is the implementation of <code>Person</code>&rsquo;s member functions:</p>
+
+<pre><code class="language-cpp">#include &quot;Person.h&quot;      // #inclue Person's class definition
+#include &quot;PersonImpl.h&quot;  // #include PersonImpl's class definition to call its member functions;
+                         // note that interfaces of PersonImpl and Person are identical
+Person::Person(const std::string&amp; name, const Date&amp; birthday, const Address&amp; addr)
+:pImpl(new PersonImpl(name, birthday, addr))
+{}
+
+std::string Person::name() const
+{
+    return pImpl-&gt;name();
+}
+...
+</code></pre>
+
+<h2 id="interface-classes">Interface classes</h2>
+
+<p>An alternative approach is to make <code>Person</code> a special kind of abstract base class called an <em>Interface class</em>, which typically has no data members, no constructors, a virtual destructor (item 7), and a set of pure virtual funcitons that specify the interface. The similar concept could be found in Java and .NET, except that C++ doesn&rsquo;t impose the restrictions on Interface classes as Java and .NET do<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>.</p>
+
+<p>An interface class for <code>Person</code> looks like this:</p>
+
+<pre><code class="language-cpp">class Person {
+public:
+    virtual ~Person();
+
+    virtual std::string name() const = 0;
+    virtual std::string birthDate() const = 0;
+    virtual std::string address() const = 0;
+    ...
+};
+</code></pre>
+
+<p>Like clients of Handle classes, clients of Interface classes need not recompile unless the Interface class&rsquo;s interface is modified.</p>
+
+<p>In order to use Interface classes:</p>
+
+<ul>
+<li><p>clients need to program in terms of <code>Person</code> pointers and references, for <code>Person</code>, which contains pure virtual functions, can not be instantiated</p></li>
+
+<li><p>typically, clients create new <code>Person</code> objects by calling factory functions (item 13) or <em>virtual constructors</em>, which return pointers (preferably smart pointers, item 18) to dynamically allocated objects of derived classes that support the interface. Such functions are often declared <code>static</code> inside the Interface class:</p>
+
+<pre><code class="language-cpp">class Person {
+public:
+    ...
+    static std::tr1::shared_ptr&lt;Person&gt;  // return a tr1::shared_ptr to a new
+    create(const std::string&amp;  name,     // Person initialized with the 
+           const Date&amp; birthday,         // gien params
+           const Address&amp; addr);
+    ...
+};
+</code></pre>
+
+<pre><code class="language-cpp">std::string name;
+Date dateOfBirth;
+Address address;
+...
+// create an object supporting the Person interface
+std::tr1::shared_ptr&lt;Person&gt; pp(Person::create(name, dateOfBirth, address));
+...
+</code></pre></li>
+
+<li><p>one way to implement the Interface class <code>Person</code> is to define a concrete derived class that inherits interface specification from <code>Person</code>, and then implement the functions in the interface:</p>
+
+<pre><code class="language-cpp">class RealPerson: public Person {
+public:
+    RealPerson(const std::string&amp; name, const Date&amp; birthday, const Address&amp; addr)
+    : theName(name), theBirthDate(birthday), theAddress(addr)
+    {}
+    virtual ~RealPerson(){}
+
+    std::string name() const;    
+    std::string birthDate() const;
+    std::string address() const;
+private:
+    std::string theName;
+    std::string theBirthDate;
+    Address theAddress;
+};
+</code></pre>
+
+<p>Then it is trivial to write <code>Person::create</code>:</p>
+
+<pre><code class="language-cpp">std::tr1::shared_ptr&lt;Person&gt; 
+Person::create(const std::string&amp; name, const Date&amp; birthday, const Address&amp; addr)
+{
+    return std::tr1::shared_ptr&lt;Person&gt;(new RealPerson(name, birthday, addr));
+}
+</code></pre>
+
+<p>Of course, a more realistic implementation of <code>Person::create</code> would create different types of derived class objects, depending on the values of additional parameters.</p></li>
+
+<li><p>another way to implement an Interface class involves multiple inheritance, a topic explored in item 40.</p></li>
+</ul>
+
+<h2 id="cost-of-decoupling-interfaces-from-implementations">Cost of decoupling interfaces from implementations</h2>
+
+<p>The cost of Handle classes and Interface classes is the usual one in computer science: it costs us some speed at runtime, plus some additional memory per object. In addition, neither of them can get much use out of inline functions (item 30), since inline functions typically exists in header files while this item talks about how to hide implementation details like function bodies in header file.</p>
+
+<p><strong>For Handle classes</strong>:</p>
+
+<ul>
+<li>impact on runtime speed:
+
+<ul>
+<li>member functions have to go through the implementation pointer to get to the object&rsquo;s data, which adds one level of indirection per access;</li>
+<li>the implementation object is dynamically allocated during the initialization of implementation pointer, which incurs the overhead of dynamic memory allocation and subsequent deallocation, as well as possible <code>bad_alloc</code> (out-of-memory) exception.</li>
+</ul></li>
+<li>impact on memory:
+
+<ul>
+<li>we have to add the size of the implementation pointer to the amount of memory required by each object.</li>
+</ul></li>
+</ul>
+
+<p><strong>For Interface classes</strong>:</p>
+
+<ul>
+<li>impact on runtime speed:
+
+<ul>
+<li>every function call is virtual, so we pay the cost of an indirect jump for each function call (item 7).</li>
+</ul></li>
+<li>impact on memory:
+
+<ul>
+<li>object derived from the Interface class must contain a virtual table pointer (item 7), which may increase the amount of memory needed to store an object (if the Interface class is the exclusive source of virtual functions for the object)</li>
+</ul></li>
+</ul>
+
+<p>Despite all the costs, consider using these techniques in an evolutionary manner:</p>
+
+<ul>
+<li>use Handle classes and Interface classes during development to minimize the impact on clients when implementations change</li>
+<li>replace Handle classes and Interface classes with concrete classes for production use when the difference in speed and/or size is significant enough to justify the increased coupling between classes.</li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">The proper forward declaration of <code>string</code> is substantiallly complex, because it involves additional templates. Anyway, we shouldn&rsquo;t manually decalre parts of the standard library. Instead, user the proper <code>#include</code>s and be done with it.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2"><iosfwd> contains declarations of iostream components whose corresponding definitions are in several different headers, including <sstream>, <streambuf>, <fstream>, and <iostream>. Note that it still makes sense to provide declaration-only headers for templates: although in many build environments, template definitions are typically found in header files (item 30), some build environments still allow template definitons to be in non-headre files; and C++ also offers the <code>export</code> keyword to allow the separation of template declarations from template definitions (unfortunately compiler support for <code>export</code> is scanty).
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3">Neither Java nor .NET allow data members or function implementations in Interfaces, but C++ allows so, which could be useful in flexibility. For example, as item 36 explains, the implementation of non-virtual functions should be the same for all classes in a hierarchy, so it makes sense to implement such functions as part of the Interface class.
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+</ol>
+</div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/make-sure-public-inheritance-models-is-a/" data-tooltip="Item-32 Make sure public inheritance models &#34;Is-A&#34;">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/ins-and-outs-of-inlining/" data-tooltip="Item-30 Understand ins and outs of inlining">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/02/minimize-compilation-dependencies-between-files/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-compilation-dependencies-between-files%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-compilation-dependencies-between-files%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/02/minimize-compilation-dependencies-between-files/";  
+this.page.identifier = "Item-31 Minimize compilation dependencies between files"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/make-sure-public-inheritance-models-is-a/" data-tooltip="Item-32 Make sure public inheritance models &#34;Is-A&#34;">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/02/ins-and-outs-of-inlining/" data-tooltip="Item-30 Understand ins and outs of inlining">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/02/minimize-compilation-dependencies-between-files/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-compilation-dependencies-between-files%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-compilation-dependencies-between-files%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-compilation-dependencies-between-files%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-compilation-dependencies-between-files%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f02%2fminimize-compilation-dependencies-between-files%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-sip-of-leica-m9/">
+                <h3 class="media-heading">徕卡M9初体验</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/06/a-simple-calculation/">
+                <h3 class="media-heading">一个油腻中年大叔在儿童节的胡思乱想</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>张爱玲说，出名要趁早。
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/music-generation-archive/">
+                <h3 class="media-heading">A simple archive for music generation</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>A random collection of recent works on music generation.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/understand-how-to-combine-c---and-c-in-the-same-program/">
+                <h3 class="media-heading">[MECpp]Item-34 Understand How to Combine C&#43;&#43; and C in the Same Program</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>There are five points worth noting if we want to mix C++ and C in the same program.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/make-non-leaf-classes-abstract/">
+                <h3 class="media-heading">[MECpp]Item-33 Make Non-Leaf Classes Abstract</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/program-in-the-future-tense/">
+                <h3 class="media-heading">[MECpp]Item-32 Program in the Future Tense</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Things change. Future tense thinking increases the reusability of the code we write, enhances its maintainability, makes it more robust, and facilitates gracefully in an environment where change is a certainty.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/reference-counting/">
+                <h3 class="media-heading">[MECpp]Item-29 Reference Counting</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/smart-pointers/">
+                <h3 class="media-heading">[MECpp]Item-28 Smart Pointers</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Smart pointers</em> are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/05/requiring-or-prohibiting-heap-based-objects/">
+                <h3 class="media-heading">[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Techniques for requiring or prohibiting heap-based objects
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/04/relocation-to-m2/">
+                <h3 class="media-heading">搬了个家</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>搬一次家，掉一层皮
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         119 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/02\/minimize-compilation-dependencies-between-files\/';
+          
+            this.page.identifier = '\/2018\/02\/minimize-compilation-dependencies-between-files\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+
