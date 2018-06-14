@@ -154,11 +154,35 @@ Now let's do a small sum-up:
 
 ## Emulating Virtual Function Tables
 
-## Initializing Emulated Virtual Function Tables
+Actually, we can build our own virtual function tables, similar to how compilers implement virtual functions by creating an array of function pointers (the vtbl) and then indexing into that array when a virtual function is called, except that this customized version support double-dispatching. Moreover, the virtual function tables is more efficient than the RTTI-based code (indexing into an array and following a function pointer vs running through a series of `if-then-else` tests), and we isolate the use of RTTI to a single location where the array of function pointers is initialized.
 
-## Using Non-Member Collision-Processing Functions
+```cpp
+class GameObject {
+public:
+    virtual void collide(GameObject& otherObject) = 0;
+    ...
+};
 
-## Inheritance and Emulated Virtual Function Tables
+class SpaceShip: public GameObject {
+public:
+    virtual void collide(GameObject& otherObject);
+    virtual void hitSpaceShip(GameObject& otherObject);
+    virtual void hitSpaceStation(GameObject& otherObject);
+    virtual void hitAsteroid(GameObject& otherObject);
+    ...
+private:
+    typedef void (SpaceShip::*HitFunctionPtr)(GameObject);
+    static HitFunctionPtr lookup(const GameObject& whatWeHit);
+    typedef map<string, HitFunctionPtr> HitMap;
+    static HitMap * initializeCollisionMap();
+    ...
+};
+```
 
-## Initializing Emulated Virtual Function Tables (Reprise)
+
+### Using Non-Member Collision-Processing Functions
+
+### Inheritance and Emulated Virtual Function Tables
+
+### Initializing Emulated Virtual Function Tables (Reprise)
 
