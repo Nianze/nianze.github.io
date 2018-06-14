@@ -166,12 +166,12 @@ public:
 class SpaceShip: public GameObject {
 public:
     virtual void collide(GameObject& otherObject);
-    virtual void hitSpaceShip(GameObject& otherObject);
-    virtual void hitSpaceStation(GameObject& otherObject);
-    virtual void hitAsteroid(GameObject& otherObject);
+    virtual void hitSpaceShip(GameObject& spaceShip);
+    virtual void hitSpaceStation(GameObject& spaceStation);
+    virtual void hitAsteroid(GameObject& asteroid);
     ...
 private:
-    typedef void (SpaceShip::*HitFunctionPtr)(GameObject);
+    typedef void (SpaceShip::*HitFunctionPtr)(GameObject&);
     static HitFunctionPtr lookup(const GameObject& whatWeHit);
     typedef map<string, HitFunctionPtr> HitMap;
     static HitMap * initializeCollisionMap();
@@ -179,10 +179,76 @@ private:
 };
 ```
 
+```cpp
+SpaceShip::HitMap * SpaceShip::initializeCollisionMap()
+{
+    HitMap *phm = newHitMap;
+    (*phm)["SpaceShip"] = &hitSpaceShip;
+    (*phm)["SpaceStation"] = &hitSpaceStation;
+    (*phm)["Asteroid"] = &hitAsteroid;
+    return phm;
+}
+
+SpaceShip::HitFunctionPtr SpaceShip::lookup(const GameObject& whatWeHit)
+{
+    static auto_ptr<HitMap> collisionMap(initializeCollisionMap());
+    HitMap::iterator mapEntry = collisionMap.find(typeid(whatWeHit).name());
+    return (*mapEntry).second;
+}
+
+void SpaceShip::collide(GameObject& otherObject)
+{
+    HitFunctionPtr hfp = lookup(otherObject);
+    if (hfp) {
+        (this->*htp)(otherObject);
+    }
+    else {
+        throw CollisionWithUnknownObject(otherObject);
+    }
+}
+
+// Each of the `dynamic_cast` will throw a `bad_cast` exception if the cast fails
+// they should never fail, though.
+void SpaceShip::hitSpaceShip(GameObject& spaceShip)
+{
+    SpaceShip& otherShip = dynamic_cast<SpaceShip&>(spaceShip);
+    process a SpaceShip-SpaceShip collision;
+}
+
+void SpaceShip::hitSpaceStation(GameObject& spaceStation) {
+    SpaceStation& Station = dynamic_cast<SpaceStation&>(spaceStation)
+    process a SpaceShip-SpaceStation collision;
+}
+
+void Spaceship::hitAsteroid(GameObject& asteroid) {
+    Asteroid& theAsteroid = dynamic_cast<Asteroid>(asteroid)
+    process a SpaceShip-Asteroid collision;
+}
+```
+
+Note that there's another error-prone design:
+
+```cpp
+class SpaceShip: public GameObject {
+public:
+    virtual void collide(GameObject& otherObject);
+    virtual void hitSpaceShip(SpaceShip& otherObject);
+    virtual void hitSpaceStation(SpaceStation& otherObject);
+    virtual void hitAsteroid(Asteroid& otherObject);
+    ...
+};
+
+SpaceShip::HitMap * SpaceShip::initializeCollisionMap()
+{
+    HitMap *phm = newHitMap;
+    (*phm)["SpaceShip"] = reinterpret_cast<HitFunctionPtr>(&hitSpaceShip);
+    (*phm)["SpaceStation"] = reinterpret_cast<HitFunctionPtr>(&hitSpaceStation);
+    (*phm)["Asteroid"] = reinterpret_cast<HitFunctionPtr>(&hitAsteroid);
+    return phm;
+}
+```
+
+Here we tell the compiler that `hitSpaceShip`, `hitSpaceStation`, and `hitAsteroid` are functions expecting a `GameObject` argument, which is not true. `hitSpaceShip` expects a `SpaceShip`, `hitSpaceStation` expects a `SpaceStation`, and `hitAsteroid` expects an `Asteroid`. All these functions are declared as pass-by-reference, which in fact is implemented by passing a pointer to an object, so ideally compilers will pass the declared type of the parameter(say `hitSpaceShip` for function `hitSpaceShip`) in the function being called. However, due to the object layout of classes under an inheritance path, after the cast above, it is possible that the wrong address (say `GameObject`) is passed into the function, because inside a `SpaceShip` object there are both a derived class part as well as a base class part, each having a different address (for detailed discussion, refer to _More Effective C++_ Item 31-Initializing Emulated Virtual Function Talbes).
 
 ### Using Non-Member Collision-Processing Functions
-
-### Inheritance and Emulated Virtual Function Tables
-
-### Initializing Emulated Virtual Function Tables (Reprise)
 
