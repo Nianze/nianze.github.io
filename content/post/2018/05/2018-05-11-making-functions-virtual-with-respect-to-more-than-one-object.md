@@ -11,7 +11,6 @@ slug: Making Functions Virtual With Respect to More Than One Object
 autoThumbnailImage: false
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-05/2018-05-11.gif
-draft: true
 ---
 
 A virtual function call is termed a "message dispatch." A call that acts virtual on multiple parameters is called _multiple dispatch_, which is not directly supported in C++. Several resolutions exist, but none is without its disadvantages.
