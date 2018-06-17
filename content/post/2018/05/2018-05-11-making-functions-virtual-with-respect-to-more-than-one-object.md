@@ -192,6 +192,7 @@ SpaceShip::HitFunctionPtr SpaceShip::lookup(const GameObject& whatWeHit)
 {
     static auto_ptr<HitMap> collisionMap(initializeCollisionMap());
     HitMap::iterator mapEntry = collisionMap.find(typeid(whatWeHit).name());
+    if (mapEntry == collisionMap->end()) return 0;
     return (*mapEntry).second;
 }
 
@@ -225,7 +226,7 @@ void Spaceship::hitAsteroid(GameObject& asteroid) {
 }
 ```
 
-Note that there's another error-prone design:
+Note that there's another design which seems doable but is actually error-prone:
 
 ```cpp
 class SpaceShip: public GameObject {
@@ -251,3 +252,143 @@ Here we tell the compiler that `hitSpaceShip`, `hitSpaceStation`, and `hitAstero
 
 ### Using Non-Member Collision-Processing Functions
 
+Still, similar to pure virtual functions based approach, there is one remaining problem: because the associative array contains pointers to _member functions_, once a new type of `GameObject` is added to the game, every class definition needs to be updated and recompiled, even if that class does not care about the new type of object.
+
+To solve this problem, we change the associative array so that it contains pointers to _non-member functions_. This update also helps us address a design question before: a collision between objects of types A and B should be handles by neither A nor B (depending on whichever is the left-hand argument to `processCollision`) but instead in some neutral location outside both classes.
+
+```cpp
+#include "SpaceShip.h"
+#include "SpaceStation.h"
+#include "Asteroid.h"
+
+namespace {  
+
+// primary collision-processing functions
+void shipStation(GameObject& spaceShip, GameObject& spaceStation);
+void shipAsteroid(GameObject& spaceShip, GameObject& asteroid);
+void asteroidStation(GameObject& asteroid, GameObject& spaceStation);
+// secondary collision-processing functions that just implement symmetry
+void stationShip(GameObject& spaceStation, GameObject& spaceShip)
+{ shipStation(spaceShip, spaceStation); }
+void asteroidShip(GameObject& asteroid, GameObject& spaceShip)
+{ shipAsteroid(spaceShip, asteroid); }
+void stationAsteroid(GameObject& spaceStation, GameObject& asteroid)
+{ asteroidStation(asteroid, spaceStation); }
+
+...
+
+typedef void (*HitFunctionPtr)(GameObject&, GameObject&);
+typedef map< pair<string, string>, HitFunctionPtr > HitMap;
+
+pair<string, string> makeStringPair(const char *s1, const char *s2);
+HitMap * initializeCollisionMap(const string& class1, const string& class2);
+HitFunctionPtr lookup(const string& class1, const string& class2);
+
+} // end of unnamed namespace
+
+void processCollision(GameObject& object1, GameObject& object2)
+{
+    HitFunctionPtr phf = lookup(typeid(object1).name(), 
+                                typeid(object2).name());
+    if (phf) phf(object1, object2);
+    else throw UnknownCollision(object1, object2);
+}
+
+namespace {
+
+pair<string, string> makeStringPair(const char *s1, const char *s2)
+{ return pair<stirng, string>(s1, s2); }
+
+HitMap * initializeCollisionMap()
+{
+    HitMap *phm = new HitMap;
+    (*phm)[makeStringPair("Spaceship", "Asteroid")] = &shipAsteroid;
+    (*phm)[makeStringPair("Spaceship", "SpaceStation")] = &shipStation;
+    ...
+    return phm;
+}
+
+HitFunctionPtr lookup(const string& class1, const string& class2)
+{
+    static auto_ptr<HitMap> collisionMap(initializeCollisionMap());
+    HitMap::iterator mapEntry = collisionMap->find(make_pair(class1, class2));
+    if (mapEntry == collisionMap->end()) return 0;
+    return (*mapEntry).second;
+}
+
+} // end namespace
+```
+
+Note that `makeStringPair`, `initializeColllisionMap`, and `lookup` were declared inside an unnamed namespace, therefore each must also be implemented within the same namespace.
+
+Now we've solved the problem: if there are new classes to the hierarchy, it requires only the addition of more map insertions in `initializeCollisionMap` and the declarations of the new collision-processing functions in the unnamed namespace associated with the implementation of `processCollision`.
+
+However, as uaual, there's still a disadvantage in this design: these non-member functions will not support inheritance-based parameter conversions such as how double-virtual-function-call mechanism does. 
+
+For example, suppose the concrete classes `CommercialShip` and `MilitaryShip` inherit from the newly abstract class `SpaceShip` (according to the guidance of MECpp item 33). If a `MilitaryShip` object and an `Asteroid` collided, we'd expect `void shipAsteroid(GameObject&, GameObject&)`  to be called. However, in fact, an `UnknownCollision` would be thrown, because `lookup` would be asked to find a function corresponding to the type names `MilitaryShip` and `Asteroid`, and no such function would be found in `collisionMap` - after all, `lookup` has no way of knowing that `MilitaryShip` can be treated like a `SpaceShip`.
+
+### Modifying Emulated Virtual Function Talbes Dynamically
+
+If we'd like to add, remove, or change collision-processing functions as the game proceeds, the static `collisionMap` will not meet this requirement. In this case, we can turn the concept of a static map into a class that offers member functions allowing us to modify the contents of the map dynamically:
+
+```cpp
+class CollisionMap {
+public:
+    typedef void (*HitFunctionPtr)(GameObject&, GameObject&);
+    void addEntry(const string& type1,
+                  const String& type2,
+                  HitFunctionPtr collisionFunction,
+                  bool symmetric = true);
+    void removeEntry(const string& type1, const string& type2);
+    HitFunctionPtr lookup(const string& type1, const string& type2)
+    // return a reference to the one and only map
+    static CollisionMap& theCollisionMap();
+private:
+    // private to prevent the creation of multiple maps
+    CollisionMap();
+    CollisionMap(const CollisionMap&);
+};
+```
+Clients wishing to add an entry to the map simply do the following step:
+
+```cpp
+void shipAsteroid(GameObject& spaceShip, GameObject& asteroid);
+CollisionMap::theCollisionMap().addEntry("SpaceShip", "Asteroid", &shipAsteroid);
+```
+
+We must take care to ensure that these map entries are added to the map before any collisions occurs. One way is to have constructors in `GameObject` subclasses check to make sure the appropriate mappings had been added each time an object was created, but then we have to pay a small performance penalty at runtime. An alternative would be to create a `RegisterCollisionFunction` class:
+
+```cpp
+class RegisterCollisionFunction {
+public:
+    RegisterCollisionFunction(const string& type1,
+                              const string& type2,
+                              CollisionMap::HitFunctionPtr collisionFunction,
+                              bool symmetric = true)
+    {
+        CollisionMap::theCollisionMap().addEntry(type1, type2, collisionFunction, symmetric);
+    }
+};
+```
+
+Clients then use global objects of this type to automatically register the functions before `main` is invoked to insure the map is initialized properly before any collision occurs:
+
+```cpp
+RegisterCollisionFunction cf1("SpaceShip", "Asteroid", &shipAsteroid);
+RegisterCollisionFunction cf2("SpaceShip", 'SpaceStation', &shipStation);
+...
+
+int main(int argc, char * argv[])
+{
+    ...
+}
+```
+
+If, later, a new derived `class Satellite: public GameObject {...};` is added, and one or more new collision-processing functions are written (say, `void satelliteShip(GameObject&, GameObject&)`, and `void satelliteAsteroid(GameObject&,GameObject&)`, etc), we can simply add them to the map without disturbing existing code:
+
+```cpp
+RegisterCollisionFunction cf4("Satellite", "SpaceShip", &satelliteShip);
+RegisterCollisionFunction cf5("Satellite", "Asteroid", &satelliteAsteroid);
+```
+
+Overall, this makes it easy to provide data for a map-based implementation, but it doesn't change the fact that there's no perfect way to implement multiple dispatch.
