@@ -8,7 +8,7 @@ tags:
 - technique
 - cpp
 slug: Understand Template Type Deduction
-autoThumbnailImage: false
+autoThumbnailImage: true
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-06/2018-06-07.gif
 draft: true

@@ -9,7 +9,7 @@ tags:
 - AI
 - recourse
 slug: music generation archive
-autoThumbnailImage: false
+autoThumbnailImage: true
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-05/2018-05-31.png
 coverImage: /images/2018/2018-05/2018-05-31.png

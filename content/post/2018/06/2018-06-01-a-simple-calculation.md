@@ -8,7 +8,7 @@ tags:
 - time
 - death
 slug: a simple calculation
-autoThumbnailImage: false
+autoThumbnailImage: true
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-06/01.jpg
 coverImage: /images/2018/2018-06/01.jpg
