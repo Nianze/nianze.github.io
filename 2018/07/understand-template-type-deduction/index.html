@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Item-51 Adhere to convention when writing new and delete - 刀心の水|Nzo</title>
+    <title>[EMCpp]Item-1 Understand Template Type Deduction - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="operator new should contain an infinite loop trying to allocate memory, should call the new-handler if it can&rsquo;t satisfy a memory request, and should handle requests for zero bytes; class-specific versions should handle requests for larger blocks than expected. operator delete should do nothing if passed a pointer that is null; class specific versions should handle blocks that are larger than expected.
+    <meta name="description" content="There are three sets of rules for type deduction in modern C&#43;&#43;: one for function templates, one for auto, and one for decltype. Without a solid understanding of how deduction operates, effective programming in modern C&#43;&#43; is all but impossible.
 ">
-    <meta property="og:description" content="operator new should contain an infinite loop trying to allocate memory, should call the new-handler if it can&rsquo;t satisfy a memory request, and should handle requests for zero bytes; class-specific versions should handle requests for larger blocks than expected. operator delete should do nothing if passed a pointer that is null; class specific versions should handle blocks that are larger than expected.
+    <meta property="og:description" content="There are three sets of rules for type deduction in modern C&#43;&#43;: one for function templates, one for auto, and one for decltype. Without a solid understanding of how deduction operates, effective programming in modern C&#43;&#43; is all but impossible.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Item-51 Adhere to convention when writing new and delete">
-    <meta property="og:url" content="/2018/03/adhere-to-convention-when-writing-new-and-delete/">
+    <meta property="og:title" content="[EMCpp]Item-1 Understand Template Type Deduction">
+    <meta property="og:url" content="/2018/07/understand-template-type-deduction/">
     <meta property="og:site_name" content="Code.Music.Photo">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photo">
-    <meta name="twitter:description" content="operator new should contain an infinite loop trying to allocate memory, should call the new-handler if it can&rsquo;t satisfy a memory request, and should handle requests for zero bytes; class-specific versions should handle requests for larger blocks than expected. operator delete should do nothing if passed a pointer that is null; class specific versions should handle blocks that are larger than expected.
+    <meta name="twitter:description" content="There are three sets of rules for type deduction in modern C&#43;&#43;: one for function templates, one for auto, and one for decltype. Without a solid understanding of how deduction operates, effective programming in modern C&#43;&#43; is all but impossible.
 ">
     
     
@@ -52,7 +52,7 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-03/2018-03-20.gif">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-07/02.gif">
     
     
     
@@ -327,14 +327,14 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-51 Adhere to convention when writing new and delete
+      [EMCpp]Item-1 Understand Template Type Deduction
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2018-03-20T14:32:24-04:00">
+    <time itemprop="datePublished" datetime="2018-07-02T22:44:34-04:00">
       
-  三月 20, 2018
+  七月 2, 2018
 
     </time>
   
@@ -356,119 +356,190 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p><code>operator new</code> should contain an infinite loop trying to allocate memory, should call the new-handler if it can&rsquo;t satisfy a memory request, and should handle requests for zero bytes; class-specific versions should handle requests for larger blocks than expected. <code>operator delete</code> should do nothing if passed a pointer that is null; class specific versions should handle blocks that are larger than expected.
+              <p>There are three sets of rules for type deduction in modern C++: one for function templates, one for <code>auto</code>, and one for <code>decltype</code>. Without a solid understanding of how deduction operates, effective programming in modern C++ is all but impossible.
 </p>
 
-<p>When write our own versions of <code>operator new</code> and <code>operator delete</code>, there are conventions we must follow.</p>
-
-<h2 id="1-operator-new">1. operator new</h2>
-
-<p>Implementing a conformant <code>operator new</code> requires:</p>
-
-<ul>
-<li>having the right return value</li>
-<li>calling the new-handling function when insufficient memory is available (item 49)</li>
-<li>being prepared to cope with requests for no memory</li>
-<li>avoiding hiding the &ldquo;normal&rdquo; form of <code>new</code> (item 52)</li>
-</ul>
-
-<h4 id="have-the-right-return-value">Have the right return value</h4>
-
-<p>If succeeding to supply the requested memory, return a pointer to it.</p>
-
-<h4 id="call-the-new-handler">Call the new-handler</h4>
-
-<p>If failing to supply the requested memory, follow the rule in item 49 to call the new-handling function after each fauilure. It is assumed that new-handling function might be able to free up some memory. Throw an exception of type <code>bad_alloc</code> only when the pointer to the new-handler is null.</p>
-
-<h4 id="cope-with-request-for-no-memory">Cope with request for no memory</h4>
-
-<p>C++ requires that <code>operator new</code> return a legitimate pointer even when zero bytes are requested (because this simplifies things else where in the language), so pseudocode for a non-member <code>operator new</code> looks like this:</p>
-
-<pre><code class="language-cpp">void* operator new(std::size_t size) throw(std::bad_alloc)
-{
-    using namespace std;
-    if (size == 0) {
-        size = 1;  // handle 0-byte requests by treating them as 1-byte requests
-    }
-    while(true) {
-        attempt to allocate size bytes
-        if (succeed to allocate)
-            return (a pointer to the memory);
-        // allocation fails
-        new_handler globalHanlder = set_new_hanlder(0); // find out current 
-        set_new_handler(globalHandler);   // new handling-function
-        if (globalHandler) (*globaleHandler)();
-        else throw std::bad_alloc();
-    }
-}
-</code></pre>
-
-<h4 id="avoid-hiding-the-normal-form-of-new">Avoid hiding the &ldquo;normal&rdquo; form of <code>new</code></h4>
-
-<p>Class specific <code>operator new</code> member functions are inherited by derived classes, so it is possible that the <code>operator new</code> tuned for objects of size <code>sizeof(base)</code> might accidentally be called to allocate memory for an object of a derived class. To handle this situation, do following trick:</p>
-
-<pre><code class="language-cpp">class Base {
-public:
-    static void * operator new(std::size_t size) throw(std::bad_alloc);
-    ... 
-};
-
-class Derived:public Base  // Derived doesn't declare operator new
-{...};
-
-void * Base::operator new(std::size_t size) throw(std::bad_alloc)
-{
-    if (size != sizeof(Base))
-        return ::operator new(size); // if size is &quot;wrong&quot;, call standard operator new
-    ...  // otherwise do the Base-specific operation
-}
-
-Derived *p = new Derived; // calls Base::operator new
-</code></pre>
-
-<p>Note that <code>sizeof(Base)</code> can never be zero - freestanding objects have non-zero size (item 39) - so the zero-size memory request will be forwarded to <code>::operator new</code> to handle in a reasonable fashion.</p>
-
-<h4 id="control-memory-allocation-for-operator-new">Control memory allocation for <code>operator new[]</code></h4>
-
-<p>To control allocation for arrays on a per-class basis, we need to implement <code>operator new[]</code> - all we can do is allocating a chunk of raw memory. The point here is that we can not do any assumption about the as-yet-nonexistent objects in the array:</p>
+<p>Since type deduction for templates is the basis of that for <code>auto</code>, it&rsquo;s important to truly understand the aspects of template type deduction that <code>auto</code> builds on: during template type deduction, there are three cases for parameter types:</p>
 
 <ol>
-<li>it is possible to allocate memory for an array of derived class objects via base class&rsquo;s <code>operator new[]</code> through inheritance, and the size of derived class objects are usually bigger than base class objects, so the number of objects in the array is no neccessarily <code>(bytes requested) / sizeof(Base)</code></li>
-<li><code>size_t</code> parameter passed to <code>operator new[]</code> may be for more memory than will be filled with objects, because dynamically allocated arrays may include extra space to store the number of array elements (item 16).</li>
+<li>pointer type or non-universal reference type</li>
+<li>universal reference type</li>
+<li>neither a pointer nor a reference (value type)</li>
 </ol>
 
-<h2 id="2-operator-delete">2. operator delete</h2>
+<p>Moreover, there&rsquo;s a niche case worth knowing about, that arguments that are array or function names decay to pointers unless they&rsquo;re used to initialize references.</p>
 
-<p>C++ guarantees it&rsquo;s always safe to delete the null pointer, so things are easier in terms of implementing <code>operator delete</code>:</p>
+<p>To tell the difference, let&rsquo;s think of a function template as looking like this:</p>
 
-<pre><code class="language-cpp">// non-member operator delete
-void operator delete(void *rawMemory) throw()
+<pre><code class="language-cpp">tempalte&lt;typename T&gt;
+void f(ParamType param);
+f(expr); // deduce T and ParamType from expr
+</code></pre>
+
+<h4 id="case-1-paramtype-is-reference-or-pointer-but-not-a-universal-reference">Case 1: <code>ParamType</code> is Reference or Pointer, but not a Universal Reference</h4>
+
+<p>The rules in this case works like this:</p>
+
+<ol>
+<li>If <code>expr</code>&rsquo;s type is a reference, ignore the reference part.</li>
+<li>Then pattern-match <code>expr</code>&rsquo;s type against <code>ParamType</code> to determine T.</li>
+</ol>
+
+<p>For example,</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T&amp; param);  // param is a reference
+
+int x = 27;         // x is an int
+const int cx = x;   // cx is a const int
+const int&amp; rx = x;  // rx is a refrence to x as a const int
+
+f(x);   // T is int, param's type is int&amp;
+f(cx);  // T is const int, param's type is const int&amp;
+f(rx);  // T is const int, param's type is const int&amp;
+</code></pre>
+
+<p>Note that even though rx&rsquo;s type is a reference, T is deduced to be a non-reference, because rx&rsquo;s reference-ness is ignored during type deduction.</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(const T&amp; param);  // param is now a ref-to-const, 
+                         // so there's no longer a need for const to be deduced as part of T
+f(x);  // T is int, param's type is const int&amp;
+f(cx); // T is int, param's type is const int&amp;
+f(rx); // T is int, param's type is const int&amp;
+</code></pre>
+
+<p>As before, rx&rsquo;s reference-ness is ignored during type deduction.</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T* param);     // param is now a pointer
+
+int x = 27;           // x is an int
+const int *px = &amp;x;   // px is a ptr to x as a const int
+
+f(&amp;x);   // T is int, param's type is int*
+f(px);   // T is const int, param's type is const int*
+</code></pre>
+
+<p>As shown above, when param were a pointer (or a pointer to const), things work essentially the same way.</p>
+
+<h4 id="case-2-paramtype-is-a-universal-reference">Case 2: <code>ParamType</code> is a Universal Reference</h4>
+
+<p>Things are less obvious for templates taking universal reference paramters:</p>
+
+<ol>
+<li>If <code>expr</code> is an lvalue, both <code>T</code> and <code>ParamType</code> are deduced to be lvalue references.</li>
+<li>If <code>expr</code> is an rvalue, the &ldquo;normal&rdquo; (i.e., case 1) rules apply.</li>
+</ol>
+
+<p>For example:</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T&amp;&amp; param);  // param is now a universal reference
+
+int x = 27;         // as before
+const int cx = x;   // as before
+const int&amp; rx = x;  // as before
+
+f(x);  // x is lvalue, so T is int&amp;, param's type is also int&amp;
+f(cx); // x is lvalue, so T is const int&amp;, param's type is also const int&amp;
+f(rx); // x is lvalue, so T is const int&amp;, param's type is also const int&amp;
+f(27); // x is rvlaue, so T is int, param's type is therefore int&amp;&amp;
+</code></pre>
+
+<p>EMCpp Item24 explains why these examples play out the way they do.</p>
+
+<h4 id="case-3-paramtype-is-neither-a-pointer-nor-a-reference">Case 3: <code>ParamType</code> is Neither a Pointer nor a Reference</h4>
+
+<p>In this case, we&rsquo;re dealing with pass-by-value. That means that <code>param</code> will be a new object, which motivates the rules below:</p>
+
+<ol>
+<li>As before, if <code>expr</code>&rsquo;s type is a reference, ignore the reference part</li>
+<li>If, after ignoring <code>expr</code>&rsquo;s reference-ness, <code>expr</code> is const, ignore that, too. If it&rsquo;s <code>volatile</code>, also ignore that (refer to EMCpp item 40 for <code>volatile</code>).</li>
+</ol>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T param);  // param is now passed by value
+
+int x = 27;         // as before
+const int cx = x;   // as before
+const int&amp; rx = x;  // as before
+const char* const ptr = &quot;Fun with pointers&quot;; // ptr is const ptr to const obj.
+
+f(x);  // T's and param's types are both int
+f(cx); // T's and param's types are both int
+f(rx); // T's and param's types are both int
+f(ptr); // T's and param's types are const char*, the constness of ptr is ignored.
+</code></pre>
+
+<h4 id="array-arguments">Array Arguments</h4>
+
+<p>Even though they sometimes seems to be interchangeable, array types are, in fact, different from pointer types. We had such equivalence illusion because, in many contexts, an array <em>decays</em> into a pointer to its first element:</p>
+
+<pre><code class="language-cpp">const char name[] = &quot;J.P. Briggs&quot;;  // name's type is const char [13]
+const char * ptrToName = name;      // array decays to pointer
+</code></pre>
+
+<p>Array parameter declarations are treated as if they were pointer parameters, so <code>void myFunc(int param[]);</code> is equivalent to <code>void myFunc(int* param);</code>. Thus, the type of an array that&rsquo;s passed to a template function by value is deduced to be a pointer type:</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T param);
+
+f(name);  // name is array, but T deduced as const char*
+</code></pre>
+
+<p>Although functions can&rsquo;t declare parameters that are truly arrays, they <em>can</em> declare parameters that are <em>references</em> to arrays. Thus,</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T&amp; param);  // template with by-reference parameter
+
+f(name);  // T is deduced as array type: const char [13], type of param is const char (&amp;)[13]
+</code></pre>
+
+<p>The actual type of the array includes the array size, so in this example, <code>T</code> is deduced to be <code>const char[13]</code>, and the type of <code>f</code>&rsquo;s parameter (a reference to this array) is <code>const char (&amp;)[13]</code>.</p>
+
+<p>Using this ability to declare references to arrays enables creation of a template that deduces the number of elements that an array contains:</p>
+
+<pre><code class="language-cpp">// return size of an array as a compile-time constant.
+// array parameter has no name because we don't care its name
+template&lt;typename T, std::size_t N&gt;
+constexpr std::size_t arraySize(T (&amp;)[N]) noexcept
 {
-    if (rawMemory == 0) return;  // do nothing if the null pointer is being deleted
-    deallocate the memory pointed to by rawMemory
+    return N;
 }
 </code></pre>
 
-<pre><code class="language-cpp">// class-specific operator delete
-class Base {  // same as before, except that operator delete is declared
-public:
-    static void * operator new(std::size_t size) throw(std::bad_alloc);
-    static void operator delete(void *rawMemory, std::size_t size) throw();
-    ...
-}
+<p>There are two points worth noting in this declaration:</p>
 
-void Base::opearator delete(void *rawMemory, std::size_t size) throw()
-{
-    if (rawMemory == 0) return;
-    if (size != sizeOf(Base)) {        // if size is &quot;wrong&quot;, 
-        ::operator delete(rawMemory);  // use standard operator delete to handle the request
-    }
-    deallocate the memory pointed to by rawMemory;
-    return;
-}
+<ol>
+<li><p><code>constexpr</code>, as explained in EMCpp 15, makes the function result available during compilation, which makes it possible to declare an array with the same number of elements as a second array whose size is computed from a braced initializer:</p>
+
+<pre><code class="language-cpp">int keyVals[] = { 1, 3, 7, 9, 11, 22, 35 };  // 7 elements
+int mappedVals[arraySize(keyVals)]; // 7 elements
+std::array&lt;int, arraySize(keyVals)&gt; values;  // size == 7
+</code></pre></li>
+
+<li><p><code>noexcept</code>, as explained in EMCpp 14, helps compilers generate better code.</p></li>
+</ol>
+
+<h4 id="function-arguments">Function Arguments</h4>
+
+<p>Apart from arrays, function types can decay into function pointers, too. As a result:</p>
+
+<pre><code class="language-cpp">void someFunc(int, double); // someFunc is a function, type is void(int, double)
+
+template&lt;typename T&gt;
+void f1(T param);  // in f1, param passed by value
+
+template&lt;typename T&gt;
+void f2(T&amp; param);  // in f2, param passed by ref
+
+f1(someFunc);  // param deduced as ptr-to-func, type is void (*)(int, double)
+
+f2(someFunc);  // param deduced as ref-to-func, type is void (&amp;)(int, double)
 </code></pre>
 
-<p>BTW, the <code>size_t</code> value C++ passes to <code>operator delete</code> may be incorrect if object being deleted was derived from a base class lacking a virtual destructor, which is another reason to support the argument in item 7 that <code>operator delete</code> may not work correctly if virtual destructors is omitted in base classes.</p>
+<p>This rarely makes any difference in practice.</p>
               
             </div>
           </div>
@@ -494,7 +565,7 @@ void Base::opearator delete(void *rawMemory, std::size_t size) throw()
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/write-placement-delete-if-you-write-placement-new/" data-tooltip="Item-52 Write placement delete if you write placement new">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -502,7 +573,7 @@ void Base::opearator delete(void *rawMemory, std::size_t size) throw()
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/understand-when-it-makes-sense-to-replace-new-and-delete/" data-tooltip="Item-50 Understand when it makes sense to replace new and delete">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/07/a-brif-review-of-dynamo/" data-tooltip="A Brif Review of Dynamo">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -516,7 +587,7 @@ void Base::opearator delete(void *rawMemory, std::size_t size) throw()
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/03/adhere-to-convention-when-writing-new-and-delete/"
+          data-href="http://nianze.ml/2018/07/understand-template-type-deduction/"
           data-layout="button_count">
         </div>
       </li>
@@ -527,12 +598,12 @@ void Base::opearator delete(void *rawMemory, std::size_t size) throw()
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fadhere-to-convention-when-writing-new-and-delete%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f07%2funderstand-template-type-deduction%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fadhere-to-convention-when-writing-new-and-delete%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f07%2funderstand-template-type-deduction%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -565,8 +636,8 @@ void Base::opearator delete(void *rawMemory, std::size_t size) throw()
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2018/03/adhere-to-convention-when-writing-new-and-delete/";  
-this.page.identifier = "Item-51 Adhere to convention when writing new and delete"; 
+this.page.url = "http://nianze.ml/2018/07/understand-template-type-deduction/";  
+this.page.identifier = "[EMCpp]Item-1 Understand Template Type Deduction"; 
 };
 
 (function() { 
@@ -596,7 +667,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/write-placement-delete-if-you-write-placement-new/" data-tooltip="Item-52 Write placement delete if you write placement new">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -604,7 +675,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/understand-when-it-makes-sense-to-replace-new-and-delete/" data-tooltip="Item-50 Understand when it makes sense to replace new and delete">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/07/a-brif-review-of-dynamo/" data-tooltip="A Brif Review of Dynamo">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -618,7 +689,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/03/adhere-to-convention-when-writing-new-and-delete/"
+          data-href="http://nianze.ml/2018/07/understand-template-type-deduction/"
           data-layout="button_count">
         </div>
       </li>
@@ -629,12 +700,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fadhere-to-convention-when-writing-new-and-delete%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f07%2funderstand-template-type-deduction%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fadhere-to-convention-when-writing-new-and-delete%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f07%2funderstand-template-type-deduction%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -662,17 +733,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fadhere-to-convention-when-writing-new-and-delete%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f07%2funderstand-template-type-deduction%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f03%2fadhere-to-convention-when-writing-new-and-delete%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f07%2funderstand-template-type-deduction%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fadhere-to-convention-when-writing-new-and-delete%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f07%2funderstand-template-type-deduction%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -961,9 +1032,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2018\/03\/adhere-to-convention-when-writing-new-and-delete\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/07\/understand-template-type-deduction\/';
           
-            this.page.identifier = '\/2018\/03\/adhere-to-convention-when-writing-new-and-delete\/'
+            this.page.identifier = '\/2018\/07\/understand-template-type-deduction\/'
           
         };
         (function() {
