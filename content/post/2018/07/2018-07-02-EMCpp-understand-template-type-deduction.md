@@ -1,6 +1,6 @@
 ---
 title: "[EMCpp]Item-1 Understand Template Type Deduction"
-date: 2018-06-07T19:50:57-04:00
+date: 2018-07-02T22:44:34-04:00
 categories:
 - article
 - coding
@@ -10,8 +10,7 @@ tags:
 slug: Understand Template Type Deduction
 autoThumbnailImage: true
 thumbnailImagePosition: right
-thumbnailImage: /images/2018/2018-06/2018-06-07.gif
-draft: true
+thumbnailImage: /images/2018/2018-07/02.gif
 ---
 
 There are three sets of rules for type deduction in modern C++: one for function templates, one for `auto`, and one for `decltype`. Without a solid understanding of how deduction operates, effective programming in modern C++ is all but impossible.
@@ -172,6 +171,7 @@ constexpr std::size_t arraySize(T (&)[N]) noexcept
 There are two points worth noting in this declaration:
 
 1. `constexpr`, as explained in EMCpp 15, makes the function result available during compilation, which makes it possible to declare an array with the same number of elements as a second array whose size is computed from a braced initializer:
+
     ```cpp
     int keyVals[] = { 1, 3, 7, 9, 11, 22, 35 };  // 7 elements
     int mappedVals[arraySize(keyVals)]; // 7 elements
