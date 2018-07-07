@@ -107,4 +107,4 @@ T =     Widget const*
 param = Widget const* const&
 ```
 
-[^1]: There is something similar called `typeid` and `std::type_info::name` in Standard C++ that could also display the type, but the output text may not be straightforward (i.e. using "PK" to stand for "pointer to const") and might not be reliable.
+[^1]: There is something similar called `typeid` and `std::type_info::name` in Standard C++ that could also display the type, but the output text may not be straightforward (for example, using "PK" to stand for "pointer to const") and might not be reliable.
