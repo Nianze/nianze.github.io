@@ -13,7 +13,7 @@ thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-07/10.gif
 ---
 
-Braced initialization is the most widely usable initialization syntax, it prevents narrowing conversions, and it's immune to C++'s most vexing parse.
+Braced initialization is the most widely usable initialization syntax, which can also prevent narrowing conversions, as well as being immune to C++'s most vexing parse.
 <!--more-->
 
 ## The good part
