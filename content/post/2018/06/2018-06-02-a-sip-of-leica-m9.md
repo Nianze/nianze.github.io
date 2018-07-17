@@ -9,7 +9,7 @@ tags:
 - leica
 - 开箱体验
 slug: a sip of leica m9
-thumbnailImagePosition: right
+thumbnailImagePosition: center
 thumbnailImage: /images/2018/2018-06/02/title-image-1.jpg
 coverImage: /images/2018/2018-06/02/title-image-1.jpg
 metaAlignment: center

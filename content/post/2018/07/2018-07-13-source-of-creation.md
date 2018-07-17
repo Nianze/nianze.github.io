@@ -8,7 +8,7 @@ tags:
 - creative desire
 slug: the source of creative desire
 autoThumbnailImage: true
-thumbnailImagePosition: right
+thumbnailImagePosition: center
 thumbnailImage: /images/2018/2018-07/13.jpg
 coverImage: /images/2018/2018-07/13.jpg
 metaAlignment: center
@@ -16,6 +16,8 @@ metaAlignment: center
 
 创作欲望的产生也许多种多样，但我觉得最强烈的创作欲，或者说根植创作欲望最深处的动力，来自于深陷内心的恐惧。
 <!--more-->
+
+>转自之前的一个[知乎回答](https://www.zhihu.com/question/38851352/answer/420954152)
 
 创作的前提是有一个创作者。而创作者之所以存在，是因为其自我意识的觉醒。
 
