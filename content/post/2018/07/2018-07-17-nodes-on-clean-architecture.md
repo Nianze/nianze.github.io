@@ -10,7 +10,9 @@ tags:
 slug: Nodes on Clean Architecture
 autoThumbnailImage: true
 thumbnailImagePosition: right
-thumbnailImage: /images/2018/2018-07/17.gif
+thumbnailImage: /images/2018/2018-07/17.jpg
+coverImage: /images/2018/2018-07/17.jpg
+metaAlignment: center
 ---
 
 A brief notes on Clean Architecture
@@ -30,8 +32,8 @@ A brief notes on Clean Architecture
 
 |  | Urgent | Not urgent |
 |:---:|:---:|:---:|
-| Important  | Important/Urgent | Important/Not urgent |
-| Unimportant | Unimportant/Urgent | Unimportant/Not urgent |
+| **Important**  | Important/Urgent | Important/Not urgent |
+| **Unimportant** | Unimportant/Urgent | Unimportant/Not urgent |
 
 In terms of priorities:
 
