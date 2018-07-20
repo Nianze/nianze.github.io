@@ -1,5 +1,5 @@
 ---
-title: "[EMCpp]Item-12 Prefer Const_iterators to Iterators"
+title: "[EMCpp]Item-13 Prefer Const_iterators to Iterators"
 date: 2018-07-19T18:48:52-04:00
 categories:
 - article
@@ -16,7 +16,7 @@ thumbnailImage: /images/2018/2018-07/19.gif
 In maximally generic code, prefer non-member versions of `begin`, `end`, `rbegin`, etc., over their member function counterparts.
 <!--more-->
 
-In C++98, using `const` whenever it's meaningful wasn't practical: it wasn't that easy to create them, and once we had one, the ways we could use it were limited. For example, in C++98:
+In C++98, using `const` whenever it's meaningful wasn't practical: it wasn't that easy to create them, and once we had one, the ways we could use it were limited. For example:
 
 ```cpp
 std::vector<int> values;
@@ -26,7 +26,9 @@ std::vector<int>::iterator it =
 values.insert(it, 1998);
 ```
 
-The code above search for the first occurrence of 1983 (the year "C++" replaced "C with Classes"), then insert the value 1998 (first ISO C++ Standard was adopted) at that location. If no 1983 found, insert at the end of the vector. Since the code never modifies what an `iterator` points to, so acoording to the convention to use `const` whenever possible, we should use the const-iterator. However, in C++98, there was no simple way to get a `const_iterator` from a non-`const` container. To work it out, we might concider using the cast like the following code, which conceptually works but probably won't compile:
+The code above search for the first occurrence of 1983 (the year "C++" replaced "C with Classes"), then insert the value 1998 (first ISO C++ Standard was adopted) at that location. If no 1983 found, insert at the end of the vector. Since the code never modifies what an `iterator` points to, so acoording to the convention to use `const` whenever possible, we should use the const-iterator. 
+
+However, in C++98, there was no simple way to get a `const_iterator` from a non-`const` container. To work it out, we might concider using the cast like the following code, which conceptually works but probably won't compile:
 
 ```cpp
 typedef std::vector<int>::iterator IterT;
@@ -86,5 +88,5 @@ auto cbegin(const C& container) -> decltype(std::begin(container))
 
 Point here is: through its reference-to-`const` parameter, `container`, we are invoking the non-member `begin` function (provided by C++11) on a `const` container, and this process yields a `const_iterator`. In fact, this template works even if `C` is a built-in array type[^2].
 
-[1^]: It's true in C++11, too.
-[2^]: For insight into how a template can be specialized for built-in arrays, consult EMCpp item 1's discussion of type deduction in templates that take reference parameters to arrays.
+[^1]: It's true in C++11, too.
+[^2]: For insight into how a template can be specialized for built-in arrays, consult EMCpp item 1's discussion of type deduction in templates that take reference parameters to arrays.
