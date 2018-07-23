@@ -114,7 +114,7 @@ Recently my music list includes such genres like Jazz, Electronic and JPop. Chec
 
 ### Photography
 
-I've managed to  DSLR since my fresh year, and have fallen in love with photography since then. I like streed photography as well as landscape, while sometimes taking a few portraits. Check out my photos:
+I've received my first DSLR (Pentax K5) as a gift at the summer vacation of my fresh year, and have fallen in love with photography since then. I like street photography as well as landscape, only taking portraits occasionally. Check out my photos:
 
 * [Favorite photographs album](/photo-faves/)
 * [Flickr](https://www.flickr.com/photos/129774362@N07/)

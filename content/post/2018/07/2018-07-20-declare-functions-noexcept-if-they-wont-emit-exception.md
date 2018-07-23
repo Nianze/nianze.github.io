@@ -11,6 +11,7 @@ slug: Declare Functions Noexcept if They Won't Emit Exception
 autoThumbnailImage: true
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-07/20.gif
+draft: true
 ---
 
 
