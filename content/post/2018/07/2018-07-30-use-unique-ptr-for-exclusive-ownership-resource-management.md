@@ -109,7 +109,7 @@ auto makeInvestment(Ts&&... params) // C++14
 }
 ```
 
-It is worth noting the size impact on a `std::unique_ptr` after introducing a customized deleter:
+It is worth thinking about the size impact on a `std::unique_ptr` after introducing a custome deleter:
 
 * if the deleter is a function pointer, the size of a `std::unique_ptr` generally grow from one (the size of a raw pointer) to two
 * if the deleter is a function object, the change in size depends on how much state is stored in the function object
