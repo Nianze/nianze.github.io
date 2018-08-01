@@ -164,13 +164,13 @@ The layout for an object of type `D` is likely to look like this:
     ┌───────────────────────────────┐
     │        B Data Members         │
     ├───────────────────────────────┤
-    │ Pointer to virtual base class │-┐
+    │ Pointer to virtual base class ├─┐
     ├───────────────────────────────┤ │
     │        C Data Members         │ │
     ├───────────────────────────────┤ │
-  ┌─│ Pointer to virtual base class │ │
-  │ ├───────────────────────────────┤ │  
-  │ │        D Data Members         │ │  
+  ┌─┤ Pointer to virtual base class │ │
+  │ ├───────────────────────────────┤ │
+  │ │        D Data Members         │ │
   │ ├───────────────────────────────┤ │
   └>│        A Data Members         │<┘
     └───────────────────────────────┘

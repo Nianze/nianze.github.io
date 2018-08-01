@@ -1,5 +1,5 @@
 ---
-title: "[EMCpp]Item-18 Use unique_ptr for Exclusive-ownership Resource Management"
+title: "[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management"
 date: 2018-07-30T15:18:04-04:00
 categories:
 - article
@@ -103,8 +103,7 @@ auto makeInvestment(Ts&&... params) // C++14
                         makeLogEntry(pInvestment);
                         delete pInvestment;
                     };
-    std::unique_ptr<Investment, decltype(delInvmt)>
-        pInv(nullptr, delInvmt);
+    std::unique_ptr<Investment, decltype(delInvmt)> pInv(nullptr, delInvmt);
     ... // as before
 }
 ```
