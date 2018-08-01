@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
-    <title>Item-48 Be aware of template metaprogramming - 刀心の水|Nzo</title>
+    <title>[EMCpp]Item-19 Use std::Shared_ptr for Shared-ownership Resource Management - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
     <meta name="keywords" content=", programming, photography, music, software, blog">
 
@@ -29,17 +29,17 @@
     
 
     
-    <meta name="description" content="Template metaprogramming can shift work from runtime to compile-time (thus enabling earlier error dettection and higher runtime performance), can be used to generate custom code based on combinations of policy choices, and can also be used to avoid generating code inappropriate for particular types.
+    <meta name="description" content="std::shared_ptrs offer convenience approaching that of garbage collection for the shared lifetime management of arbitrary resources.
 ">
-    <meta property="og:description" content="Template metaprogramming can shift work from runtime to compile-time (thus enabling earlier error dettection and higher runtime performance), can be used to generate custom code based on combinations of policy choices, and can also be used to avoid generating code inappropriate for particular types.
+    <meta property="og:description" content="std::shared_ptrs offer convenience approaching that of garbage collection for the shared lifetime management of arbitrary resources.
 ">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="Item-48 Be aware of template metaprogramming">
-    <meta property="og:url" content="/2018/03/be-aware-of-template-metaprogramming/">
+    <meta property="og:title" content="[EMCpp]Item-19 Use std::Shared_ptr for Shared-ownership Resource Management">
+    <meta property="og:url" content="/2018/07/use-shared_ptr-for-shared-ownership-resource-management/">
     <meta property="og:site_name" content="Code.Music.Photo">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Code.Music.Photo">
-    <meta name="twitter:description" content="Template metaprogramming can shift work from runtime to compile-time (thus enabling earlier error dettection and higher runtime performance), can be used to generate custom code based on combinations of policy choices, and can also be used to avoid generating code inappropriate for particular types.
+    <meta name="twitter:description" content="std::shared_ptrs offer convenience approaching that of garbage collection for the shared lifetime management of arbitrary resources.
 ">
     
     
@@ -52,7 +52,7 @@
     
 
     
-      <meta property="og:image" content="http://nianze.ml/images/2018/2018-03/2018-03-15.gif">
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-07/31.gif">
     
     
     
@@ -327,14 +327,14 @@ ga('send', 'pageview');
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-48 Be aware of template metaprogramming
+      [EMCpp]Item-19 Use std::Shared_ptr for Shared-ownership Resource Management
     </h1>
   
   <div class="postShorten-meta post-meta">
   
-    <time itemprop="datePublished" datetime="2018-03-15T23:00:22-04:00">
+    <time itemprop="datePublished" datetime="2018-07-31T17:59:25-04:00">
       
-  三月 15, 2018
+  七月 31, 2018
 
     </time>
   
@@ -356,126 +356,146 @@ ga('send', 'pageview');
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Template metaprogramming can shift work from runtime to compile-time (thus enabling earlier error dettection and higher runtime performance), can be used to generate custom code based on combinations of policy choices, and can also be used to avoid generating code inappropriate for particular types.
+              <p><code>std::shared_ptrs</code> offer convenience approaching that of garbage collection for the shared lifetime management of arbitrary resources.
 </p>
 
-<p>Template metaprogramming (TMP) is the process of writing template-based C++ programs that execute inside the C++ compiler, ending up with pieces of C++ source code instantiated from templates, which are then compiled as usual. TMP was discovered, not designed, in the early 1990s, and has later been shown to be Turing-complete, which means that it is powerful enough to compute anything (declare variables, perform loops, write and call functions, etc).</p>
-
-<h2 id="strength-of-tmp">Strength of TMP</h2>
-
-<p>TMP has two great strengths:</p>
-
-<ol>
-<li>it makes some things easy that would otherwise be hard or impossiblle</li>
-<li>it shifts work from runtime to compile-time<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></li>
-</ol>
-
-<p>By making use of TMP, we can expect following good consequences:</p>
+<h4 id="some-facts">Some facts</h4>
 
 <ul>
-<li>Some kinds of errors originally detected at runtime could be found during compilation</li>
-<li>C++ progrmas become more efficient in about every way: smaller executables, shorter runtimes, lesser memory requirements</li>
+<li><code>std::shared_ptr</code>s are twice the size of a raw pointer:
+
+<ul>
+<li>a raw pointer to the resource</li>
+<li>a raw pointer to the resource&rsquo;s <em>control block</em>, which is dynamically allocated and contains
+
+<ul>
+<li>reference count</li>
+<li>weak count</li>
+<li>other optional data (e.g., custom deleter, allocator, etc)</li>
+</ul></li>
+</ul></li>
+<li>increments and decrements of the reference count are atomic
+
+<ul>
+<li>reading and writing reference counts is typically slower than non-atomic operations and comparatively costly</li>
+<li>the related atomic operations typically map to individual machine instructions. Admittedly, they are expensive compared to non-atomic instructons, but they&rsquo;re still just single instructions</li>
+<li>move-constructing a <code>std::shared_ptr</code> from another <code>std::shared_ptr</code> requires no refernece count manipulation</li>
+</ul></li>
+<li>Default resource destruction is via <code>delete</code>, but custom deleters are supported
+
+<ul>
+<li>the type of the deleter has no effect on the type of the <code>std::shared_ptr</code> (they&rsquo;re in the control block)</li>
+</ul></li>
+<li><code>std::shared_ptr</code> is designed only for pointers to single objects, and can&rsquo;t work with arrays, unlike <code>std::unique_ptr</code></li>
 </ul>
 
-<p>To take a glimpse into how things work in TMP, let&rsquo;s look at two examples.</p>
+<p>Basically, this is how a <code>std::shared_ptr&lt;T&gt;</code> object looks like in the memory:</p>
 
-<h3 id="examples">Examples</h3>
+<pre><code> std::shared_ptr&lt;T&gt;
+┌──────────────────────┐   ┌──────────┐
+│      Ptr to T        ├──&gt;│ T Object │
+├──────────────────────┤   └──────────┘
+│ Ptr to Control Block ├───┐
+└──────────────────────┘   ↓     Control Block
+                           ┌───────────────────────┐
+                           │    Reference Count    │
+                           ├───────────────────────┤
+                           │      Weak Count       │
+                           ├───────────────────────┤
+                           │      Other Data       │
+                           │ (e.g., custom deleter,│
+                           │   allocator, etc.)    │
+                           └───────────────────────┘
+
+</code></pre>
+
+<p>It is worth noting that <code>std::shared_ptr</code> design is more flexible than <code>std::unique_ptr</code> in the aspect of specifying custom deleters, because, unlike <code>std::unique_ptr</code>, the type of the deleter is not part of the type of the <code>std::shared_ptr</code>:</p>
+
+<pre><code class="language-cpp">auto customDeleter1 = [](Widget *pw) {...};
+auto customDeleter2 = [](Widget *pw) {...};
+
+std::unique_ptr&lt;Widget, decltype(customDeleter1)&gt; upw1(new Widget, customDeleter1);
+std::unique_ptr&lt;Widget, decltype(customDeleter2)&gt; upw2(new Widget, customDeleter1);
+
+std::shared_ptr&lt;Widget&gt; spw1 (new widget, customDeleter1);
+std::shared_ptr&lt;Widget&gt; spw2 (new widget, customDeleter2);
+std::vector&lt;std::shared_ptr&lt;Widget&gt;&gt; vpw { spw1, spw2 };
+</code></pre>
+
+<p>Apart from placing <code>spw1</code> and <code>spw2</code> in the same container, we could also assign one to another, or pass them into a function taking a parameter of type <code>std::shared_ptr&lt;Widget&gt;</code>. None of these things can be done with <code>std::unique_ptr</code>s, since their types differ due to different custom deleters.</p>
+
+<h4 id="avoid-multiple-control-blocks-from-this-pointer">Avoid multiple control blocks from <code>this</code> pointer</h4>
+
+<p>Below is the rules to create the control block:</p>
 
 <ul>
-<li><p><strong>Ex1: <code>if...else</code> conditionals in TMP</strong></p>
+<li>a control block is created when <code>std::make_shared</code> (EMCpp item 20) is called (which manufactures a new object to point to)</li>
+<li>a control block is created when <code>std::shared_ptr</code> is constructed from a unique-ownership pointer (i.e., a <code>std::unique_ptr</code> or <code>std::auto_ptr</code>), and the unique-ownership pointer is set to null later.</li>
+<li>a control block is created when a <code>std::shared_ptr</code> is called with a raw pointer
 
-<p>As item 47 shows, <code>if...else</code> conditionals in TMP are expressed via templates and template specializations<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>. Let&rsquo;s take a comparason between the &ldquo;normal&rdquo; C++ (using <code>typeid</code>) and TMP (using traits) based on implementing the pseudo part of <code>if (iter is a random access iterator)</code> from STL&rsquo;s <code>advance</code></p>
+<ul>
+<li>this may lead to double deletion issue (creating two control blocks with the same raw pointer), so avoid passing raw pointers to a <code>std::shared_ptr</code></li>
+<li>if have to, do in this form <code>std::shared_ptr&lt;Widget&gt; spw(new Widget, loggingDel);</code> to use <code>new</code> directly</li>
+</ul></li>
+<li>the same control block will be shared if a <code>std::shared_ptr</code> is constructed using another <code>std::shared_ptr</code> as initialization argument (by calling <code>std::shared_ptr</code> copy constructor)</li>
+</ul>
 
-<p>Below is the &ldquo;normal&rdquo; C++ approach, which evaluates at runtime:</p>
+<p>Even though we remember the rule to restrict the creation of <code>std::shared_ptr</code> from raw pointers, we might surprisingly create multiple control blocks through the <code>this</code> pointer, which is also a raw pointer. For example, <code>Widget</code> has a member function <code>void processing();</code>, and we use a vector to keep track of <code>Widget</code>s that have been processed. A reasonable-looking approach looks like this:</p>
 
-<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;
-void advance(IterT&amp; iter, DistT d)
-{
-    if (typeid(typename std::iterator_traits&lt;IterT&gt;::iterator_categoray) == 
-        typeid(std::random_access_iterator_tag)) {
-            iter += d; // use iterator arithmetic for random access iters
-    }
-    else {
-        if (d &gt;= 0) { while(d--) ++iter; }
-        else { while(d++) --iter; }
-    }
+<pre><code class="language-cpp">std::vector&lt;std::shared_ptr&lt;Widget&gt;&gt; processedWidgets;
+class Widget {
+public:
+    ...
+    void process();
+    ...
+};
+
+void Widget::process(){
+    ...
+    processedWidgets.emplace_back(this);  // add current Widget to list of processed Widgets
+    ...
 }
 </code></pre>
 
-<p>Compared to the one using traits, the <code>typeid</code>-based approach has following issues:</p>
+<p>This code will compiler, but it has potential danger: <code>process()</code> passes raw pointer <code>this</code> to a container of <code>std::shared_ptr</code>, resulting to a new control block for pointed-to <code>Widget</code>(<code>*this</code>); as long as there are <code>std::shared_ptr</code>s outside the <code>process()</code> that already point to that <code>Widget</code>, undefined behavior shows up.</p>
 
-<ol>
-<li>less efficient: testing occurs at runtime; executable is larger (since the code to do the testing must be present in the executable)</li>
-<li>introduce compilation problems: if <code>iter</code> isn&rsquo;t a random access iterator, <code>iter</code> will not support operator <code>+=</code>, so <code>iter += d</code> will not be valid, but compilers will still check this part of code and complain about its invalidation, because they are obliged to make sure that all source code is valid, even if it&rsquo;s not executed.</li>
-</ol></li>
+<p>Here, we want a class managed by <code>std::shared_ptr</code>s to be able to safely create a <code>std::shared_ptr</code> from a <code>this</code> pointer without creating multiple control blocks. The solution is to inherit from a base class template  <code>std::enable_shared_from_this</code>, which contains a member function <code>shared_from_this()</code>, which points to the same object as the <code>this</code> pointer. We can use this function to create a <code>std::shared_ptr</code> worring about creating a new control block.</p>
 
-<li><p><strong>Ex2: loops in TMP</strong></p>
-
-<p>TMP has no real looping construct, so the effect of loops is accomplished via recursion, or more specifically, recursive <em>template instantiations</em>. As an example, TMP factorial computation demonstates how it works:</p>
-
-<pre><code class="language-cpp">template&lt;unsigned n&gt;  // general case: the value of Factorial&lt;n&gt; is n times the value of Factorial&lt;n-1&gt;
-struct Factorial {
-    enum { value = n * Factorial&lt;n-1&gt;::value };
+<pre><code class="language-cpp">class Widget: public std::enable_shared_from_this&lt;Widget&gt; {
+public:
+    ...
+    void process();
+    ...
 };
 
-template&lt;&gt;
-struct Factorial&lt;0&gt; {
-    enum { value = 1 };
-};
-</code></pre>
-
-<p>The looping part of the code occurs where the template instantiation <code>Factorial&lt;n&gt;</code> references the tempalte instantiation <code>Factorial&lt;n-1&gt;</code>, until hitting the special case, <code>Factorial&lt;0&gt;</code>, that causes the recursion to terminate.</p>
-
-<p>Each instantiation of the <code>Factorial</code> template is a struct, and each struct uses the enum hack (item 2) to declare a TMP variable named <code>value</code>, which holds the current value of the factorial computation. After recursive template instantiation, each instantiation gets its own copy of <code>value</code>.</p>
-
-<p>To use <code>Factorial</code>:</p>
-
-<pre><code class="language-cpp">int main()
+void Widget::process()
 {
-    std::cout &lt;&lt; Factorial&lt;5&gt;::value;  // prints 120
-    std::cout &lt;&lt; Factorial&lt;10&gt;::value; // prints 3628800
+    ...
+    processedWidgets.emplace_back(shared_from_this());
+    ...
 }
 </code></pre>
 
-<p>To sum up the technique keywords: templates and specializations and recursive instantiations and enum hacks.</p></li>
-</ul>
-
-<h2 id="what-can-be-accomplished-in-tmp">What can be accomplished in TMP</h2>
-
-<h3 id="1-ensuring-dimensional-unit-correctness">1. Ensuring dimensional unit correctness</h3>
-
-<p>In scientific and engineering applications, it&rsquo;s essential that dimensional units (e.g., mass, distance, time, etc.) be combined correctly. Using TMP, it&rsquo;s possible to ensure (during compilation) that all dimensional unit combinations in a program are correct, no matter how complex the calculations - good example for early error detection.</p>
-
-<h3 id="2-optimizang-matrix-operations">2. Optimizang matrix operations</h3>
-
-<p>Consider the following code,</p>
-
-<pre><code class="language-cpp">typedef SqureMatrix&lt;double, 10000&gt; BigMatrix;
-BigMatrix m1, m2, m3, m4, m5;  // create matrices
-... // give them values
-BigMatrix result = m1 * m2 * m3 * m4 * m5; // compute the product
-</code></pre>
-
-<p>Calculating <code>result</code> in the &ldquo;normal&rdquo; way calls for the creation of four temporary matrices, one for the reuslt of each call to <code>operator*</code>. Furthermore, the independent multiplications generate a sequence of four loops over the matrix elements.</p>
-
-<p>Using an advanced template technology related to TMP called <em>expression templates</em>, it&rsquo;s possible to eliminate the temporaries and merge the loops, without changing the syntax of the client code above while enabling the program consume less memory and run dramatically fast.</p>
-
-<h3 id="3-generating-custom-design-pattern-implementations">3. Generating custom design pattern implementations</h3>
-
-<p>Design patterns like Strategy (item 35), Observer, Visitor, etc. can be implemented in many ways. Using a TMP-based technology called <code>policy-based design</code>, it&rsquo;s possible to create templates representing independent design choices (&ldquo;policies&rdquo;) that can be combined in arbitrary ways to yield pattern implementations with custom behavior.</p>
-
-<p>Generalized beyond the domain of programming artifacts like design patterns, this technology is a basis for what&rsquo;s known as <em>generative programming</em>.</p>
-<div class="footnotes">
-
-<hr />
+<p>Two points worth noting:</p>
 
 <ol>
-<li id="fn:1">Programs using TMP may take <em>much</em> longer to compile than their non-TMP counterparts.
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
-<li id="fn:2">Basic constructs, such as declaring variables, performing loops, and calling function, may look very different from their &ldquo;normal&rdquo; C++ counterparts, but that&rsquo;s assembly-level TMP - it&rsquo;s worth to know that libraries for TMP (e.g., Boost&rsquo;s MPL, item 55) offer a higher-level syntax.
- <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li>Here, the derived class(<code>Widget</code>) inherites from a base class templatized on the derived class. This design pattern is called <em>CRTP</em>: The Curiously Recurring Template Pattern.</li>
+<li>Internally, <code>shared_from_this()</code> looks up the control block for the current object, and it creates a new <code>std::shared_ptr</code> referring to that control block. This means there must be an existing <code>std::shared_ptr</code> that points to the current object. If no such <code>std::shared_ptr</code> exists, behavior is undefined (typically an exception will be thrown)</li>
 </ol>
-</div>
+
+<p>To prevent invoking <code>shared_from_this()</code> before a <code>std::shared_ptr</code> points to the object, classes inheriting from <code>std::enable_shared_from_this</code> often declare their constructors <code>private</code> and provide factory functions returning  <code>std::shared_ptr</code>s to clients:</p>
+
+<pre><code class="language-cpp">class Widget: public std::enable_shared_from_this&lt;Widget&gt; {
+public;
+    template&lt;typename... Ts&gt;
+    static std::shared_ptr&lt;Widget&gt; create(Ts&amp;&amp;... params);
+    ...
+    void process(); // as before
+    ...
+private:
+    ... // ctors
+};
+</code></pre>
               
             </div>
           </div>
@@ -501,7 +521,7 @@ BigMatrix result = m1 * m2 * m3 * m4 * m5; // compute the product
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/understand-the-behavior-of-the-new-handler/" data-tooltip="Item-49 Understand the behavior of the new handler">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -509,7 +529,7 @@ BigMatrix result = m1 * m2 * m3 * m4 * m5; // compute the product
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/" data-tooltip="Item-47 Use traits classes for information about types">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/07/use-unique_ptr-for-exclusive-ownership-resource-management/" data-tooltip="[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -523,7 +543,7 @@ BigMatrix result = m1 * m2 * m3 * m4 * m5; // compute the product
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/03/be-aware-of-template-metaprogramming/"
+          data-href="http://nianze.ml/2018/07/use-shared_ptr-for-shared-ownership-resource-management/"
           data-layout="button_count">
         </div>
       </li>
@@ -534,12 +554,12 @@ BigMatrix result = m1 * m2 * m3 * m4 * m5; // compute the product
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fbe-aware-of-template-metaprogramming%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f07%2fuse-shared_ptr-for-shared-ownership-resource-management%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fbe-aware-of-template-metaprogramming%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f07%2fuse-shared_ptr-for-shared-ownership-resource-management%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -572,8 +592,8 @@ BigMatrix result = m1 * m2 * m3 * m4 * m5; // compute the product
 
 
 var disqus_config = function () {
-this.page.url = "http://nianze.ml/2018/03/be-aware-of-template-metaprogramming/";  
-this.page.identifier = "Item-48 Be aware of template metaprogramming"; 
+this.page.url = "http://nianze.ml/2018/07/use-shared_ptr-for-shared-ownership-resource-management/";  
+this.page.identifier = "[EMCpp]Item-19 Use std::Shared_ptr for Shared-ownership Resource Management"; 
 };
 
 (function() { 
@@ -603,7 +623,7 @@ s.setAttribute('data-timestamp', +new Date());
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/understand-the-behavior-of-the-new-handler/" data-tooltip="Item-49 Understand the behavior of the new handler">
+            <a class="post-action-btn btn btn--disabled">
           
             <i class="fa fa-angle-left"></i>
             <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
@@ -611,7 +631,7 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/03/use-traits-classes-for-information-about-types/" data-tooltip="Item-47 Use traits classes for information about types">
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/07/use-unique_ptr-for-exclusive-ownership-resource-management/" data-tooltip="[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management">
           
             <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
             <i class="fa fa-angle-right"></i>
@@ -625,7 +645,7 @@ s.setAttribute('data-timestamp', +new Date());
 
       <li class="post-action hide-xs">
         <div class="fb-share-button"
-          data-href="http://nianze.ml/2018/03/be-aware-of-template-metaprogramming/"
+          data-href="http://nianze.ml/2018/07/use-shared_ptr-for-shared-ownership-resource-management/"
           data-layout="button_count">
         </div>
       </li>
@@ -636,12 +656,12 @@ s.setAttribute('data-timestamp', +new Date());
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fbe-aware-of-template-metaprogramming%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f07%2fuse-shared_ptr-for-shared-ownership-resource-management%2f">
           <i class="fa fa-google-plus"></i>
         </a>
       </li>
       <li class="post-action hide-xs">
-        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fbe-aware-of-template-metaprogramming%2f">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f07%2fuse-shared_ptr-for-shared-ownership-resource-management%2f">
           <i class="fa fa-twitter"></i>
         </a>
       </li>
@@ -669,17 +689,17 @@ s.setAttribute('data-timestamp', +new Date());
       <div id="share-options-bar" class="share-options-bar" data-behavior="4">
   <ul class="share-options">
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f03%2fbe-aware-of-template-metaprogramming%2f">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f07%2fuse-shared_ptr-for-shared-ownership-resource-management%2f">
         <i class="fa fa-google-plus"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f03%2fbe-aware-of-template-metaprogramming%2f">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f07%2fuse-shared_ptr-for-shared-ownership-resource-management%2f">
         <i class="fa fa-facebook-official"></i><span></span>
       </a>
     </li>
     <li class="share-option">
-      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f03%2fbe-aware-of-template-metaprogramming%2f">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f07%2fuse-shared_ptr-for-shared-ownership-resource-management%2f">
         <i class="fa fa-twitter"></i><span></span>
       </a>
     </li>
@@ -968,9 +988,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'http:\/\/nianze.ml\/2018\/03\/be-aware-of-template-metaprogramming\/';
+          this.page.url = 'http:\/\/nianze.ml\/2018\/07\/use-shared_ptr-for-shared-ownership-resource-management\/';
           
-            this.page.identifier = '\/2018\/03\/be-aware-of-template-metaprogramming\/'
+            this.page.identifier = '\/2018\/07\/use-shared_ptr-for-shared-ownership-resource-management\/'
           
         };
         (function() {
