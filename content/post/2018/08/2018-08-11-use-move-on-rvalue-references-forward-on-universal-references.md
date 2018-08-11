@@ -126,7 +126,7 @@ According to Standardization Committee, there's a kind of optimizatoin called _r
 
 > the “copying” version of makeWidget can avoid the need to copy the local variable w by constructing it in the memory alloted for the function’s return value
 
-
+Due to this optimization, we should not use `std::move` on a local object being returnd from a function that's returning by value so that we won't precluding the RVO that compilers will do for the return value.
 
 [^1]: The type we pass to `std::forward` should be a non-reference, according to the convention for encoding that the argument being passed is an rvalue (see EMCpp Item 28).
 [^2]: With the universal reference version, there's only one call to `std::string` assignment operator for `w.name`, since the string literal would be passed to this function as a `const char*` pointer; the overloaded versions entail execution of one `std::string` constructor (to create a temporary), one `std::string` move assignment operator (to move `newName` into `w.name`), and one `std::string` destructor (to destroy the temporary), which is almost certainly more expensive.
