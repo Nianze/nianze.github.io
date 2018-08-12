@@ -42,11 +42,12 @@ private:
 You may wonder, what will happen if we exchange `std::forward` ans `std::move`:
 
 * applying `std::forward` on rvalue references can exhibit the proper behavior, but the source code is wordy, error-prone[^1], and unidiomatic:
+
     ```cpp
-    Widget::Widget(Widget&& rhs)
-    : name(std::forward<std::string>(rhs.name)),
-      p(std::forward<std::shared_ptr<SomeDataStructure>>(rhs.p))
-      {...}
+    Widget::Widget(Widget&& rhs) : 
+        name(std::forward<std::string>(rhs.name)), 
+        p(std::forward<std::shared_ptr<SomeDataStructure>>(rhs.p))
+    {...}
     ```
 * using `std::move` on universal refenreces can have the effect of unexpectedly modifying lvalues (e.g., local variables):
     ```cpp
@@ -77,14 +78,15 @@ public:
 The cost we pay for this replacement is:
 
 1. More source code to write and maintain (two functions instead of a single template)
-2. Less efficient in some cases such as this[^2]:
+2. Less efficient in some cases such as this[^2]:  
     ```cpp
     w.setName("John Smith");
     ```
-3. Poor scalability of the design if more parameters come (each of which can be an lvalue or rvalue):
+3. Poor scalability of the design if more parameters come (each of which can be an lvalue or rvalue):   
+
     ```cpp
-    tempalte<class T, class... Args>
-    shared_ptr<T> make_shared(Args&&... args); // can't overload on lvalues and rvalues on args. universal reference is used and std::forward is applyied
+    tempalte<class T, class... Args> 
+    shared_ptr<T> make_shared(Args&&... args);  // can't overload on lvalues and rvalues on args. universal reference is used and std::forward is applyied
     ```
 
 #### Other usage
