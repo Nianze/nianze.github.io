@@ -1,0 +1,1048 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>[EMCpp]Item-27 Alternatives to Overloading on Universal References - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
+">
+    <meta property="og:description" content="Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="[EMCpp]Item-27 Alternatives to Overloading on Universal References">
+    <meta property="og:url" content="/2018/08/alternatives-to-overloading-on-universal-references/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-08/15.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [EMCpp]Item-27 Alternatives to Overloading on Universal References
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-08-15T18:25:27-04:00">
+      
+  八月 15, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
+</p>
+
+<h4 id="abandon-overloading">Abandon overloading</h4>
+
+<p>This solution works for overloaded <code>logAndAdd</code> example in Item 26, where we break the overloaded function into two: <code>logAndAddName</code> and <code>logAndAddIdx</code>. However, this will not work for <code>Person</code> constructor - the constructor names are fixed by the language.</p>
+
+<h4 id="pass-by-const-t">Pass by <code>const T&amp;</code></h4>
+
+<p>This is the original function <code>void logAndAdd(const std::string&amp; name)</code> we see in Item 26. Not efficient in some cases, but works as expected.</p>
+
+<h4 id="pass-by-value">Pass by value</h4>
+
+<p>According to the advice in Item 41, we may consider passing objects by value when we know we&rsquo;ll copy them. Thus, the <code>Person</code> example may get revised like this:</p>
+
+<pre><code class="language-cpp">class Person {
+public:
+    explicit Person(std::string n)
+    : name(std::move(n)) {}
+    explicit Person(int idx)
+    : name(nameFromIdx(idx)) {}
+    ...
+private:
+    std::string name;
+};
+</code></pre>
+
+<p>With this design, <code>int</code>-like arguments get passed to <code>int</code> overload, and arguments of type <code>std::string</code> (and anything from which <code>std::string</code> could be created, e.g., literals) get passed to the <code>std::string</code> overload.</p>
+
+<h4 id="use-tag-dispatch">Use Tag dispatch</h4>
+
+<p>Add another &ldquo;tag&rdquo; parameter to help compiler differentiate the overloading cases as we want:</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void logAndAdd(T&amp;&amp; name)
+{
+    logAndAddImpl(
+        std::forward&lt;T&gt;(name),
+        std::is_integral&lt;typename std::remove_reference&lt;T&gt;::type&gt;()
+    );
+}
+
+template&lt;typename T&gt;
+void logAndAddImpl(T&amp;&amp; name, std::false_type)
+{
+    auto now = std::chrono::system_clock::now();
+    log(now, &quot;logAndAdd&quot;);
+    names.emplace(std::forward&lt;T&gt;(name));
+}
+
+std::string nameFromIdx(int idx);
+
+template&lt;typename T&gt;
+void logAndAddImpl(T&amp;&amp; name, std::true_type)
+{
+    logAndAdd(nameFromIdx(idx));
+}
+</code></pre>
+
+<p>Conceptually, <code>true</code> and <code>false</code> are <em>runtime</em> values, and what we need here for the tag parameter should be <em>compil-time</em> types that corresponds to <code>true</code> and <code>false</code>, which in the Standard Library are called <code>std::true_type</code> and <code>std::false_type</code>. This compile-time variables serve no purpose at runtime, so some compilers who&rsquo;s smart enough may recognize these tag parameters and optimize them out of the program&rsquo;s execution image.</p>
+
+<p>Tag dispatch is a standard building block of template metaprogramming to let the tag determine which overload gets called, so that overloading on universal references may work as expect.</p>
+
+<h4 id="use-enable-if-to-constrain-templates-that-take-universal-references">Use <code>enable_if</code> to constrain templates that take universal references</h4>
+
+<p>Tag dispatch solves some of the problems related with templates taking universal references, but not all of them. The perfect-forwarding constructor for the <code>Person</code> class, for example, remains problematic: even if we write only one constructor and apply tag dispactch technique to it, some constructor calls (copy from <code>const</code> vs non-<code>const</code> lvalues) may sometimes be handled by compiler-generated functions (e.g., copy and move constructors) that bypass the tag dispatch system.</p>
+
+<p>Thus, we want to constrain on when the function template is permitted to be employed. By default, all templates are <em>enabled</em>, but a template using <code>std::enable_if</code> is enabled only if the condition specified by <code>std::enable_if</code> is satisfied.</p>
+
+<p>In the case of <code>Person</code>&rsquo;s perfect forwarding constructor, we want to enable its instantiation only if the type being passed isn&rsquo;t <code>Person</code>, so that the class&rsquo;s copy or move constructor my handle the calls where a <code>Person</code> object gets passed in. Specifically, when checking the type of the argument being passed, we want to ignore its referenceness, constness, and volatileness using <code>std::decay&lt;T&gt;</code>:</p>
+
+<pre><code class="language-cpp">class Person {
+public:
+    template&lt;
+        typename T,
+        typename = typename std::enable_if&lt;
+                        !std::is_same&lt;Person,
+                                      typename std::decay&lt;T&gt;::type
+                                     &gt;::value
+                   &gt;::type
+    &gt;
+    explicit Person(T&amp;&amp; n);
+    ...
+};
+</code></pre>
+
+<p>Moreover, if we want to make sure the derived class work properly, the conditions for <code>std::enble_if</code> get more restricted: we want to enable it for any argument type other than <em><code>Person</code> or a type derived from <code>Person</code></em>. To determian whether one type is derived from another, we can use <code>std::is_base_of&lt;T1, T2&gt;</code>:</p>
+
+<pre><code class="language-cpp">class Person {
+public:
+    template&lt;
+        typename T,
+        typename = typename std::enable_if&lt;
+                        !std::is_base_of&lt;Person,
+                                         typename std::decay&lt;T&gt;::type
+                                        &gt;::value
+                   &gt;::type
+    &gt;
+    explicit Person(T&amp;&amp; n);
+    ...
+};
+</code></pre>
+
+<p>In C++14, by employing alias templates, we can save some typing for <code>typename</code> and <code>::type</code>:</p>
+
+<pre><code class="language-cpp">class Person {
+public;
+    template&lt;
+        typename T,
+        typename = std::enbale_if_t&lt;
+            !std::is_base_of&lt;Person, std::decay_t&lt;T&gt;&gt;::value
+        &gt;
+    &gt;
+    explicit Person(T&amp;&amp; n);
+    ...
+};
+</code></pre>
+
+<p>Finally, to get our perfect forwarding constructor to work with the <code>int</code> overload, we have to add another constrain in <code>std::enbale_if</code> to check the integral arguments type:</p>
+
+<pre><code class="language-cpp">class Person {
+public;
+    template&lt;
+        typename T,
+        typename = std::enbale_if_t&lt;
+            !std::is_base_of&lt;Person, std::decay_t&lt;T&gt;&gt;::value
+            &amp;&amp;
+            !std::is_integral&lt;std::remove_reference_t&lt;T&gt;&gt;::value
+        &gt;
+    &gt;    
+    explicit Person(T&amp;&amp; n)   // ctor for std::strings and args convertible to std::strings
+    : name(std::forward&lt;T&gt;(n))
+    { ... }
+
+    explicit Person(int idx) // ctor for integral args
+    : name(nameFromIdx(idx))
+    { ... }
+
+    ...                      // copy and move ctors, etc.
+private:
+    std::string name;
+};
+</code></pre>
+
+<p>To make even more effective code, considering some kinds of arguments can&rsquo;t be perfect-forwarded, as well as the fact that forwarding functions tend to create lengthy error messages, which is debug-unfriendly, we can use <code>static_assert</code>, accompanied with <code>std::is_constructible</code>, to perform a compile-time test to determine whether an object of one type can be constructed from an object (or a set of objects) of a different type (or set of types):</p>
+
+<pre><code class="language-cpp">class Person {
+public;
+    template&lt;
+        typename T,
+        typename = std::enbale_if_t&lt;
+            !std::is_base_of&lt;Person, std::decay_t&lt;T&gt;&gt;::value
+            &amp;&amp;
+            !std::is_integral&lt;std::remove_reference_t&lt;T&gt;&gt;::value
+        &gt;
+    &gt;    
+    explicit Person(T&amp;&amp; n)   // ctor for std::strings and args convertible to std::strings
+    : name(std::forward&lt;T&gt;(n))
+    { 
+        static_assert(
+            std::is_constructible&lt;std::string, T&gt;::value,
+            &quot;Parameter n can't be used to construct a std::string&quot;
+        );
+        ...  // the usual ctor work goes here
+    }
+    ...
+};
+</code></pre>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/08/avoid-overloading-on-universal-references/" data-tooltip="[EMCpp]Item-26 Avoid Overloading on Universal References">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/08/alternatives-to-overloading-on-universal-references/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f08%2falternatives-to-overloading-on-universal-references%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f08%2falternatives-to-overloading-on-universal-references%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/08/alternatives-to-overloading-on-universal-references/";  
+this.page.identifier = "[EMCpp]Item-27 Alternatives to Overloading on Universal References"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/08/avoid-overloading-on-universal-references/" data-tooltip="[EMCpp]Item-26 Avoid Overloading on Universal References">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/08/alternatives-to-overloading-on-universal-references/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f08%2falternatives-to-overloading-on-universal-references%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f08%2falternatives-to-overloading-on-universal-references%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f08%2falternatives-to-overloading-on-universal-references%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f08%2falternatives-to-overloading-on-universal-references%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f08%2falternatives-to-overloading-on-universal-references%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/alternatives-to-overloading-on-universal-references/">
+                <h3 class="media-heading">[EMCpp]Item-27 Alternatives to Overloading on Universal References</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/avoid-overloading-on-universal-references/">
+                <h3 class="media-heading">[EMCpp]Item-26 Avoid Overloading on Universal References</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Overloading on universal references almost always leads to the universal reference overload being called more frequently than expected.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/use-stdmove-on-rvalue-references-stdforward-on-universal-references/">
+                <h3 class="media-heading">[EMCpp]Item-25 Use std::move on Rvalue References, std::forward on Universal References</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>But don&rsquo;t apply <code>std::move</code> or <code>std::forward</code> to local objects if they would otherwise be eligible for the return value optimization.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/distinguish-universal-references-from-rvalue-references/">
+                <h3 class="media-heading">[EMCpp]Item-24 Distinguish Universal References From Rvalue References</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>If a function template parameter has type <code>T&amp;&amp;</code> for a deduced type <code>T</code>, or if an object is declared using <code>auto&amp;&amp;</code>, the parameter or object is a <em>universal reference</em>.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/understand-stdmove-and-stdforward/">
+                <h3 class="media-heading">[EMCpp]Item-23 Understand std::Move and std::Forward</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><code>std::move</code> performs an unconditional cast to an rvalue, while <code>std::forward</code> casts its argument to an rvalue only if that argument is bound to an rvalue.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/">
+                <h3 class="media-heading">[EMCpp]Item-22 When Using Pimple Idiom, Define Special Member Functions in the Implementation File</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>For <code>std::unique_ptr</code> pImpl pointers, declare special member functions in the class header, but implement them in the implementation file.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/">
+                <h3 class="media-heading">[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Compared to <code>new</code>, make functions eliminate source code duplication, improve exception safety, and, for <code>std::make_shard</code> and <code>std::allocate_shared</code>, generate code that&rsquo;s smaller and faster.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/use-weak_ptr-for-shared_ptr-like-pointers-that-can-dangle/">
+                <h3 class="media-heading">[EMCpp]Item-20 Use Weak_ptr for Shared_ptr Like Pointers That Can Dangle</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Potential use cases for <code>std::weak_ptr</code> include caching, observer lists, and the prevention of <code>std::shared_ptr</code> cycles.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/07/use-shared_ptr-for-shared-ownership-resource-management/">
+                <h3 class="media-heading">[EMCpp]Item-19 Use std::Shared_ptr for Shared-ownership Resource Management</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jul 7, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><code>std::shared_ptrs</code> offer convenience approaching that of garbage collection for the shared lifetime management of arbitrary resources.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/07/use-unique_ptr-for-exclusive-ownership-resource-management/">
+                <h3 class="media-heading">[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jul 7, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><code>std::unique_ptr</code> is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         151 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/08\/alternatives-to-overloading-on-universal-references\/';
+          
+            this.page.identifier = '\/2018\/08\/alternatives-to-overloading-on-universal-references\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+
