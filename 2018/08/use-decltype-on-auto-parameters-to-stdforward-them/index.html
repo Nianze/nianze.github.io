@@ -1,0 +1,935 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>[EMCpp]Item-33 Use decltype on auto&amp;&amp; parameters to std::forward them - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="C&#43;&#43;14 introduces generic lambdas, which use auto in their parameter specifications.
+">
+    <meta property="og:description" content="C&#43;&#43;14 introduces generic lambdas, which use auto in their parameter specifications.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="[EMCpp]Item-33 Use decltype on auto&amp;&amp; parameters to std::forward them">
+    <meta property="og:url" content="/2018/08/use-decltype-on-auto-parameters-to-stdforward-them/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="C&#43;&#43;14 introduces generic lambdas, which use auto in their parameter specifications.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-08/23.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [EMCpp]Item-33 Use decltype on auto&amp;&amp; parameters to std::forward them
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-08-23T21:44:29-04:00">
+      
+  八月 23, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>C++14 introduces generic lambdas, which use <code>auto</code> in their parameter specifications.
+</p>
+
+<pre><code class="language-cpp">auto f = [](auto x){ return normalize(x); };
+</code></pre>
+
+<p>If we want to perfect-fowrad a parameter <code>x</code> to <code>normalize</code>, we make two changes:</p>
+
+<ol>
+<li>use universal reference <code>auto&amp;&amp;</code></li>
+<li>apply <code>decltype</code> on parameter to specify the correct type for type argument of <code>std::forward</code></li>
+</ol>
+
+<pre><code class="language-cpp">auto f = [](auto&amp;&amp; x){ return normalize(std::forward&lt;decltype(x)&gt;(x)); };
+</code></pre>
+
+<p>As a fact of <code>decltype(x)</code>:
+* if <code>x</code> is bound to an lvalue, it will yield an lvalue refernece;
+* if <code>x</code> is bound to an rvalue, it will yield an rvalue reference</p>
+
+<p>Actually, the result of <code>decltype(x)</code> doesn&rsquo;t follow the convention of <code>std::forward</code>, where it dictates that the type argument be an lvalue reference to indicate an lvalue and a non-reference to indicate an rvalue.</p>
+
+<p>Thanks to reference-collapsing rule, even though rvalue convention is broken here, the collapsing result is still the same. Say the <code>T</code> in the implementation of <code>std::forward</code> below is instantiated as <code>Widget&amp;&amp;</code>, an rvalue reference type:</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;                         // in namespace
+T&amp;&amp; forward(remove_reference_t&lt;T&gt;&amp; param)    // std
+{  return static_cast&lt;T&amp;&amp;&gt;(param);
+}
+</code></pre>
+
+<p>and we get this before reference collapsing:</p>
+
+<pre><code class="language-cpp">Widget&amp;&amp; &amp;&amp; forward(Widget&amp; param)         // instantiation of
+{                                          // std::forward when 
+    static_cast&lt;Widget&amp;&amp; &amp;&amp;&gt;(param);       // T is Widget&amp;&amp; 
+}
+</code></pre>
+
+<p>After reference collapsing:</p>
+
+<pre><code class="language-cpp">Widget&amp;&amp; forward(Widget&amp; param)         // instantiation of
+{                                       // std::forward when 
+    static_cast&lt;Widget&amp;&amp;&gt;(param);       // T is Widget&amp;&amp; 
+}
+</code></pre>
+
+<p>This is exactly what we expect.</p>
+
+<h4 id="variadic-parameters">Variadic parameters</h4>
+
+<p>For more than a single parameter, using following format:</p>
+
+<pre><code class="language-cpp">auto f = [](auto&amp;&amp;... xs)
+         { return normalize(std::forward&lt;decltype(xs)&gt;(xs)...); }
+</code></pre>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/08/prefer-lambdas-to-stdbind/" data-tooltip="[EMCpp]Item-34 Prefer Lambdas to std::bind">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/08/use-init-capture-to-move-objects-into-closures/" data-tooltip="[EMCpp]Item-32 Use Init Capture to Move Objects Into Closures">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/08/use-decltype-on-auto-parameters-to-stdforward-them/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f08%2fuse-decltype-on-auto-parameters-to-stdforward-them%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f08%2fuse-decltype-on-auto-parameters-to-stdforward-them%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/08/use-decltype-on-auto-parameters-to-stdforward-them/";  
+this.page.identifier = "[EMCpp]Item-33 Use decltype on auto\u0026\u0026 parameters to std::forward them"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/08/prefer-lambdas-to-stdbind/" data-tooltip="[EMCpp]Item-34 Prefer Lambdas to std::bind">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/08/use-init-capture-to-move-objects-into-closures/" data-tooltip="[EMCpp]Item-32 Use Init Capture to Move Objects Into Closures">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/08/use-decltype-on-auto-parameters-to-stdforward-them/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f08%2fuse-decltype-on-auto-parameters-to-stdforward-them%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f08%2fuse-decltype-on-auto-parameters-to-stdforward-them%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f08%2fuse-decltype-on-auto-parameters-to-stdforward-them%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f08%2fuse-decltype-on-auto-parameters-to-stdforward-them%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f08%2fuse-decltype-on-auto-parameters-to-stdforward-them%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/prefer-lambdas-to-stdbind/">
+                <h3 class="media-heading">[EMCpp]Item-34 Prefer Lambdas to std::bind</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Lambdas are more readable, more expressive, and may be more efficient than using <code>std::bind</code>.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/use-decltype-on-auto-parameters-to-stdforward-them/">
+                <h3 class="media-heading">[EMCpp]Item-33 Use decltype on auto&amp;&amp; parameters to std::forward them</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>C++14 introduces generic lambdas, which use <code>auto</code> in their parameter specifications.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/use-init-capture-to-move-objects-into-closures/">
+                <h3 class="media-heading">[EMCpp]Item-32 Use Init Capture to Move Objects Into Closures</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Use init capture to move objects into closures in C++14; emulate init capture via hand-written classes or <code>std::bind</code> in C++11.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/avoid-default-capture-modes/">
+                <h3 class="media-heading">[EMCpp]Item-31 Avoid Default Capture Modes</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Default by-reference capture can lead to dangling references; default by-value capture is susceptible to dangling pointers, while misleadingly susggests the lambdas are self-contained.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/failure-cases-in-perfect-forwarding/">
+                <h3 class="media-heading">[EMCpp]Item-30 Failure Cases in Perfect Forwarding</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Perfect forwarding fails when template type deduction fails or when it deduces the wrong type.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/assume-move-operations-are-not-present-not-cheap-not-used/">
+                <h3 class="media-heading">[EMCpp]Item-29 Assume Move Operations Are Not Present Not Cheap, and Not Used</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>There are several scenarios in which C++11&rsquo;s move semantics do us no good:
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/understand-reference-collapsing/">
+                <h3 class="media-heading">[EMCpp]Item-28 Understand Reference Collapsing</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/alternatives-to-overloading-on-universal-references/">
+                <h3 class="media-heading">[EMCpp]Item-27 Alternatives to Overloading on Universal References</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/avoid-overloading-on-universal-references/">
+                <h3 class="media-heading">[EMCpp]Item-26 Avoid Overloading on Universal References</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Overloading on universal references almost always leads to the universal reference overload being called more frequently than expected.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/use-stdmove-on-rvalue-references-stdforward-on-universal-references/">
+                <h3 class="media-heading">[EMCpp]Item-25 Use std::move on Rvalue References, std::forward on Universal References</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>But don&rsquo;t apply <code>std::move</code> or <code>std::forward</code> to local objects if they would otherwise be eligible for the return value optimization.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         158 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/08\/use-decltype-on-auto-parameters-to-stdforward-them\/';
+          
+            this.page.identifier = '\/2018\/08\/use-decltype-on-auto-parameters-to-stdforward-them\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+
