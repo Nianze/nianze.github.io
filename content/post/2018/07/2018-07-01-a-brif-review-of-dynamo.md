@@ -1,5 +1,5 @@
 ---
-title: "A Brif Review of Dynamo"
+title: "A Brief Review of Dynamo"
 date: 2018-07-01T23:03:34-04:00
 categories:
 - article
