@@ -19,7 +19,7 @@ Since C++ is fickle about initialization, some good coding style is suggested.
 There are basically only 3 rules we need to remember if wanting to avoid tragedy of using objects before they're initialized:
 
 1. always manually initialize non-member objects of _built-in_ type, becauese C++ sometimes initializes them and sometimes not.
-2. in constructors, prefer use member initialization list to assignment inside the constructor body; data members in the initialization list is suggested to be in the same order as they are declared in the class (which helps to avoid reader confusion)
+2. in constructors, prefer to use member initialization list to assignment inside the constructor body; data members in the initialization list is suggested to be in the same order as they are declared in the class (which helps to avoid reader confusion)
 3. replacing non-local static objects with local static objects in order to avoid initialization order problems across translation units.
 
 ## 1. Initialize non-member _built-in_ type object
@@ -47,7 +47,8 @@ Exception: multiple constructors share large common member initialization list m
 
 ## 3. Initialze non-local static objects defined in different translation units
 
->Terms definition:
+#### Glossary:
+
 1. _static object_: one that exists from the time it's constructed until the end of the program (i.e., their destructors will be called when _main_ finishes executing)
 2. **local** _static object_: 
     - objects declared _static_ inside functions (it's local to a function)
