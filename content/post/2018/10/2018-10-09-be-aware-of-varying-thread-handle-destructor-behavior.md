@@ -10,7 +10,7 @@ tags:
 slug: Be Aware of Varying Thread Handle Destructor Behavior
 autoThumbnailImage: true
 thumbnailImagePosition: right
-thumbnailImage: /images/2018/2018-10/02.gif
+thumbnailImage: /images/2018/2018-10/09.gif
 ---
 
 Future destructors normally just destroy the future's data members, execept for the final future referring to a shared state for a non-deferred task launched via `std::async`, which blocks until the task completes. 
