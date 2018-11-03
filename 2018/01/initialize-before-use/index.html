@@ -19,7 +19,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Hugo 0.40.2">
+    <meta name="generator" content="Hugo 0.37.1">
     <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
     <title>Item-4 Initialize objects before they&#39;re used - 刀心の水|Nzo</title>
     <meta name="author" content="刀心の水|Nzo">
@@ -363,7 +363,7 @@ ga('send', 'pageview');
 
 <ol>
 <li>always manually initialize non-member objects of <em>built-in</em> type, becauese C++ sometimes initializes them and sometimes not.</li>
-<li>in constructors, prefer use member initialization list to assignment inside the constructor body; data members in the initialization list is suggested to be in the same order as they are declared in the class (which helps to avoid reader confusion)</li>
+<li>in constructors, prefer to use member initialization list to assignment inside the constructor body; data members in the initialization list is suggested to be in the same order as they are declared in the class (which helps to avoid reader confusion)</li>
 <li>replacing non-local static objects with local static objects in order to avoid initialization order problems across translation units.</li>
 </ol>
 
@@ -393,18 +393,25 @@ std::cin &gt;&gt; d;
 
 <h2 id="3-initialze-non-local-static-objects-defined-in-different-translation-units">3. Initialze non-local static objects defined in different translation units</h2>
 
-<blockquote>
-<p>Terms definition:
-1. <em>static object</em>: one that exists from the time it&rsquo;s constructed until the end of the program (i.e., their destructors will be called when <em>main</em> finishes executing)
-2. <strong>local</strong> <em>static object</em>:
-    - objects declared <em>static</em> inside functions (it&rsquo;s local to a function)
-3. <strong>non-local</strong> <em>static object</em>:
-    - global objects
-    - objects defined at namespace scope
-    - objects declared <em>static</em> inside classes
-    - objects declared <em>static</em> at file scope
-3. <em>translation unit</em>: the source code giving rise to a single object file (basically a single source file plus all of its #include files)</p>
-</blockquote>
+<h4 id="glossary">Glossary:</h4>
+
+<ol>
+<li><em>static object</em>: one that exists from the time it&rsquo;s constructed until the end of the program (i.e., their destructors will be called when <em>main</em> finishes executing)</li>
+<li><strong>local</strong> <em>static object</em>:
+
+<ul>
+<li>objects declared <em>static</em> inside functions (it&rsquo;s local to a function)</li>
+</ul></li>
+<li><strong>non-local</strong> <em>static object</em>:
+
+<ul>
+<li>global objects</li>
+<li>objects defined at namespace scope</li>
+<li>objects declared <em>static</em> inside classes</li>
+<li>objects declared <em>static</em> at file scope</li>
+</ul></li>
+<li><em>translation unit</em>: the source code giving rise to a single object file (basically a single source file plus all of its #include files)</li>
+</ol>
 
 <p>Below is an example of non-local static objects requiring correct order of initialization (firstly tfs, secondly tempDir):</p>
 
@@ -745,6 +752,96 @@ s.setAttribute('data-timestamp', +new Date());
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
+                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/consider-void-futures-for-one-shot-event-communication/">
+                <h3 class="media-heading">[EMCpp]Item-39 Consider Void Futures for One-Shot Event Communication</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Using <code>std::promise</code>s and futures is useful skill to create one-shot communication between a detecting task and reacting task.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/be-aware-of-varying-thread-handle-destructor-behavior/">
+                <h3 class="media-heading">[EMCpp]Item-38 Be Aware of Varying Thread Handle Destructor Behavior</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Future destructors normally just destroy the future&rsquo;s data members, execept for the final future referring to a shared state for a non-deferred task launched via <code>std::async</code>, which blocks until the task completes.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/make-stdthreads-unjoinable-on-all-paths/">
+                <h3 class="media-heading">[EMCpp]Item-37 Make std::threads Unjoinable on All Paths</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Join-on-destruction</em> can lead to difficult-to-debug performance anomalies; while <em>detach-on-destruction</em> can lead to difficult-to-debug undefined behavior.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/">
+                <h3 class="media-heading">[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The flexibility that default policy for <code>std::async</code> permits both async and sync task execution leads to uncertainty when accessing <code>thread_locals</code>, implies that the task may never execute, and affects program logic for timeout-based <code>wait</code> calls.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.ml/2018/08/prefer-task-based-programming-to-thread-based/">
                 <h3 class="media-heading">[EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based</h3>
               </a>
@@ -832,96 +929,6 @@ s.setAttribute('data-timestamp', +new Date());
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/08/failure-cases-in-perfect-forwarding/">
-                <h3 class="media-heading">[EMCpp]Item-30 Failure Cases in Perfect Forwarding</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Aug 8, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Perfect forwarding fails when template type deduction fails or when it deduces the wrong type.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/08/assume-move-operations-are-not-present-not-cheap-not-used/">
-                <h3 class="media-heading">[EMCpp]Item-29 Assume Move Operations Are Not Present Not Cheap, and Not Used</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Aug 8, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>There are several scenarios in which C++11&rsquo;s move semantics do us no good:
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/08/understand-reference-collapsing/">
-                <h3 class="media-heading">[EMCpp]Item-28 Understand Reference Collapsing</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Aug 8, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/08/alternatives-to-overloading-on-universal-references/">
-                <h3 class="media-heading">[EMCpp]Item-27 Alternatives to Overloading on Universal References</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Aug 8, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.ml/2018/08/avoid-overloading-on-universal-references/">
-                <h3 class="media-heading">[EMCpp]Item-26 Avoid Overloading on Universal References</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Aug 8, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Overloading on universal references almost always leads to the universal reference overload being called more frequently than expected.
-</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -929,7 +936,7 @@ s.setAttribute('data-timestamp', +new Date());
          data-message-zero=""
          data-message-one=""
          data-message-other="">
-         159 posts found
+         164 posts found
       </p>
     </div>
   </div>

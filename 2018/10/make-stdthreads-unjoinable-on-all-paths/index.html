@@ -1,0 +1,953 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+
+  
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.37.1">
+    <meta name="theme" content="Tranquilpeak 0.3.1-BETA">
+    <title>[EMCpp]Item-37 Make std::threads Unjoinable on All Paths - 刀心の水|Nzo</title>
+    <meta name="author" content="刀心の水|Nzo">
+    <meta name="keywords" content=", programming, photography, music, software, blog">
+
+    <link rel="icon" href="http://nianze.ml/favicon.png">
+    
+
+    
+    <meta name="description" content="Join-on-destruction can lead to difficult-to-debug performance anomalies; while detach-on-destruction can lead to difficult-to-debug undefined behavior.
+">
+    <meta property="og:description" content="Join-on-destruction can lead to difficult-to-debug performance anomalies; while detach-on-destruction can lead to difficult-to-debug undefined behavior.
+">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="[EMCpp]Item-37 Make std::threads Unjoinable on All Paths">
+    <meta property="og:url" content="/2018/10/make-stdthreads-unjoinable-on-all-paths/">
+    <meta property="og:site_name" content="Code.Music.Photo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Code.Music.Photo">
+    <meta name="twitter:description" content="Join-on-destruction can lead to difficult-to-debug performance anomalies; while detach-on-destruction can lead to difficult-to-debug undefined behavior.
+">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/bio-picture.jpg">
+    
+
+    
+      <meta property="og:image" content="http://nianze.ml/images/2018/2018-10/02.gif">
+    
+    
+    
+
+    
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.js"></script>
+
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" />
+    
+    
+    <link rel="stylesheet" href="http://nianze.ml/css/style-u6mk0ojoywresbx8iepslrmmhl4stuhrsxuwhkpwrkrx7mryjcaimasnk4pi.min.css" />
+    
+    
+      <link rel="stylesheet" href="http://nianze.ml/css/main.css">
+    
+
+    
+      
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+
+
+    
+  </head>
+
+  <body>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="http://nianze.ml/">刀心の水|Nzo - Code.Music.Photo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="http://nianze.ml/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="http://nianze.ml/#about">
+          <img class="sidebar-profile-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刀心の水|Nzo</h4>
+        
+          <h5 class="sidebar-profile-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home" title='Home'></i>
+      
+      <span class="sidebar-button-desc" title="Home">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/article">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-file-text-o" title='Article'></i>
+      
+      <span class="sidebar-button-desc" title="Article">文章</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/music">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-music" title='Music'></i>
+      
+      <span class="sidebar-button-desc" title="Music">音乐</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories/photography">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-camera" title='Photography'></i>
+      
+      <span class="sidebar-button-desc" title="Photography">摄影</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark" title='Categories'></i>
+      
+      <span class="sidebar-button-desc" title="Categories">分类</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags" title='Tags'></i>
+      
+      <span class="sidebar-button-desc" title="Tags">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive" title='Archives'></i>
+      
+      <span class="sidebar-button-desc" title="Archives">归档</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://nianze.ml/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user" title='About'></i>
+      
+      <span class="sidebar-button-desc" title="About">关于</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.linkedin.com/in/nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-linkedin" title='LinkedIn'></i>
+      
+      <span class="sidebar-button-desc" title="LinkedIn">LinkedIn</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Nianze" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github" title='Github'></i>
+      
+      <span class="sidebar-button-desc" title="GitHub">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.flickr.com/photos/129774362@N07/" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flickr", title='Flickr'></i>
+      
+      <span class="sidebar-button-desc" title="Flickr">Flickr</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://instagram.com/eznain" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram" title='Instagram'></i>
+      
+      <span class="sidebar-button-desc" title="Instagram">Instagram</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.facebook.com/rym.lnz" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-facebook", title='Facebook'></i>
+      
+      <span class="sidebar-button-desc" title="Facebook">Facebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.youtube.com/user/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-youtube", title='YouTube'></i>
+      
+      <span class="sidebar-button-desc" title="YouTube">YouTube</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="http://weibo.com/daoxinzhishui" target="_blank">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-weibo", title='Weibo'></i>
+      
+      <span class="sidebar-button-desc" title="Weibo">Weibo</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:daoxinzhishui@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope", title='Email'></i>
+      
+      <span class="sidebar-button-desc" title="Email">Email</span>
+    </a>
+  </li>
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      [EMCpp]Item-37 Make std::threads Unjoinable on All Paths
+    </h1>
+  
+  <div class="postShorten-meta post-meta">
+  
+    <time itemprop="datePublished" datetime="2018-10-02T19:16:09-04:00">
+      
+  十月 2, 2018
+
+    </time>
+  
+  
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="http://nianze.ml/categories/article">article</a>, 
+    
+      <a class="category-link" href="http://nianze.ml/categories/coding">coding</a>
+    
+  
+
+
+</div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p><em>Join-on-destruction</em> can lead to difficult-to-debug performance anomalies; while <em>detach-on-destruction</em> can lead to difficult-to-debug undefined behavior.
+</p>
+
+<p>Every <code>std::thread</code> object is in one of two states:</p>
+
+<ol>
+<li>joinable: corresponding to an underlying asynchronous thread of execution that is or could be running.
+
+<ul>
+<li>A <code>std::thread</code> corresponding to an underlying thread that&rsquo;s waiting to be scheduled, blocked, or have run to comletion are all considered joinable.</li>
+</ul></li>
+<li>unjoinable:
+
+<ul>
+<li>Default-constructed <code>std::thread</code>s: such <code>std::thread</code>s have no function to execute, thus corresponding to no underlying thread of execution</li>
+<li><code>std::thread</code> that have been joined: after a <code>join</code>, the <code>std::thread</code> object no longer corresponding to the underlying thread of execution which has finished running.</li>
+<li><code>std::thread</code>s that have been detached: a <code>detach</code> severs the connection between a <code>std::thread</code> object and the underlying thread of execution it corresponds to.</li>
+</ul></li>
+</ol>
+
+<p>Due to the requirement that if the destructor for a joinable thread is invoked, execution of the program (i.e., all threads) is terminated. The destructor of <code>std::thread</code> behaves in this way because the two other obvious options are arguably worse:</p>
+
+<ol>
+<li>An implicit <code>join</code>: thus a <code>std::thread</code>&rsquo;s destructor would wait for its underlying asynchronous thread of execution to complete, leading to performance anomalies that would be difficult to track down.</li>
+<li>An implicit <code>detach</code>: then a <code>std::thread</code>&rsquo;s destructor would sever the connection between the <code>std::thread</code>  object and its underlying thread of execution, which would continue to run. That is wild.</li>
+</ol>
+
+<p>The Standardization Committee decided this program termination behavior just to tell us that we need to ensure a <code>std::thread</code> object is made unjoinable on every path out of the scope in which it&rsquo;s defined. That is, we can use <em>RAII</em> technique to take care of that.</p>
+
+<pre><code class="language-cpp">class ThreadRAII {
+public:
+    enum class DtorAction { join, detach };
+
+    ThreadRAII(std::thread&amp;&amp; t, DtorAction a)
+    : action(a), t(std::move(t)) {}
+
+    ~ThreadRAII 
+    {
+        if (t.joinable()) {
+            if (action == DtorAction::join) {
+                t.join();
+            } else {
+                t.detach();
+            }
+        }
+    }
+    ThreadRAII(ThreadRAII&amp;&amp;) = default; // explicitly requesting the default move operations
+    ThreadRAII&amp; operator=(ThreadRAII&amp;&amp;) = default;  // since customized destructor prevent compiler-generated ones
+    std::thread&amp; get() { return t; }
+private:
+    DtorAction action;
+    std::thread t;
+};
+</code></pre>
+
+<p>A few points:</p>
+
+<ul>
+<li><code>std::thread</code> objects aren&rsquo;t copyable, so we accepts only <code>std::thread</code> rvalues</li>
+<li>The parameter order in the constructor is designed to be intuitive to callers, but the member initialization list is designed to match the order of the data members&rsquo; declarations, in which we put the <code>std::thread</code> object last in case the <code>std::thread</code> depends on other data members.</li>
+<li><code>get</code> is provided to access the underlying <code>std::thread</code> object so that we gain the full <code>std::thread</code> interface for free</li>
+<li>A check to make sure the <code>t</code> is joinable in destructor is necessary in case that clients used <code>get</code> to acquire <code>t</code> and then did a move from <code>t</code> or called <code>join</code> or <code>detach</code> on <code>t</code>, making <code>t</code> unjoinable.</li>
+<li>If in the client code there are simultaneous calls trying to invoke two member functions (the destructor and something else) on one object at the same time, there is a race: between execution of <code>t.joinable()</code> and invocation of <code>join</code> or <code>detach</code>, another thread could render <code>t</code> unjoinable.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">In general, simultaneous member function calls on a single object are safe only if all are to <code>cont</code> member functions.
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">标签</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/technique/">technique</a>
+
+  <a class="tag tag--primary tag--small" href="http://nianze.ml//tags/cpp/">cpp</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/10/be-aware-of-varying-thread-handle-destructor-behavior/" data-tooltip="[EMCpp]Item-38 Be Aware of Varying Thread Handle Destructor Behavior">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/" data-tooltip="[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/10/make-stdthreads-unjoinable-on-all-paths/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f10%2fmake-stdthreads-unjoinable-on-all-paths%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f10%2fmake-stdthreads-unjoinable-on-all-paths%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+            
+              
+                <div id="disqus_thread"></div>
+<script>
+
+
+
+
+var disqus_config = function () {
+this.page.url = "http://nianze.ml/2018/10/make-stdthreads-unjoinable-on-all-paths/";  
+this.page.identifier = "[EMCpp]Item-37 Make std::threads Unjoinable on All Paths"; 
+};
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://robinhu.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 刀心の水|Nzo. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  <nav>
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/10/be-aware-of-varying-thread-handle-destructor-behavior/" data-tooltip="[EMCpp]Item-38 Be Aware of Varying Thread Handle Destructor Behavior">
+          
+            <i class="fa fa-angle-left"></i>
+            <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+          </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.ml/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/" data-tooltip="[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential">
+          
+            <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </nav>
+  <ul class="post-actions post-action-share">
+    
+
+      <li class="post-action hide-xs">
+        <div class="fb-share-button"
+          data-href="http://nianze.ml/2018/10/make-stdthreads-unjoinable-on-all-paths/"
+          data-layout="button_count">
+        </div>
+      </li>
+
+      <li class="post-action hide-lg hide-md hide-sm">
+        <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+          <i class="fa fa-share-alt"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f10%2fmake-stdthreads-unjoinable-on-all-paths%2f">
+          <i class="fa fa-google-plus"></i>
+        </a>
+      </li>
+      <li class="post-action hide-xs">
+        <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f10%2fmake-stdthreads-unjoinable-on-all-paths%2f">
+          <i class="fa fa-twitter"></i>
+        </a>
+      </li>
+
+    
+    
+      <li class="post-action">
+        <a class="post-action-btn btn btn--default" href="#disqus_thread">
+          <i class="fa fa-comment-o"></i>
+        </a>
+      </li>
+    
+    <li class="post-action">
+      
+        <a class="post-action-btn btn btn--default" href="#">
+      
+        <i class="fa fa-list"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <ul class="share-options">
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=http%3a%2f%2fnianze.ml%2f2018%2f10%2fmake-stdthreads-unjoinable-on-all-paths%2f">
+        <i class="fa fa-google-plus"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?app_id=1906806182974656&u=http%3a%2f%2fnianze.ml%2f2018%2f10%2fmake-stdthreads-unjoinable-on-all-paths%2f">
+        <i class="fa fa-facebook-official"></i><span></span>
+      </a>
+    </li>
+    <li class="share-option">
+      <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fnianze.ml%2f2018%2f10%2fmake-stdthreads-unjoinable-on-all-paths%2f">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="http://nianze.ml/images/bio-picture.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刀心の水|Nzo</h4>
+    
+      <div id="about-card-bio"><p>虚度廿余岁月浅，略识几行代码源。<br />
+闲来随手快门按，黯然独把音韵弹。</p>
+
+<p>A software developer who also love producing music and taking photo.</p>
+</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Developer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        New York City
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="搜索" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center"></div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
+                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/consider-void-futures-for-one-shot-event-communication/">
+                <h3 class="media-heading">[EMCpp]Item-39 Consider Void Futures for One-Shot Event Communication</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Using <code>std::promise</code>s and futures is useful skill to create one-shot communication between a detecting task and reacting task.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/be-aware-of-varying-thread-handle-destructor-behavior/">
+                <h3 class="media-heading">[EMCpp]Item-38 Be Aware of Varying Thread Handle Destructor Behavior</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Future destructors normally just destroy the future&rsquo;s data members, execept for the final future referring to a shared state for a non-deferred task launched via <code>std::async</code>, which blocks until the task completes.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/make-stdthreads-unjoinable-on-all-paths/">
+                <h3 class="media-heading">[EMCpp]Item-37 Make std::threads Unjoinable on All Paths</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p><em>Join-on-destruction</em> can lead to difficult-to-debug performance anomalies; while <em>detach-on-destruction</em> can lead to difficult-to-debug undefined behavior.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/">
+                <h3 class="media-heading">[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>The flexibility that default policy for <code>std::async</code> permits both async and sync task execution leads to uncertainty when accessing <code>thread_locals</code>, implies that the task may never execute, and affects program logic for timeout-based <code>wait</code> calls.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/prefer-task-based-programming-to-thread-based/">
+                <h3 class="media-heading">[EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via <code>std::async</code> with the default launch policy handles most of the issues for us.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/prefer-lambdas-to-stdbind/">
+                <h3 class="media-heading">[EMCpp]Item-34 Prefer Lambdas to std::bind</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Lambdas are more readable, more expressive, and may be more efficient than using <code>std::bind</code>.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/use-decltype-on-auto-parameters-to-stdforward-them/">
+                <h3 class="media-heading">[EMCpp]Item-33 Use decltype on auto&amp;&amp; parameters to std::forward them</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>C++14 introduces generic lambdas, which use <code>auto</code> in their parameter specifications.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/use-init-capture-to-move-objects-into-closures/">
+                <h3 class="media-heading">[EMCpp]Item-32 Use Init Capture to Move Objects Into Closures</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Use init capture to move objects into closures in C++14; emulate init capture via hand-written classes or <code>std::bind</code> in C++11.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.ml/2018/08/avoid-default-capture-modes/">
+                <h3 class="media-heading">[EMCpp]Item-31 Avoid Default Capture Modes</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Default by-reference capture can lead to dangling references; default by-value capture is susceptible to dangling pointers, while misleadingly susggests the lambdas are self-contained.
+</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero=""
+         data-message-one=""
+         data-message-other="">
+         164 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('http://nianze.ml/images/cover-v1.2.0.jpg');"></div>
+  
+
+
+    
+
+
+
+<script src="http://nianze.ml/js/script-wl33z0n6ocaypepiqrazthtivfrliqijej4rq8ek8gvrv1awftmgjuv8k4zc.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight').each(function(i, block) {
+    var code = "";
+    hljs.highlightAuto(block.innerText).value.split(/\r\n|\r|\n/).forEach(function(line) {
+      code += "<span class=\"line\">" + line + "</span><br>";
+    });
+    if (code.length > 0) {
+      block.innerHTML = code;
+    }
+  });
+  $('pre > code').each(function(i, block) {
+    $(this).addClass('codeblock');
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'http:\/\/nianze.ml\/2018\/10\/make-stdthreads-unjoinable-on-all-paths\/';
+          
+            this.page.identifier = '\/2018\/10\/make-stdthreads-unjoinable-on-all-paths\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'daoxinzhishui';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+
+    
+  </body>
+</html>
+
