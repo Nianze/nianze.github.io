@@ -5,13 +5,12 @@ const data = {
     "datatype": "json",
     "apikey": "I7JY3EYLKK5LRI8L"
 }
-
 const url = "https://www.alphavantage.co/query"
-
 var queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
-
 var queryUrl = url + '?' + queryString;
 
+
+document.getElementById("query").innerHTML = queryUrl;
 fetch(queryUrl)
 	.then(data => {return data.json()})
 	.then(res => {
@@ -19,10 +18,8 @@ fetch(queryUrl)
 		console.log(res); })
 	.catch(error => {document.getElementById("demo").innerHTML = error;});
 
-alert(queryUrl);
 
 // test wavesurfer.
-
 var wavesurfer = WaveSurfer.create({
     container: "#waveform",
     waveColor: 'blue',
@@ -31,7 +28,7 @@ var wavesurfer = WaveSurfer.create({
 });
 
 function load() {
-    wavesurfer.load('../test.mp3');
+    wavesurfer.load('../../../test.mp3');
     document.getElementById("load").disabled = true;
 }
 

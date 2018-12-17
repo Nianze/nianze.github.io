@@ -1,15 +1,23 @@
 ---
-title: "Trading audio"
+title: "Use trading data to create interactive music"
 date: 2018-12-16
-showTags: false
-showPagination: false
-showSocial: false
-comments: false
+categories:
+- article
+- coding
+tags:
+- music
+- technique
+slug: Use trading data to create interactive music
+autoThumbnailImage: true
+thumbnailImagePosition: right
+thumbnailImage: /images/2018/2018-12/16.gif
+draft: true
 ---
 
-<p>Test...</p>
 <p id="demo"></p>
+<p id="query"></p>
 <div id="waveform"></div>
+
 <input type="button" value="load" id="load" onclick="load()">
 <input type="button" value="play" onclick="play()">
 <input type="button" value="pause" onclick="pause()">
