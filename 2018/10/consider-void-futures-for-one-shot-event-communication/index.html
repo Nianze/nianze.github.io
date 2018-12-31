@@ -371,7 +371,35 @@ ga('send', 'pageview');
 
 <p>The essence of the technique looks like,</p>
 
-<pre><code class="language-cpp">std::promise&lt;void&gt; p;
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight cpp">
+  <figcaption>
+    
+      <span></span><a href="http://underscorejs.org/#compact" target="_blank" rel="external"></a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="cpp code-highlight">std::promise&lt;void&gt; p;
 
 void react();     // func for reacting task
 
@@ -384,20 +412,52 @@ void detect() {   // func for detecting task
     p.set_value();  // event detected, so t is unsuspended (and thus call react)
     ...   // do additional work, program is terminated if this part of code throws
     t.join();   // make t unjoinable
-}
-</code></pre>
+}</pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
 
 <p>Taking use of <code>std::future::share()</code><sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, a general form is easy to implement where originally one reacting task extent to many:</p>
 
-<pre><code class="language-cpp">std::promise&lt;void&gt; p;  // as before
+
+  
+    
+  
+  
+    
+  
+  
+    
+  
+  
+    
+  
+
+
+<figure class="highlight cpp">
+  <figcaption>
+    
+      <span></span><a href="http://underscorejs.org/#compact" target="_blank" rel="external"></a>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="cpp code-highlight">std::promise&lt;void&gt; p;  // as before
 
 void detect()  // now for multiple reacting tasks
 {
-    auto sf = p.get_future().share();  // sf's type is std::shared_future&lt;void&gt;
+    auto sf = p.get_future().share();  // sf&#39;s type is std::shared_future&lt;void&gt;
 
     std::vector&lt;std::thread&gt; vt;  // container for reacting threads
 
-    for (int i = 0; i &lt; ThreadsToRun; ++i) {
+    for (int i = 0; i &lt; ThreadsToRun; &#43;&#43;i) {
         vt.emplace_back([sf]{ sf.wait();    // wait on local copy of sf
                               react(); });  // see item 42 for info on emplace_back
     }
@@ -407,8 +467,12 @@ void detect()  // now for multiple reacting tasks
     for (auto&amp; t : vt) {  
         t.join();    // make all threads unjoinable
     }
-}
-</code></pre>
+}</pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
 <div class="footnotes">
 
 <hr />

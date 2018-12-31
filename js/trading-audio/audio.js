@@ -29,13 +29,9 @@ var wavesurfer = WaveSurfer.create({
 
 function load() {
     wavesurfer.load('../../../test.mp3');
-    document.getElementById("load").disabled = true;
-}
-
-function play() {
-    wavesurfer.play();
-}
-
-function pause() {
-    wavesurfer.pause();
+    //document.getElementById("load").disabled = true;
+    var button = document.getElementById('waveButton');
+    button.removeAttribute('onclick');
+    button.innerHTML = 'Play/pause';
+    button.addEventListener('click', () => { wavesurfer.playPause(); });
 }
