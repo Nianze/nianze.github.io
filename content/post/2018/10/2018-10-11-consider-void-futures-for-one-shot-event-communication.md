@@ -26,7 +26,7 @@ If we only want to inform once, we can take use of the power of `std::promise`s 
 
 The essence of the technique looks like,
 
-```cpp
+{{< codeblock "" "cpp"  "http://underscorejs.org/#compact" "">}}
 std::promise<void> p;
 
 void react();     // func for reacting task
@@ -41,11 +41,11 @@ void detect() {   // func for detecting task
     ...   // do additional work, program is terminated if this part of code throws
     t.join();   // make t unjoinable
 }
-```
+{{< /codeblock >}}
 
 Taking use of `std::future::share()`[^1], a general form is easy to implement where originally one reacting task extent to many: 
 
-```cpp
+{{< codeblock "" "cpp"  "http://underscorejs.org/#compact" "">}}
 std::promise<void> p;  // as before
 
 void detect()  // now for multiple reacting tasks
@@ -65,6 +65,6 @@ void detect()  // now for multiple reacting tasks
         t.join();    // make all threads unjoinable
     }
 }
-```
+{{< /codeblock >}}
 
 [^1]: `std::future::share()` transfers ownership of its shared state to the `std::shared_future` produced by `std::future::share()`

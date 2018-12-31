@@ -1,5 +1,5 @@
 ---
-title: "Sound of Trading"
+title: "Sound of Trade"
 date: 2018-12-16
 categories:
 - article
