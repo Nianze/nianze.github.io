@@ -5,6 +5,28 @@ var HEIGHT = 360;
 var SMOOTHING = 0.8;
 var FFT_SIZE = 2048;
 
+// Start off by initializing a new context.
+var context = new (window.AudioContext || window.webkitAudioContext)();
+
+if (!context.createGain)
+    context.createGain = context.createGainNode;
+if (!context.createDelay)
+    context.createDelay = context.createDelayNode;
+if (!context.createScriptProcessor)
+    context.createScriptProcessor = context.createJavaScriptNode;
+
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function(){
+return  window.requestAnimationFrame       || 
+  window.webkitRequestAnimationFrame || 
+  window.mozRequestAnimationFrame    || 
+  window.oRequestAnimationFrame      || 
+  window.msRequestAnimationFrame     || 
+  function( callback ){
+  window.setTimeout(callback, 1000 / 60);
+};
+})();
+
 // sound generator
 function WhiteNoiseGenerated(callback) {  
     // Generate a 5 second white noise buffer.  
