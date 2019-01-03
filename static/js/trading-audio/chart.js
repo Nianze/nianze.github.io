@@ -1,90 +1,20 @@
-const request_params = {
+var request_params = {
     "function": "TIME_SERIES_DAILY",
     "symbol": "MSFT",
     "outputsize": "full",
     "datatype": "json",
     "apikey": "I7JY3EYLKK5LRI8L"
 }
-const base_url = "https://www.alphavantage.co/query"
+
+var base_url = "https://www.alphavantage.co/query"
+
 var params = Object.keys(request_params)
                    .map(key => key + '=' + request_params[key])
                    .join('&');
+
 var queryUrl = base_url + '?' + params;
 
 var parseDate = d3.timeParse("%Y-%m-%d");
-
-var feed;
-fetch(queryUrl)
-    .then(resp => resp.json())
-    .then(rawData => {
-        feed = Object.entries(rawData["Time Series (Daily)"])
-                     .map(([date, obj]) => ({
-                        date: parseDate(date),
-                        open: +obj["1. open"],
-                        high: +obj["2. high"],
-                        low: +obj["3. low"],
-                        close: +obj["4. close"],
-                        volume: +obj["5. volume"]
-                     }));
-        redraw(feed.slice(0, 200));
-    })
-    .catch(error => {document.getElementById("chart").innerHTML = error;});
-
-// draw chart with techanJS
-function redraw(data) {
-    var accessor = ohlc.accessor();
-
-    x.domain(data.map(accessor.d));
-    // Show only 150 points on the plot
-    x.zoomable().domain([data.length-130, data.length]);
-
-    // Update y scale min max, only on viewable zoomable.domain()
-    y.domain(techan.scale.plot.ohlc(data.slice(data.length-130, data.length)).domain());
-    yVolume.domain(techan.scale.plot.volume(data.slice(data.length-130, data.length)).domain());
-
-    // Setup a transition for all that support
-    svg
-//      .transition() // Disable transition for now, each is only for transitions
-        .each(function() {
-            var selection = d3.select(this);
-            selection.select('g.x.axis').call(xAxis);
-            selection.select('g.y.axis').call(yAxis);
-            selection.select("g.volume.axis").call(volumeAxis);
-
-            selection.select("g.candlestick").datum(data).call(ohlc);
-            selection.select("g.sma.ma-0").datum(sma0Calculator(data)).call(sma0);
-            selection.select("g.sma.ma-1").datum(sma1Calculator(data)).call(sma1);
-            selection.select("g.volume").datum(data).call(volume);
-
-            svg.select("g.crosshair.ohlc").call(crosshair);
-        });
-
-    // Set next timer expiry
-    setTimeout(function() {
-        var newData;
-
-        if(data.length < feed.length) {
-            // Simulate a daily feed
-            newData = feed.slice(0, data.length+1);
-        }
-        else {
-            // Simulate intra day updates when no feed is left
-            var last = data[data.length-1];
-            // Last must be between high and low
-            last.close = Math.round(((last.high - last.low)*Math.random())*10)/10+last.low;
-
-            newData = data;
-        }
-
-        redraw(newData);
-    }, (Math.random()*1000)+400); // Randomly pick an interval to update the chart
-}
-
-function move(coords) {
-    coordsText.text(
-            timeAnnotation.format()(coords.x) + ", " + ohlcAnnotation.format()(coords.y)
-    );
-}
 
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
         width = 640 - margin.left - margin.right,
@@ -215,3 +145,78 @@ var coordsText = svg.append('text')
         .attr("class", "coords")
         .attr("x", width - 5)
         .attr("y", 15);
+
+var feed;
+
+// draw chart with techanJS
+function redraw(data) {
+    var accessor = ohlc.accessor();
+
+    x.domain(data.map(accessor.d));
+    // Show only 150 points on the plot
+    x.zoomable().domain([data.length-130, data.length]);
+
+    // Update y scale min max, only on viewable zoomable.domain()
+    y.domain(techan.scale.plot.ohlc(data.slice(data.length-130, data.length)).domain());
+    yVolume.domain(techan.scale.plot.volume(data.slice(data.length-130, data.length)).domain());
+
+    // Setup a transition for all that support
+    svg
+//      .transition() // Disable transition for now, each is only for transitions
+        .each(function() {
+            var selection = d3.select(this);
+            selection.select('g.x.axis').call(xAxis);
+            selection.select('g.y.axis').call(yAxis);
+            selection.select("g.volume.axis").call(volumeAxis);
+
+            selection.select("g.candlestick").datum(data).call(ohlc);
+            selection.select("g.sma.ma-0").datum(sma0Calculator(data)).call(sma0);
+            selection.select("g.sma.ma-1").datum(sma1Calculator(data)).call(sma1);
+            selection.select("g.volume").datum(data).call(volume);
+
+            svg.select("g.crosshair.ohlc").call(crosshair);
+        });
+
+    // Set next timer expiry
+    setTimeout(function() {
+        var newData;
+
+        if(data.length < feed.length) {
+            // Simulate a daily feed
+            newData = feed.slice(0, data.length+1);
+        }
+        else {
+            // Simulate intra day updates when no feed is left
+            var last = data[data.length-1];
+            // Last must be between high and low
+            last.close = Math.round(((last.high - last.low)*Math.random())*10)/10+last.low;
+
+            newData = data;
+        }
+
+        redraw(newData);
+    }, (Math.random()*1000)+400); // Randomly pick an interval to update the chart
+}
+
+function move(coords) {
+    coordsText.text(
+            timeAnnotation.format()(coords.x) + ", " + ohlcAnnotation.format()(coords.y)
+    );
+}
+
+fetch(queryUrl)
+    .then(resp => resp.json())
+    .then(rawData => {
+        feed = Object.entries(rawData["Time Series (Daily)"])
+                     .map(([date, obj]) => ({
+                        date: parseDate(date),
+                        open: +obj["1. open"],
+                        high: +obj["2. high"],
+                        low: +obj["3. low"],
+                        close: +obj["4. close"],
+                        volume: +obj["5. volume"]
+                     }));
+        redraw(feed.slice(0, 200));
+    })
+    .catch(error => {document.getElementById("chart").innerHTML = error;});
+
