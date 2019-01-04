@@ -1,14 +1,14 @@
 /////////////////////////
 
-var VOICE_COUNT = 10;
-var WIDTH = 640;
-var HEIGHT = 360;
+let VOICE_COUNT = 10;
+let WIDTH = 640;
+let HEIGHT = 360;
 
-var SMOOTHING = 0.8;
-var FFT_SIZE = 2048;
+let SMOOTHING = 0.8;
+let FFT_SIZE = 2048;
 
 // Start off by initializing a new context.
-var context = new (window.AudioContext || window.webkitAudioContext)();
+let context = new (window.AudioContext || window.webkitAudioContext)();
 
 if (!context.createGain)
     context.createGain = context.createGainNode;
@@ -32,10 +32,10 @@ return  window.requestAnimationFrame       ||
 // sound generator
 function WhiteNoiseGenerated(callback) {  
     // Generate a 5 second white noise buffer.  
-    var lengthInSamples = 5 * context.sampleRate;  
-    var buffer = context.createBuffer(1, lengthInSamples, context.sampleRate);  
-    var data = buffer.getChannelData(0);  
-    for (var i = 0; i < lengthInSamples; i++) {    
+    let lengthInSamples = 5 * context.sampleRate;  
+    let buffer = context.createBuffer(1, lengthInSamples, context.sampleRate);  
+    let data = buffer.getChannelData(0);  
+    for (let i = 0; i < lengthInSamples; i++) {    
         data[i] = ((Math.random() * 2) - 1);  
     }
 
@@ -80,20 +80,20 @@ function ProceduralSound() {
 }
 
 ProceduralSound.prototype.onLoaded = function() {
-    var filter = context.createBiquadFilter();  
+    let filter = context.createBiquadFilter();  
     filter.type = 'lowpass';
     filter.Q.value = 1; 
     filter.frequency.value = 800;  
 
     // Initialize multiple voices.  
-    for (var i = 0; i < VOICE_COUNT; i++) {    
-        var voice = new Envelope();    
+    for (let i = 0; i < VOICE_COUNT; i++) {    
+        let voice = new Envelope();    
         this.noise.connect(voice.node);    
         voice.connect(filter);    
         this.voices.push(voice);
     }
 
-    var gainMaster = context.createGain();
+    let gainMaster = context.createGain();
     gainMaster.gain.value = 1;
     filter.connect(gainMaster);
     //gainMaster.connect(context.destination);
@@ -113,31 +113,31 @@ ProceduralSound.prototype.draw = function() {
   this.analyser.getByteFrequencyData(this.freqs);
   this.analyser.getByteTimeDomainData(this.times);
 
-  var width = Math.floor(1/this.freqs.length, 10);
+  let width = Math.floor(1/this.freqs.length, 10);
 
-  var canvas = document.getElementById('proceduralCanvas');
-  var drawContext = canvas.getContext('2d');
+  let canvas = document.getElementById('proceduralCanvas');
+  let drawContext = canvas.getContext('2d');
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
   // Draw the frequency domain chart.
-  for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
-    var value = this.freqs[i];
-    var percent = value / 256;
-    var height = HEIGHT * percent;
-    var offset = HEIGHT - height - 1;
-    var barWidth = WIDTH/this.analyser.frequencyBinCount;
-    var hue = i/this.analyser.frequencyBinCount * 360;
+  for (let i = 0; i < this.analyser.frequencyBinCount; i++) {
+    let value = this.freqs[i];
+    let percent = value / 256;
+    let height = HEIGHT * percent;
+    let offset = HEIGHT - height - 1;
+    let barWidth = WIDTH/this.analyser.frequencyBinCount;
+    let hue = i/this.analyser.frequencyBinCount * 360;
     drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
     drawContext.fillRect(i * barWidth, offset, barWidth, height);
   }
 
   // Draw the time domain chart.
-  for (var i = 0; i < this.analyser.frequencyBinCount; i++) {
-    var value = this.times[i];
-    var percent = value / 256;
-    var height = HEIGHT * percent;
-    var offset = HEIGHT - height - 1;
-    var barWidth = WIDTH/this.analyser.frequencyBinCount;
+  for (let i = 0; i < this.analyser.frequencyBinCount; i++) {
+    let value = this.times[i];
+    let percent = value / 256;
+    let height = HEIGHT * percent;
+    let offset = HEIGHT - height - 1;
+    let barWidth = WIDTH/this.analyser.frequencyBinCount;
     drawContext.fillStyle = 'gray';
     drawContext.fillRect(i * barWidth, offset, 1, 2);
   }
@@ -152,81 +152,81 @@ ProceduralSound.prototype.beatOnce = function() {
 
 /////////////////////////
 
-var parseDate = d3.timeParse("%Y-%m-%d");
+let parseDate = d3.timeParse("%Y-%m-%d");
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
+let margin = {top: 20, right: 20, bottom: 30, left: 50},
         width = 640 - margin.left - margin.right,
         height = 360 - margin.top - margin.bottom;
 
-var x = techan.scale.financetime()
+let x = techan.scale.financetime()
         .range([0, width]);
 
-var y = d3.scaleLinear()
+let y = d3.scaleLinear()
         .range([height, 0]);
 
-var yVolume = d3.scaleLinear()
+let yVolume = d3.scaleLinear()
         .range([y(0), y(0.2)]);
 
-var ohlc = techan.plot.ohlc()
+let ohlc = techan.plot.ohlc()
         .xScale(x)
         .yScale(y);
 
-var sma0 = techan.plot.sma()
+let sma0 = techan.plot.sma()
         .xScale(x)
         .yScale(y);
 
-var sma0Calculator = techan.indicator.sma()
+let sma0Calculator = techan.indicator.sma()
         .period(10);
 
-var sma1 = techan.plot.sma()
+let sma1 = techan.plot.sma()
         .xScale(x)
         .yScale(y);
 
-var sma1Calculator = techan.indicator.sma()
+let sma1Calculator = techan.indicator.sma()
         .period(20);
 
-var volume = techan.plot.volume()
+let volume = techan.plot.volume()
         .accessor(ohlc.accessor())   // Set the accessor to a ohlc accessor so we get highlighted bars
         .xScale(x)
         .yScale(yVolume);
 
-var xAxis = d3.axisBottom(x);
+let xAxis = d3.axisBottom(x);
 
-var yAxis = d3.axisLeft(y);
+let yAxis = d3.axisLeft(y);
 
-var volumeAxis = d3.axisRight(yVolume)
+let volumeAxis = d3.axisRight(yVolume)
         .ticks(3)
         .tickFormat(d3.format(",.3s"));
 
-var timeAnnotation = techan.plot.axisannotation()
+let timeAnnotation = techan.plot.axisannotation()
         .axis(xAxis)
         .orient('bottom')
         .format(d3.timeFormat('%Y-%m-%d'))
         .width(65)
         .translate([0, height]);
 
-var ohlcAnnotation = techan.plot.axisannotation()
+let ohlcAnnotation = techan.plot.axisannotation()
         .axis(yAxis)
         .orient('left')
         .format(d3.format(',.2f'));
 
-var volumeAnnotation = techan.plot.axisannotation()
+let volumeAnnotation = techan.plot.axisannotation()
         .axis(volumeAxis)
         .orient('right')
         .width(35);
 
-var crosshair = techan.plot.crosshair()
+let crosshair = techan.plot.crosshair()
         .xScale(x)
         .yScale(y)
         .xAnnotation(timeAnnotation)
         .yAnnotation([ohlcAnnotation, volumeAnnotation])
         .on("move", move);
 
-var svg = d3.select("#chart").append("svg")
+let svg = d3.select("#chart").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
 
-var defs = svg.append("defs");
+let defs = svg.append("defs");
 
 defs.append("clipPath")
         .attr("id", "ohlcClip")
@@ -239,7 +239,7 @@ defs.append("clipPath")
 svg = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var ohlcSelection = svg.append("g")
+let ohlcSelection = svg.append("g")
         .attr("class", "ohlc")
         .attr("transform", "translate(0,0)");
 
@@ -278,19 +278,19 @@ svg.append("g")
 svg.append('g')
         .attr("class", "crosshair ohlc");
 
-var coordsText = svg.append('text')
+let coordsText = svg.append('text')
         .style("text-anchor", "end")
         .attr("class", "coords")
         .attr("x", width - 5)
         .attr("y", 15);
 
-var feed;
+let feed;
 
-var tradeBeat = new ProceduralSound();
+let tradeBeat = new ProceduralSound();
 
 // draw chart with techanJS
 function redraw(data) {
-    var accessor = ohlc.accessor();
+    let accessor = ohlc.accessor();
 
     x.domain(data.map(accessor.d));
     // Show only 150 points on the plot
@@ -304,7 +304,7 @@ function redraw(data) {
     svg
 //      .transition() // Disable transition for now, each is only for transitions
         .each(function() {
-            var selection = d3.select(this);
+            let selection = d3.select(this);
             selection.select('g.x.axis').call(xAxis);
             selection.select('g.y.axis').call(yAxis);
             selection.select("g.volume.axis").call(volumeAxis);
@@ -321,7 +321,7 @@ function redraw(data) {
 
     // Set next timer expiry
     setTimeout(function() {
-        var newData;
+        let newData;
 
         if(data.length < feed.length) {
             // Simulate a daily feed
@@ -329,7 +329,7 @@ function redraw(data) {
         }
         else {
             // Simulate intra day updates when no feed is left
-            var last = data[data.length-1];
+            let last = data[data.length-1];
             // Last must be between high and low
             last.close = Math.round(((last.high - last.low)*Math.random())*10)/10+last.low;
 
@@ -347,18 +347,18 @@ function move(coords) {
 }
 
 function begin() {
-    var request_params = {
+    let request_params = {
         "function": "TIME_SERIES_DAILY",
         "symbol": "MSFT",
         "outputsize": "full",
         "datatype": "json",
         "apikey": "I7JY3EYLKK5LRI8L"
     }
-    var base_url = "https://www.alphavantage.co/query"
-    var params = Object.keys(request_params)
+    const base_url = "https://www.alphavantage.co/query"
+    let params = Object.keys(request_params)
                        .map(key => key + '=' + request_params[key])
                        .join('&');
-    var queryUrl = base_url + '?' + params;
+    let queryUrl = base_url + '?' + params;
         
     fetch(queryUrl)
         .then(resp => resp.json())
