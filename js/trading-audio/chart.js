@@ -1,217 +1,455 @@
-const request_params = {
-    "function": "TIME_SERIES_DAILY",
-    "symbol": "MSFT",
-    "outputsize": "full",
-    "datatype": "json",
-    "apikey": "I7JY3EYLKK5LRI8L"
-}
-const base_url = "https://www.alphavantage.co/query"
-var params = Object.keys(request_params)
-                   .map(key => key + '=' + request_params[key])
-                   .join('&');
-var queryUrl = base_url + '?' + params;
+// Start off by initializing a new context.
+let context = new (window.AudioContext || window.webkitAudioContext)();
 
-var parseDate = d3.timeParse("%Y-%m-%d");
+if (!context.createGain)
+    context.createGain = context.createGainNode;
+if (!context.createDelay)
+    context.createDelay = context.createDelayNode;
+if (!context.createScriptProcessor)
+    context.createScriptProcessor = context.createJavaScriptNode;
 
-var feed;
-fetch(queryUrl)
-    .then(resp => resp.json())
-    .then(rawData => {
-        feed = Object.entries(rawData["Time Series (Daily)"])
-                     .map(([date, obj]) => ({
-                        date: parseDate(date),
-                        open: +obj["1. open"],
-                        high: +obj["2. high"],
-                        low: +obj["3. low"],
-                        close: +obj["4. close"],
-                        volume: +obj["5. volume"]
-                     }));
-        redraw(feed.slice(0, 200));
-    })
-    .catch(error => {document.getElementById("chart").innerHTML = error;});
+// shim layer with setTimeout fallback
+window.requestAnimFrame = (function () {
+    return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (callback) {
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
 
-// draw chart with techanJS
-function redraw(data) {
-    var accessor = ohlc.accessor();
+// sound generator
+function WhiteNoiseGenerated(callback) {
+    // Generate a 5 second white noise buffer.  
+    let lengthInSamples = 5 * context.sampleRate;
+    let buffer = context.createBuffer(1, lengthInSamples, context.sampleRate);
+    let data = buffer.getChannelData(0);
+    for (let i = 0; i < lengthInSamples; i++) {
+        data[i] = ((Math.random() * 2) - 1);
+    }
 
-    x.domain(data.map(accessor.d));
-    // Show only 150 points on the plot
-    x.zoomable().domain([data.length-130, data.length]);
-
-    // Update y scale min max, only on viewable zoomable.domain()
-    y.domain(techan.scale.plot.ohlc(data.slice(data.length-130, data.length)).domain());
-    yVolume.domain(techan.scale.plot.volume(data.slice(data.length-130, data.length)).domain());
-
-    // Setup a transition for all that support
-    svg
-//      .transition() // Disable transition for now, each is only for transitions
-        .each(function() {
-            var selection = d3.select(this);
-            selection.select('g.x.axis').call(xAxis);
-            selection.select('g.y.axis').call(yAxis);
-            selection.select("g.volume.axis").call(volumeAxis);
-
-            selection.select("g.candlestick").datum(data).call(ohlc);
-            selection.select("g.sma.ma-0").datum(sma0Calculator(data)).call(sma0);
-            selection.select("g.sma.ma-1").datum(sma1Calculator(data)).call(sma1);
-            selection.select("g.volume").datum(data).call(volume);
-
-            svg.select("g.crosshair.ohlc").call(crosshair);
-        });
-
-    // Set next timer expiry
-    setTimeout(function() {
-        var newData;
-
-        if(data.length < feed.length) {
-            // Simulate a daily feed
-            newData = feed.slice(0, data.length+1);
-        }
-        else {
-            // Simulate intra day updates when no feed is left
-            var last = data[data.length-1];
-            // Last must be between high and low
-            last.close = Math.round(((last.high - last.low)*Math.random())*10)/10+last.low;
-
-            newData = data;
-        }
-
-        redraw(newData);
-    }, (Math.random()*1000)+400); // Randomly pick an interval to update the chart
+    // Create a source node from the buffer.  
+    this.node = context.createBufferSource();
+    this.node.buffer = buffer;
+    this.node.loop = true;
+    this.node.start(0);
 }
 
-function move(coords) {
-    coordsText.text(
-            timeAnnotation.format()(coords.x) + ", " + ohlcAnnotation.format()(coords.y)
-    );
+WhiteNoiseGenerated.prototype.connect = function (dest) {
+    this.node.connect(dest);
+};
+
+function Envelope() {
+    this.oscillator = context.createOscillator();
+    this.node = context.createGain();
+    this.node.gain.value = 0;
+
+    this.oscillator.connect(this.node);
+    this.oscillator.start(0);
 }
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
+Envelope.prototype.addEventToQueue = function (data) {
+    this.oscillator.frequency.value = data;
+    this.node.gain.linearRampToValueAtTime(0, context.currentTime);
+    this.node.gain.linearRampToValueAtTime(1, context.currentTime + 0.01);
+    this.node.gain.linearRampToValueAtTime(0.3, context.currentTime + 0.101);
+    this.node.gain.linearRampToValueAtTime(0, context.currentTime + 0.200);
+};
+
+Envelope.prototype.connect = function (dest) {
+    this.node.connect(dest);
+};
+
+// procedural sound
+function ProceduralSound() {
+    this.voices = [];
+    this.voiceIndex = 0;
+    //this.noise = new WhiteNoiseGenerated();
+
+    this.analyser = context.createAnalyser();
+    this.freqs = new Uint8Array(this.analyser.frequencyBinCount);
+    this.times = new Uint8Array(this.analyser.frequencyBinCount);
+
+    this.canvasWidth = 640;
+    this.canvasHeight = 360;
+    this.SMOOTHING = 0.8;
+    this.FFT_SIZE = 2048;
+    this.VOICE_COUNT = 10;
+
+    this.onLoaded();
+}
+
+ProceduralSound.prototype.onLoaded = function () {
+    let filter = context.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.Q.value = 1;
+    filter.frequency.value = 800;
+
+    // Initialize multiple voices.  
+    for (let i = 0; i < this.VOICE_COUNT; i++) {
+        let voice = new Envelope();
+        //this.noise.connect(voice.node);
+        //this.oscillator.connect(voice.node);
+        voice.connect(filter);
+        this.voices.push(voice);
+    }
+
+    let gainMaster = context.createGain();
+    gainMaster.gain.value = 0.8;
+    filter.connect(gainMaster);
+    //gainMaster.connect(context.destination);
+
+    this.analyser.minDecibels = -140;
+    this.analyser.maxDecibels = 0;
+    gainMaster.connect(this.analyser);
+    this.analyser.connect(context.destination);
+    requestAnimFrame(this.draw.bind(this));
+};
+
+ProceduralSound.prototype.draw = function () {
+    this.analyser.smoothingTimeConstant = this.SMOOTHING;
+    this.analyser.fftSize = this.FFT_SIZE;
+
+    // Get the frequency data from the currently playing music
+    this.analyser.getByteFrequencyData(this.freqs);
+    this.analyser.getByteTimeDomainData(this.times);
+
+    let width = Math.floor(1 / this.freqs.length, 10);
+
+    let canvas = document.getElementById('proceduralCanvas');
+    let drawContext = canvas.getContext('2d');
+    canvas.width = this.canvasWidth;
+    canvas.height = this.canvasHeight;
+    // Draw the frequency domain chart.
+    for (let i = 0; i < this.analyser.frequencyBinCount; i++) {
+        let value = this.freqs[i];
+        let percent = value / 256;
+        let height = this.canvasHeight * percent;
+        let offset = this.canvasHeight - height - 1;
+        let barWidth = this.canvasWidth / this.analyser.frequencyBinCount;
+        let hue = i / this.analyser.frequencyBinCount * 360;
+        drawContext.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+        drawContext.fillRect(i * barWidth, offset, barWidth, height);
+    }
+
+    // Draw the time domain chart.
+    for (let i = 0; i < this.analyser.frequencyBinCount; i++) {
+        let value = this.times[i];
+        let percent = value / 256;
+        let height = this.canvasHeight * percent;
+        let offset = this.canvasHeight - height - 1;
+        let barWidth = this.canvasWidth / this.analyser.frequencyBinCount;
+        drawContext.fillStyle = 'gray';
+        drawContext.fillRect(i * barWidth, offset, 1, 2);
+    }
+
+    requestAnimFrame(this.draw.bind(this));
+}
+
+ProceduralSound.prototype.beatOnce = function (data) {
+    this.voiceIndex = (this.voiceIndex + 1) % this.VOICE_COUNT;
+    this.voices[this.voiceIndex].addEventToQueue(data);
+};
+
+/////////////////////////
+
+function Chart() {
+    this.feed;
+    this.data;
+    this.isPlaying;
+    this.tradeBeat = new ProceduralSound();
+    this.parseDate = d3.timeParse("%Y-%m-%d");
+
+    this.MAX_INTERVAL_TIME = 2000;
+    this.MIN_INTERVAL_TIME = 100;
+    this.LOW_FREQ = 100;
+    this.HIGH_FREQ = 2000; 
+    this.volumeScale;
+    this.valueScale;
+
+    this.x;
+    this.y;
+    this.yVolume;
+    this.ohlc;
+    this.sma0;
+    this.sma0Calculator;
+    this.sma1;
+    this.sma1Calculator;
+    this.volume;
+    this.xAxis;
+    this.yAxis;
+    this.volumeAxis;
+    this.timeAnnotation;
+    this.ohlcAnnotation;
+    this.volumeAnnotation;
+    this.crosshair;
+    this.svg;
+    this.coordsText;
+
+    this.onLoaded();
+}
+
+Chart.prototype.onLoaded = function () {
+    let margin = { top: 20, right: 20, bottom: 30, left: 50 },
         width = 640 - margin.left - margin.right,
         height = 360 - margin.top - margin.bottom;
 
-var x = techan.scale.financetime()
+    this.x = techan.scale.financetime()
         .range([0, width]);
 
-var y = d3.scaleLinear()
+    this.y = d3.scaleLinear()
         .range([height, 0]);
 
-var yVolume = d3.scaleLinear()
+    let y = this.y;
+    let x = this.x;
+
+    this.yVolume = d3.scaleLinear()
         .range([y(0), y(0.2)]);
 
-var ohlc = techan.plot.ohlc()
+    this.ohlc = techan.plot.ohlc()
         .xScale(x)
         .yScale(y);
 
-var sma0 = techan.plot.sma()
+    this.sma0 = techan.plot.sma()
         .xScale(x)
         .yScale(y);
 
-var sma0Calculator = techan.indicator.sma()
+    this.sma0Calculator = techan.indicator.sma()
         .period(10);
 
-var sma1 = techan.plot.sma()
+    this.sma1 = techan.plot.sma()
         .xScale(x)
         .yScale(y);
 
-var sma1Calculator = techan.indicator.sma()
+    this.sma1Calculator = techan.indicator.sma()
         .period(20);
 
-var volume = techan.plot.volume()
-        .accessor(ohlc.accessor())   // Set the accessor to a ohlc accessor so we get highlighted bars
+    this.volume = techan.plot.volume()
+        .accessor(this.ohlc.accessor())   // Set the accessor to a ohlc accessor so we get highlighted bars
         .xScale(x)
-        .yScale(yVolume);
+        .yScale(this.yVolume);
 
-var xAxis = d3.axisBottom(x);
+    this.xAxis = d3.axisBottom(x);
 
-var yAxis = d3.axisLeft(y);
+    this.yAxis = d3.axisLeft(y);
 
-var volumeAxis = d3.axisRight(yVolume)
+    this.volumeAxis = d3.axisRight(this.yVolume)
         .ticks(3)
         .tickFormat(d3.format(",.3s"));
 
-var timeAnnotation = techan.plot.axisannotation()
-        .axis(xAxis)
+    this.timeAnnotation = techan.plot.axisannotation()
+        .axis(this.xAxis)
         .orient('bottom')
         .format(d3.timeFormat('%Y-%m-%d'))
         .width(65)
         .translate([0, height]);
 
-var ohlcAnnotation = techan.plot.axisannotation()
-        .axis(yAxis)
+    this.ohlcAnnotation = techan.plot.axisannotation()
+        .axis(this.yAxis)
         .orient('left')
         .format(d3.format(',.2f'));
 
-var volumeAnnotation = techan.plot.axisannotation()
-        .axis(volumeAxis)
+    this.volumeAnnotation = techan.plot.axisannotation()
+        .axis(this.volumeAxis)
         .orient('right')
         .width(35);
 
-var crosshair = techan.plot.crosshair()
+    let that = this;
+    this.crosshair = techan.plot.crosshair()
         .xScale(x)
         .yScale(y)
-        .xAnnotation(timeAnnotation)
-        .yAnnotation([ohlcAnnotation, volumeAnnotation])
-        .on("move", move);
+        .xAnnotation(this.timeAnnotation)
+        .yAnnotation([this.ohlcAnnotation, this.volumeAnnotation])
+        .on("move", (coords) => {
+            that.coordsText.text(
+                that.timeAnnotation.format()(coords.x) + ", " + that.ohlcAnnotation.format()(coords.y)
+            );
+        });
 
-var svg = d3.select("#chart").append("svg")
+    this.svg = d3.select("#chart").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom);
 
-var defs = svg.append("defs");
+    let defs = this.svg.append("defs");
 
-defs.append("clipPath")
+    defs.append("clipPath")
         .attr("id", "ohlcClip")
-    .append("rect")
+        .append("rect")
         .attr("x", 0)
         .attr("y", 0)
         .attr("width", width)
         .attr("height", height);
 
-svg = svg.append("g")
+    this.svg = this.svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var ohlcSelection = svg.append("g")
+    let ohlcSelection = this.svg.append("g")
         .attr("class", "ohlc")
         .attr("transform", "translate(0,0)");
 
-ohlcSelection.append("g")
+    ohlcSelection.append("g")
         .attr("class", "volume")
         .attr("clip-path", "url(#ohlcClip)");
 
-ohlcSelection.append("g")
+    ohlcSelection.append("g")
         .attr("class", "candlestick")
         .attr("clip-path", "url(#ohlcClip)");
 
-ohlcSelection.append("g")
+    ohlcSelection.append("g")
         .attr("class", "indicator sma ma-0")
         .attr("clip-path", "url(#ohlcClip)");
 
-ohlcSelection.append("g")
+    ohlcSelection.append("g")
         .attr("class", "indicator sma ma-1")
         .attr("clip-path", "url(#ohlcClip)");
 
-svg.append("g")
+    this.svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")");
 
-svg.append("g")
+    this.svg.append("g")
         .attr("class", "y axis")
-    .append("text")
+        .append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("Price ($)");
 
-svg.append("g")
+    this.svg.append("g")
         .attr("class", "volume axis");
 
-svg.append('g')
+    this.svg.append('g')
         .attr("class", "crosshair ohlc");
 
-var coordsText = svg.append('text')
+    this.coordsText = this.svg.append('text')
         .style("text-anchor", "end")
         .attr("class", "coords")
         .attr("x", width - 5)
         .attr("y", 15);
+}
+
+Chart.prototype.playPause = function () {
+    this.isPlaying = !this.isPlaying;
+    if (this.isPlaying) {
+        let data = this.data;
+        let feed = this.feed;
+        if (data.length < feed.length) {
+            // Simulate a daily feed
+            data = feed.slice(0, data.length + 1);
+        }
+        else {
+            // Simulate intra day updates when no feed is left
+            let last = data[data.length - 1];
+            // Last must be between high and low
+            last.close = Math.round(((last.high - last.low) * Math.random()) * 10) / 10 + last.low;
+        }
+        this.redraw();
+    }
+}
+
+Chart.prototype.setScale = function (feed) {
+    var maxVol = d3.max(feed, d => d.volume);
+    var minVol = d3.min(feed, d => d.volume);
+    this.volumeScale = d3.scaleLinear()
+                         .domain([minVol, maxVol])
+                         .range([this.MIN_INTERVAL_TIME,this.MAX_INTERVAL_TIME]);
+    var maxVal = d3.max(feed, d => d.high);
+    var minVal = d3.min(feed, d => d.low);
+    this.valueScale = d3.scaleLinear()
+                        .domain([minVal, maxVal])
+                        .range([this.LOW_FREQ, this.HIGH_FREQ]);
+}
+
+// draw chart with techanJS
+Chart.prototype.redraw = function () {
+    let accessor = this.ohlc.accessor();
+
+    let data = this.data;
+    let that = this;
+    this.x.domain(data.map(accessor.d));
+    // Show only 150 points on the plot
+    this.x.zoomable().domain([data.length - 150, data.length]);
+    // Update y scale min max, only on viewable zoomable.domain()
+    this.y.domain(techan.scale.plot.ohlc(data.slice(data.length - 130, data.length)).domain());
+    this.yVolume.domain(techan.scale.plot.volume(data.slice(data.length - 130, data.length)).domain());
+    // Setup a transition for all that support
+    this.svg
+        //      .transition() // Disable transition for now, each is only for transitions
+        .each(function () {
+            let selection = d3.select(this);
+            selection.select('g.x.axis').call(that.xAxis);
+            selection.select('g.y.axis').call(that.yAxis);
+            selection.select("g.volume.axis").call(that.volumeAxis);
+            selection.select("g.candlestick").datum(data).call(that.ohlc);
+            selection.select("g.sma.ma-0").datum(that.sma0Calculator(data)).call(that.sma0);
+            selection.select("g.sma.ma-1").datum(that.sma1Calculator(data)).call(that.sma1);
+            selection.select("g.volume").datum(data).call(that.volume);
+            that.svg.select("g.crosshair.ohlc").call(that.crosshair);
+        });
+    let latest = data[data.length-1];
+    this.tradeBeat.beatOnce(this.valueScale(latest.close));
+
+    if (!this.isPlaying) return;
+
+    // Set next timer expiry
+    setTimeout(() => {
+        if (data.length < that.feed.length) {
+            // Simulate a daily feed
+            that.data = that.feed.slice(0, data.length + 1);
+        }
+        else {
+            // Simulate intra day updates when no feed is left
+            let last = data[data.length - 1];
+            // Last must be between high and low
+            last.close = Math.round(((last.high - last.low) * Math.random()) * 10) / 10 + last.low;
+        }
+        that.redraw();
+    }, that.volumeScale(latest.volume)); // Randomly pick an interval to update the chart
+}
+
+var chart = new Chart();
+
+function begin() {
+    let request_params = {
+        "function": "TIME_SERIES_DAILY",
+        "symbol": "MSFT",
+        "outputsize": "full",
+        "datatype": "json",
+        "apikey": "I7JY3EYLKK5LRI8L"
+    };
+    const base_url = "https://www.alphavantage.co/query";
+    let params = Object.keys(request_params)
+        .map(key => key + '=' + request_params[key])
+        .join('&');
+    let queryUrl = base_url + '?' + params;
+
+    fetch(queryUrl)
+        .then(resp => resp.json())
+        .then(rawData => {
+            chart.feed = Object.entries(rawData["Time Series (Daily)"])
+                .map(([date, obj]) => ({
+                    date: chart.parseDate(date),
+                    open: +obj["1. open"],
+                    high: +obj["2. high"],
+                    low: +obj["3. low"],
+                    close: +obj["4. close"],
+                    volume: +obj["5. volume"]
+                }))
+                .reverse();
+            chart.data = chart.feed.slice(0, 150);
+            chart.isPlaying = true;
+            chart.setScale(chart.feed);
+            chart.redraw();
+
+            let button = document.getElementById('scriptButton')
+            button.removeAttribute('onclick');
+            button.innerHTML = 'play/pause';
+            button.addEventListener('click', () => chart.playPause());
+            document.getElementById('chart').hidden = false;
+            document.getElementById('proceduralCanvas').hidden = false;
+        })
+        .catch(error => { document.getElementById("chart").innerHTML = error; });
+}
