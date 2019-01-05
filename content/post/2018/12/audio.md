@@ -23,7 +23,7 @@ What would it sound like if trading market data sings?
     <div><canvas id="proceduralCanvas" hidden></canvas></div>
     <link rel="stylesheet" type="text/css" href="/css/techan.css" />
     <script src="http://d3js.org/d3.v4.min.js"></script>
-    <script src="http://techanjs.org/techan.min.js"></script>
-    <script src="/js/trading-audio/chart.js"></script>    
+    <script src="/js/trading-audio/techan.min.js"></script>
+    <script src="/js/trading-audio/tradeBeats.js"></script>    
     <button id="scriptButton" onclick="begin()" >Begin</button>
 </div>
