@@ -11,8 +11,12 @@ slug: Use trading market data to create beat sounds
 autoThumbnailImage: true
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-12/16.gif
-draft: true
 ---
+
+What would it sound like if trading market data sings? 
+<!--more-->
+
+> TODO: more sound, more interaction.
 
 <div>
     <div id="chart" hidden></div>
