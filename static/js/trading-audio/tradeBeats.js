@@ -48,10 +48,21 @@ function Envelope() {
 
     this.oscillator.connect(this.node);
     this.oscillator.start(0);
+    
+    this.filter = context.createBiquadFilter();
+    this.filter.type = 'lowpass';
+    this.filter.Q.value = 1;
+    //this.filter.frequency.value = 800;
+    this.node.connect(this.filter);
 }
 
-Envelope.prototype.addEventToQueue = function (data) {
-    this.oscillator.frequency.value = data;
+Envelope.prototype.addEventToQueue = function (open, close, volume) {
+    this.oscillator.frequency.value = close;
+    this.oscillator.type = close > open ? 'triangle' : 'sine';
+    let scale = d3.scaleLinear()
+                .domain([chart.MIN_INTERVAL_TIME, chart.MAX_INTERVAL_TIME])
+                .range([10, 1000]);
+    this.filter.frequency.value = scale(volume);
     this.node.gain.linearRampToValueAtTime(0, context.currentTime);
     this.node.gain.linearRampToValueAtTime(1, context.currentTime + 0.01);
     this.node.gain.linearRampToValueAtTime(0.3, context.currentTime + 0.101);
@@ -82,23 +93,20 @@ function ProceduralSound() {
 }
 
 ProceduralSound.prototype.onLoaded = function () {
-    let filter = context.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.Q.value = 1;
-    filter.frequency.value = 800;
-
+    let gainMaster = context.createGain();
+    gainMaster.gain.value = 0.8;
+    
     // Initialize multiple voices.  
     for (let i = 0; i < this.VOICE_COUNT; i++) {
         let voice = new Envelope();
         //this.noise.connect(voice.node);
         //this.oscillator.connect(voice.node);
-        voice.connect(filter);
+        //voice.connect(filter);
+        voice.connect(gainMaster);
         this.voices.push(voice);
     }
 
-    let gainMaster = context.createGain();
-    gainMaster.gain.value = 0.8;
-    filter.connect(gainMaster);
+    //filter.connect(gainMaster);
     //gainMaster.connect(context.destination);
 
     this.analyser.minDecibels = -140;
@@ -148,9 +156,9 @@ ProceduralSound.prototype.draw = function () {
     requestAnimFrame(this.draw.bind(this));
 }
 
-ProceduralSound.prototype.beatOnce = function (data) {
+ProceduralSound.prototype.beatOnce = function (open, close, volume) {
     this.voiceIndex = (this.voiceIndex + 1) % this.VOICE_COUNT;
-    this.voices[this.voiceIndex].addEventToQueue(data);
+    this.voices[this.voiceIndex].addEventToQueue(open, close, volume);
 };
 
 /////////////////////////
@@ -159,13 +167,15 @@ function Chart() {
     this.feed;
     this.data;
     this.isPlaying;
+    this.ticker;
+    this.timeScheduler;
     this.tradeBeat = new ProceduralSound();
     this.parseDate = d3.timeParse("%Y-%m-%d");
 
-    this.MAX_INTERVAL_TIME = 2000;
-    this.MIN_INTERVAL_TIME = 100;
+    this.MAX_INTERVAL_TIME = 100;
+    this.MIN_INTERVAL_TIME = 10;
     this.LOW_FREQ = 100;
-    this.HIGH_FREQ = 2000; 
+    this.HIGH_FREQ = 2000;
     this.volumeScale;
     this.valueScale;
 
@@ -332,6 +342,9 @@ Chart.prototype.onLoaded = function () {
 }
 
 Chart.prototype.playPause = function () {
+    if (typeof (chart.timeScheduler) === 'undefined') {
+        return;
+    }
     this.isPlaying = !this.isPlaying;
     if (this.isPlaying) {
         let data = this.data;
@@ -354,19 +367,18 @@ Chart.prototype.setScale = function (feed) {
     var maxVol = d3.max(feed, d => d.volume);
     var minVol = d3.min(feed, d => d.volume);
     this.volumeScale = d3.scaleLinear()
-                         .domain([minVol, maxVol])
-                         .range([this.MIN_INTERVAL_TIME,this.MAX_INTERVAL_TIME]);
+        .domain([minVol, maxVol])
+        .range([this.MAX_INTERVAL_TIME, this.MIN_INTERVAL_TIME]);
     var maxVal = d3.max(feed, d => d.high);
     var minVal = d3.min(feed, d => d.low);
     this.valueScale = d3.scaleLinear()
-                        .domain([minVal, maxVal])
-                        .range([this.LOW_FREQ, this.HIGH_FREQ]);
+        .domain([minVal, maxVal])
+        .range([this.LOW_FREQ, this.HIGH_FREQ]);
 }
 
 // draw chart with techanJS
 Chart.prototype.redraw = function () {
     let accessor = this.ohlc.accessor();
-
     let data = this.data;
     let that = this;
     this.x.domain(data.map(accessor.d));
@@ -389,18 +401,21 @@ Chart.prototype.redraw = function () {
             selection.select("g.volume").datum(data).call(that.volume);
             that.svg.select("g.crosshair.ohlc").call(that.crosshair);
         });
-    let latest = data[data.length-1];
-    this.tradeBeat.beatOnce(this.valueScale(latest.close));
+    let latest = data[data.length - 1];
+    this.tradeBeat.beatOnce(this.valueScale(latest.open),
+                            this.valueScale(latest.close), 
+                            this.volumeScale(latest.volume));
 
     if (!this.isPlaying) return;
 
     // Set next timer expiry
-    setTimeout(() => {
+    this.timeScheduler = setTimeout(() => {
         if (data.length < that.feed.length) {
             // Simulate a daily feed
             that.data = that.feed.slice(0, data.length + 1);
         }
         else {
+            return;
             // Simulate intra day updates when no feed is left
             let last = data[data.length - 1];
             // Last must be between high and low
@@ -413,9 +428,10 @@ Chart.prototype.redraw = function () {
 var chart = new Chart();
 
 function begin() {
+    chart.ticker = document.getElementById('tickers').value;
     let request_params = {
         "function": "TIME_SERIES_DAILY",
-        "symbol": "MSFT",
+        "symbol": chart.ticker,
         "outputsize": "full",
         "datatype": "json",
         "apikey": "I7JY3EYLKK5LRI8L"
@@ -444,12 +460,23 @@ function begin() {
             chart.setScale(chart.feed);
             chart.redraw();
 
-            let button = document.getElementById('scriptButton')
+            let button = document.getElementById('scriptButton');
             button.removeAttribute('onclick');
             button.innerHTML = 'play/pause';
             button.addEventListener('click', () => chart.playPause());
             document.getElementById('chart').hidden = false;
             document.getElementById('proceduralCanvas').hidden = false;
+            document.getElementById('tickers').addEventListener('change', () => {
+                if (typeof (chart.timeScheduler) !== 'undefined') {
+                    if (chart.isPlaying) {
+                        chart.isPlaying = false;
+                    }
+                    clearTimeout(chart.timeScheduler);
+                    chart.feed = [];
+                    chart.data = [];
+                    begin();
+                }
+            });
         })
-        .catch(error => { document.getElementById("chart").innerHTML = error; });
+        .catch(error => { document.getElementById('chart').innerHTML = error; });
 }
