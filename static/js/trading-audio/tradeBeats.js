@@ -342,9 +342,6 @@ Chart.prototype.onLoaded = function () {
 }
 
 Chart.prototype.playPause = function () {
-    if (typeof (chart.timeScheduler) === 'undefined') {
-        return;
-    }
     this.isPlaying = !this.isPlaying;
     if (this.isPlaying) {
         let data = this.data;
@@ -352,14 +349,10 @@ Chart.prototype.playPause = function () {
         if (data.length < feed.length) {
             // Simulate a daily feed
             data = feed.slice(0, data.length + 1);
+            this.redraw();
         }
-        else {
-            // Simulate intra day updates when no feed is left
-            let last = data[data.length - 1];
-            // Last must be between high and low
-            last.close = Math.round(((last.high - last.low) * Math.random()) * 10) / 10 + last.low;
-        }
-        this.redraw();
+    } else {
+        clearTimeout(this.timeScheduler);
     }
 }
 
@@ -378,9 +371,9 @@ Chart.prototype.setScale = function (feed) {
 
 // draw chart with techanJS
 Chart.prototype.redraw = function () {
-    let accessor = this.ohlc.accessor();
-    let data = this.data;
-    let that = this;
+    var accessor = this.ohlc.accessor();
+    var data = this.data;
+    var that = this;
     this.x.domain(data.map(accessor.d));
     // Show only 150 points on the plot
     this.x.zoomable().domain([data.length - 150, data.length]);
@@ -388,59 +381,49 @@ Chart.prototype.redraw = function () {
     this.y.domain(techan.scale.plot.ohlc(data.slice(data.length - 130, data.length)).domain());
     this.yVolume.domain(techan.scale.plot.volume(data.slice(data.length - 130, data.length)).domain());
     // Setup a transition for all that support
-    this.svg
-        //      .transition() // Disable transition for now, each is only for transitions
-        .each(function () {
-            let selection = d3.select(this);
-            selection.select('g.x.axis').call(that.xAxis);
-            selection.select('g.y.axis').call(that.yAxis);
-            selection.select("g.volume.axis").call(that.volumeAxis);
-            selection.select("g.candlestick").datum(data).call(that.ohlc);
-            selection.select("g.sma.ma-0").datum(that.sma0Calculator(data)).call(that.sma0);
-            selection.select("g.sma.ma-1").datum(that.sma1Calculator(data)).call(that.sma1);
-            selection.select("g.volume").datum(data).call(that.volume);
-            that.svg.select("g.crosshair.ohlc").call(that.crosshair);
-        });
-    let latest = data[data.length - 1];
+    this.svg.each(function () {
+        var selection = d3.select(this);
+        selection.select('g.x.axis').call(that.xAxis);
+        selection.select('g.y.axis').call(that.yAxis);
+        selection.select("g.volume.axis").call(that.volumeAxis);
+        selection.select("g.candlestick").datum(data).call(that.ohlc);
+        selection.select("g.sma.ma-0").datum(that.sma0Calculator(data)).call(that.sma0);
+        selection.select("g.sma.ma-1").datum(that.sma1Calculator(data)).call(that.sma1);
+        selection.select("g.volume").datum(data).call(that.volume);
+        that.svg.select("g.crosshair.ohlc").call(that.crosshair);
+    });
+    if (!this.isPlaying) return;
+    var latest = data[data.length - 1];
     this.tradeBeat.beatOnce(this.valueScale(latest.open),
                             this.valueScale(latest.close), 
                             this.volumeScale(latest.volume));
-
-    if (!this.isPlaying) return;
-
     // Set next timer expiry
     this.timeScheduler = setTimeout(() => {
         if (data.length < that.feed.length) {
             // Simulate a daily feed
             that.data = that.feed.slice(0, data.length + 1);
+            that.redraw();
         }
-        else {
-            return;
-            // Simulate intra day updates when no feed is left
-            let last = data[data.length - 1];
-            // Last must be between high and low
-            last.close = Math.round(((last.high - last.low) * Math.random()) * 10) / 10 + last.low;
-        }
-        that.redraw();
-    }, that.volumeScale(latest.volume)); // Randomly pick an interval to update the chart
+    }, that.volumeScale(latest.volume));
 }
 
 var chart = new Chart();
+var init = false;
 
 function begin() {
     chart.ticker = document.getElementById('tickers').value;
-    let request_params = {
+    var request_params = {
         "function": "TIME_SERIES_DAILY",
         "symbol": chart.ticker,
         "outputsize": "full",
         "datatype": "json",
         "apikey": "I7JY3EYLKK5LRI8L"
     };
-    const base_url = "https://www.alphavantage.co/query";
-    let params = Object.keys(request_params)
+    var base_url = "https://www.alphavantage.co/query";
+    var params = Object.keys(request_params)
         .map(key => key + '=' + request_params[key])
         .join('&');
-    let queryUrl = base_url + '?' + params;
+    var queryUrl = base_url + '?' + params;
 
     fetch(queryUrl)
         .then(resp => resp.json())
@@ -456,27 +439,28 @@ function begin() {
                 }))
                 .reverse();
             chart.data = chart.feed.slice(0, 150);
-            chart.isPlaying = true;
+            chart.isPlaying = false;
             chart.setScale(chart.feed);
             chart.redraw();
-
-            let button = document.getElementById('scriptButton');
-            button.removeAttribute('onclick');
-            button.innerHTML = 'play/pause';
-            button.addEventListener('click', () => chart.playPause());
-            document.getElementById('chart').hidden = false;
-            document.getElementById('proceduralCanvas').hidden = false;
-            document.getElementById('tickers').addEventListener('change', () => {
-                if (typeof (chart.timeScheduler) !== 'undefined') {
-                    if (chart.isPlaying) {
-                        chart.isPlaying = false;
+            if (!init) {
+                let button = document.getElementById('scriptButton');
+                button.removeAttribute('onclick');
+                button.innerHTML = 'play/pause';
+                button.addEventListener('click', () => chart.playPause());
+                document.getElementById('chart').hidden = false;
+                document.getElementById('proceduralCanvas').hidden = false;
+                document.getElementById('tickers').addEventListener('change', () => {
+                    if (typeof (chart.timeScheduler) !== 'undefined') {
+                        if (chart.isPlaying) {
+                            chart.playPause();
+                        }
+                        chart.feed = [];
+                        chart.data = [];
+                        begin();
                     }
-                    clearTimeout(chart.timeScheduler);
-                    chart.feed = [];
-                    chart.data = [];
-                    begin();
-                }
-            });
+                });
+                init = true;
+            }
         })
         .catch(error => { document.getElementById('chart').innerHTML = error; });
 }

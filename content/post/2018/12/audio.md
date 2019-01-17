@@ -16,7 +16,8 @@ thumbnailImage: /images/2018/2018-12/16.gif
 What would it sound like if trading market data speaks? 
 <!--more-->
 
-> TODO: more sound, more interaction.
+> TODO: more sound, more interaction
+> auto complete for input tickers; play control bar and pause; more complicated oscillator generator and sound parameter control; multi-tickers play simultaneously; style in dark mode; more animation.
 
 <div>
     <link rel="stylesheet" type="text/css" href="/css/techan.css" />
