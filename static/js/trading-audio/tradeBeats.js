@@ -352,11 +352,11 @@ Chart.prototype.playPause = function () {
             this.redraw();
         }
         let button = document.getElementById('togglePlay');
-        button.innerText = '❙❙';
+        button.innerHTML = '<i class="fa fa-pause"></i>';
     } else {
         clearTimeout(this.timeScheduler);
         let button = document.getElementById('togglePlay');
-        button.innerText = '▶';
+        button.innerHTML = '<i class="fa fa-play"></i>';
     }
 }
 

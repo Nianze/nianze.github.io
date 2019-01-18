@@ -20,6 +20,7 @@ What would it sound like if trading market data speaks?
     <link rel="stylesheet" type="text/css" href="/css/trading-audio/techan.css" />
     <link rel="stylesheet" type="text/css" href="/css/trading-audio/awesomplete.css" />
     <link rel="stylesheet" type="text/css" href="/css/trading-audio/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <script src="http://d3js.org/d3.v4.min.js"></script>
     <script src="/js/trading-audio/techan.min.js"></script>
     <script src="/js/trading-audio/awesomplete.min.js"></script>
@@ -28,7 +29,7 @@ What would it sound like if trading market data speaks?
             <button id="exchange-btn" class="dropdown-btn" type="button"><span class="caret"></span></button>
             <input id="ticker-input" placeholder="Enter a ticker name" class="dropdown-input" />
             <button id="ticker-btn" class="dropdown-btn" type="button"><span class="caret"></span></button>
-            <button id="togglePlay" hidden>▶</button>
+            <button id="togglePlay" hidden><i class="fa fa-play"></i></button>
     </section>
     <div></div>
     <div id="chart" hidden></div>
