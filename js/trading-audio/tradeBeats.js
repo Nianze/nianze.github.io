@@ -164,10 +164,10 @@ ProceduralSound.prototype.beatOnce = function (open, close, volume) {
 /////////////////////////
 
 function Chart() {
-    this.feed;
-    this.data;
-    this.isPlaying;
-    this.ticker;
+    this.feed = [];
+    this.data = [];
+    this.isPlaying = false;
+    this.ticker = "";
     this.timeScheduler;
     this.tradeBeat = new ProceduralSound();
     this.parseDate = d3.timeParse("%Y-%m-%d");
@@ -411,7 +411,7 @@ var chart = new Chart();
 var init = false;
 
 function begin() {
-    chart.ticker = document.getElementById('tickers').value;
+    console.log("begin!!");
     var request_params = {
         "function": "TIME_SERIES_DAILY",
         "symbol": chart.ticker,
@@ -424,7 +424,7 @@ function begin() {
         .map(key => key + '=' + request_params[key])
         .join('&');
     var queryUrl = base_url + '?' + params;
-
+    console.log(queryUrl);
     fetch(queryUrl)
         .then(resp => resp.json())
         .then(rawData => {
@@ -444,23 +444,32 @@ function begin() {
             chart.redraw();
             if (!init) {
                 let button = document.getElementById('scriptButton');
-                button.removeAttribute('onclick');
-                button.innerHTML = 'play/pause';
                 button.addEventListener('click', () => chart.playPause());
+                button.hidden = false;
                 document.getElementById('chart').hidden = false;
                 document.getElementById('proceduralCanvas').hidden = false;
-                document.getElementById('tickers').addEventListener('change', () => {
-                    if (typeof (chart.timeScheduler) !== 'undefined') {
-                        if (chart.isPlaying) {
-                            chart.playPause();
-                        }
-                        chart.feed = [];
-                        chart.data = [];
-                        begin();
-                    }
-                });
                 init = true;
             }
         })
         .catch(error => { document.getElementById('chart').innerHTML = error; });
 }
+
+(function main(){
+    var input = document.getElementById("tickers");
+    var awesomeplete = new Awesomplete(input, {
+        minChars: 1,
+        autoFirst: true,
+        maxItems: 5
+    });    
+    window.addEventListener("awesomplete-select", function(e){
+        if (chart.isPlaying) {
+            chart.playPause();
+        }
+        chart.feed = [];
+        chart.data = [];
+        chart.ticker = e.text.value;
+        begin();
+    }, false);
+
+    awesomeplete.list = ['FB', 'GOOG', 'IBM', 'AAPL'];
+})();
