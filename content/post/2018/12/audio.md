@@ -25,10 +25,14 @@ What would it sound like if trading market data speaks?
     <script src="/js/trading-audio/techan.min.js"></script>
     <script src="/js/trading-audio/awesomplete.min.js"></script>
     <section id="combobox">
-            <input id="exchange-input" placeholder="Select an exchange" class="dropdown-input" />
-            <button id="exchange-btn" class="dropdown-btn" type="button"><span class="caret"></span></button>
-            <input id="ticker-input" placeholder="Enter a ticker name" class="dropdown-input" />
-            <button id="ticker-btn" class="dropdown-btn" type="button"><span class="caret"></span></button>
+            <label id="exchange-combobox">
+                <input id="exchange-input" placeholder="Select an exchange" class="dropdown-input" />
+                <button id="exchange-btn" class="dropdown-btn" type="button"><span class="caret"></span></button>
+            </label>
+            <label id="ticker-combobox">
+                <input id="ticker-input" placeholder="Enter a ticker name" class="dropdown-input" />
+                <button id="ticker-btn" class="dropdown-btn" type="button"><span class="caret"></span></button>
+            </label>
             <button id="togglePlay" hidden><i class="fa fa-play"></i></button>
     </section>
     <div></div>
