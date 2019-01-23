@@ -16,6 +16,12 @@ thumbnailImage: /images/2018/2018-12/16.gif
 What would it sound like if trading market data speaks? 
 <!--more-->
 
+#### A little background
+
+This little project tries to do one thing for fun: to transform the trading market history data into some sords of sound.
+
+The techniques involve some basic use of web audio API and D3.js. All the ticker names are collected from [dumb stock api](https://dumbstockapi.com/), while all the trading history data comes from [ALPHA VANTAGE](https://www.alphavantage.co/). Since support for web audio API is different by different browsers, it is highly suggested to try this demo with Chrome.
+
 <div>
     <link rel="stylesheet" type="text/css" href="/css/trading-audio/techan.css" />
     <link rel="stylesheet" type="text/css" href="/css/trading-audio/awesomplete.css" />
@@ -24,6 +30,11 @@ What would it sound like if trading market data speaks?
     <script src="http://d3js.org/d3.v4.min.js"></script>
     <script src="/js/trading-audio/techan.min.js"></script>
     <script src="/js/trading-audio/awesomplete.min.js"></script>
+    <script src="/js/trading-audio/main.js" type="module"></script>
+    <div>-</div>
+</div>
+
+<div>
     <section id="combobox">
             <label id="exchange-combobox">
                 <input id="exchange-input" placeholder="Select an exchange" class="dropdown-input" />
@@ -35,17 +46,27 @@ What would it sound like if trading market data speaks?
             </label>
             <button id="togglePlay" hidden><i class="fa fa-play"></i></button>
     </section>
-    <div></div>
+<div>
+
+<div></div>
+
+>Feel free to choose any company interesting to you by typing/selecting corresponding stock exchange name as well as company security ticker (e.g.: NASDAQ for exchange and FB as ticker to listen to how Facebook sounds like.)
+
+<div id="demo">
     <div id="chart" hidden></div>
-    <div><canvas id="proceduralCanvas" hidden></canvas></div>
-    <script src="/js/trading-audio/tradeBeats.js"></script>    
 </div>
 
-> TODO: more sound, more interaction
-> auto complete for input tickers; play control bar and pause; more complicated oscillator generator and sound parameter control; multi-tickers play simultaneously; style in dark mode; more animation.
+Currently the mapping from market data to sound is naive: 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eget urna vitae velit eleifend interdum at ac nisi. In nec ligula lacus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed eu cursus erat, ut dapibus quam. Aliquam eleifend dolor vitae libero pharetra adipiscing. Etiam adipiscing dolor a quam tempor, eu convallis nulla varius. Aliquam sollicitudin risus a porta aliquam. Ut nec velit dolor. Proin eget leo lobortis, aliquam est sed, mollis mauris. Fusce vitae leo pretium massa accumsan condimentum. Fusce malesuada gravida lectus vel vulputate. Donec bibendum porta nibh ut aliquam. Sed lorem felis, congue non fringilla eu, aliquam eu eros. Curabitur orci libero, mollis sed semper vitae, adipiscing in lectus. Aenean non egestas odio. Donec sollicitudin nisi quis lorem gravida, in pharetra mauris fringilla. Duis sit amet faucibus dolor, id aliquam neque. In egestas, odio gravida tempor dictum, mauris felis faucibus purus, sit amet commodo lacus diam vitae est. Ut ut quam eget massa semper sodales. Aenean non ipsum cursus, blandit lectus in, ornare odio. Curabitur ultrices porttitor vulputate. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eget urna vitae velit eleifend interdum at ac nisi. In nec ligula lacus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed eu cursus erat, ut dapibus quam. Aliquam eleifend dolor vitae libero pharetra adipiscing. Etiam adipiscing dolor a quam tempor, eu convallis nulla varius. Aliquam sollicitudin risus a porta aliquam. Ut nec velit dolor. Proin eget leo lobortis, aliquam est sed, mollis mauris. Fusce vitae leo pretium massa accumsan condimentum. Fusce malesuada gravida lectus vel vulputate. Donec bibendum porta nibh ut aliquam.
+1. Each beat stands for one day of the security price in the past, ordered by the security's trading history.
+2. Sound frequency: the higher the daily close price, the higher the frequency.
+3. Waveform: if the daily open price is lower than close price, a beat of triangle wave sound is generated, otherwise the sine wave. 
+4. Duration between each two beats are determined by the earlier day's market volume: larger market volume comes with shorter duration.
 
-Sed lorem felis, congue non fringilla eu, aliquam eu eros. Curabitur orci libero, mollis sed semper vitae, adipiscing in lectus. Aenean non egestas odio. Donec sollicitudin nisi quis lorem gravida, in pharetra mauris fringilla. Duis sit amet faucibus dolor, id aliquam neque. In egestas, odio gravida tempor dictum, mauris felis faucibus purus, sit amet commodo lacus diam vitae est. Ut ut quam eget massa semper sodales. Aenean non ipsum cursus, blandit lectus in, ornare odio. Curabitur ultrices porttitor vulputate. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eget urna vitae velit eleifend interdum at ac nisi. In nec ligula lacus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed eu cursus erat, ut dapibus quam. Aliquam eleifend dolor vitae libero pharetra adipiscing. Etiam adipiscing dolor a quam tempor, eu convallis nulla varius. Aliquam sollicitudin risus a porta aliquam. Ut nec velit dolor. Proin eget leo lobortis, aliquam est sed, mollis mauris. Fusce vitae leo pretium massa accumsan condimentum. Fusce malesuada gravida lectus vel vulputate. Donec bibendum porta nibh ut aliquam.
+Apart from the chart for market data, each beat is also visualized to show their waveform and frequency domain distribution.
 
-Sed lorem felis, congue non fringilla eu, aliquam eu eros. Curabitur orci libero, mollis sed semper vitae, adipiscing in lectus. Aenean non egestas odio. Donec sollicitudin nisi quis lorem gravida, in pharetra mauris fringilla. Duis sit amet faucibus dolor, id aliquam neque. In egestas, odio gravida tempor dictum, mauris felis faucibus purus, sit amet commodo lacus diam vitae est. Ut ut quam eget massa semper sodales. Aenean non ipsum cursus, blandit lectus in, ornare odio. Curabitur ultrices porttitor vulputate.
+<div id="demo">
+    <canvas id="proceduralCanvas" hidden></canvas>
+</div>
+
+Of course, listening to only one security ticker at a time isn't that much fun. Some good way to extend this project might be to map multiple securities into different sounds, and play them simultaneously, in the hope of creating some sort of "symphony".
