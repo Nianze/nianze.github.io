@@ -8,7 +8,7 @@ showSocial: false
 comments: false
 ---
 <h4 class='text-center'>
-    <a href='https://drive.google.com/file/d/1r7-g99aMlgLqXwMPj7Kz43BUMk9iUgz4/view?usp=sharing'>Download Resume</a>
+    <a href='https://drive.google.com/open?id=1W9VTQuNzg3rrCC91RMHi6NxMopeg8poE'>Download Resume</a>
 </h4>
 
 ## Work Experience
