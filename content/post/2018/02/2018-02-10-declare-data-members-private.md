@@ -2,7 +2,7 @@
 title: "Item-22 Declare data members private"
 date: 2018-02-10
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

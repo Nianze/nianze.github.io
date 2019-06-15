@@ -2,7 +2,7 @@
 title: "Item-43 Know how to access names in templatized base classes"
 date: 2018-03-09T21:48:26-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

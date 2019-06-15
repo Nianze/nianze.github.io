@@ -2,7 +2,7 @@
 title: Convert Char to String in Java
 date: 2016-11-02
 categories:
-- article
+- technology
 - coding
 tags:
 - algorithm

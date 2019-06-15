@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects"
 date: 2018-07-10T18:55:06-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

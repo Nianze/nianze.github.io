@@ -2,7 +2,7 @@
 title: "[MECpp]Item-25 Virtualizing Constructors and Non-Member Functions"
 date: 2018-04-23T13:30:56-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

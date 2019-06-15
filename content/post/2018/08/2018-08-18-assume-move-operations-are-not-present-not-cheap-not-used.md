@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-29 Assume Move Operations Are Not Present Not Cheap, and Not Used"
 date: 2018-08-18T15:15:12-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-9 Prefer Alias Declarations to Typedefs"
 date: 2018-07-12T13:03:01-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

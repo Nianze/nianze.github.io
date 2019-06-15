@@ -2,7 +2,7 @@
 title: "Item-24 Declare non-member functions when type conversions should apply to all parameters"
 date: 2018-02-12T22:47:20-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

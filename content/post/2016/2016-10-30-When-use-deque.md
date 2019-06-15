@@ -2,7 +2,7 @@
 title: When use Dueque
 date: 2016-10-30
 categories:
-- article
+- technology
 - coding
 tags:
 - algorithm

@@ -2,7 +2,7 @@
 title: "[MECpp]Item-11 Prevent Exceptions From Leaving Destructors"
 date: 2018-04-03T10:54:39-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-38 Be Aware of Varying Thread Handle Destructor Behavior"
 date: 2018-10-09T19:42:16-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

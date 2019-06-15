@@ -2,7 +2,7 @@
 title: 使用Hugo在GitHub Pages上搭建免费个人网站
 date: 2017-12-26
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

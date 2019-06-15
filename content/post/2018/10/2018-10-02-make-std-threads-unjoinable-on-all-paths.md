@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-37 Make std::threads Unjoinable on All Paths"
 date: 2018-10-02T19:16:09-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

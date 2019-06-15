@@ -2,7 +2,7 @@
 title: "Item-8 Prevent exception from leaving destructor"
 date: 2018-01-26T20:15:48-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

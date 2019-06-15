@@ -2,7 +2,7 @@
 title: "[MECpp]Item-8 Understand the Different Meanings of New and Delete"
 date: 2018-03-30T17:09:04-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

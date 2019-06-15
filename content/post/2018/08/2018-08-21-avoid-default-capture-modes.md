@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-31 Avoid Default Capture Modes"
 date: 2018-08-21T19:22:22-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

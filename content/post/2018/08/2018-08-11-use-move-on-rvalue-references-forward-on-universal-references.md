@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-25 Use std::move on Rvalue References, std::forward on Universal References"
 date: 2018-08-11T15:26:53-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

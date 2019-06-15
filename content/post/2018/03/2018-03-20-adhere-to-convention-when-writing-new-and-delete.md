@@ -2,7 +2,7 @@
 title: "Item-51 Adhere to convention when writing new and delete"
 date: 2018-03-20T14:32:24-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

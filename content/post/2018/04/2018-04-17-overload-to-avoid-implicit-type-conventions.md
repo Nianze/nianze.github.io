@@ -2,7 +2,7 @@
 title: "[MECpp]Item-21 Overload to Avoid Implicit Type Conventions"
 date: 2018-04-17T15:42:12-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

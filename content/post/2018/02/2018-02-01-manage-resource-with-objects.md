@@ -2,7 +2,7 @@
 title: "Item-13 Use objects to manage resources"
 date: 2018-02-01T18:20:10-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

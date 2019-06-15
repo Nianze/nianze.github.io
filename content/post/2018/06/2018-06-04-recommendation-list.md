@@ -2,7 +2,7 @@
 title: "第一次上CHH的门户"
 date: 2018-06-06T01:06:12-04:00
 categories:
-- article
+- technology
 - thoughts
 tags:
 - camera

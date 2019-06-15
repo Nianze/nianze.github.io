@@ -2,11 +2,9 @@
 title: "一个大坑"
 date: 2018-04-25T21:44:06-04:00
 categories:
-- article
 - thoughts
 tags:
 - music
-- AI
 slug: a big step
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-04/2018-04-25-nyu-phd.jpg

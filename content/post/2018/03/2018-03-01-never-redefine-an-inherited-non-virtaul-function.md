@@ -2,7 +2,7 @@
 title: "Item-36 Never redefine an inherited non-virtaul function"
 date: 2018-03-01T20:22:17-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

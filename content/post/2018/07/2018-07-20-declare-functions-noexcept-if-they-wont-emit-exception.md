@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-14 Declare Functions Noexcept if They Won't Emit Exception"
 date: 2018-07-20T19:50:39-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "Item-40 Use multiple inheritance judiciously"
 date: 2018-03-06T17:35:59-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

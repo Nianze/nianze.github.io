@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-17 Understand Special Member Function Generation"
 date: 2018-07-25T20:26:53-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

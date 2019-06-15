@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-6 Use the Explicitly Typed Initializer Idiom when auto deduces undesired types"
 date: 2018-07-08T13:32:48-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

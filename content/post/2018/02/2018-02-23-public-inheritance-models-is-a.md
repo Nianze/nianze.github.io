@@ -2,7 +2,7 @@
 title: Item-32 Make sure public inheritance models "Is-A"
 date: 2018-02-23T12:59:53-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

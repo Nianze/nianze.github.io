@@ -2,7 +2,7 @@
 title: "Item-20 Perfer pass-by-reference-to-const to pass-by-value"
 date: 2018-02-08T16:26:33-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

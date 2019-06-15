@@ -2,7 +2,7 @@
 title: "[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects"
 date: 2018-05-01
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

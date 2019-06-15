@@ -2,7 +2,7 @@
 title: "[MECpp]Item-33 Make Non-Leaf Classes Abstract"
 date: 2018-05-21T18:27:39-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "A Brief Review of Dynamo"
 date: 2018-07-01T23:03:34-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

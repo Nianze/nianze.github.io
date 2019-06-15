@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-8 Prefer Nullptr to 0 and NULL"
 date: 2018-07-11T18:03:51-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

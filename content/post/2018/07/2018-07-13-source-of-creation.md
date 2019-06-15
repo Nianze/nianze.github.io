@@ -2,10 +2,9 @@
 title: "创作欲望本质是什么？"
 date: 2018-07-13
 categories:
-- article
 - thoughts
 tags:
-- creative desire
+- creative
 slug: the source of creative desire
 autoThumbnailImage: true
 thumbnailImagePosition: center

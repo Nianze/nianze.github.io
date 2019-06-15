@@ -2,7 +2,7 @@
 title: "Item-19 Treat class design as type design"
 date: 2018-02-07T13:47:07-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

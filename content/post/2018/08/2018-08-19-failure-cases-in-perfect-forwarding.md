@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-30 Failure Cases in Perfect Forwarding"
 date: 2018-08-19T16:10:34-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

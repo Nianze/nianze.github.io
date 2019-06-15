@@ -2,7 +2,7 @@
 title: "Item-26 Postpone variable definitions as long as possible"
 date: 2018-02-14T10:50:18-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

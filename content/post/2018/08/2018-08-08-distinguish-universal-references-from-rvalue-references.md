@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-24 Distinguish Universal References From Rvalue References"
 date: 2018-08-08T18:56:09-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

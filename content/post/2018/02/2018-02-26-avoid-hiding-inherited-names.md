@@ -2,7 +2,7 @@
 title: "Item-33 Avoid hiding inherited names"
 date: 2018-02-26T20:18:55-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

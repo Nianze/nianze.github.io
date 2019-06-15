@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-5 Prefer Auto to Explicit Type Declarations"
 date: 2018-07-07T13:33:06-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "Item-23 Prefer non-member non-friend function to member function"
 date: 2018-02-11T21:33:28-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

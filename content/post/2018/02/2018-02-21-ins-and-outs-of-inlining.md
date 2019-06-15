@@ -2,7 +2,7 @@
 title: "Item-30 Understand ins and outs of inlining"
 date: 2018-02-21
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

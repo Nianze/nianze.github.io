@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New"
 date: 2018-08-02T18:45:53-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-23 Understand std::Move and std::Forward"
 date: 2018-08-07T17:57:26-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

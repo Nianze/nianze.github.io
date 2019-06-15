@@ -2,7 +2,7 @@
 title: "[MECpp]Item-28 Smart Pointers"
 date: 2018-05-05T16:38:03-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

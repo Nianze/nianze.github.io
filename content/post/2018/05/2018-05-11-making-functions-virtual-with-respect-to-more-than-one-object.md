@@ -2,7 +2,7 @@
 title: "[MECpp]Item-31 Making Functions Virtual With Respect to More Than One Object"
 date: 2018-05-11
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

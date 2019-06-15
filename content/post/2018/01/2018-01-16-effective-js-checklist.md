@@ -3,7 +3,7 @@ title: "Effective JavaScript Checklist"
 date: 2018-01-16T18:42:21-05:00
 draft: true
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

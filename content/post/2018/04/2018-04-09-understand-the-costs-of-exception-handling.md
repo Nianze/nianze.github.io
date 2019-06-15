@@ -2,7 +2,7 @@
 title: "[MECpp]Item-15 Understand the Costs of Exception Handling"
 date: 2018-04-09T18:10:06-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title:  "[MECpp]Item-1 Distinguish Between Pointers and References"
 date: 2018-03-22T16:47:15-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

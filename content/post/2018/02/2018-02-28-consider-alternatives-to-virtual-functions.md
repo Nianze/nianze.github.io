@@ -2,7 +2,7 @@
 title: "Item-35 Consider Alternatives to Virtual Functions"
 date: 2018-02-28T20:27:02-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

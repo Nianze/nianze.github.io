@@ -2,7 +2,7 @@
 title: "Item-16 Use the same form in corresponding uses of new and delete"
 date: 2018-02-04
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

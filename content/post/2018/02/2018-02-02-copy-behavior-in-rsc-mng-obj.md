@@ -2,7 +2,7 @@
 title: "Item-14 Copy behavior in resource-managing classes"
 date: 2018-02-02T13:27:32-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

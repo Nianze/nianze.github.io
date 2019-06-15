@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-3 Understand Decltype"
 date: 2018-07-05T18:59:39-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

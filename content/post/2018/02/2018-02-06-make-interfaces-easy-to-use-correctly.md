@@ -2,7 +2,7 @@
 title: "Item-18 Make interfaces easy to use correctly and hard to use incorrectly"
 date: 2018-02-06T19:05:53-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

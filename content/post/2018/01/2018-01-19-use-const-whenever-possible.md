@@ -2,7 +2,7 @@
 title: "Item-3 Use const whenever possible"
 date: 2018-01-19T14:31:40-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

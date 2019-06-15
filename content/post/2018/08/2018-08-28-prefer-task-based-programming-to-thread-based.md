@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based"
 date: 2018-08-28T10:19:06-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

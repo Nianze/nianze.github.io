@@ -2,7 +2,7 @@
 title: Substring type problem's template
 date: 2016-11-08
 categories:
-- article
+- technology
 - coding
 tags:
 - algorithm

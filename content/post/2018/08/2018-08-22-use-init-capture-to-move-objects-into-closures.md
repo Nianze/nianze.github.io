@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-32 Use Init Capture to Move Objects Into Closures"
 date: 2018-08-22T18:24:02-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

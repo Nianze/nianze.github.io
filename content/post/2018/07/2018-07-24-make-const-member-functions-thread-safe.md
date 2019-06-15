@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-16 Make Const Member Functions Thread Safe"
 date: 2018-07-24T10:26:02-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

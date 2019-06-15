@@ -2,7 +2,7 @@
 title: Binary search review
 date: 2016-12-29
 categories:
-- article
+- technology
 - coding
 tags:
 - algorithm

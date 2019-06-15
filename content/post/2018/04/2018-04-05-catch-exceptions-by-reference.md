@@ -2,7 +2,7 @@
 title: "[MECpp]Item-13 Catch Exceptions by Reference"
 date: 2018-04-05T18:57:13-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

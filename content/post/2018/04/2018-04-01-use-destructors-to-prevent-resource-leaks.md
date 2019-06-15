@@ -2,7 +2,7 @@
 title: "[MECpp]Item-9 Use Destructors to Prevent Resource Leaks"
 date: 2018-04-01
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

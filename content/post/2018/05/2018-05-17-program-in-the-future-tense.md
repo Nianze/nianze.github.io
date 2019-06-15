@@ -2,7 +2,7 @@
 title: "[MECpp]Item-32 Program in the Future Tense"
 date: 2018-05-17T19:26:17-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

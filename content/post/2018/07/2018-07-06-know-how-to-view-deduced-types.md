@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-4 Know How to View Deduced Types"
 date: 2018-07-06T10:08:00-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

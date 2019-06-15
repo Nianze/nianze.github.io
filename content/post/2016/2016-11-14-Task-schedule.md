@@ -2,7 +2,7 @@
 title: Task schedule - greedy algorithm
 date: 2016-11-14
 categories:
-- article
+- technology
 - coding
 tags:
 - algorithm

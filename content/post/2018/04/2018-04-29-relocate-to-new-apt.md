@@ -2,10 +2,8 @@
 title: "搬了个家"
 date: 2018-04-29
 categories:
-- article
 - thoughts
 tags:
-- relocation
 slug: relocation to m2
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-04/2018-04-29/internal.jpeg

@@ -2,7 +2,7 @@
 title: "Item-52 Write placement delete if you write placement new"
 date: 2018-03-21T15:48:12-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

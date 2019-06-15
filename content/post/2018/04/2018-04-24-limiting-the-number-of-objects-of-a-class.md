@@ -2,7 +2,7 @@
 title: "[MECpp]Item-26 Limiting the Number of Objects of a Class"
 date: 2018-04-24T15:03:26-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

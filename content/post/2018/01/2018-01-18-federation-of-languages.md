@@ -2,7 +2,7 @@
 title: "Item-0 Federation of languages"
 date: 2018-01-18T20:01:47-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "Item-9 不要在构造函数和析构函数中触发虚函数"
 date: 2018-01-27T21:03:05-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

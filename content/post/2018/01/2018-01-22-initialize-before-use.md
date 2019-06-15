@@ -2,7 +2,7 @@
 title: "Item-4 Initialize objects before they're used"
 date: 2018-01-22T18:47:54-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

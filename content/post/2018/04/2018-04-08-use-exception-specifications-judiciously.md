@@ -2,7 +2,7 @@
 title: "[MECpp]Item-14 Use Exception Specifications Judiciously"
 date: 2018-04-08T23:51:00-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

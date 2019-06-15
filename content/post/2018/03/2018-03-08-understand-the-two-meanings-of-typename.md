@@ -2,7 +2,7 @@
 title: "Item-42 Understand the two meanings of typename"
 date: 2018-03-08T19:19:28-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

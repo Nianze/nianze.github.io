@@ -2,7 +2,7 @@
 title: "[MECpp]Item-5 Be Wary of User Defined Conversion Functions"
 date: 2018-03-27T18:53:56-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

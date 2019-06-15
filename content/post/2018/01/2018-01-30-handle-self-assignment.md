@@ -2,7 +2,7 @@
 title: "Item-11 Handle self assignment in operator="
 date: 2018-01-30T18:34:01-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

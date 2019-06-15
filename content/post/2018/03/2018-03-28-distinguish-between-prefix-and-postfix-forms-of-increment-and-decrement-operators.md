@@ -2,7 +2,7 @@
 title: "[MECpp]Item-6 Distinguish Between Prefix and Postfix Forms of Increment and Decrement Operators"
 date: 2018-03-28T13:03:10-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

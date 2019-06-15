@@ -2,7 +2,7 @@
 title: "Item-38 Model 'has-a' or 'is-implemented-in-terms-of' through composition"
 date: 2018-03-04T15:49:31-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

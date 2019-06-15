@@ -2,7 +2,7 @@
 title: "Item-17 Store newed objects in smart pointers in standalone statements"
 date: 2018-02-05T18:04:38-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

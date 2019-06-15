@@ -2,7 +2,7 @@
 title: "[MECpp]Item-23 Consider Alternative Libraries"
 date: 2018-04-19T13:32:15-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

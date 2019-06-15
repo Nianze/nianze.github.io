@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-28 Understand Reference Collapsing"
 date: 2018-08-17T19:46:25-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

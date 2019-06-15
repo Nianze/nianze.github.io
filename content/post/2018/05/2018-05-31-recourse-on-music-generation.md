@@ -2,11 +2,10 @@
 title: "A simple archive for music generation"
 date: 2018-05-31T16:07:41-04:00
 categories:
-- article
-- thoughts
+- music
+- notes
 tags:
 - music
-- AI
 - recourse
 slug: music generation archive
 autoThumbnailImage: true

@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-33 Use decltype on auto&& parameters to std::forward them"
 date: 2018-08-23T21:44:29-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

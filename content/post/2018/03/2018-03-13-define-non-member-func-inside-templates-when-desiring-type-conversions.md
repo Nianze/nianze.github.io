@@ -2,7 +2,7 @@
 title: "Item-46 Define non-member function inside templates when type conversions are desired"
 date: 2018-03-13T12:23:40-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

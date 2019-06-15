@@ -2,7 +2,7 @@
 title: "Item-49 Understand the behavior of the new handler"
 date: 2018-03-16T19:52:09-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

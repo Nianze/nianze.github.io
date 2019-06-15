@@ -2,7 +2,7 @@
 title: "Item-5 What functions C++ silently generates"
 date: 2018-01-23T18:42:07-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

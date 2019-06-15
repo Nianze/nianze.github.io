@@ -2,7 +2,7 @@
 title: "Item-10 Have assignment operators return a reference to *this"
 date: 2018-01-29T18:17:34-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

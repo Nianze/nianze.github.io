@@ -2,7 +2,7 @@
 title: "Item-31 Minimize compilation dependencies between files"
 date: 2018-02-22
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

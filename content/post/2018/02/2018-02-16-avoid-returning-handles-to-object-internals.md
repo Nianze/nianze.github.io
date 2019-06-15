@@ -2,7 +2,7 @@
 title: "Item-28 Avoid returning handles to object internals"
 date: 2018-02-16T12:26:14-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

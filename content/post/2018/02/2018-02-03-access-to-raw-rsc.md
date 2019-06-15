@@ -2,7 +2,7 @@
 title: "Item-15 Provide access to raw resource in resource-managing classes"
 date: 2018-02-03
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

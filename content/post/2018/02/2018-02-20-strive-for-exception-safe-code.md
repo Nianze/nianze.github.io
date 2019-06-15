@@ -2,7 +2,7 @@
 title: "Item-29 Strive for exception-safe code"
 date: 2018-02-20T18:23:38-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

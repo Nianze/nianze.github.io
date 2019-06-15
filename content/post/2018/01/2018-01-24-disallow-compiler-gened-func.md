@@ -2,7 +2,7 @@
 title: "Item-6 Disallow unwanted compiler-generated functions"
 date: 2018-01-24T16:18:59-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

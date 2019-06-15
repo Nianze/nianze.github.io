@@ -2,7 +2,7 @@
 title: Valid tree
 date: 2016-10-29
 categories:
-- article
+- technology
 - coding
 tags:
 - algorithm

@@ -2,7 +2,7 @@
 title: Remove Invalid Parentheses
 date: 2016-11-06
 categories:
-- article
+- technology
 - coding
 tags:
 - algorithm

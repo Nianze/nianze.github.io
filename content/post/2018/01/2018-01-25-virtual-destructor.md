@@ -2,7 +2,7 @@
 title: "Item-7 Declare destructor virtual in polymorphic base classes"
 date: 2018-01-25T18:04:14-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

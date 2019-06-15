@@ -2,7 +2,7 @@
 title: "Item-39 Use private inheritance judiciously"
 date: 2018-03-05T18:42:43-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

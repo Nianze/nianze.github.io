@@ -2,7 +2,6 @@
 title: "2018进度表"
 date: 2018-02-06T11:44:42-05:00
 categories:
-- article
 - thoughts
 tags:
 - technique

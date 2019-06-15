@@ -2,7 +2,7 @@
 title: "Item-48 Be aware of template metaprogramming"
 date: 2018-03-15T23:00:22-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

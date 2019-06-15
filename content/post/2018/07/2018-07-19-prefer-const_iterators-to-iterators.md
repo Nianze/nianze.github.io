@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-13 Prefer Const_iterators to Iterators"
 date: 2018-07-19T18:48:52-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

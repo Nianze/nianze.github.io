@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-12 Declare Overriding Functions Override"
 date: 2018-07-18T19:19:07-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

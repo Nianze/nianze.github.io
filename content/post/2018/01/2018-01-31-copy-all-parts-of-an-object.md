@@ -2,7 +2,7 @@
 title: "Item-12 Copy all parts of an object"
 date: 2018-01-31T18:16:11-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

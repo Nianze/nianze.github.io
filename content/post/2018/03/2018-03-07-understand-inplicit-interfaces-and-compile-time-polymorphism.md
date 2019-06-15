@@ -2,7 +2,7 @@
 title: "Item-41 Understand inplicit interfaces and compile time polymorphism"
 date: 2018-03-07T14:21:33-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

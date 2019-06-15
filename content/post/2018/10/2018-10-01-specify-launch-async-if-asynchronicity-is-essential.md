@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential"
 date: 2018-10-01T18:33:54-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

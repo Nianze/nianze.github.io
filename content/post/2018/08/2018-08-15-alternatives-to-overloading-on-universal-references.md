@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-27 Alternatives to Overloading on Universal References"
 date: 2018-08-15T18:25:27-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

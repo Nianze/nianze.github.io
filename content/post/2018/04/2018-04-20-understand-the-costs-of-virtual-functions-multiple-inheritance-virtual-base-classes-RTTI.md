@@ -2,7 +2,7 @@
 title: "[MECpp]Item-24 Understand the Costs of Virtual Functions, Multiple Inheritance, Virtual Base Classes, and RTTI"
 date: 2018-04-20T15:32:45-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "[MECpp]Item-22 Consider Using op= Instead of Stand Alone op"
 date: 2018-04-18T14:09:10-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

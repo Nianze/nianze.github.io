@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-19 Use std::Shared_ptr for Shared-ownership Resource Management"
 date: 2018-07-31T17:59:25-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

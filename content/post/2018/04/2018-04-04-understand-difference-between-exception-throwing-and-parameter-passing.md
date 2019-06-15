@@ -2,7 +2,7 @@
 title: "[MECpp]Item-12 Understand How Throwing an Exception Differs From Passing a Parameter or Calling a Virtual Function"
 date: 2018-04-04T11:28:07-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

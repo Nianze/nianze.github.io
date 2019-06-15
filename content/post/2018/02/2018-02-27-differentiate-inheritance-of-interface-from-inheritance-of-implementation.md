@@ -2,7 +2,7 @@
 title: "Item-34 Differentiate between inheritance of interface and inheritance of implementation"
 date: 2018-02-27T20:53:53-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: Machine learning overview
 date: 2018-01-04
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

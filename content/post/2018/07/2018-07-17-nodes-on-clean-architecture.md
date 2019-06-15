@@ -2,7 +2,7 @@
 title: "Nodes on Clean Architecture"
 date: 2018-07-17T19:45:47-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

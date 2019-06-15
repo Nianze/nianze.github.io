@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-15 Use Constexpr Whenever Possible"
 date: 2018-07-23T19:27:53-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

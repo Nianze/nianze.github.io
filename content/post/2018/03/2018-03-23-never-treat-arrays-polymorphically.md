@@ -2,7 +2,7 @@
 title: "[MECpp]Item-3 Never Treat Arrays Polymorphically"
 date: 2018-03-23T18:59:16-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

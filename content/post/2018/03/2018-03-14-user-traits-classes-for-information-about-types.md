@@ -2,7 +2,7 @@
 title: "Item-47 Use traits classes for information about types"
 date: 2018-03-14T18:49:03-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

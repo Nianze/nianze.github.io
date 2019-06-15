@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-26 Avoid Overloading on Universal References"
 date: 2018-08-13T18:54:05-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

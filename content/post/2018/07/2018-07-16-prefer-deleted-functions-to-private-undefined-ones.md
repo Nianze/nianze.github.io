@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-11 Prefer Deleted Functions to Private Undefined Ones"
 date: 2018-07-16T21:22:57-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

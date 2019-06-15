@@ -2,7 +2,7 @@
 title: "Item-44 Factor parameter-independent code out of templates"
 date: 2018-03-10T20:24:42-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

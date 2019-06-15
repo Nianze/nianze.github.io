@@ -2,7 +2,7 @@
 title: "[MECpp]Item-29 Reference Counting"
 date: 2018-05-07
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

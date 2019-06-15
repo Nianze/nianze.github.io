@@ -2,7 +2,7 @@
 title: "[MECpp]Item-20 Facilitate the Return Value Optimization"
 date: 2018-04-16
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

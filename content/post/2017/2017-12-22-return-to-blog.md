@@ -2,7 +2,6 @@
 title: 一些近况
 date: 2017-12-22
 categories:
-- article
 - thoughts
 tags:
 - photography

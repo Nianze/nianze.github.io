@@ -2,7 +2,7 @@
 title: "[MECpp]Item-18 Amortize the Cost of Expected Computations"
 date: 2018-04-12T15:31:55-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

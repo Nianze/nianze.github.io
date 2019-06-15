@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-39 Consider Void Futures for One-Shot Event Communication"
 date: 2018-10-11T19:23:06-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

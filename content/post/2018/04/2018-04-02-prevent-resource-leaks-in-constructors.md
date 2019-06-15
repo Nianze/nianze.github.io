@@ -2,7 +2,7 @@
 title: "[MECpp]Item-10 Prevent Resource Leaks in Constructors"
 date: 2018-04-02T15:56:25-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

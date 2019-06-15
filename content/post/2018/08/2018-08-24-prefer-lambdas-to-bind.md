@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-34 Prefer Lambdas to std::bind"
 date: 2018-08-24T20:07:38-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

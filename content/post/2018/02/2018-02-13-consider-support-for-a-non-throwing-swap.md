@@ -2,7 +2,7 @@
 title: "Item-25 Consider support for a non-throwing swap"
 date: 2018-02-13T19:11:15-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

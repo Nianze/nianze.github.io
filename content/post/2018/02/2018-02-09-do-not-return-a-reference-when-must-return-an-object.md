@@ -2,7 +2,7 @@
 title: "Item-21 Don't return a reference when we have to return an object"
 date: 2018-02-09T18:02:23-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-10 Prefer Scoped enums to Unscopded enums"
 date: 2018-07-14T13:33:33-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

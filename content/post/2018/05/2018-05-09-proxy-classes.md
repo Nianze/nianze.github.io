@@ -2,7 +2,7 @@
 title: "[MECpp]Item-30 Proxy Classes"
 date: 2018-05-09
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

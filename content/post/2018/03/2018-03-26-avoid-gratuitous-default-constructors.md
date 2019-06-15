@@ -2,7 +2,7 @@
 title: "[MECpp]Item-4 Avoid Gratuitous Default Constructors"
 date: 2018-03-26T11:21:08-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

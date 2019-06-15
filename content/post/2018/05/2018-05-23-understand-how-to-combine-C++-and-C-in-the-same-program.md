@@ -2,7 +2,7 @@
 title: "[MECpp]Item-34 Understand How to Combine C++ and C in the Same Program"
 date: 2018-05-23T18:38:10-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

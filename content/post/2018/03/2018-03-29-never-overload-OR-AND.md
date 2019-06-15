@@ -2,7 +2,7 @@
 title: "[MECpp]Item-7 Never Overload \'&&\', \'||\', or \',\'"
 date: 2018-03-29T11:18:24-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

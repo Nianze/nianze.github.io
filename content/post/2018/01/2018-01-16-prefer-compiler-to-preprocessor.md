@@ -2,7 +2,7 @@
 title: "Item-1 Prefer consts, enums and inlines to #defines"
 date: 2018-01-16T18:41:58-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

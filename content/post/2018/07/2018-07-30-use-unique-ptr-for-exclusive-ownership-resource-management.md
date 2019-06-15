@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management"
 date: 2018-07-30T15:18:04-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

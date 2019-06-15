@@ -2,7 +2,7 @@
 title: "Item-50 Understand when it makes sense to replace new and delete"
 date: 2018-03-19T10:54:04-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

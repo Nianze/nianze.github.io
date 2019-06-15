@@ -2,7 +2,7 @@
 title: "[MECpp]Item-19 Understand the Origin of Temporary Objects"
 date: 2018-04-13T17:06:28-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

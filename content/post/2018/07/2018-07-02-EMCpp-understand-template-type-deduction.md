@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-1 Understand Template Type Deduction"
 date: 2018-07-02T22:44:34-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

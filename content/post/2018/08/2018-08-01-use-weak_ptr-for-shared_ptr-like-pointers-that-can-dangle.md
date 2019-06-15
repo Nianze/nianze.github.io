@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-20 Use Weak_ptr for Shared_ptr Like Pointers That Can Dangle"
 date: 2018-08-01T18:44:19-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

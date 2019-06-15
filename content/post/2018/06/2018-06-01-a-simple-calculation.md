@@ -2,10 +2,8 @@
 title: "一个油腻中年大叔在儿童节的胡思乱想"
 date: 2018-06-01
 categories:
-- article
 - thoughts
 tags:
-- time
 - death
 slug: a simple calculation
 autoThumbnailImage: true

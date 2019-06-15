@@ -2,7 +2,7 @@
 title: "Item-27 Minimize_casting"
 date: 2018-02-15T17:43:53-05:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

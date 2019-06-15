@@ -2,7 +2,7 @@
 title: "Trade Beats"
 date: 2018-12-16
 categories:
-- article
+- technology
 - coding
 tags:
 - music

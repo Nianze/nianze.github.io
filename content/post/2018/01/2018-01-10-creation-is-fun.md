@@ -2,7 +2,6 @@
 title: 当谈论有趣时，我在谈论什么
 date: 2018-01-10
 categories:
-- article
 - thoughts
 tags:
 - coding

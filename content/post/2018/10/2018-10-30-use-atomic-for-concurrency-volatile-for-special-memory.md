@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory"
 date: 2018-10-30T19:05:01-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

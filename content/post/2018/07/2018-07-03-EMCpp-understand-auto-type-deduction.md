@@ -2,7 +2,7 @@
 title: "[EMCpp]Item-2 Understand Auto Type Deduction"
 date: 2018-07-03T10:07:13-04:00
 categories:
-- article
+- technology
 - coding
 tags:
 - technique

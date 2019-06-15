@@ -2,11 +2,8 @@
 title: "人间不值得。。。吗？"
 date: 2018-01-28
 categories:
-- article
 - thoughts
 tags:
-- 虚无
-- 荒诞
 - 意义
 slug: worth it or not
 thumbnailImagePosition: right
