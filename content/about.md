@@ -57,11 +57,14 @@ comments: false
 
 ## Education
 
+**New York University**
+| Master of Music - Music Technology
+
 **Cornell University**
-| M.Eng. Electrical and Computer Engineering
+| Master of Engineer - Electrical and Computer Engineering
 
 **Southeast University**
-| B.Eng. Electronic Science & Technology
+| Bachelor of Engineer - Electronic Science & Technology
 
 Computer always fascinates me. I chose Electronic Science & Technology as my undergrad major largely because I want to better understand the basic of computer hardware. 
 
