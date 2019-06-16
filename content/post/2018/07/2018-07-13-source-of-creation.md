@@ -4,7 +4,7 @@ date: 2018-07-13
 categories:
 - thoughts
 tags:
-- creative
+- meaning
 slug: the source of creative desire
 autoThumbnailImage: true
 thumbnailImagePosition: center

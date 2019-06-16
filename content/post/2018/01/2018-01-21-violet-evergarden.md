@@ -3,11 +3,10 @@ title: 紫羅蘭永恆花園
 date: 2018-01-21T23:25:09-05:00
 categories:
 - music
-- multi-instruments
+- instruments
 tags:
 - music
 - clarinet
-- tin whistle
 slug: violet snow
 autoThumbnailImage: false
 thumbnailImagePosition: right

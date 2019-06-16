@@ -6,7 +6,6 @@ categories:
 - coding
 tags:
 - technique
-- hugo
 slug: personal site with hugo
 autoThumbnailImage: false
 thumbnailImagePosition: top

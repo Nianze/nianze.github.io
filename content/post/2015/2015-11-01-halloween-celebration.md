@@ -3,10 +3,9 @@ title: Halloween celebration
 date: 2015-11-01
 categories:
 - music
-- clarinet
+- instruments
 tags:
 - clarinet
-- 梶浦由纪
 - music
 slug: Halloween celebration
 autoThumbnailImage: false

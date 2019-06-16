@@ -3,10 +3,9 @@ title: End of my first semester in Cornell
 date: 2015-12-12
 categories:
 - music
-- clarinet
+- instruments
 tags:
 - clarinet
-- 梶浦由纪
 - music
 slug: end of semester
 autoThumbnailImage: false

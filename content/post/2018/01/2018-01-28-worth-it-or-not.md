@@ -4,7 +4,7 @@ date: 2018-01-28
 categories:
 - thoughts
 tags:
-- 意义
+- meaning
 slug: worth it or not
 thumbnailImagePosition: right
 thumbnailImage: /images/2018/2018-01/2018-01-28/2018-01-28.jpg

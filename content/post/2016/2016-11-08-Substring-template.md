@@ -6,8 +6,6 @@ categories:
 - coding
 tags:
 - algorithm
-- two pointer
-- java
 slug: substring template
 thumbnailImagePosition: right
 thumbnailImage: /images/2016/2016-11-08.jpg

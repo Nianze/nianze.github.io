@@ -3,7 +3,7 @@ title: 填个去年的坑
 date: 2016-01-08
 categories:
 - music
-- clarinet
+- instruments
 tags:
 - clarinet
 - music

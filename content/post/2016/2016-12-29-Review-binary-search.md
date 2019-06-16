@@ -6,8 +6,6 @@ categories:
 - coding
 tags:
 - algorithm
-- binary search
-- java
 slug: binary search review
 thumbnailImagePosition: right
 thumbnailImage: /images/2016/2016-12-29.jpg

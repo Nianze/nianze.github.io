@@ -6,7 +6,6 @@ categories:
 - coding
 tags:
 - technique
-- architecture
 slug: Nodes on Clean Architecture
 autoThumbnailImage: true
 thumbnailImagePosition: right

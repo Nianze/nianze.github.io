@@ -3,11 +3,10 @@ title: New year cover - Aesthetic
 date: 2016-01-01
 categories:
 - music
-- clarinet
+- instruments
 tags:
 - clarinet
 - music
-- 澤野弘之
 slug: aesthetic
 autoThumbnailImage: false
 thumbnailImagePosition: right

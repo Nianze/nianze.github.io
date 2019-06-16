@@ -3,11 +3,10 @@ title: Spirited away
 date: 2016-02-15
 categories:
 - music
-- clarinet
+- instruments
 tags:
 - clarinet
 - music
-- 久石譲
 slug: Spirited away
 autoThumbnailImage: false
 thumbnailImagePosition: right

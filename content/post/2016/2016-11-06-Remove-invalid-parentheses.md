@@ -6,8 +6,6 @@ categories:
 - coding
 tags:
 - algorithm
-- DFS/BFS
-- java
 slug: invalid parentheses
 thumbnailImagePosition: right
 thumbnailImage: /images/2016/2016-11-06.jpg

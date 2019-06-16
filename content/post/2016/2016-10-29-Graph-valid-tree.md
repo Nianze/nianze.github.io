@@ -6,9 +6,6 @@ categories:
 - coding
 tags:
 - algorithm
-- DFS/BFS
-- Union-find
-- java
 slug: valid tree
 thumbnailImagePosition: right
 thumbnailImage: /images/2016/2016-10-29.jpg

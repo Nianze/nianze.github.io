@@ -3,7 +3,7 @@ title: "Basic Musicianship Review"
 date: 2019-06-15T19:39:39-04:00
 categories:
 - music
-- theory
+- notes
 tags:
 - music
 slug: Basic Musicianship Review

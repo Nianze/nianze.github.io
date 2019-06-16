@@ -6,8 +6,6 @@ categories:
 - coding
 tags:
 - algorithm
-- deque
-- java
 slug: dueque
 thumbnailImagePosition: right
 thumbnailImage: /images/2016/2016-10-30.jpg

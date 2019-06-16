@@ -3,7 +3,7 @@ title: New semester is coming
 date: 2016-01-25
 categories:
 - music
-- clarinet
+- instruments
 tags:
 - clarinet
 - music

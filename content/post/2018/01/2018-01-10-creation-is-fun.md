@@ -4,9 +4,7 @@ date: 2018-01-10
 categories:
 - thoughts
 tags:
-- coding
-- music
-- photography
+- meaning
 slug: creation is fun
 autoThumbnailImage: false
 thumbnailImagePosition: right

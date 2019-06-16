@@ -6,8 +6,6 @@ categories:
 - coding
 tags:
 - technique
-- Dynamo
-- nosql
 slug: A Brif Review of Dynamo
 autoThumbnailImage: true
 thumbnailImagePosition: right

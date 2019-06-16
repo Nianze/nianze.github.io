@@ -3,7 +3,7 @@ title: Early collection of clarinet cover
 date: 2015-07-28
 categories:
 - music
-- clarinet
+- instruments
 tags:
 - clarinet
 - vocaloid

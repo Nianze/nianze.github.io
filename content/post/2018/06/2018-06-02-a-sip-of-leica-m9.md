@@ -6,8 +6,6 @@ categories:
 - impressions
 tags:
 - camera
-- leica
-- 开箱体验
 slug: a sip of leica m9
 thumbnailImagePosition: center
 thumbnailImage: /images/2018/2018-06/02/title-image-1.jpg
