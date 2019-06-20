@@ -13,10 +13,11 @@ thumbnailImage: /images/2016/2016-11-08.jpg
 
 Two pointer template to solve substring problem.
 <!--more-->
+<!-- toc -->
 
-### LC76 Minimum Window Substring
+# LC76 Minimum Window Substring
 
-#### Method: Two Pointer with map
+## Method: Two Pointer with map
 
 1. Scanning from left to right, keep the head and length of minimum window substring so far.
 2. Use an `int[256]` array or a `HashMap` to store target charater counts.
@@ -37,7 +38,7 @@ public String minWindow(String s, String t) {
 }    
 ```
 
-### Template[^1]
+# Template[^1]
 
 For most substring problem, we are given a string and need to find a substring of it which satisfy some restrictions. A general way is to use a hashmap assisted with two pointers.
 

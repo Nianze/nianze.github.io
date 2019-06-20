@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-02/2018-02-22.gif
 
 To minimize compilation dependencies, depend on declarations instead of definitions via techniques such as Handle classes and Interface classes.
 <!--more-->
+<!-- toc -->
 
 C++ doesn't do a very good job of separating interfaces from implementations. A  class definition specifies not only a class interface but also a fair number of implementation details. For example:
 
@@ -75,7 +76,7 @@ There're two problems with this idea:
 
 The essence of minimizing compilation dependencies it to truly separate interface from implementation, which means we have to replace dependencies on _definitions_ with dependencies on _declarations_.
 
-## Handle classes
+# Handle classes
 
 One way to hide the object implementation is through a pointer, in which case compilers allocate only enough space for a `pointer` when an object is defined:
 
@@ -156,7 +157,7 @@ std::string Person::name() const
 ...
 ```
 
-## Interface classes
+# Interface classes
 
 An alternative approach is to make `Person` a special kind of abstract base class called an _Interface class_, which typically has no data members, no constructors, a virtual destructor (item 7), and a set of pure virtual funcitons that specify the interface. The similar concept could be found in Java and .NET, except that C++ doesn't impose the restrictions on Interface classes as Java and .NET do[^3].
 
@@ -237,7 +238,7 @@ In order to use Interface classes:
 
 * another way to implement an Interface class involves multiple inheritance, a topic explored in item 40.
 
-## Cost of decoupling interfaces from implementations
+# Cost of decoupling interfaces from implementations
 
 The cost of Handle classes and Interface classes is the usual one in computer science: it costs us some speed at runtime, plus some additional memory per object. In addition, neither of them can get much use out of inline functions (item 30), since inline functions typically exists in header files while this item talks about how to hide implementation details like function bodies in header file.
 

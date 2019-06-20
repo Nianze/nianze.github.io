@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-16.gif
 
 `set-new-handler` allows you to specify a function to be called when memory allocation requests cannot be satisfied.
 <!--more-->
+<!-- toc -->
 
-## The basic
+# The basic
 
 If `operator new` can't satisfy a memory allocation request, it will call a client-specifiable error-handling function called a `new-handler` before throwing a `bad_alloc` exception. To specify this out-of-memory-handling function, clients call `set_new_handler`, a standard library function declared in `<new>`:
 
@@ -54,7 +55,7 @@ int main()
 }
 ```
 
-## Customize the `new-handler` per class
+# Customize the `new-handler` per class
 
 C++ has no support for class-specific new-handlers, so we implement this by ourselves: we have each class provide its own versions of `set_new_handler` (which allows clients to specify the customized `new-handler`) and `operator new` (which ensures the class-specific `new-handler` is used in place of the global `new-handler` when memory allocation request fails).
 
@@ -139,7 +140,7 @@ Widget::set_new_handler(0);  // set the Widget-specific new-handler to nothing (
 Widget *pw2 = new Widget;  // there's no new-handling func. for Widget now, so if mem. alloc. fails, throw an exception immediately
 ```
 
-## Traditional failure-yields-null alternative for `operator new`
+# Traditional failure-yields-null alternative for `operator new`
 
 Althought now it is specified to throw a `bad_alloc` exception, until 1993, C++ required that `operator new` return null when it way unable to allocate the requested memory. Unwilling to abandon the traditional behavior, the C++ standardization committee provided an alternative form of `operator new` called "nothrow" forms, in part because the forms employ `nothrow` objects defined in the header `<new>`:
 

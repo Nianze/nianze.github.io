@@ -17,6 +17,7 @@ thumbnailImage: /images/2018/2018-01/2018-01-04-ml.png
 
 My first post in the new `machine learning` series.
 <!--more-->
+<!-- toc -->
 
 Although I've chosen `https://nianze.ml` as my personal website domain name, I haven't really posted any article on **M**achine **L**earning at all, which may somehow be _misleading_. Considering it's new year and my website has just been re-designed, it's perfect time for new plans, so I've made a dicision to begin a new series related to `ml`: I'll write down learning notes during my self-study in machine learning. Recently I'm reading the book [_Hands-On Machine Learning with Scikit-Learn and TensorFlow_](https://www.safaribooksonline.com/library/view/hands-on-machine-learning/9781491962282/) by Aurélien Géron, which should be a good start for this new series. 
 
@@ -24,7 +25,7 @@ At first the post is intended to be written in Chinese, but considering there're
 
 As the first post in this series, let's just take a overview on machine learning system.
 
-## Types of machine learning
+# Types of machine learning
 
 There are broadly three ways to classify machine learning systems, and each of these three could be further categorized into multiple sub-categories:
 
@@ -63,7 +64,7 @@ Machine learning system
     └── model-based learning
 ```
 
-## Main challenges of machine learning
+# Main challenges of machine learning
 
 * Bad data
     * [Insufficient quantity](http://static.googleusercontent.com/media/research.google.com/fr//pubs/archive/35179.pdf) of training data
@@ -82,7 +83,7 @@ On the other side, to solve underfitting problem, we may consider:
 * feed better fetures
 * reduce the constraints (e.g., reducing the regularization hyperparameter)
 
-## Testing and validating
+# Testing and validating
 
 Usually we split data into three groups:
 
@@ -105,7 +106,7 @@ Further, we can use cross-validation technique to reuse data:
 5. measure the generalized error on the test set
 
 
-## Concept checkout:
+# Concept checkout:
 
 1. How would you define Machine Learning?
 	* ML is a system that can learn from data. Specifically, given performance measure, the learning will result in better performance at some tasks.

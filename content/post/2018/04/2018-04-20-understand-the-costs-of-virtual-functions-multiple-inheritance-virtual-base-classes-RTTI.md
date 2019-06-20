@@ -15,12 +15,13 @@ thumbnailImage: /images/2018/2018-04/2018-04-20.gif
 
 It's important to have a basic understanding of the cost of some C++ features that can have a noticeable impact on the size of objects and the speed at which member functions execute.
 <!--more-->
+<!-- toc -->
 
-## Virtual Functions
+# Virtual Functions
 
 Virtual function feature in C++ gives us the ability to execute the code corresponding to the dynamic type of the object on which the virtual function is invoked. Most implementations use _virtual tables_ (_vtbls_) and _virtual table pointers_ (_vptrs_). 
 
-#### Cost of vtbl
+## Cost of vtbl
 
 A vtble is usually an array of pointers to functions. Each class that declares or inherits virtual functions has its own vtbl, which holds pointers to the implementations of the virtual functions for that class.
 
@@ -87,7 +88,7 @@ Speaking of `inline`, it is worth noting that for all practical purposes, virtua
 * `virtual` means wait until **runtime** to see which function is called.
 * In practical real world situation, virtual function calls are made through _pointers_ or _reference_ to objects, which are not inlined; only the virtual functions invoked through _objects_ can be inlined, which is usually pointless.
 
-#### Cost of vptr
+## Cost of vptr
 
 Each object whose class declares virtual functions will be added by compilers a hidden member that points to the virtual table for that class, so we'll pay for an extra pointer indise each object that is of a class containing virtual functions:
 
@@ -125,11 +126,11 @@ will be translated by compilers like this (given compilers know the hidden membe
 
 On most machines this is almost as efficient as a non-virtual function call, with only a few more instructions, so the cost of calling a virtual function is basically the same as that of calling a function through a function pointer.
 
-#### Summary
+## Summary
 
 Both the per-class and the per-object space overhead for virtual functions increases, and the runtime invocation cost grows slightly.
 
-## Multiple Inheritance
+# Multiple Inheritance
 
 The same effect applies to multiple inheritance, except that things get more complex:
 
@@ -137,7 +138,7 @@ The same effect applies to multiple inheritance, except that things get more com
 * there are multiple vptrs within a single object (one per base class)
 * special vtbls must be generated for base classes in addition to the stand-alone vtbls
 
-## Virtual Base Classes
+# Virtual Base Classes
 
 Multiple inheritance often leads to the need for virtual base classes to eliminate the duplicated copies of base class in each deriving path.
 
@@ -202,7 +203,7 @@ Combining virtual base class with virtual table pointers introduced in "Cost of 
 
 Notice that in the above diagram there are only thre vptrs while four classes are involved, this is because  `D` can share the vptr with `B`. Most implementations take use of this to reduce the compiler-generated overhead.
 
-## RTTI
+# RTTI
 
 >RTTI (Runtime type identification) lets us discover information about objects and classes at runtime. The information is stored in an object of type `type_+info`, which can be accessed by using the `typeid` operator.
 

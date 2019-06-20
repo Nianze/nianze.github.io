@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-07/14.gif
 
 Enumerators of scoped `enum`s are visible only within the `enum`, convert to other types only with a cast, and always support forward-declared because their default underlying type is `int`.
 <!--more-->
+<!-- toc -->
 
-#### Scope
+# Scope
 
 Generally speaking, declaring a name inside curly braces limits the visibility of that name to the scope defined by the braces, with one exception: the C++98-style `enum`s, which lead to enumerator names leaking into the scope containing their `enum` definition, and thus have an official term - _unscoped_ `enum`s.
 
@@ -34,7 +35,7 @@ Color c = white; // error
 auto c = Color::white; // fine, type of c is Color
 ```
 
-#### Implicit conversion
+# Implicit conversion
 
 The fact that scoped `enum`s have strong typed enumerators results in their inability to implicitly convert to integral types (and, from there, to floating-point types), which behavior is otherwise permited in terms of unscoped `enum`s:
 
@@ -55,7 +56,7 @@ if (static_cast<double>(c) < 14.5 ) {  // odd code, but valid
 }
 ```
 
-#### Forward declaration
+# Forward declaration
 
 Technically speaking, both scoped and unscoped `enum`s may be forward-declared, except that unscoped ones need a bit of additional work - by specifying the underlying type for unscoped `enum`s[^1]:
 
@@ -72,7 +73,7 @@ void continueProcessing(Status s); // use of fwd-declared enum
 
 With the help of forward declaration, the header containing the declarations requires no recompilation if `Status`'s definition is revised. Furthermore, it is also possible that `continueProcessing`'s implementation need not be recompiled[^2].
 
-#### Twist
+# Twist
 
 There's still some situation where unscoped `enum`s may be useful: when referring to fields within C++11's `std::tuple`s. Suppose we have a tuple holding values for the name, email address, and reputation value for a user at a social networking website:
 

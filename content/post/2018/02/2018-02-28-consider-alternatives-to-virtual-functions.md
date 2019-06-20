@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-02/2018-02-28.gif
 
 Alternatives to virtual functions include the NVI idiom (as an example of the Template Method design pattern) and various forms of the Strategy design pattern.
 <!--more-->
+<!-- toc -->
 
 Suppose we want to implement a member function named `healthValue`, which will calculate the health value for different characters in differen ways in a video game. Declaring `healthValue` virtual seems the obvious way to design things:
 
@@ -38,7 +39,7 @@ Actually, except from this obvious design, there exists some alternatives. To na
 
 Let's take a look at the pros and cons of these alternatives.
 
-## The template method pattern via the non-virtual interface idiom
+# The template method pattern via the non-virtual interface idiom
 
 The _non-virtual interface (NVI) idiom_ argues that clients should call private virtual functions indirectly through public non-virtual member functions, which act like a _wrapper_ around the virtual functions. This is a particular manifestation of the more general design pattern known as Template Method[^1].
 
@@ -67,13 +68,13 @@ However, it's not strictly necessary to declare the virtual functions `private`:
 
 The advantage of the NVI idiom is in the ""do 'before' stuff" and  "do 'after' stuff" part in the code above, which enable the wrapper abilities to ensure that before a virtual function is called, the proper context is set up (e.g., locking a mutex, making a log entry, verifying the class invariants and function pereconditions, etc), and after the call is over, the context is cleaned up (e.g., unlocking a mutex, verifying function postconditions, etc). If letting clients call virtual functions directly, there's no good way to do these stuff.
 
-## The strategy pattern
+# The strategy pattern
 
 The NVI idiom is still using virtual functions to calculate a character's health. A more dramatic design assertion, such as the strategy pattern, says that calculating a character's health is independent of the character's type - the calculation need not to be part of the character.
 
 It is worth noting that, due to its being outside the `GameCharacter` hierarchy, the calculation has no special access to the internal parts of the object whose health it's calculating, so this design pattern works only if a character's health can be calculated based purely on information available through the character's public interface. Thus it may require the class's encapsulation to be weakened (e.g., make the non-member functions to be `friend`, or offer public accessor functions for class implementation that is previously hidden).
 
-### The strategy pattern via function pointers
+## The strategy pattern via function pointers
 
 ```cpp
 class GameCharacter; // forward declaration
@@ -102,7 +103,7 @@ The advantage of this approach is some interesting flexibility:
 * different instances of the same character type can have different health calculation functions installed
 * health calculation functions for a particular character may be changed at runtime. For example, `GameCharacter` might offer a member function `setHealthCalculator` that allowed replacement of the current health calculation function.
 
-### The strategy pattern via `TR1::function`
+## The strategy pattern via `TR1::function`
 
 To generalized the approach above, we could replace the function pointer `healthFunc` with an object of type `tr1::function`. As item 54 explains, such objects may hold _any callable entity_ (e.g., function pointer, function object, member function pointer) whose signature is compatible[^2] with the given target signature:
 
@@ -177,7 +178,7 @@ Here, the purpose of calling `tr1::bind` is that:
 * it adapts the `GameLevel::health` member function (which takes two parameters: an implicit `GameLevel` parameter that `this` points to, as well as another reference to a `GameCharacter` parameter) into the expected function signature (which should only take a single paramter: the `GameCharacter`) 
 * by passing `_1`, it specifies that when calling `GameLevel::health` for `ebg2`, always use `currentLevel` as the first parameter of `GameLevel` object
 
-### The "Classic" strategy pattern
+## The "Classic" strategy pattern
 
 The conventional approach to Strategy design pattern would be to make the health-calculation function a virtual member function of a separate health-calculation hierarchy with root being `HealthCalcFunc`, so that different health calculation algorithm could be implemented in the derived classes in this inheritance hierarchy. Each object of type `GameCharacter` just contains a pointer to an object from the `HealthCalcFunc` hierarchy:
 

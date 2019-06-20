@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-04/2018-04-08.gif
 
 Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.
 <!--more-->
+<!-- toc -->
 
-## The good points
+# The good points
 
 * Explicitly state what exception a function may throw  
 
@@ -36,7 +37,7 @@ Exception specifications provide a documentation aid and an enforcement mechanis
     }
     ```
 
-## The unwanted points
+# The unwanted points
 
 * The default behavior for `unexpected` is to call `terminate`, which by default will call `abort`, preventing possible high-level exception handlers from dealing with unexpected exceptions.
     
@@ -60,7 +61,7 @@ Exception specifications provide a documentation aid and an enforcement mechanis
     }
     ```
 
-## The solution
+# The solution
 
 To avoid calls to `unexpected`:
 

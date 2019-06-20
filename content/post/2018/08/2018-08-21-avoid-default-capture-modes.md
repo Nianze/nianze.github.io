@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-08/21.gif
 
 Default by-reference capture can lead to dangling references; default by-value capture is susceptible to dangling pointers, while misleadingly susggests the lambdas are self-contained.
 <!--more-->
+<!-- toc -->
 
-#### Default by-reference capture
+# Default by-reference capture
 
 If the lifetime of a closure created from a lambda exceeds the lifetime of the local variable or parameter captured by-reference, the reference in the closure will dangle:
 
@@ -39,7 +40,7 @@ void addDivisorFilter()
 
 Long-term, it's better software engineering to explicitly list the local variables and parameters that a lambda depends on.
 
-#### Default by-value capture
+# Default by-value capture
 
 Capture by value will solve the dangling problem in above example, but it can't guarantee the safety if we capture a pointer and that pointer is deleted outside the lambda, which causes our copied pointer to dangle. This usually happens where `this`, a raw pointer, implicitly shows up, for example:
 

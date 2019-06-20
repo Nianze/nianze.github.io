@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-03/2018-03-22.gif
 
 More effective C++: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.
 <!--more-->
+<!-- toc -->
 
 Both pointers and references refer to other objects indirectly, and we should distinguish their differences.
 
-## No null reference
+# No null reference
 
 A reference must _always_ refer to some object, which implies that references must be initialized:
 
@@ -47,7 +48,7 @@ void printPointDouble(const double *pd)
 }
 ```
 
-## No reassignment for reference
+# No reassignment for reference
 
 Another difference is that we can reassign pointers to refer to different objects, while reference _always_ refers to the one it is initialized:
 
@@ -69,7 +70,7 @@ In general, use pointers when
 
 use reference when we know there will always be an object to refer to and we will never refer to anything else other than the initial object.
 
-## Use reference for some operators
+# Use reference for some operators
 
 Another situation to prefer reference is when we're implementing certain operators such as `operator[]`, which needs to return something that can be used as the target of an assignment:
 

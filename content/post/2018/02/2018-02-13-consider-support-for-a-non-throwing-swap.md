@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-02/2018-02-13.jpg
 
 When `std::swap` would be inefficient for your type,provide a non-throwing `swap` member function, a non-member `swap` calling the member, and possibly a specialized `std::swap` for the case of classes (not templates).
 <!--more-->
+<!-- toc -->
 
 `swap`, since its introduction into STL, is useful for exception-safe programming (item 29) and a common mechanism for coping with the possibility of assignment to self (item 11). Due to its importance, it should be implemented properly, which is exactly what this item explores about.
 
-## Customization
+# Customization
 
 By default, swapping is accomplished via the standard `swap` algorithm:
 
@@ -150,11 +151,12 @@ namespace WidgetStuff {
         a.swap(b);
     }
 }
+
 ```
 
 The name lookup rules in C++ (specifically the rules known as _argument-dependent lookup_ or _Koenig lookup_) will guarantee the Widget-specific version of `swap` in `WidgetStuff` will be invoked if any code calls `swap` on two `Widget` objects.
 
-## Usage
+# Usage
 
 Let's look from a client's point of view and see how to use the `swap`. Ideally, we want to call a T-specific version of `swap` if there is one, but to fall back on the general version in `std` if there's not. To fulfill this idea:
 
@@ -182,9 +184,10 @@ One thing worth noting is to not qualify the call like this:
 std::swap(obj1, obj2);  // the wrong way to call swap
 ```
 
+
 here we force compilers to consider only the `swap` in `std` (including any template specializations), thus eliminating the possibility of getting a more appropriate T-specific version defined elsewhere. Alas, some misguided programmers (or even some standard library) _do_ qualify calls to `swap` in this way. To make code work as efficiently as possible, we'd better totally specialize `std::swap` for our classes.
 
-## Summary
+# Summary
 
 We've discussed the default `swap`, member `swap`s, non-member `swap`s, specializations of `std::swap`, and calls to `swap`. Below is a good practice on implementing and using customized `swap`:
 

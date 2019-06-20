@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-07/23.gif
 
 `constexpr` objects are `const` and are initialized with values known during compilation; `constexpr` functions can produce copmile-time results when called with arguments whose values are know during compilations.
 <!--more-->
+<!-- toc -->
 
-#### `constexpr` objects
+# `constexpr` objects
 
 Values known during compmilation are privileged: they may be placed in read-only memory (important for embedded systems), and part of them with constant integral values can be used in contexts where C++ requires an _integral constant expression_[^1]. Thuse, if we want the compilers to ensure that a variable is constant with a value know at compile time, we declare it `constexpr`:
 
@@ -38,7 +39,9 @@ const auto arraySize = sz;  // fine: arraySize is const copy of sz
 std::array<int, arraySize>  data; // error: arraySize's value not known at compilation
 ```
 
-#### `constexpr` functions
+
+
+# `constexpr` functions
 
 `constexpr` is part of a functions's interface, which proclaims "I can be used in a context where C++ requires a constant expression." In other words:
 

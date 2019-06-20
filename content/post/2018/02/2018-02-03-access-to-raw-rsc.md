@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-02/2018-02-03.jpg
 
 Each RAII class should offer a way to get at the resource it manages.
 <!--more-->
+<!-- toc -->
 
 From time to time, some APIs require access to raw resources, so it is a good habit to design the resource-managing classes in such a way that it provides access to raw resources. For example, suppose there's a function we'd like to use with `Investment` objects, which is managed by smart pointer:
 
@@ -35,7 +36,7 @@ We need to find a way to get the access to the raw resources, and generally ther
 1. Implicit conversion (convenient for clients)
 2. Explicit conversion (generally preferred)
 
-### Implicit conversion
+# Implicit conversion
 
 Pointer dereferencing operators (`operator->` and `operator*`) are implicit conversion to the underlying raw pointers, which is virtually provided by all smart pointer classes. Suppose there's a member function `bool isTaxFree()` inside the class `Investment`, and we can access the member function like this:
 
@@ -85,7 +86,7 @@ FontHandle f2 = f1;  // meant to copy a Font object but implicitly converted f1 
                      // FontHandle, and copied the underlying resource
 ```
 
-### Explicit conversion
+# Explicit conversion
 
 In order to avoid unintended implicit conversion, an explicit conversion function like `get` is a preferable path. We can exchange the implicit convertion function to following explicit one:
 

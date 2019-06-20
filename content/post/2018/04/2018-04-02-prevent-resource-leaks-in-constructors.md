@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-04/2018-04-02.gif
 
 Replace pointer class members with their corresponding smart pointer objects to fortify the constructors against resource leaks in the presence of exceptions, to eliminate the need to manually deallocate resources in destructors, and to allow `const` member pointers to be handled in the smae graceful fashion as non-`const` pointers.
 <!--more-->
+<!-- toc -->
 
-## Example
+# Example
 
 Suppose we want to develop a software for a multimedia address book that might hold information of a person's name, address, phone numbers, a picture of the person and, the sound of their voice:
 
@@ -53,7 +54,7 @@ private:
 };
 ```
 
-## Naive implementation
+# Naive implementation
 
 A straightforward implementation for constructor and destructor:
 
@@ -106,7 +107,7 @@ void testBookEntryClass()
 
 If `BookEntry`'s constructor throws an exception, no assignment is made to `pb` and `pb` will be a null pointer, so deleting it in the `catch` block does nothing except make us feel better about ourselves.
 
-## Workable (but inelegant) implementation
+# Workable (but inelegant) implementation
 
 ```cpp
 BookEntry::BookEntry(const string& name,
@@ -175,7 +176,7 @@ BookEntry::~BookEntry()
 
 ---
 
-## For both `constant` and non-`const` pointers
+# For both `constant` and non-`const` pointers
 
 What if `BookEntry` class interface is designed differently, with `theImage` and `theAudioClip` defined as `constant` pointers, which must be initialized via the member initialization lists:
 
@@ -190,7 +191,7 @@ private:
 };
 ```
 
-### Naive implementation
+## Naive implementation
 
 We may be tempted to initit `theImage` and `theAudioClip` like this:
 
@@ -212,7 +213,7 @@ BookEntry::BookEntry(const string& name,
 
 but this leads to the problem of potential resource leak: if an exception is thrown during initialization of `theAudioClip`, the object pointed to by `theImage` is never destroyed.
 
-### Workable design
+## Workable design
 
 In order to add `try` and `catch` to perform cleanup tasks in a member initialization list, we may consider put them inside private member functions that return pointers:
 
@@ -262,7 +263,7 @@ AudioClip * BookEntry::initAudioClip(const string& audioClipFileName)
 
 This design works, but the drawback is that code that conceptually belongs in a constructor is now dispersed across several functions, and that's a maitenance headache.
 
-### Better design
+## Better design
 
 A better design is to adopt the advise of MECpp Item 9 (as well as item 13): 
 

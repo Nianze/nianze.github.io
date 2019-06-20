@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-06.gif
 
 Being more complex than single inheritance, Multiple inheritance (MI) can lead to ambiguity issues and to the need for virtual inheritance, the latter of which imposes costs in size, speed, and complexity of initialization and assignment, so it's more practical to make "empty" virtual base classes.
 <!--more-->
+<!-- toc -->
 
-## Ambiguity
+# Ambiguity
 
 In the realm of MI, one thing worth noting is that it becomes possible to inherit the same name (e.g., function, typedef, etc.) from more than one base class:
 
@@ -52,7 +53,7 @@ To resolve the ambiguity, specify which base class's function to call:
 mp.BorrowableItem::checkOut();
 ```
 
-## Virtual inheritance
+# Virtual inheritance
 
 It is not uncommon in the world of MI to encounter the classical case of "deadly MI diamond", where there are more than one path between a base class and a derived class:
 
@@ -111,7 +112,7 @@ To make things easier to handle, we could adopt following strategy:
 * Use non-virtual by default, and don't use virtual bases unless we need to
 * If we must use a virtual base classes, avoid putting data in them[^1]
 
-## Example of legitimate MI usecase
+# Example of legitimate MI usecase
 
 Multiple inheritance does have legitimate uses. One scenario involves combining public inheritance from an Interface class with private inheritance from a class that provides help of implementation.
 
@@ -207,7 +208,7 @@ In UML, the design looks like this:
          IOFile
 ```
 
-## Summary
+# Summary
 
 Compared to single inheritance (SI), multiple inheritance (MI) is typically more complicated to use and more complicated to understand, so if SI design is more or less equivalent to an MI design, we prefer the SI design. Sometimes, though, MI is the clearest, most maintainable, most reasonable way to get the job done. When that's the case, just use it, with judiciousness.
 

@@ -41,7 +41,7 @@ void checkForCollision(GameObject& object1, GameObject& object2)
 
 Now comes the _double dispatch_: since collisions betwenn different `GameObject` effects the environment differently, we want `processCollision` to act virtual on both `object1` and `object2`, but C++ only offers virtual support for one parameter, like `object1.processCollision(object2)`. We must come up with some approaches ourselves instead of relyin on compilers.
 
-## Using Virtual Function and RTTI
+# Using Virtual Function and RTTI
 
 We need double dispatch, so we can use virtual functions for first half of what we need, and use chains of `if-then-else`s for rest half:
 
@@ -91,7 +91,7 @@ void SpaceShip::collide(GameObject& otherObject)
 
 The danger in this design: each `collide` function must be aware of each of its sibling classes, so if a new type of object is added to the game, we must update each RTTI-based `if-then-else` chain in the proram that might encounter the new object, which in essence is unmaintainable in the long run. We added a final `else` clause where control winds up if we hit an unnknown object, throwing an exception to callers in the hope that they handle the error better than we can (but since we are running into something we didn't know existed, they almost can't do anything more satisfying.)
 
-## Using Virtual Functions Only
+# Using Virtual Functions Only
 
 We can also implement double-dispatching as two separate virtual function calls: 
 
@@ -151,7 +151,7 @@ Now let's do a small sum-up:
 2. RTTI makes no recompilation demands, but it generally leads unmaintainable software.
 3. The best recourse is to modify the design to eliminate the need for double-dispatching.
 
-## Emulating Virtual Function Tables
+# Emulating Virtual Function Tables
 
 Actually, we can build our own virtual function tables, similar to how compilers implement virtual functions by creating an array of function pointers (the vtbl) and then indexing into that array when a virtual function is called, except that this customized version support double-dispatching. Moreover, the virtual function tables is more efficient than the RTTI-based code (indexing into an array and following a function pointer vs running through a series of `if-then-else` tests), and we isolate the use of RTTI to a single location where the array of function pointers is initialized.
 
@@ -250,7 +250,7 @@ SpaceShip::HitMap * SpaceShip::initializeCollisionMap()
 
 Here we tell the compiler that `hitSpaceShip`, `hitSpaceStation`, and `hitAsteroid` are functions expecting a `GameObject` argument, which is not true. `hitSpaceShip` expects a `SpaceShip`, `hitSpaceStation` expects a `SpaceStation`, and `hitAsteroid` expects an `Asteroid`. All these functions are declared as pass-by-reference, which in fact is implemented by passing a pointer to an object, so ideally compilers will pass the declared type of the parameter(say `hitSpaceShip` for function `hitSpaceShip`) in the function being called. However, due to the object layout of classes under an inheritance path, after the cast above, it is possible that the wrong address (say `GameObject`) is passed into the function, because inside a `SpaceShip` object there are both a derived class part as well as a base class part, each having a different address (for detailed discussion, refer to _More Effective C++_ Item 31-Initializing Emulated Virtual Function Talbes).
 
-### Using Non-Member Collision-Processing Functions
+## Using Non-Member Collision-Processing Functions
 
 Still, similar to pure virtual functions based approach, there is one remaining problem: because the associative array contains pointers to _member functions_, once a new type of `GameObject` is added to the game, every class definition needs to be updated and recompiled, even if that class does not care about the new type of object.
 
@@ -327,7 +327,7 @@ However, as uaual, there's still a disadvantage in this design: these non-member
 
 For example, suppose the concrete classes `CommercialShip` and `MilitaryShip` inherit from the newly abstract class `SpaceShip` (according to the guidance of MECpp item 33). If a `MilitaryShip` object and an `Asteroid` collided, we'd expect `void shipAsteroid(GameObject&, GameObject&)`  to be called. However, in fact, an `UnknownCollision` would be thrown, because `lookup` would be asked to find a function corresponding to the type names `MilitaryShip` and `Asteroid`, and no such function would be found in `collisionMap` - after all, `lookup` has no way of knowing that `MilitaryShip` can be treated like a `SpaceShip`.
 
-### Modifying Emulated Virtual Function Talbes Dynamically
+## Modifying Emulated Virtual Function Talbes Dynamically
 
 If we'd like to add, remove, or change collision-processing functions as the game proceeds, the static `collisionMap` will not meet this requirement. In this case, we can turn the concept of a static map into a class that offers member functions allowing us to modify the contents of the map dynamically:
 

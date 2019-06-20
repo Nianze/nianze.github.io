@@ -15,13 +15,14 @@ thumbnailImage: /images/2018/2018-08/07.gif
 
 `std::move` performs an unconditional cast to an rvalue, while `std::forward` casts its argument to an rvalue only if that argument is bound to an rvalue.
 <!--more-->
+<!-- toc -->
 
 Some facts:
 
 * Neither `std::move` nor `std::forward` do anything at runtime.
 * Move request on `const` objects are treated as copy requests.
 
-#### std::move
+# std::move
 
 To make things concrete, a very basic implementation of `std::move` in C++11 looks like this:
 
@@ -48,7 +49,7 @@ decltype<auto> move(T&& param)
 
 Basically, `std::move` does nothing but cast its argument to an rvalue, and we might think it as `rvalue_cast`. Usually we want `move` operation on rvalues, so every time we see a `move` over some parameter, we know we want to perform move operation over the resulting rvalue. However, not all rvalues are candidates for moving, especailly those annotated by `const` - _move requests on `const` objects are silentlly transformed into copy operation_.
 
-#### std::forward
+# std::forward
 
 `std::move` unconditionally casts its argument to an rvalue, while `std::forward` conditionally do so: it casts to an rvalue only if its argument was initialized with an rvalue.
 
@@ -75,7 +76,7 @@ logAndProcess(std::move(w));  // call with rvalue
 
 In the code above, `std::forward` is able to tell whether `param` is initialized with an lvalue or an rvalue because that information is encoded in `logAndProcess`'s template parameter `T`, which is then passed to `std::forward`, which is able to recover the encoded information. For details, refer to EMCpp item 28.
 
-#### Comparison
+# Comparison
 
 Depending on the usecase scenario, we can tell when to use which:
 

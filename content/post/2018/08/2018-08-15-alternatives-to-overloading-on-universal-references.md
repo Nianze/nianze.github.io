@@ -15,16 +15,17 @@ thumbnailImage: /images/2018/2018-08/15.gif
 
 Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.
 <!--more-->
+<!-- toc -->
 
-#### Abandon overloading
+# Abandon overloading
 
 This solution works for overloaded `logAndAdd` example in Item 26, where we break the overloaded function into two: `logAndAddName` and `logAndAddIdx`. However, this will not work for `Person` constructor - the constructor names are fixed by the language.
 
-#### Pass by `const T&`
+# Pass by `const T&`
 
 This is the original function `void logAndAdd(const std::string& name)` we see in Item 26. Not efficient in some cases, but works as expected.
 
-#### Pass by value
+# Pass by value
 
 According to the advice in Item 41, we may consider passing objects by value when we know we'll copy them. Thus, the `Person` example may get revised like this:
 
@@ -44,7 +45,7 @@ private:
 With this design, `int`-like arguments get passed to `int` overload, and arguments of type `std::string` (and anything from which `std::string` could be created, e.g., literals) get passed to the `std::string` overload.
 
 
-#### Use Tag dispatch
+# Use Tag dispatch
 
 Add another "tag" parameter to help compiler differentiate the overloading cases as we want:
 
@@ -79,7 +80,7 @@ Conceptually, `true` and `false` are _runtime_ values, and what we need here for
 
 Tag dispatch is a standard building block of template metaprogramming to let the tag determine which overload gets called, so that overloading on universal references may work as expect.
 
-#### Use `enable_if` to constrain templates that take universal references
+# Use `enable_if` to constrain templates that take universal references
 
 Tag dispatch solves some of the problems related with templates taking universal references, but not all of them. The perfect-forwarding constructor for the `Person` class, for example, remains problematic: even if we write only one constructor and apply tag dispactch technique to it, some constructor calls (copy from `const` vs non-`const` lvalues) may sometimes be handled by compiler-generated functions (e.g., copy and move constructors) that bypass the tag dispatch system.
 

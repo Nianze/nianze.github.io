@@ -13,11 +13,11 @@ thumbnailImage: /images/2016/2016-11-11.jpg
 
 Summary on LinkedList reversing.
 <!--more-->
+<!-- toc -->
 
+# Starter
 
-### Starter
-
-#### Special case: LC206 reverse all the nodes in one pass:
+## Special case: LC206 reverse all the nodes in one pass:
 
 ```java
 public ListNode reverseList(ListNode head) {
@@ -32,7 +32,7 @@ public ListNode reverseList(ListNode head) {
 }
 ```
 
-#### General case: LC92 reverse nodes from position m to n
+## General case: LC92 reverse nodes from position m to n
 
 ```java
 public ListNode reverseBetween(ListNode head, int m, int n) {
@@ -52,7 +52,7 @@ public ListNode reverseBetween(ListNode head, int m, int n) {
 }
 ```
 
-### Main dish: LC25 Reverse Nodes in k-Groups
+# Main dish: LC25 Reverse Nodes in k-Groups
 
 ```java
 /**

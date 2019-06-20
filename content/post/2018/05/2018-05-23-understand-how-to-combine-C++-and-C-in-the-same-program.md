@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-05/2018-05-23.gif
 
 There are five points worth noting if we want to mix C++ and C in the same program.
 <!--more-->
+<!-- toc -->
 
-## Summary
+# Summary
 
 * Make sure the C++ and C compilers produce compatible object files
 * Declare functions to be used by both languages `extern C`
@@ -24,11 +25,11 @@ There are five points worth noting if we want to mix C++ and C in the same progr
 * Always use `delete` with memory from `new`; always use `free` with memory from `malloc`
 * Limit what we pass between the two languages to data structures that compile under C; the C++ version of structs may contain nonvirtual member functions
 
-### 1. Compatible object files
+## 1. Compatible object files
 
 Before mix together object files produced by some C compiler with those from C++ compiler, we have to make sure they both share the same implementation-dependent features, such as the size of `int`s and `double`s, the mechanism by which parameters are passed from caller to callee, and whether the caller or the callee orchestrates the passing.
 
-### 2. Name Mangling
+## 2. Name Mangling
 
 Name mangling is the process through which the C++ compilers give each function in our program a unique name, which is unnecessary in C because we can't overload function names in C.
 
@@ -72,7 +73,7 @@ extern "C" {
 #endif
 ```
 
-### 3. Initialization of Statics
+## 3. Initialization of Statics
 
 In C++, the constructors of static class objects and objects at global, namespace, and file scope are usually called before the body of `main` is executed, which is known as _static initialization_. Similarly, objects that are created through static initialization must have their destructors called during _static destruction_, which typically take place after `main` has finished executing.
 
@@ -103,7 +104,7 @@ int main(int argc, char *argv[]) // write this in C++
 }
 ```
 
-### 4. Dynamic Memory Allocation
+## 4. Dynamic Memory Allocation
 
 Recall MECpp Item 8: the C++ parts of a program use `new` and `delete`, and the C parts of a program use `malloc` (and its variants) and `free`. Mismatched allocation and deallocation operation for dynamic memory yields undefined behavior, so never call `free` on a `new`ed pointer, nor `delete`ing a `malloc`ed pointer.
 
@@ -115,7 +116,7 @@ char * strdup(const char *ps); // return a copy of the string pointed to by ps
 
 If the `strdup` is from a C library, we need to call `free`; if it was written for a C++ library, we should call `delete`. If we can't make sure, then simply avoid calling such functions.
 
-### 5. Data Structure Compatibility
+## 5. Data Structure Compatibility
 
 C functions can not understand C++ features, so if we want to pass data between C++ and C programs, we are limited to those concepts that C can express: naturally, `struct`s and variables of built-in types (e.g., `int`s, `char`s, etc.)
 

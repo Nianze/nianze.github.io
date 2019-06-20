@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-05/2018-05-07.gif
 
 Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.
 <!--more-->
+<!-- toc -->
 
 Consider a customized naive version of `class String;`: its assignment operator is implemented in a naive way:
 
@@ -93,7 +94,7 @@ In practice, we need to keep track of how many objects are sharing - _refering t
 └───┘    
 ```
 
-## Implementing Reference Counting
+# Implementing Reference Counting
 
 From the picture above, we can see we need one reference count per string _value_, instead of one per string _object_. This implies a decoupling between values and reference counts, leading to our first design: nesting a `StringValue` struct in the private part of `String` class, so that all the members of `String` class get full access to this inner data structure, while everybody else get denied (except friends of the class).
 
@@ -168,7 +169,7 @@ String& String::operator=(const String& rhs)
 }
 ```
 
-## Copy-on-write
+# Copy-on-write
 
 Now comes the troublesome one: an array-bracket operator([]), which allows individual characters within strings to be read and written:
 
@@ -207,7 +208,7 @@ char& String::operator[](int index)
 
 This technique - to share a value with other objects until we have to write on our own copy of the value - is the well-knwon _copy-on-write_, which is a specific example of _lazy evaluation_ (MECpp item 17), which is a more general approach to efficiency.
 
-## Pointers, References, and Copy-on-write
+# Pointers, References, and Copy-on-write
 
 Consider this code:
 
@@ -278,7 +279,7 @@ char& String::operator[](int index)
 }
 ```
 
-## A Reference-Counting Base class
+# A Reference-Counting Base class
 
 Reference counting is useful for more than just strings, so it's good practice to separate reference counting code in a context-independent manner. This leads us to the design of a base class `RCObject`. Any class wishing to take advantage of automatic reference counting may inherit from this class. Basically, for general purpose usage, `RCObject` class should include
 
@@ -367,7 +368,7 @@ String::StringValue::~StringValue()
 
 After this change, `RCObject` now provide the manipulation ability of the `refCount` field, instead of `StringValue`.
 
-## Automating Reference Count Manipulations
+# Automating Reference Count Manipulations
 
 The `RCObject` class only gives us a place to store a reference count, as well as the member functions to manipulate the `refCount` field. However, the _calls_ to these functions must still be mannually inserted in other classes: `String` copy constructor and assignment operator need to call `addReference` and `removeReference` on `StringValue` objects, which is not good practice for reuse.
 
@@ -458,7 +459,7 @@ String::StringValue::StirngValue(const StringValue& rhs)
 2. For the same statement calling `T`'s copy constructor, we assume the type of `*pointee` is `T` rather than `T`'s derived class. If, however, chances are `poinee` might point to `T`'s derived class instances, we need to use a virtual copy constructor.
 3. `T` should prove all the functionality that `RCObject` does, either or not by inheriting from `RCObject`.
 
-## Puting Everyting Together
+# Puting Everyting Together
 
 ```
                      ┌──────────┐  
@@ -638,7 +639,7 @@ char& String::operator[](int index)
 }
 ```
 
-## Adding Refenrence Counting to Existing Classes
+# Adding Refenrence Counting to Existing Classes
 
 Given some class `Widget` that's in a library we can't modify, and suppose we want to apply the benefits of reference counting to `Widget` without being able to inherit `Widget` from `RCObject`, we solve the problem with an additional level of indirection by adding a new class `CountHolder`, which does three jobs:
 

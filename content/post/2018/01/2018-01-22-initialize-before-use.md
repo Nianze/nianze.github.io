@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-01/2018-01-22.jpg
 
 Since C++ is fickle about initialization, some good coding style is suggested.
 <!--more-->
+<!-- toc -->
 
 There are basically only 3 rules we need to remember if wanting to avoid tragedy of using objects before they're initialized:
 
@@ -22,7 +23,7 @@ There are basically only 3 rules we need to remember if wanting to avoid tragedy
 2. in constructors, prefer to use member initialization list to assignment inside the constructor body; data members in the initialization list is suggested to be in the same order as they are declared in the class (which helps to avoid reader confusion)
 3. replacing non-local static objects with local static objects in order to avoid initialization order problems across translation units.
 
-## 1. Initialize non-member _built-in_ type object
+# 1. Initialize non-member _built-in_ type object
 
 No need to remember rules about when built-in type object initialization is guaranteed to take place and when it isn't, for they're too complicated to know.
 
@@ -35,7 +36,7 @@ double d;
 std::cin >> d;
 ```
 
-## 2. Initialize data member with member initialization list
+# 2. Initialize data member with member initialization list
 
 The arguments in the initialization list are used as constructor arguments for the various data members (will be copy-constructed), which will be more efficient than a call to the default constructor followed by a calll to the copy assignment operator.
 
@@ -45,9 +46,9 @@ The arguments in the initialization list are used as constructor arguments for t
 
 Exception: multiple constructors share large common member initialization list may consider moving assignment to a single (private) function called by all the constructors, which will be helpful for initializing values from reading a file or database.
 
-## 3. Initialze non-local static objects defined in different translation units
+# 3. Initialze non-local static objects defined in different translation units
 
-#### Glossary:
+## Glossary:
 
 1. _static object_: one that exists from the time it's constructed until the end of the program (i.e., their destructors will be called when _main_ finishes executing)
 2. **local** _static object_: 

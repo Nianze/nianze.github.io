@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-04/2018-04-13.gif
 
 Unnamed non-heap objects are invisible temporary objects in C++.
 <!--more-->
+<!-- toc -->
 
 Temporary objects arise in two situations:
 
@@ -23,7 +24,7 @@ Temporary objects arise in two situations:
 
 It's important to understand how and why these temporary objects are created and destroyed because their construction and destruction can have noticeable impact on the performance of the program.
 
-### Implicit conversion
+# Implicit conversion
 
 When the type of object passed to a function is not the same as the type of the parameter to which it is being bound, temporary objects are created during the implicit conversion to make function calls succeed.
 
@@ -54,7 +55,7 @@ Needless to say, such implicit conversion (with pointless construction and destr
 * by redesigning the code to forbid such implicit conversion, MECpp item 5
 * by modifying the code the same as described in MECpp item 21
 
-#### Restrictions on implicit conversion
+## Restrictions on implicit conversion
 
 These conversions occur only when passing objects by value or when passing to a reference-to-`const` parameter, so when passing an object to a reference-to-non-`const` parameter, there is no implicit conversion. For example,
 
@@ -66,7 +67,7 @@ uppercasify(bootTitle);  // error!
 
 Here, temporary would not be created for parameter `str`, which is declared to be of type "non-`const` reference", because it is the `bookTitle` that is supposed to be updated, instead of a newly created temporary.
 
-### Function return value
+# Function return value
 
 ```cpp
 const Number operator+(const Number& lhs, const Number& rhs);

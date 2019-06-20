@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-04/2018-04-01.gif
 
 To avoid resource leaks in the presence of exceptions, we can encapsulate resources inside objects.
 <!--more-->
+<!-- toc -->
 
-## Using objects to manage pointer-based resource
+# Using objects to manage pointer-based resource
 
 Suppose we're writing software for a shelter names Adorable Little Animals, an organization that finds homes for puppies and kittens. Each day the shelter creates a file containing information on the adoptions it arranged that day, so we need to read these files and do the approgriate procesing for each adoption. 
 
@@ -107,8 +108,9 @@ void processAdoptions(istream& dataSource)
     }
 }
 ```
+<!-- toc -->
 
-## Using objects to manage other resources
+# Using objects to manage other resources
 
 The idea behind `auto_ptr` is to use an object to store a resource that needs to be automatically released via the object's destructor, which applis to broader ranges of resource types as well. For example, in a GUI application that needs to create a window to display some information:
 

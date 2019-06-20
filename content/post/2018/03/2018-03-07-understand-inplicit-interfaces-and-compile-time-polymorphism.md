@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-07.gif
 
 Classes support explicit interfaces based on function signatures, as well as runtime polymorphism through virtual functions; templates support implicit interfaces based on valid expressions, as well as compile-time polymorphism through template instantiation and function overloading resolution.
 <!--more-->
+<!-- toc -->
 
-## Interface and Polymorphism in OOP
+# Interface and Polymorphism in OOP
 
 The world of object-oriented programming revolves around _explicit_ interfaces and _runtime_ polymorphism. For example:
 
@@ -51,7 +52,7 @@ Regarding the `w` in `doProcessing`, we could conclude:
 
 Specifically, the explicit interface of `Widget` consists of its function signatures: a constructor, a destructor, and the functions `size`, `normalize`, and `swap`, along with the parameter types, return types, and constnesses of these functions, as well as compilter-generated copy constructor and copy assignment operator (item 5). Potentially, it could also include typedefs, and data members.
 
-## Interface and Polymorphism in templates and generic programming
+# Interface and Polymorphism in templates and generic programming
 
 In the world of templates and generic programming, the explicit interfaces and runtime polymorphism continue to exist, but we also have to consider _implicit interfaces_ and _compile-time polymorphism_. As a comparison, let's take a look at the template version of `doProcessing`:
 

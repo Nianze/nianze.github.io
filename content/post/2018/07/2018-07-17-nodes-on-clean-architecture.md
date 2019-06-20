@@ -16,8 +16,9 @@ metaAlignment: center
 
 A brief notes on Clean Architecture
 <!--more-->
+<!-- toc -->
 
-## Chapter 1 What is design and architecture
+# Chapter 1 What is design and architecture
 
 * The Goal: 
 
@@ -25,7 +26,7 @@ A brief notes on Clean Architecture
 
 * Low-level details andd the high-level structure are all part of the same whole, forming a continuous fabric that defines the shape of the system. There is simply a continuum of decisions from the highest to the lowest levels.
 
-## Chapter 2 A Tale of Two Values
+# Chapter 2 A Tale of Two Values
 
 * Eisenhower matrix:
 
@@ -45,7 +46,7 @@ The common mistake we make: elevate items in position 3 to position 1 - fail to 
 
 It is the responsibility of the software development team to assert the importance of architecture over the urgency of features.
 
-## Chapter 3 Paradigm Overview
+# Chapter 3 Paradigm Overview
 
 1. Structured Programming: remove `goto` - imposing discipline on direct transfer of control
 2. Object-oriented Programming: polymorphism through the disciplines use of function pointer - imposing discipline on indirect transfer of control
@@ -53,7 +54,7 @@ It is the responsibility of the software development team to assert the importan
 
 **Conclusion**: We use polymorphism as the mechanism to cross architectural boundaries; we use functional programming to impose discipline on the location of and access to data; and we use structured programming as the algorithmic foundation of our modules.
 
-## Chapter 4 Sturctured Programming
+# Chapter 4 Sturctured Programming
 
 >It is this ability to create falsifiable units of programming that makes structured programming valuable. 
 

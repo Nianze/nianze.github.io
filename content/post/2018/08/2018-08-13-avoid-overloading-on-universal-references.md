@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-08/13.gif
 
 Overloading on universal references almost always leads to the universal reference overload being called more frequently than expected.
 <!--more-->
+<!-- toc -->
 
-#### Why universal references?
+# Why universal references?
 
 We want to introduce universal references because we can eliminate some inefficiencies via it. For example,
 
@@ -52,7 +53,8 @@ void logAndAdd(T&& name)
 }
 ```
 
-#### What trouble universal references introduces?
+
+# What trouble universal references introduces?
 
 Functions taking universal references are the greediest functions in C++, so the usually overload more argument types than the developer generally expects. Suppose there's another function overloading for the type of `int`:
 
@@ -75,7 +77,8 @@ logAndAdd(nameIdx);  // error!
 
 We generally assume the last call will invoke the `int` overload, but instead it will invoke the `T&&` one, since the universal reference overload version exactly matches the `short` argument by deduce `T` to be `short&`, while `int` version has to match `short` with a promotion. As a result, the exact match beats a match with a promotion. However, within the `T&&` overload, the parameter `name` with type `short&` first get passed into `std::forward`, which will not get casted into a rvalue since `name` is initialized with an lvalue (refer to EMCpp item 24), and then get passed into `emplace` member function on `names`, which finally forwards it to the `std::string` constructor, and we get an error here because no constructor for `std::string` will take a short.
 
-#### More problematic: Perfect-forwarding consturctors
+
+# More problematic: Perfect-forwarding consturctors
 
 Perfect-forwarding constructors are typically better matches than copy constructors for non-`const` lvalues, and they can hijack derived class calls to base class copy and move constructors, which makes them problematic. For example:
 
@@ -127,6 +130,7 @@ public:
 
 Here, the derived class will call the perfect forwarding constructor for their copy and move constructors, because they are using arguments of type `SpecialPerson` to pass to their base class, and base class's forwarding constructor will happily instantiate an exact match for this call. Since there's no `std::string` constructor taking a `SpecialPerson`, the code won't compile.
 
-#### Conclusion
+
+# Conclusion
 
 Overloading on universal reference is something we should avoid if possible. However, if we do want a function that forwards most argument types, while still support special treatment for some special types, we can find some alternatives to achieve this goal in EMCpp item 27.

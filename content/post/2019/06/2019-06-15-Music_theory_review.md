@@ -6,6 +6,7 @@ categories:
 - notes
 tags:
 - music
+- nyu
 slug: Basic Musicianship Review
 autoThumbnailImage: true
 thumbnailImagePosition: right
@@ -14,13 +15,14 @@ thumbnailImage: /images/2019/06/15/img_musition5.png
 
 A review of some basic music theory before the NYU Steinhardt music technology placement exam.
 <!--more-->
+<!-- toc -->
 
-### Intervals
+# Intervals
 
 * Perfect Intervals: 1(perfect unison), 4(perfect 4th), 5(perfect 5th), 8(perfect octave)
 * Major Intervals: 2(major 2nd), 3(major 3rd), 6(major 6th), 7(major 7th)
 
-### Scales
+# Scales
 
 * major scale (WWHWWWH)
 * natural minor scale / aeolian scale (WHWWHWW) = based off the 6th degree that shares the key signature of the major scale
@@ -31,7 +33,7 @@ A review of some basic music theory before the NYU Steinhardt music technology p
 * lydian scale(WWWHWWH) = based off the 4th degree of any major scale (C major scale from its fourth degree (F) -> F lydian scale)
 * mixolydian scale(WWHWWHW) = based off the 5th degree of any major scale (C major scale from its fifth degree (G), -> G mixolydian scale)
 
-### Chords
+# Chords
 
 * Tonic: the note considered to be the basis of the chord, e.g.: C, D, …
 * Quality
@@ -42,12 +44,12 @@ A review of some basic music theory before the NYU Steinhardt music technology p
     * dominat 7th chords = similar to major, with the addition of a flattened seventh above the root note of the chord (C Dominant 7th = C,E,G,bB); within a diatonic context, it’s based from the 5th/dominant of any major key, so in the key of C major, the dominant 7th chord starts on G (GBDF)
 * Inversion: which note of the chord is placed at the bottom (root, 1st inversion, 2nd inversion)
 
-### Key Signatures
+# Key Signatures
 
 * Relative minor & major keys: the sixth degree of the major key is the relative minor key, both share exactly the same key signature (C major -> A minor); similarly, to find the relative major of a minor key = either count down 6 notes, or count up to the 3rd note.
 * To add a flat sign, count up four notes from root; to add a sharp, count up five notes.
 
-### Chord Progressions
+# Chord Progressions
 
 * Labelling: 
     * C Major Root Position: C = I
@@ -57,7 +59,7 @@ A review of some basic music theory before the NYU Steinhardt music technology p
     * G7 2nd Inversion: G7/D = Vc = V4/3
     * G7 3rd Inversion: G7/F = Vd = V4/2
 
-### Meter
+# Meter
 
 * Simple meters: the top number in the time signature is a 3 or divisible by 2 (e.g., 2/4, 3/4, 4/4, 2/2, 3/2, 4/2). 
     * 4/4: simple quadruple, can be represented by a ‘C’, known as common time; 

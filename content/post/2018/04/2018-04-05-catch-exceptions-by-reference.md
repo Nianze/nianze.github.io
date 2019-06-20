@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-04/2018-04-05.gif
 
 If catching by reference, we sidestep the questions about object deletion, avoid slicing exception objects, retain the ability to catch standard exceptions, and limit the number of times exception objects being copied.
 <!--more-->
+<!-- toc -->
 
 # Catch by pointer
 

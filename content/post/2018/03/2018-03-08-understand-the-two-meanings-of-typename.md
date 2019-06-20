@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-08.gif
 
 When declaring template parameters, both `class` and `typename` are interchangeable. When identifying nested dependent type names, use `typename`, except in base class lists or as a base class identifier in a member initialization list.
 <!--more-->
+<!-- toc -->
 
-## In template parameter declaration
+# In template parameter declaration
 
 In the template declarations such as below:
 
@@ -27,7 +28,7 @@ template<typename T> class Widget;  // uses "typename"
 
 There's no difference between these two declarations, though using `typename` may be helpful to imply that the parameter need not be a class type. From C++'s point of view, `class` and `typename` means exactly the same in this case.
 
-## Nested dependent type
+# Nested dependent type
 
 Names in a template that are dependent on a template parameter are called `dependent names`. When a dependent name is nested inside a class, we can call it a _nested dependent name_. For example, considering following code, which actually won't compile due to the lack of `typename`:
 
@@ -75,7 +76,7 @@ void print2nd(const C& container)
 }
 ```
 
-### Real world usecase
+## Real world usecase
 
 In real code, it's representative that sometimes `typename` shows with another keyword `typedef` to save some typing time:
 
@@ -100,7 +101,7 @@ void f(const C& container,            // typename not allowed: C is not a nested
 
 In summary, the general rule is: anytime we refer to a nested dependent type name in a template, we must immediately precede it by the word `typename`, except for the following two cases:
 
-### Exception
+## Exception
 
 There are two exception cases where `typename` must not precede nested dependent type names:
 

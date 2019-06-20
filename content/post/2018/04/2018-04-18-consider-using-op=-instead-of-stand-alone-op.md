@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-04/2018-04-18.gif
 
 Assignment versions of operators (such as `operator+=`) tend to be more efficient than stand-alone versions of those operators (e.g., `operator+`).
 <!--more-->
+<!-- toc -->
 
-## Efficiency difference between `op=` and stand-alone `op`
+# Efficiency difference between `op=` and stand-alone `op`
 
 * In general, assignment versions of operators are more effiecient than stand-alone versions, because 
     1. stand-alone versions must typically return a new object, and that costs us the construction and destruction of a temporary (MECpp item 19 and 20)
@@ -42,7 +43,7 @@ This version is more efficient.
 
 In summary, as a library designer, we should offer both, and as an application developer, we should consider using assignment versions of operators instead of stand-alone versions when trying to deal with the critical 20% code.
 
-## Relationship between `op=` and stand-alone `op`
+# Relationship between `op=` and stand-alone `op`
 
 To ensure the natural relationship between the assignment version of an operator (e.g., `operator+=`) and the stand-alone version (e.g., `operator+`) exists, we can implement the latter in terms of the former (MECpp item 6):
 

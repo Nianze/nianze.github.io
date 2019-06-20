@@ -16,7 +16,7 @@ thumbnailImage: /images/2018/2018-10/30.gif
 `std::atomic` is for data accessed from multiple threads without using mutexes (concurrent usage); `volatile` is for memory where reads and writes should not be optimised away (special memory).
 <!--more-->
 
-#### `std::atomic` template
+# `std::atomic` template
 
 Instantiations of `std::atomic` template offer operations that are guaranteed to be seen as atomic by other threads, as if they were inside a mutex-protected critical section, generally with the support of special machine instructions that are more efficient than the case of mutex. For example:
 

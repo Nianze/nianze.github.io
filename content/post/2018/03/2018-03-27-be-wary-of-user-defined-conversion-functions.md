@@ -15,13 +15,14 @@ thumbnailImage: /images/2018/2018-03/2018-03-27.gif
 
 Implicit type conversions usually lead to more harm than good, so don't provide conversion functions unless we're sure we want them.
 <!--more-->
+<!-- toc -->
 
 There are two kinds of functions allowing compilers to perform implicit type conversions: 
 
 * implicit type conversion operators
 * non-explicit single-argument constructors
 
-## Implicit type conversion operators
+# Implicit type conversion operators
 
 ```cpp
 class Rational {
@@ -58,7 +59,7 @@ cout << r; // error! no operator<< for Rationals
 cout << r.asDouble();  // fine, prints r as a double
 ```
 
-## Single-argument constructor
+# Single-argument constructor
 
 ```cpp
 template<class T>
@@ -103,7 +104,7 @@ Each iteration through the loop compares the contents of `a` with the contents o
 
 There are two solutions: use keyword `explicit` or creating proxy classes.
 
-### Solution 1: Keyword `explicit`
+## Solution 1: Keyword `explicit`
 
 ```cpp
 template<class T>
@@ -115,7 +116,7 @@ public:
 };
 ```
 
-### Solution 2: Proxy classes
+## Solution 2: Proxy classes
 
 ```cpp
 template<class T>

@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-07/31.gif
 
 `std::shared_ptrs` offer convenience approaching that of garbage collection for the shared lifetime management of arbitrary resources.
 <!--more-->
+<!-- toc -->
 
-#### Some facts
+# Some facts
 
 * `std::shared_ptr`s are twice the size of a raw pointer: 
     * a raw pointer to the resource
@@ -69,7 +70,7 @@ std::vector<std::shared_ptr<Widget>> vpw { spw1, spw2 };
 
 Apart from placing `spw1` and `spw2` in the same container, we could also assign one to another, or pass them into a function taking a parameter of type `std::shared_ptr<Widget>`. None of these things can be done with `std::unique_ptr`s, since their types differ due to different custom deleters.
 
-#### Avoid multiple control blocks from `this` pointer 
+# Avoid multiple control blocks from `this` pointer 
 
 Below is the rules to create the control block:
 

@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-07/10.gif
 
 Braced initialization is the most widely usable initialization syntax, which can also prevent narrowing conversions, as well as being immune to C++'s most vexing parse.
 <!--more-->
+<!-- toc -->
 
-## The good part
+# The good part
 
-#### Syntacticly widest usage
+## Syntacticly widest usage
 
 Syntax choices for object initialization in C++11 are confusing to support 3 forms: parentheses, equal signs, and braces.
 
@@ -52,7 +53,7 @@ std::atomic<int> ai3 = 0;  // error
 
 From the example above, it's easy to see why braced initialization is called "uniform" - a single initialization syntax that aims to be used anywhere and express everything.
 
-#### Preventing narrowing conversion
+## Preventing narrowing conversion
 
 Braced initialization prohibits implicit _narrowing conversions_ among built-in types:
 
@@ -64,7 +65,7 @@ int sum2(x + y + z);  // okay to truncate value of expression to an int
 int sum3 = x + y + z; // ditto
 ```
 
-#### Immune to most vexing parse
+## Immune to most vexing parse
 
 _Most vexing parse_: anything that can be parsed as a declaration must be interpreted as one. This may be annoying when developers want to default-construct an object, but inadvertently end up declaring a function instead. Using braces, we don't have such an issue:
 
@@ -74,13 +75,13 @@ Widget w2();  // intend to call a Widget const. with zero arg., end up declaring
 Widget w3{}; // calls Widget ctor with no args.
 ```
 
-## The not-so-good part
+# The not-so-good part
 
-#### Unintuitive behavior with `auto`
+## Unintuitive behavior with `auto`
 
 As EMCpp item 2 explains, when an `auto`-declared variable has a braced initializer, the type deduced is `std::initializer_list`, which may lead to surprising behaviors sometimes.
 
-#### (Too) high overloading priority
+## (Too) high overloading priority
 
 Calls using braced initialization syntax strongly prefer the overloads taking `std::initializer_list`s: if there's any way for compilers to construe a call using a braced initializer to be to a constructor taking a `std::initializer_list`, compilers will employ that interpretation:
 

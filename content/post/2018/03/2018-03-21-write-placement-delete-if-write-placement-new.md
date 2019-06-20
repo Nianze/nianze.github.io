@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-21.gif
 
 When we write a placement version of `operator new`, be sure to write the corresponding placement version of `operator delete` to avoid subtle, intermittent memory leaks. When we do so, pay attention not to unintentionally hide the normal versions of `new` and `delete`
 <!--more-->
+<!-- toc -->
 
-## Placement version of `new`
+# Placement version of `new`
 
 When an `operator new` function takes extra parameters (other than the mandatory `size_t` argument), that function is known as a _placement version of `new`_. For example:
 
@@ -26,7 +27,7 @@ void* operator new(std::size_t, void *pMemory) throw(); // placement new
 
 This specific version of placement `new` is in C++'s standard library (access through `#include<new>`) and is the original placement `new`. Later, people also use the term "placement `new`" to refer any version of `operator new` that takes extra arguments. The phrace "placement `delete`" also derives from this version.
 
-## To avoid subtle memory leak
+# To avoid subtle memory leak
 
 Suppose we want to write a class-specific `operator new` that requires specification of an `ostream` to which allocation information should be logged:
 
@@ -66,7 +67,7 @@ Widget *pw = new (std::cerr) Widget; // no potential leak
 delete pw;  // invokes the normal operator delete
 ```
 
-## Do not hide normal form of `new` and `delete`
+# Do not hide normal form of `new` and `delete`
 
 By default, C++ offers the following forms of `operator new` (and corresponding `operator delete`) at global scope:
 

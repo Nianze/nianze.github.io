@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-07/25.gif
 
 The special member functions are those ccompilers may generate on their own: default constructor, destructor, copy operations, and move operations.
 <!--more-->
+<!-- toc -->
 
 The rules in C++11:
 
@@ -33,7 +34,7 @@ The rules in C++11:
     - Runtime behavior: memberwise moving of non-static data members
     - Generated only if the class lacks user-declared copy operations, move operations, and destrutor.
 
-#### Use of "=default"
+# Use of "=default"
 
 The default implementation for special member functions inside a base class is correct. Since we have to explicitly declare the base destructor as `virtual` to avoid undefined or misleading results that often occurs in polymorphic inheritance, using  "=default" will be a good way to express the suppressed default implementation of the move and/or copy operations:
 
@@ -50,7 +51,7 @@ public:
 };
 ```
 
-#### Member function templates
+# Member function templates
 
 Note that there's nothing in the rules about the existence of a member function template preventing compilers from generating the special member functions:
 

@@ -15,6 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-09.gif
 
 In derived class templates, refer to names in base class templates via a `this->` prefix, via `using` declarations, or via an explicit base class qualification.
 <!--more-->
+<!-- toc -->
+
+# Case Study
 
 Sometimes when we cross from Object-oriented C++ to Template C++ (item 1), inheritance seem to stop working. For example, we'd like to log some information for the `sendMsg` function in base class `MsgSender`, so we make following derived class `LoggingMsgSender`:
 
@@ -95,7 +98,7 @@ Since base class templates may be specialized and that such specializations may 
 
 To force C++ to look in templatized base classes, there are three ways:
 
-### 1. Call with "this->"
+## 1. Call with "this->"
 
 ```cpp
 template<typename Company>
@@ -112,7 +115,7 @@ public:
 };
 ```
 
-### 2. Employ a "using" declaration
+## 2. Employ a "using" declaration
 
 This is the same trick we use in item 33, which explains how `using` declaration brings hidden base class names into a derived class's scope[^1]:
 
@@ -132,7 +135,7 @@ public:
 };
 ```
 
-### 3. Explicitly specify the base class qualification
+## 3. Explicitly specify the base class qualification
 
 ```cpp
 template<typename Company>
@@ -151,7 +154,7 @@ public:
 
 This approach is less desirable, because if the function being called is virtual, explicit qualification turns off the virtual binding behavior.
 
-## Summary
+# Summary
 
 From a name visibility point of view, each of these approaches does the same thing: it promises  compilers that any subsequent specializations of the base class template will support the interface  offered by the general template. However, if the promise turns out to be unfounded, the subsequent compilation will still diagnose invalid references to base class members and reveal the truth:
 

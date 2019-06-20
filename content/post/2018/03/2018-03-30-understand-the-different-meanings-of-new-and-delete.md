@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-30.gif
 
 The behaviors of `new` operator and `operator new` is different.
 <!--more-->
+<!-- toc -->
 
-## Relationship between '`new` operator' and '`operator new`'
+# Relationship between '`new` operator' and '`operator new`'
 
 Consider the following code:
 
@@ -78,7 +79,8 @@ However, if we want to do some customized behaviors, we may consider following o
 
     All placement `new` has to do is return the pointer that's passed into it, because the memory for the object is already known. The unused (but mandatory) `size_t` parameter has no name to keep compilers from complaining about its not being used (MECpp item 6).
 
-## Deletion and memory deallocation
+
+# Deletion and memory deallocation
 
 The `delete` operator also includes two steps: destructing the object and deallocating the memory occupied by that object. The second part of memory deallocation is performed by the `operator delete` function:
 
@@ -118,7 +120,8 @@ pw->~Widget();  // fine. destructs the Widget pointed to by pw, no memory deallo
 freeShared(pw);  // fine, deallocate the memory pointed to by pw, but calls no dtor
 ```
 
-## Arrays
+
+# Arrays
 
 For array allocation:
 

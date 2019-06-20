@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-05/2018-05-01.gif
 
 Techniques for requiring or prohibiting heap-based objects
 <!--more-->
+<!-- toc -->
 
-## Requiring Heap-Based Objects
+# Requiring Heap-Based Objects
 
-### 1. The straightforward way
+## 1. The straightforward way
 
 The brutle way is to declare the constructors and the destructor `private`, but this is overkill. Either one of them need to be private to ensure objects only be created on the heap. Since there are usually many constructors but only one destructor per class, a more elegant way is to make the destructor private and the constructors public, prividing privileged pseudo-destructor function (which has access to the real destructor) for clients to call, as suggested in MECpp item 26.
 
@@ -49,7 +50,7 @@ delete p; // error! attempt to call private dtor
 p->destroy(); // fine
 ```
 
-### 2. Inheritance-and-containment friendly
+## 2. Inheritance-and-containment friendly
 
 Restricting access to a class's destructor or constructors prevents the creation of not only non-heap objects, but also both inheritance and containment. To work this out:
 
@@ -77,7 +78,7 @@ Asset::~Asset()
 { value->destroy(); }  // fine
 ```
 
-### 3. Determining Whether an Object is On The Heap
+## 3. Determining Whether an Object is On The Heap
 
 It's hard to tell whether an object is on the heap. For example, given the class definition above, it's ligal to define a non-heap `NonNegativeUPNumber` object, which will not construct its base `UPNumber` part on the heap. There is no way to detect whether a constructor is being invoked as the base class part of a heap-based object, which means for the following contexts, it is not possible for the `UPNumber` constructor to detect the difference:
 
@@ -90,7 +91,7 @@ Sadly, there's no portable way to determine whether an object is on the heap, an
 
 We'll have to turn to unportable, implementation-dependent system calls if we absolutely have to tell whether an address is on the heap. That being the case, we'd better off trying to redesign the software so we don't need to determine whether an object is on the heap in the first place.
 
-#### 4. Determine whether it's safe to delete a pointer
+## 4. Determine whether it's safe to delete a pointer
 
 To answer this easier question, all we need to do is to create a collection of addresses that have been returned by `operator new`. One possible solution is to provide an abstract mixin base class that offers derived classes the ability to determine whether a pointer was allocated from `operator new`:
 
@@ -175,7 +176,7 @@ void inventoryAsset(const Asset *ap)
 
 Since built-in types such as `int` and `char` can't inherit from anything, `HeapTracked` can't be used with these built-in types. Still, the most common reason for wanting to use a class like `HeapTracked` is to determine whether it's okay to `delete this`, and we don't want to do that with a built-in type because such types have no `this` pointer.
 
-## Prohibiting Heap-Based Objects
+# Prohibiting Heap-Based Objects
 
 To preventing objects from being allocated on the heap, there are three cases:
 
@@ -183,7 +184,7 @@ To preventing objects from being allocated on the heap, there are three cases:
 2. objects instantiated as base class parts of derived class objects
 3. objects embedded inside other objects
 
-#### 1. Preventing directly instantiation on heap
+## 1. Preventing directly instantiation on heap
 
 To prevent clients from directly instantiating objects on the heap: we can declare `operator new` (and possibly `operator new[]`) as `private`:
 
@@ -215,11 +216,11 @@ static NonNegativeUPNumber n2; // okay
 NonNegativeUPNumber *p = new NonNegativeUPNumber; // error! attempt to call private operator new
 ```
 
-#### 2. Preventing base class parts instantiated on heap
+## 2. Preventing base class parts instantiated on heap
 
 However, if the derived class declares an `operator new` of its own, which will be called when allocating derived class objects on the heap, it is hard to prevent `UPNumber` base class parts from winding up there. 
 
-#### 3. Preventing base class parts instantiated on heap
+## 3. Preventing base class parts instantiated on heap
 
 Similarly, the fact that `UPNumber`'s `operator new` is private has no effect on attempts to allocate objects containing `UPNumber` objects as members:
 

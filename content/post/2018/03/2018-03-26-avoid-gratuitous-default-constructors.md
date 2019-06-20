@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-03/2018-03-26.gif
 
 Including meaningless default constructors affects the efficiency of classes, so avoiding them in classes guarantees fully-initialized objects, with the cost of some limits on how such classes can be used.
 <!--more-->
+<!-- toc -->
 
 For many objects, there is no reasonable way to perform a complete initialization in the absence of outside information. Consider a class for company equipment in which the corporate ID number of the quipment is a mandatory constructor argument:
 
@@ -26,7 +27,7 @@ public:
 };
 ```
 
-## With default constructor
+# With default constructor
 
 Some people believe _all_ classes should include a default constructors, even if a default constructor doesn't have enough information to fully initialize objects of the class. Adherents to this philosophy will modify `EquipmentPiece` as follows:
 
@@ -45,7 +46,7 @@ There are two downsides after including a default constructor in a class where n
 1. There's no longer any guarantee that the fields of an `EquipmentPiece` object have been meaningfully initialized, so member functions must check if each object has valid `IDNumber` before using it. If not, clients must find a solution to deal with the situation - sometimes they simply throw an exception or terminates the program, which may degrade the overall quality of the software.
 2. The meaningless default constructors affects the efficiency of classes: member functions have to include extra code to test object's validness and deal with the failure tests, and clients of those functions have to pay for the time those tests take as well as the space the extra code occupies.
 
-## Without default constructor
+# Without default constructor
 
 If a class lacks a default constructor, there are restrictions on how you can use that class. Specifically, in three constexts:
 
@@ -53,7 +54,7 @@ If a class lacks a default constructor, there are restrictions on how you can us
 * Ineligible for some template-based container classes
 * Virtual base classes
 
-### 1. Creation of arrays
+## 1. Creation of arrays
 
 There is, in general, no way to specify constructor arguments for objects in arrays:
 
@@ -122,7 +123,7 @@ There are three ways to get around the restriction:
     operator delete[](rawMemory);
     ``` 
 
-### 2. Ineligible for some template-based container classes
+## 2. Ineligible for some template-based container classes
 
 Some templates requires that the type used to instantiate the template proved a default constructor for purpose such as createing an array of the template parameter type inside the template:
 
@@ -146,7 +147,7 @@ Array<T>::Array(int size)
 
 Although careful template design can eliminate the need for a default constructor (such as `vector` template), there are templates designed with that requirement. That being the case, classes without default constructors will be incompatible with such templates.
 
-### 3. Virtual base classes
+## 3. Virtual base classes
 
 Arguments for virtual base class construcctors must be provided by the most derived class of the object being constructed. As a result, a virtual base class lacking a default constructor requires that _all_ classes derived from that class must know about, understand the meaning of, and provide for the virtual base class's constructors' arguments, which is neigher expected not appreciated by authors of derived classes.
 

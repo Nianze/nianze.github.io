@@ -13,10 +13,11 @@ thumbnailImage: /images/2016/2016-12-29.jpg
 
 Detailed review on binary search.
 <!--more-->
+<!-- toc -->
 
 This post is based on an article on binary search from [Topcoder](http://www.topcoder.com/community/data-science/data-science-tutorials/binary-search/).
 
-### Classic: Finding a value in a sorted sequence
+# Classic: Finding a value in a sorted sequence
 
 Consider the following sequence of integers sorted in ascending order and say we are looking for the number 55:
 
@@ -48,7 +49,7 @@ binary_search(A, target):
 
 ```
 
-### Taking it further: the main theorem
+# Taking it further: the main theorem
 
 Consider a predicate p defined over some ordered set S (the search space). The search space consists of candidate solutions to the problem. We use the predicate to verify if a candidate solution is legal (does not violate some constraint) according to the definition of the problem.
 
@@ -61,7 +62,7 @@ We can use binary search to find the smallest legal solution (i.e. the smallest 
 
 These two parts are most often interleaved: when we think a problem can be solved by binary search, we aim to design the predicate so that it satisfies the condition in the main theorem.
 
-### Implementation
+# Implementation
 
 Given an array A (following array) and a target value (say 55), return the index of the first element in A equal to or greater than the target value.
 
@@ -138,7 +139,7 @@ Note:
 
 * Just remember to always test the code on a two-element set where the predicate is false for the first element and true for the second.
 
-### Example: [_FairWorkload_](http://community.topcoder.com/stat?c=problem_statement&pm=1901&rd=4650)
+# Example: [_FairWorkload_](http://community.topcoder.com/stat?c=problem_statement&pm=1901&rd=4650)
 
 In the problem, a number of workers need to examine a number of filing cabinets. The cabinets are not all of the same size and we are told for each cabinet how many folders it contains. We are asked to find an assignment such that each worker gets a sequential series of cabinets to go through and that it minimizes the maximum amount of folders that a worker would have to look through.
 
@@ -191,7 +192,7 @@ The overall complexity of the solution is O(n log SIZE), where SIZE is the size 
 
 In this example, we used a greedy algorithm to evaluate the predicate. In other problems, evaluating the predicate can come down to anything from a simple math expression to finding a maximum cardinality matching in a bipartite graph.
 
-### Conclusion
+# Conclusion
 
 * Design a predicate which can be efficiently evaluated and so that binary search can be applied
 * Decide on what you’re looking for and code so that the search space always contains that (if it exists)

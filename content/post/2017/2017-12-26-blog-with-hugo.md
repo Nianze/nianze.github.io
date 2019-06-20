@@ -17,8 +17,9 @@ metaAlignment: center
 This article talks about how to use [Hugo](https://gohugo.io/) to build a personal website hosted on [Github Pages](https://pages.github.com/). It also introduces how to find a free custom domain name from [Freenom](http://www.freenom.com/) and migrated the DNS server to [CloudFlare](https://www.cloudflare.com/) in order to use HTTPs with chosen custom domain name on GitHub Pages.  
 本文讲述了如何使用[Hugo](https://gohugo.io/)将个人网页托管在[Github Pages](https://pages.github.com/)上。同时也介绍了如何在[Freenom](http://www.freenom.com/)上找到免费个人域名并利用[CloudFlare](https://www.cloudflare.com/)的免费DNS服务在Github Pages上以HTTPs协议加载个人域名。
 <!--more-->
+<!-- toc -->
 
-### 前言
+# 前言
 
 最开始写博客始于2015年末，当时因为自制了几个单簧管演奏的视频，心想可以建一个简易的网站把录制背后的故事和想法集合起来。由于个人网站一般不需要太多交互，使用静态网页生成器并托管在`Github Pages`上成为了首选方案（能使用git实现版本控制更是个加分项）。彼时没想太多直接用了`Github Pages`原生支持的网页生成器[Jekyll](https://jekyllrb.com/)。随便搜了一个主题，第一版网站便这么建了起来：
 
@@ -28,7 +29,7 @@ This article talks about how to use [Hugo](https://gohugo.io/) to build a person
 
 在为期一年断断续续的更新中总计写下了十余篇音乐和程序相关的（毫无营养的）文章后，第一代模板差不多也看腻了，突然觉得是时候该把网站升级下。遂决定新的博客应更简洁规整，首页加入图片预览功能并减去不必要的视觉干扰，菜单栏里应有分类、标签和归档功能。一番搜寻后，目光落在[Hugo](https://gohugo.io/)。主要原因在于`Hugo`简单易用——不需要安装太多[Hexo](https://hexo.io/)中的依赖库，更换主题也比`Jekyll`方便，生成速度还很快。以下便是我的配置过程。
 
-### 安装Hugo
+# 安装Hugo
 
 > 本文在macOS High Sierra环境下写成。Windows平台可参考官方文档做相应修改。
 
@@ -42,7 +43,7 @@ brew install hugo
 
 至此Hugo就安装完毕了。So easy.
 
-### 在Hugo中写文章
+# 在Hugo中写文章
 
 在硬盘中选取合适的存储路径，然后命令行中使用如下指令生成网页本地文档：
 
@@ -132,7 +133,7 @@ hugo
 
 如此一来网页便生成在默认的public子目录中了。
 
-### 发布并托管到Github
+# 发布并托管到Github
 
 上传到Github之前，先在Github中添加一个空白repository，注意不要添加如`README`，`.gitignore`等文档。由此得到Github中该repository的网址：`https://github.com/Nianze/personal-site.git`
 
@@ -155,7 +156,7 @@ git push -u origin master
 1. 配置`Hugo`将网页生成在名为`/docs`的子目录中，然后直接push到`master branch`
 2. 仍然使用默认的`/public`子目录存储网页，再单独建立一个`gh-pages branch`
 
-#### 使用`/docs`发布到master branch
+## 使用`/docs`发布到master branch
 
 第一种方案的好处在于一次push即可将源文档和对应生成的网页文档都发布到Github，操作非常简单。所需要的仅是在config.toml中添加如下一行配置，使得生成的网页默认保存在`/docs`子目录下：
 
@@ -169,7 +170,7 @@ publishDir = docs
 
 等待片刻即可访问`http://your_name.github.io`看到之前用`Hugo`生成的网页了。
 
-#### 发布到gh-pages branch
+## 发布到gh-pages branch
 
 如果希望单独控制源文档和生成的网页文档的版本历史，可以使用单独建立一个`gh-pages branch`的方法托管到`Github Pages`——先将`/public`子目录添加到`.gitignore`中，让`master branch`忽略其更新，然后在本地和Github端添加一个名为`gh-pages`的branch：
 
@@ -223,7 +224,7 @@ git push origin gh-pages
 
 同样等待片刻，即可访问`https://your_name.github.io`看到之前用`Hugo`生成的网页了。
 
-### 配置个人域名
+# 配置个人域名
 
 如果觉得使用`your_name.github.io`不够酷炫，还可以考虑使用自选的个人域名。好的个人域名自然是需要到对应服务商购买的。常见的域名如`.com`, `.net`, `.me`一般都不免费，但好在非顶级域名的年费其实也不贵。由于我建网的初衷只是自娱自乐，暂时并没有付费购买域名的意向，索性直接去[Freenom](http://www.freenom.com/)找了免费域名来用。目前Freenom平台提供的免费域名后缀为`.tk`, `.ml`,`ga`,`cf`,`gq`等。购买域名很简单，先在[Freenom](http://www.freenom.com/)
 网站上注册账号，然后查看自己想要的域名的价格并根据提示下单即可。考虑到现在machine leanring这么火，我就选了`nianze.ml`这个免费域名。
@@ -242,7 +243,7 @@ git push origin gh-pages
 
 等待几小时，在浏览器中访问`nianze.ml`就可以看到熟悉的个人网站页面了。
 
-### 配置CloudFlare以使用HTTPs
+# 配置CloudFlare以使用HTTPs
 
 之所以想要使用[CloudFlare](https://www.cloudflare.com/)，是因为上一步当我们配置好个人域名后，由于`Github Pages`不支持在自定义域名中使用`HTTPs`协议，所以浏览器中访问`nianze.ml`使用的是`HTTP`协议。这造成一个弊端：每回用Chrome打开`nianze.ml`，浏览器都提示该网页不受信任，如果网页中还有待加载的`JavaScript`代码,就得单独点浏览器地址栏右侧的`load`按钮才能正常加载全部页面，非常麻烦。再加上考虑到`HTTPs`协议比`HTTP`更快更安全，显然应该想办法解决这个问题。
 
@@ -268,11 +269,11 @@ git push origin gh-pages
 
 至此配置完毕。其实`CloudFlare`中还有很多别的选项，可以根据个人喜好进行相应配置。等待几小时，再次访问`nianze.ml`，可以发现网页已经在`HTTPs`协议下加载了。这样以来就再也不用去点那个烦人的load按钮了。
 
-### 后记
+# 后记
 
 至此我的新版博客就迁移完毕了，基本满足我现在写文章、摄影和音乐的各项需求。下一步准备在摄影栏目中加上一个照片墙功能。
 
-### 参考文档
+# 参考文档
 
 1. [Hugo Tranquilpeak Theme](https://themes.gohugo.io/hugo-tranquilpeak-theme/)
 2. [Using HTTPs with Custom Domain Name](https://www.jonathan-petitcolas.com/2017/01/13/using-https-with-custom-domain-name-on-github-pages.html)

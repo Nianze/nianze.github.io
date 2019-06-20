@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-03/2018-03-14.gif
 
 Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time `if...else` tests on types.
 <!--more-->
+<!-- toc -->
 
 In this item, let's look at how STL supports the utility template `advance`, which moves a specified iterator a specified distance:
 
@@ -25,7 +26,7 @@ void advance(IterT& iter, DistT d); // move iter d units forward; if d < 0, move
 
 Before we step into the field of `advance` implementation, we should be familiar about STL iterator categoryies, because different iterators support different operations.
 
-## Five iterator categories
+# Five iterator categories
 
 According to the operations they support, there are five categories of iterators[^1]:
 
@@ -45,7 +46,7 @@ struct bidirectional_iterator_tag: public forward_iterator_tag {};
 struct random_access_iterator_tag: public bidirectional_iterator_tag {};
 ```
 
-## Pseudocode for `advance`
+# Pseudocode for `advance`
 
 Knowing that different categories support different operations, `advance` will essentially be implemented like this:
 
@@ -65,11 +66,11 @@ void advance(IterT& iter, DistT d)
 
 How to determine whether `iter` is a random access iterator? Here comes the technique of _traits_, which allow us to get type information during compilation.
 
-## Traits
+# Traits
 
 Traits aren't a keyword or a predefined construct in C++, but simply a technique and a convention followed by C++ programmers. It has some requirements, one of which asks that it has to work as well for built-in types as it does for user-defined types. This demand leads to the conclusion that the traits information for a type must be external to the type[^2]. 
 
-#### For user-defined types
+## For user-defined types
 
 The standard technique is to put the information into a template and one or more specializations of that template. For iterators, the template in the standard library is named `iterator_traits`[^3]:
 
@@ -111,7 +112,7 @@ public:
 };
 ```
 
-#### For pointer types
+## For pointer types
 
 The code above works well for user-defined types, but it doasn't work for iterators that are pointers, since there's no such thing as a nested typedef inside a built-in pointer. To make it work, `iterator_traits` need to offer a _partial template specialization_ for pointer types:
 
@@ -124,13 +125,13 @@ struct iterator_traits<IterT*> // for built-in pointer types
 }
 ```
 
-### Workflow for designing and implementing a traits class
+## Workflow for designing and implementing a traits class
 
 * Identify some information about types we'd like to make available (e.g., iterator category for iterator types)
 * Choose a name to identify that information (e.g., `iterator_category`)
 * Provide a template and set of specializations (e.g., `iterator_traits`) that contain the information for the types we want to support
 
-## Implementing `advance`
+# Implementing `advance`
 
 Given `std::iterator_traits`, we can refine our pseudocode for `advance`:
 
@@ -146,7 +147,7 @@ void advance(IterT& iter, DistT d)
 
 Sadly, this is not what we want: for one thing, it will lead to compilation problems (refer to item 48); anther issue, which is more fundamental, is that `if` statement is evaluated at runtime but `iterator_traits<IterT>::iterator_category` can be determined during compilation already. There's no point to move the evaluation from compile-time to runtime to waste time and bloat the executable.
 
-### Template metaprogramming
+## Template metaprogramming
 
 What we want is a conditional construct for types that is evaluated during compilation. Actually this demand brings us to the realm of template metaprogramming (item 48), but the technique we'll use turns out to be quit familiar: _overloading_:
 
@@ -181,7 +182,7 @@ void advance(IterT& iter, DistT d)
 };
 ```
 
-### Summary
+## Summary
 
 How to use a traits class:
 

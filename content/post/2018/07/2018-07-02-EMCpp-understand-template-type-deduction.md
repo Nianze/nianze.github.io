@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-07/02.gif
 
 There are three sets of rules for type deduction in modern C++: one for function templates, one for `auto`, and one for `decltype`. Without a solid understanding of how deduction operates, effective programming in modern C++ is all but impossible.
 <!--more-->
+<!-- toc -->
 
 Since type deduction for templates is the basis of that for `auto`, it's important to truly understand the aspects of template type deduction that `auto` builds on: during template type deduction, there are three cases for parameter types:
 
@@ -32,7 +33,7 @@ void f(ParamType param);
 f(expr); // deduce T and ParamType from expr
 ```
 
-#### Case 1: `ParamType` is Reference or Pointer, but not a Universal Reference
+# Case 1: `ParamType` is Reference or Pointer, but not a Universal Reference
 
 The rules in this case works like this:
 
@@ -80,7 +81,7 @@ f(px);   // T is const int, param's type is const int*
 
 As shown above, when param were a pointer (or a pointer to const), things work essentially the same way.
 
-#### Case 2: `ParamType` is a Universal Reference
+# Case 2: `ParamType` is a Universal Reference
 
 Things are less obvious for templates taking universal reference paramters:
 
@@ -105,7 +106,7 @@ f(27); // x is rvlaue, so T is int, param's type is therefore int&&
 
 EMCpp Item24 explains why these examples play out the way they do.
 
-#### Case 3: `ParamType` is Neither a Pointer nor a Reference
+# Case 3: `ParamType` is Neither a Pointer nor a Reference
 
 In this case, we're dealing with pass-by-value. That means that `param` will be a new object, which motivates the rules below:
 
@@ -127,7 +128,7 @@ f(rx); // T's and param's types are both int
 f(ptr); // T's and param's types are const char*, the constness of ptr is ignored.
 ```
 
-#### Array Arguments
+# Array Arguments
 
 Even though they sometimes seems to be interchangeable, array types are, in fact, different from pointer types. We had such equivalence illusion because, in many contexts, an array _decays_ into a pointer to its first element:
 
@@ -179,7 +180,7 @@ There are two points worth noting in this declaration:
     ```
 2. `noexcept`, as explained in EMCpp 14, helps compilers generate better code.
 
-#### Function Arguments
+# Function Arguments
 
 Apart from arrays, function types can decay into function pointers, too. As a result:
 

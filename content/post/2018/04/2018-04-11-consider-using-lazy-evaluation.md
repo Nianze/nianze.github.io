@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-04/2018-04-11.gif
 
 The best computations are those we never perform at all.
 <!--more-->
+<!-- toc -->
 
 Lazy evaluation is applicable in an enormous variety of application areas.
 
-### Reference Counting
+# Reference Counting
 
 ```cpp
 class String {...};
@@ -30,7 +31,7 @@ String s2 = s1;  // call String copy ctor
 
 The lazy approach: instead of giving `s2` a copy of `s1`'s value, we have `s2` share `s1`'s value to save the cost of a call to `new` and the expense of copying anything, until any one is modified (i.e., `s2.convertToUpperCase();` will change only `s2`'s value by making a private copy of shared value before modification). Refer to MECpp item 29 for implementation details.
 
-### Distinguishing Reads from Writes
+# Distinguishing Reads from Writes
 
 ```cpp
 cout << s[2];  // read
@@ -39,7 +40,7 @@ s[2] = 'x';    // write
 
 For `operator[]`, we'd like to distinguish the read call from the write so that a reference-counted string reading is cheap. In order to determine whether `operator[]` has been called in a read or in a write context, we use lazy evaluation and proxy classes as described in MECpp item 30.
 
-### Lazy Fetching
+# Lazy Fetching
 
 ```cpp
 class LargeObject {
@@ -80,7 +81,7 @@ Since null pointers may need to be initialized to point to real data from inside
 
 As an alternative, we can replace pointers with smart pointers (MECpp item 28), which does not need to be declared as `mutable`.
 
-### Lazy Expression Evaluation
+# Lazy Expression Evaluation
 
 ```cpp
 template<class T>

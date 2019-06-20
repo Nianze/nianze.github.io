@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-04/2018-04-24.gif
 
 Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.
 <!--more-->
+<!-- toc -->
 
-## Allowing zero or one objects
+# Allowing zero or one objects
 
 Using the classic singleton design pattern, it's easy to limit the number of object to either zero or one. There are three points worth noting in this design:
 
@@ -77,9 +78,9 @@ This design never instantiates more than a single `Printer` object at a time, bu
 
 This need for flexibility leads us to the design of object-counting.
 
-## Allowing multimple objects: object-counting with pseudo-constructor
+# Allowing multimple objects: object-counting with pseudo-constructor
 
-#### Object-counting
+## Object-counting
 
 The good point of object-counting is that, it provides us with more flexibility than the function static, and makes it easier to generalize the limit number to more than one. However, object-counting alone will not work. For example:
 
@@ -144,7 +145,7 @@ From object definition above, there are two `Printer` objects, one for `p` and o
 
 Often we are interested only in allowing objects to exist on their own, and limit the number of those kinds of instantiations. To satisfy such restrictions, we should declare the class constructors `private`, and (in the absence of `friend` declarations) classes with private constructors can't be used as base classes, nor can they be embedded inside other objects.
 
-#### Pseudo-constructor
+## Pseudo-constructor
 
 In fact, private constructors are a general solution for preventing derivation. Instead of returning a reference to a single object (like what `thePrinter` does), we can declare a pseudo-constructor returning a pointer to a unique object to allow multiple objects.
 
@@ -203,7 +204,7 @@ Printer * Printer::makePrinter(const Printer& rhs)
 { return new Printer(rhs); }
 ```
 
-#### An object-counting base class
+## An object-counting base class
 
 We can split the instance counting ability apart from the `Printer` class to reuse the limited-number-of-instance functionality.
 

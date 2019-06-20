@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-08/11.gif
 
 But don't apply `std::move` or `std::forward` to local objects if they would otherwise be eligible for the return value optimization.
 <!--more-->
+<!-- toc -->
 
-#### Normal cases
+# Normal cases
 
 When forwarding them to other functions, rvalue references, which is always bound to rvalues, should be _unconditionally_ cast to rvalues (via `std::move`), while universal references, which is sometimes bound be rvalues, should be _conditionally_ cast to rvalues (via `std::forward`):
 
@@ -37,7 +38,8 @@ private:
 };
 ```
 
-#### What if
+
+# What if
 
 You may wonder, what will happen if we exchange `std::forward` ans `std::move`:
 
@@ -89,7 +91,8 @@ The cost we pay for this replacement is:
     shared_ptr<T> make_shared(Args&&... args);  // can't overload on lvalues and rvalues on args. universal reference is used and std::forward is applyied
     ```
 
-#### Other usage
+
+# Other usage
 
 Moreove, sometimes we want to apply `std::move` or `std::forward` to only the final use of the reference when an rvalue reference or a universal reference will be used more than once in a single function:
 
@@ -122,7 +125,8 @@ Fraction reduceAndCopy(T&& frac)
 }
 ```
 
-#### When not to
+
+# When not to
 
 According to Standardization Committee, there's a kind of optimizatoin called _return value optimization (RVO)_:
 

@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-07/07.gif
 
 Despite some pitfalls described in EMCpp item 2 and 6, `auto` variables are preferred for they must be initialized, are generally immune to type mismatches that can lead to portability or efficiency problems, can ease the process of refactoring, and typically require less typing than variables with explicitly specified types.
 <!--more-->
+<!-- toc -->
 
-#### Avoidance of Uninitialized variables
+# Avoidance of Uninitialized variables
 
 `auto` variavbles have their type deduced from their initializer, so they must be initialized.
 
@@ -26,7 +27,8 @@ auto x2;  // error! initializer required
 auto x3 = 0; // fine, x3's value is well-defined
 ```
 
-#### Avoidance of Syntactic Verbosity 
+
+# Avoidance of Syntactic Verbosity 
 
 In order to express the type of the value pointed to by an iterator, without `auto`, we may write like this:
 
@@ -54,7 +56,8 @@ void dwim(It b, It e)
 }
 ```
 
-#### Ability to Hold Closure
+
+# Ability to Hold Closure
 
 Because `auto` uses type deduction, it can represent types known only to compilers, such as lambda expressions:
 
@@ -93,7 +96,8 @@ As we can see, syntactic verbosity makes `auto` a preferred choice. Besides that
 
 In summary, `auto` wins the competition between `auto` and `std::function` for holding a closure.
 
-#### Avoidance of Unexpected Implicit Conversions
+
+# Avoidance of Unexpected Implicit Conversions
 
 Consider this code:
 
@@ -117,7 +121,8 @@ for (auto& p : m)
 }
 ```
 
-#### Avoidance of Explicit Type Revising during Refactoring
+
+# Avoidance of Explicit Type Revising during Refactoring
 
 `auto` types automatically change if the type of their initializing expression changes, and that means that some refactoring (e.g., change the return type of a function from `int` to `long`) are facilitated by the use of `auto`: 
 

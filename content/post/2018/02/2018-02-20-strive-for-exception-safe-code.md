@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-02/2018-02-20.gif
 
 Exception-safe functions leak no resources and allow no data structures to become corrupted, even when exceptions are thrown. Such functions offer the basic, strong, and nothrow guarantees.
 <!--more-->
+<!-- toc -->
 
 For exception-safe functions, there are two requirements when an exception is thrown:
 
@@ -27,7 +28,7 @@ Specifically, from the perspective of data structure corruption, exception-safe 
 2. The **strong guarantee** promises that if an exception is thrown, the state of the program is unchanged - calls to such functions are _atomic_ in the sense that if they succeed, they successd completely, and if they fail, the program state is as if they'd never been called.
 3. The **nothrow guarantee** promises never to throw exceptions - all operators on built-in types (e.g., `int`s, pointers, etc.) are nothrow. This is a critical building block of exception-safe code.
 
-## Example
+# Example
 
 With all these terminologies bear in mind, let's see an example representing exception-unsafe style. Suppose there's a class for GUI menus with background images, and it will be used in a threaded environment, so it has a mutex for concurrency control:
 
@@ -58,7 +59,7 @@ Firstly, the code above is likely to encounter resource leak, because if the `ne
 
 Secondly, this function guarantees none of the 3 promises in terms of data structure corruption above: when `new Image(Src)` throws, `bgImage` is left pointing to a deleted object, and `imageChanges` has been increamented before the new image has been installed, resulting to invalid object state.
 
-### Resource leak
+## Resource leak
 
 To address the resource leak issue, we can use objects to manage resources (item 13), and take advantage of `Lock` class to ensure that mutexes are released in a timely fashion (item 14):
 
@@ -72,7 +73,7 @@ void PrettyMenu::changeBackground(std::istream& imgSrc)
 }
 ```
 
-### Data structure corruption
+## Data structure corruption
 
 To address the issue of data structure corruption, we may need to determine which guarantee to offer. As a general rule, 
 
@@ -114,7 +115,7 @@ Note how the use of resource magangement object (i.e., the smart pointer here) h
 
 After these two changes, `changeBackground` _almost_ offer the strong exception safety guarantee. The only weakness now is the parameter `imgSrc`: if the `Image` constructor throws an exception, it's possible that the read marker for the input stream has been moved, which is a change in state visible to the rest of the program, leading to offering only the basic exception safety guarantee.
 
-#### Copy-and-`swap` strategy
+### Copy-and-`swap` strategy
 
 There actually is a general design strategy for offering the strong guarantee:
 
@@ -154,11 +155,11 @@ void PrettyMenu::changeBackground(std::istream& imgSrc)
 
 We don't have to make the struct `PMImpl` as a class, because the encapsulation of `PrettyMenu` data is assured by `pImpl` being private, and it is more convenient to use struct. If desired, `PMImpl` could be nested inside `PrettyMenu` when considering packaging issues.
 
-#### Side effects and efficiency
+### Side effects and efficiency
 
 Even with the help of copy-and-`swap` strategy, there are two possible reasons that downgrade the overall exception safety level from strong to basic: _side effects_ and _efficiency_.
 
-##### 1. Side effects
+#### 1. Side effects
 
 Suppose `someFunc` uses copy-and-`swap` and includes calls to two other functions, `f1` and `f2`:
 
@@ -176,13 +177,13 @@ Apparently, if `f1` or `f2` is less than strongly exception-safe, it will be har
 
 For example, if a side effect of calling `f1` is that a database is modified, and there is, in general, no way to undo a database modification that has already been committed; so after successfully calling `f1`, if `f2` then throws an exception, the state of the program is not the same as it was when calling `someFunc`, even though `f2` didn't change anything.
 
-##### 2. Efficiency 
+#### 2. Efficiency 
 
 Copy and `swap` strategy requires making a copy of each object to be modified, which takes time and space we may be unable or unwilling to make available. It's just not practical 100% of the time when we want to offer the strong guarantee.
 
 When it's not, we'll have to offer the basic guarantee. In practice, we can usually offer the strong guarantee for some functions, but the const in efficiency or complexity will make it untenable for many others. For those functions, the basic guarantee is a perfectly resonable choice, as long as we've made a reasonable effort to offer the strong guarantee whenever it's practical.
 
-## In practice
+# In practice
 
 A software system is either exception-safe or it's not. There's no such thing as a partially exception-safe system. If a system has even a single function that's not exception-safe, the system as a whole is not exception-safe. Unfortunately, much C++ legacy code was written without exception safety in mind, so many system incorporating legacy code today are not exception-safe.
 

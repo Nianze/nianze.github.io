@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-07/20.gif
 
 Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, `noexcept` is particularly valuable.
 <!--more-->
+<!-- toc -->
 
-#### More optimizable
+# More optimizable
 
 For functions that won't produce exceptions, we have C++98 style as well as C++11 style:
 
@@ -49,7 +50,9 @@ struct pair {
 
 These functions are _conditionally_ `noexcept`: whether they are `noexcept` depends on whether the expression inside the `noexcept` clauses are `noexcept`. The fact that swapping higher-level data structures can generally be `noexcept` only if swapping their lower-level constituents is `noexcept` should be reasonable enough to offer `noexcept` `swap` functions whenever we can.
 
-#### Exception Neutral Functions
+
+
+# Exception Neutral Functions
 
 `noexcept` is part of a function's interface, so we should declare a function `noexcept` only if we are willing to commit to a `noexcept` implementation over the long term. 
 
@@ -57,7 +60,9 @@ However, most functions are _exception-newtral_: they throw no exceptions themse
 
 For some other few functions, on the other hand, being `noexcept` is so important that, in C++11, they are implicitly `noexcept`: by default, all memory deallocation functions and destructors (both user-defined and compiler-generated) are `noexcept`.
 
-#### Wide Contracts vs Narrow Contracts
+
+
+# Wide Contracts vs Narrow Contracts
 
 A function with a wide contract has no preconditions: they can be called regardless of the state of the program, with no constraints on the arguments that callers pass it, and never exhibit undefined behavior.
 
@@ -67,7 +72,9 @@ Generally, library desingers reserve `noexcept` for functions with wide contract
 
 If we're writing a function with a wide contract and we know it won't emit exceptions, just declare it `noexcept`.
 
-#### Backward compatibility
+
+
+# Backward compatibility
 
 So much legacy code is not decalred with `noexcpet` even though they actually never emit exceptions. For the reason of backward compatibility, `noexcept` functions calling non-`noexcept` functions are permitted in C++, and compilers generally don't issue warnings about it:
 

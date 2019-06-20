@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-08/24.gif
 
 Lambdas are more readable, more expressive, and may be more efficient than using `std::bind`.
 <!--more-->
+<!-- toc -->
 
-#### More readable 
+# More readable 
 
 Suppose we want a function to set up an audible alarm that will go off an hour after it's set and that will stay on for 30 seconds, with the alarm sound remaining undecided.
 
@@ -96,7 +97,7 @@ auto setSoundB =
               30s);
 ```
 
-#### More efficient
+# More efficient
 
 The cast above introduces another side effect: 
 
@@ -105,7 +106,7 @@ The cast above introduces another side effect:
 
 This means using lambdas might generate faster code than using `std::bind`.
 
-#### More expressive
+# More expressive
 
 ```cpp
 auto betweenL = 
@@ -122,7 +123,7 @@ auto betweenB =
 
 Moreover, the placeholders (e.g., `_1`, `_2`, etc.) are opaque in that it doesn't specify how parameters are passed and stored in the bind object, by value or by reference. We have to memorize that it's stored by value. Lambda, however, specifies capture mode very clearly.
 
-#### Edge cases
+# Edge cases
 
 In C++14, there's no reasonable use case for `std::bind`. In C++11, two constrained situations my be useful:
 

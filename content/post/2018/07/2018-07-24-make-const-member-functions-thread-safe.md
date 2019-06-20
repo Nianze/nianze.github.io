@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-07/24.gif
 
 Make `const` member functions thread safe unless we're _certain_ they'll never be used in a concurrent context.
 <!--more-->
+<!-- toc -->
 
 Due to `mutable` member datas, `const` member functions may not be thread safe. For a classic use case for `mutable`:
 
@@ -48,7 +49,7 @@ auto rootsOfP = p.roots();    auto valsGivingZero = p.roots();
 
 Having multiple threads perform a read operation without synchronization is safe. However, although `roots` is declared `const`, it's not thread safe: more than one threads might try to modify the data members `rootsAreValid` and `rootVals` inside `roots`, reading and writing the same memory without synchronization - which is data racing, leading to undefined behavior.
 
-#### Solution: mutex
+# Solution: mutex
 
 ```cpp
 class Polynomial {
@@ -75,7 +76,7 @@ private:
 
 Another point worth noting is that `std::mutex` can be neither copied nor moved, so a side effect of adding `m` to `Polynomial` is that `Polynomial` loses the ability to be copied and moved.
 
-#### For a single variable requiring synchronization
+# For a single variable requiring synchronization
 
 Sometimes when there's only one variable or memory location requiring synchronization, `mutex` might be overkill, and we might consider `std::atomic` counter (EMCpp item 40), which is often a less expensive way to go[^1]:
 
@@ -96,7 +97,7 @@ private:
 
 The same side effect goes here: the existance of `callCount` in `Point` makes `Point` neither copyable nor movable. 
 
-#### Summary
+# Summary
 
 The point in this item: when we write a `const` member function, we might avoid the costs associated with mutexes and `std::stomic`s as well as the side effect of uncopyability as well as unmovability, if we can guarantee that there will never be more than one thread executing that member function on an object.
 

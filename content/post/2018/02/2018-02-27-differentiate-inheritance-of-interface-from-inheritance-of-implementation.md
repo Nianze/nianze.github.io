@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-02/2018-02-27.gif
 
 Inheritance of interface is different from inheritance of implementatino.
 <!--more-->
+<!-- toc -->
 
 Under public inheritance, derived classes always inherit base class interfaces, but may act differently in terms of base class implementation inheritance:
 
@@ -38,7 +39,7 @@ class Ellipse: public Shape {...};
 
 Since derived classes `Rectangle` and `Ellipse` are both public inherited, according to item 32, this means `is-a`, so anything that is true of the base class must also apply to derived classes. Thus, the member function _interfaces_ are always inherited.
 
-## Pure virtual functions
+# Pure virtual functions
 
 For pure virtual functions, there are two features we have to note:
 
@@ -62,7 +63,7 @@ ps1->Shape::draw(); // call Shape::draw
 
 This feature is generally of limited utility, except that it can be employed as a mechanism for providing a safer-than-usual default implementation for simple virtual functions as we'll see below.
 
-## Simple (impure) virtual functions
+# Simple (impure) virtual functions
 
 Simple virtual functions provide an implementation that derived classes may override, which means that
 
@@ -70,7 +71,7 @@ Simple virtual functions provide an implementation that derived classes may over
 
 For example, the declaration of `error` function tells us that "You have to supoort an `error` function, but if you don't want to write your own, you can fall back on the default version in the `Shape` class."
 
-### Potential danger
+## Potential danger
 
 However, in the perspective of class design, there's a potential danger to allow simple virtual functions to specify both a function interface and a default implementation. That is: a derived class is allowed to inherit the default implementation without **explicitly** saying that it wanted to. For example:
 
@@ -94,7 +95,7 @@ class ModelB: public Airplane{...};
 
 Suppose both `ModelA` and `ModelB` inherit the base class `Airplane` without re-implementing the simple virtual function `fly`. Chances are that `ModelB` is actually a new type of model, yet its programmer simply forgets to redefine the `fly` function. 
 
-#### Separate interface from default implementation
+## Separate interface from default implementation
 
 To make our design more foolproof, we may separate functions for providing interface and default implementation, such as below:
 
@@ -133,7 +134,7 @@ void ModelB::fly(const Airport& destination)
 }
 ```
 
-#### Take use of pure virtual function
+## Take use of pure virtual function
 
 Some people may feel this design is redundant, arguing that this will polllute the class namespace with a proliferation of closely related function names. Then we may take advantage of the fact that pure virtual functions, which insists on redeclaring in concrete derived classes, may also have implementations of their own:
 
@@ -179,7 +180,7 @@ In essence, this design breaks `fly` into two fundamental components:
 
 However, in merging `fly` and `defaultFly`, we have lost the ability to give the two functions different protection levels: previously `protected` code in `defaultFly` is now `public` in `fly`.
 
-## Non-virtual function
+# Non-virtual function
 
 A non-virtual member function specifies an _invariant over specialization_ (a point discussed in item 36), identifying behavior that is not supposed to change, no matter how specialized a derived class becomes. Thus:
 
@@ -188,6 +189,6 @@ A non-virtual member function specifies an _invariant over specialization_ (a po
 The declaration for `Shape::objectId` is basically say, "Every `Shape` object has a function that yields an object identifier, and that identifier is always conputed the same way. That way is determined by the definition of `Shape::objectID`, and no derived class should try to chagne how it's done."
 
 
-## Summary
+# Summary
 
 The differences in declarations for pure virtual, simple virtual and non-virtual functions allow us to specify with precision what we want derived classes to inherit: interface only, interface and a default implementation, or interface and a mandatory implementation, respectively.

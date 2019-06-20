@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-02/2018-02-01.jpg
 
 Use RAII objects such as `tr1::shared_ptr` and `auto_ptr` to prevent resource leaks.
 <!--more-->
+<!-- toc -->
 
 First of all, let's make clear the concept: a resource is something that we need to return to the system once we're done using it, such as dynamically allocated memory, file descriptors, mutex locks, fonts and brushes in graphical user interfaces (GUIs), database connections, and network sockets.
 
@@ -25,7 +26,7 @@ On the other hand, by putting resources inside objects, we can rely on C++'s aut
 1. `std::auto_ptr`: destructor automatically calls `delete` on what it points to when the `auto_ptr` is destroyed. There's only one `auto_ptr` pointing to the underlying resoures each time
 2. `std::tr1::shared_ptr`: is a `reference-counting smart pointer (RCSP)`. Similar to garbage collection but can't break cycles of references (e.g.: two otherwise unused objects pointing to one another).
 
-### 1. `auto_ptr`
+# 1. `auto_ptr`
 
 We can use `auto_ptr` to manage a class `Investment` that comes with a factory function (item 7) without worrying about resource leak:
 
@@ -54,7 +55,7 @@ std::auto_ptr<Investment> pInv2(pInv1);  // pInv2 now points to the object; pInv
 pInv1 = pInv2;  // pInv1 points to the object, and pInv2 is null now
 ```
 
-### 2. `shared_ptr`
+# 2. `shared_ptr`
 
 An alternative **RAII** object, `shared_ptr`, is an RCSP(reference-counting smart pointer), which is a smart pointer that keeps track of how many objects point to a particular resource and automatically deletes  the resource when nobody is pointing to it any longer. The code above is almost the same as with `shared_ptr`, but copying behavior is much more natural:
 

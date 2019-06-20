@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-05/2018-05-21.gif
 
 The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.
 <!--more-->
+<!-- toc -->
 
-## Redesign concrete base classes to abstract ones
+# Redesign concrete base classes to abstract ones
 
 If we have two concrete classes C1 and C2 and we'd like C2 to publicly inherit from C1, we should transform that two-class hierarchy into a three-class hierarchy by creating a new class A and having both C1 and C2 publicly inherit from it:
 
@@ -81,7 +82,7 @@ The two problems here:
 1. _partial assignment_: only `Animal` members in `liz1` get updated from `liz2`, while the `liz1`'s Lizard members remain unchanged.
 2. it's not uncommon for programmers to make assignments to objects via pointers.
 
-### Solution 1: virtual functions
+## Solution 1: virtual functions
 
 ```cpp
 class Animal {
@@ -130,7 +131,7 @@ Lizard& Lizard::operator=(const Animal& rhs)
 
 In this case, we have to worry about `std::bad_cast` exceptions thrown by `dynamic_cast` when `rhs` is not a `Lizard`, while paying for extra runtime check cost for valid assignment cases, as well as the harder to maintain code.
 
-### Solution 2: adding another function
+## Solution 2: adding another function
 
 If we don't want to pay for the complexity or cost of a `dynamic_cast` in the case of valid assignment, we add to `Lizard` the conventional assignment operator:
 
@@ -161,7 +162,7 @@ Animal *pAni2 = &liz2;
 
 Still, clients of `Lizard` and `Chicken` have to be prepared to catch `bad_cast` exceptions and do something sensible with them each time they perform an assignment, which most programmers are unwilling to do.
 
-### Solution 3: making partial assignment illegal
+## Solution 3: making partial assignment illegal
 
 The easiest way to prevent partial assignments is to make `Animal::operator=` private so that `*pAni1 = *pAni2;` is illegal (which calls private `Animal::operator=`), but this naive solution has 2 problems:
 
@@ -179,7 +180,7 @@ The easiest way to prevent partial assignments is to make `Animal::operator=` pr
 
 Declaring `Animal::operator=` as `protected` will solve the latter problem, but the first one still remains.
 
-### Solution 4: redesign the inheritance hierarchy
+## Solution 4: redesign the inheritance hierarchy
 
 Because our orignimal design for the system presupposed that `Animal` objects were necessary, we can not abstract `Animal` class. Instead, we create a new class - `AbstractAnimal` that consists of the common features of `Animal`, `Lizard`, and `Chicken`, and we make _that_ class abstract by making its destructor a pure virtual function[^1]:
 
@@ -217,7 +218,7 @@ This design gives us everything:
 * derived class assignment operators may call the assignment operator in the base class
 * non of the code written in terms of the `Animal`, `Lizard`, or `Chicken` requires modification - they behave as they did before `AbstractAnimal` was introduced - though the code does need to be recompiled
 
-## In reality when facing constraints
+# In reality when facing constraints
 
 If we want wot create a concrete class that inherits from a concrete class in a thirt-party libraries to which we have only read access, what are we to do?
 

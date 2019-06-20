@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-02/2018-02-06.jpg
 
 Good interfaces are easy to use correctly and hard to use incorrectly.
 <!--more-->
+<!-- toc -->
 
 To design a good interface, it's always good to make the interface in consistency and behave in compatibility with built-in types. After all, clients already know how types like `int` behave, so we should strive to make our types behave the same way. A good (though not perfect) example is the interface to STL containers: every STL container has a _member function_ named `size` that tells how many objects are in the container. On the contrary, in **Java**, we use the `length` _property_ for arrays, the `length` _method_ for `String`s, and the `size` _method_ for `List`s; as for **.Net**, `Arrays` have a property named `Length`, while `ArrayList`s have a property named `Count`. No matter how convenient modern IDEs may be, inconsistency imposes mental fricition into a developer's work.
 
@@ -25,7 +26,7 @@ A good way to think of the interface design is to consider the kinds of mistakes
 3. Restricting operations on types
 4. Eliminating client resource management responsibilities
 
-### Creating new types
+# Creating new types
 
 Say we're designing the constructor for a class representing dates in time:
 
@@ -84,7 +85,7 @@ Date d(Day(30), Month(3), Year(1995));  // error: wrong type!
 Date d(Month(3), Day(30), Year(1995));  // fine
 ```
 
-### Constraining object values
+# Constraining object values
 
 Once the type is right, we may consider adding some restriction on the values of those types. The `Month` in example above only has 12 valid values, so the `Month` type should reflect this restriction. One way is to use an enum to represent the month, but considering enums can be used like `ints` (item 2), it is not as type-safe as we might like. A safer solution is to predefine the set of all valid `Month`s:
 
@@ -108,7 +109,7 @@ The reason to use functions (returning local static objects) instead of (non-loc
 
 >the relative order of initialization of non-local static objects defined in different translation units is undefined.
 
-### Restricting operations on types
+# Restricting operations on types
 
 A good example for restricting operations on types is in item 3 explaining how `const` qualifying the return type from `operator*` can prevent clients from making following errors for user-defined types:
 
@@ -118,7 +119,7 @@ if (a * b = c)... // meant to do a comparison
 
 Again, it is always good to have our types behave consistently with the built-in types. Such kind of operation is illegal for `int` type, so unless there's a good reason, it should be illegal for our types, too.
 
-### Eliminating client resource management responsibilities
+# Eliminating client resource management responsibilities
 
 Any interface that requires that client remember to do something is prone to incorrect use. A bad example is function `createInvestment` in item 13, which returns pointers to dynamically allocated objeects in an `Investment` hierarchy. 
 

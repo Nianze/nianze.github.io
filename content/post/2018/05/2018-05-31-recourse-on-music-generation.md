@@ -17,8 +17,9 @@ metaAlignment: center
 
 A random collection of recent works on music generation.
 <!--more-->
+<!-- toc -->
 
-## Papers
+# Papers
 
 - **Melody Generation for Pop Music via Word Representation of Musical Properties** (2017.10) [[arXiv](https://arxiv.org/abs/1710.11549)] [[Code](https://github.com/mil-tokyo/NeuralMelody)]
 - **Generating Nontrivial Melodies for Music as a Service** (2017.10) [[arXiv](https://arxiv.org/abs/1710.02280)] [[Page](https://composing.ai)]
@@ -47,7 +48,7 @@ A random collection of recent works on music generation.
 - **Towards Adaptive Music Generation By Reinforcement Learning of Musical Tension** (2010) [[Paper](https://ccrma.stanford.edu/~slegroux/affect/pubs/SMC2010.pdf)]
 - **A First Look at Music Composition using LSTM Recurrent Neural Networks** (2002) [[Web](http://www.iro.umontreal.ca/~eckdoug/blues/index.html)] [[Paper](http://www.iro.umontreal.ca/~eckdoug/blues/IDSIA-07-02.pdf)]
 
-## Projects
+# Projects
 
 -  **Google Magenta** [[Web](https://magenta.tensorflow.org/welcome-to-magenta)] [[Code](https://github.com/tensorflow/magenta)] 
 - **Deep Jazz**  [[Web](https://deepjazz.io/)] [[Code](https://deepjazz.io/)]
@@ -56,7 +57,7 @@ A random collection of recent works on music generation.
 - **GRUV** [[Code](https://github.com/MattVitelli/GRUV)]
 - **Kulitta** [[Code](https://github.com/donya/Kulitta)]
 
-## Applications
+# Applications
 
 - **AIVA**[[Link](http://aiva.ai)]
 - **Google A.I. Duet** [[Link](https://aiexperiments.withgoogle.com/ai-duet)]
@@ -67,7 +68,7 @@ A random collection of recent works on music generation.
 - **Tidalcycles** [[Link](https://tidalcycles.org)] [[Video](https://www.youtube.com/watch?v=xoa3OT8ncX0)]
 - **Jukedeck** [[Link](https://www.jukedeck.com/)]
 
-## Conferences&Workshops
+# Conferences&Workshops
 
 - **ACM MM** - ACM MultiMedia [[Web](http://www.acmmm.org/2017)]
 - **ISMIR** - The International Society of Music Information Retrieval [[Web](http://www.ismir.net/)]
@@ -77,7 +78,7 @@ A random collection of recent works on music generation.
 - **CCRMA** - Center for Computer Research in Music and Acoustics (Stanford University) [[Web](https://ccrma.stanford.edu/)]
 - **ICMC** - Internatonal Computer Music Conference [[Web](http://www.icmc2017.com/)] [[Lists](http://www.icmc2017.com/cn/page1.html)]
 
-## Blogs
+# Blogs
 
 - **Neural Nets for Generating Music** [[Web](https://medium.com/@kcimc/neural-nets-for-generating-music-f46dffac21c0)]
 - **Generative Music with JavaScript & Web Audio** [[Web](https://teropa.info/generative-music-slides/)]

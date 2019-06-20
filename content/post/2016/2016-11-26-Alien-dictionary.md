@@ -13,8 +13,9 @@ thumbnailImage: /images/2016/2016-11-26.jpg
 
 Build a graph to solve alien dictionary problem via DFS/BFS.
 <!--more-->
+<!-- toc -->
 
-## Alien Dictionary
+# Alien Dictionary
 
 There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of words from the dictionary, where **words are sorted lexicographically by the rules of this new language**. Derive the order of letters in this language.
 
@@ -40,7 +41,7 @@ Note:
 2. If the order is invalid, return an empty string (["abcd","ab"] is invalid).
 3. There may be multiple valid order of letters, return any one of them is fine.
 
-## Method 1: DFS
+# Method 1: DFS
 
 Build the graph (post-adjacency list and visited list), then use `DFS` to build the correct order, while checking the loop at the same time.
 
@@ -100,7 +101,7 @@ Note:
     }
 ```
 
-## Method 2: BFS
+# Method 2: BFS
 
 Build the graph(post-adjacency list and visited list), then use Karn's algorithm to do topological sort (essentially BFS).
 

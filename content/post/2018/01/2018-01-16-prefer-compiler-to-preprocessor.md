@@ -15,12 +15,13 @@ thumbnailImage: /images/2018/2018-01/2018-01-16.jpg
 
 A new (hopefully) daily review on `C++`.
 <!--more-->
+<!-- toc -->
 
 This is another new series, which I plan to update daily (well, hopefully :P). It's mainly about `C++`, which is my current main development language. Each day I'll follow 1 item in the _Effective C++ 2nd edition_ by [Scott Meyers](https://www.aristeia.com/books.html) to discuss 1 tiny point of `C++`.
 
 The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer `const`s, `enum`s and `inline`s to `#define`. Now let's take a closer look.
 
-### Prefer `const` to `#define`
+# Prefer `const` to `#define`
 
 There are two ways we may consider, when we want to define a constant:
 
@@ -33,7 +34,7 @@ const double PI_2 = 3.1415926;
 
 However, since `PI_1` may be removed by preprocessor and never be seen by compilers, making it absent in the symbol table, this can be confusing during debugging if we get an error refering to 3.1415926 rather than `PI_1` (especially when `PI_1` is defined in a header file written by somebody else). Thus, instead of using a preprocessor macro, we'd better go with `const`. Below is some tricks with `const`.
 
-#### Tricks on `const` definition
+## Tricks on `const` definition
 
 1. When defining constant pointers, use two `const` to make sure both the pointer as well as the content pointed by the pointer are immutable:
 
@@ -77,7 +78,7 @@ However, since `PI_1` may be removed by preprocessor and never be seen by compil
 
     For modern compilers, on the other hand, rules change a bit in a more convenient way. Usually C++ requires that you provide a difinition for anything you use, but class-specific `constant`s that are `stitic` and of `integral type` (e.g., _integers_, _chars_, _bools_) are an exception. As long as you don't take thier address, you can declare and read them **without** providing a definition, and (good) compilers will not allocate unneccessary memory for these integral-type const objects, which will make the static const integral an lvalue.
 
-### Prefer `inline` to `#define`
+# Prefer `inline` to `#define`
 
 Another common (mis)use of the `#define` is using it to implement macros that look like functions:
 
@@ -110,6 +111,6 @@ inline const T& max (const T& a, const T& b) { return a > b ? a : b; }
 
 Basically, this template generates a whole family of functions, each of which takes two objects convertible to the same type and returns a reference to the greater of the two objects in const version.
 
-### When to use preprocessor
+# When to use preprocessor
 
 However, preprocessor is never dead. We still need preprocessor for tasks such as `#include` to include libraries, as well as `#ifdef`/`#ifndef` to control compilation.

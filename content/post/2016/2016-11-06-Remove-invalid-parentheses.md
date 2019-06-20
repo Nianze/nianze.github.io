@@ -13,13 +13,13 @@ thumbnailImage: /images/2016/2016-11-06.jpg
 
 Several ways to remove invalid parentheses problem.
 <!--more-->
+<!-- toc -->
 
-
-### Starter
+# Starter
 
 > Return only one possible result
 
-#### Method: Two pass with `counter`
+## Method: Two pass with `counter`
 
 1. Scanning from left to right, ending up removing extra ')'
 2. Scanning from right to left, ending up removing extra '('
@@ -59,11 +59,11 @@ public String removeInvalidParantheses(String s) {
 }    
 ```
 
-### Main dish (follow up)
+# Main dish (follow up)
 
 > Return all the possible results
 
-#### Method 1: Two pass with [**DFS**][1]
+## Method 1: Two pass with [**DFS**][1]
 
 * same idea as starter question: using dfs searching for valid candidate without extra ')', then reverse the string and search for the second pass to remove all the extra '('
 * for continuous ')', say "())", always remove the first ')' firstly, so "(`)`)" -> "()": for j:[prev_j ~ i], if (s[j] == par[1] && (j == prev_j || s[j-1] != par[1])), remove s.charAt(j)
@@ -100,7 +100,7 @@ private void remove(String s, List<String> ans, int prev_i, int prev_j, char[] p
 }
 ```
 
-#### Method 2: BFS
+## Method 2: BFS
 
 Naive way of thinking: 
 

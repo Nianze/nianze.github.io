@@ -15,12 +15,13 @@ thumbnailImage: /images/2018/2018-02/2018-02-10.jpg
 
 Declaring data members `private` gives clients syntactically uniform access to data, affords fine-grained access control, allows invariants to be enforced, and offers class authors implementation flexibility.
 <!--more-->
+<!-- toc -->
 
-## Syntactic consistency
+# Syntactic consistency
 
 If data member aren't public, the only way for clients to access an object is via member functions. If everything in the public interface is a function, clients know they will always use parentheses when accessing a member of the class, which is called "sysntactic consistency".
 
-## Pricise control over the accessibility
+# Pricise control over the accessibility
 
 If we use functions to get or set data member's value, we can implement multiple levels of accessibility:
 
@@ -42,7 +43,7 @@ private:
 
 Since it is rare that every data member need a getter and setter, such fine-grained access control is important.
 
-## Encapsulation
+# Encapsulation
 
 Encapsulation offers class authors implementation flexibility. Through a function, we can replace a data member with a computationi while nobody using the interface notice the change. For example, suppose we are writing an application monitoring the speed of passing cars, and each passing car's speed will be collected into the class:
 
@@ -74,7 +75,7 @@ The point is, by encapsulating the average through a member function, we can int
 
 On the other side, if we don't encapsulate data members from clients, we give up the right to change our future implementation decisions. Even if we own the source code to a class, our ability to chagne anything public is extremely restricted, because too much client code will be broken. Public means unencapsulated, and unencapsulated means unchangeable, which is especailly true for widely used classes.
 
-## `protected` data members
+# `protected` data members
 
 The argument above is also applicable for `protected` data members. In fact, no only the reasoning about syntactic consistency and fine-grained access control is applicable, the argument on encapsulation is also true for them:  
 suppose we eliminate a `protected` data member, and then all the derived classes using it, typically in an unknowably large amount of size, will be broken, which is exactly the same case for `public` data members used by large number of different clients.

@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-03/2018-03-10.gif
 
 Templates generate multiple classes and multiple functions, so any template code not dependent on a template parameter (either non-type template parameters or type parameters) causes bloat: eliminate bloat due to non-type template parameters by replacing template parameters with function parameters or class data members; reduce bloat caused from type parameters by sharing implementations for instantiation types with identical binary representations.
 <!--more-->
+<!-- toc -->
 
 When writing templates, since there's only one copy of the template source code, we have to analyze it carefully to avoid the implicit replication that may take place when a template is instantiated multiple times. 
 
-## Bloat due to non-type template parameters
+# Bloat due to non-type template parameters
 
 For example, suppose we'd like to write a template for fixed-size square matrices that support matrix inversion:
 
@@ -42,7 +43,7 @@ sm2.invert();  // call SquareMatrix<double, 10>::invert
 
 In the statements above, two copies of `invert` will be instantiated, and these two version of `invert` are character-for-character identical except for the use of 5 in one version and 10 in the other. To reduce the code bloat, we could redesign and call a parameterized function instead.
 
-### Replace with function parameters
+## Replace with function parameters
 
 ```cpp
 template<typename T>     // size-independent base class for square matrices
@@ -68,7 +69,7 @@ This design addressed the issue of code bloat, but it also introduces a problem:
 
 However, an alternative and possibly better solution will be to have `SquareMatrixBase` store both a pointer to the memory for the matrix values, as well as the matrix size, so that any other functions asking for the matrix memory address or matrix size can be written in a address-independent-and-size-independent manner, and moved into `SquareMatrixBase`.
 
-### Replace with class data members
+## Replace with class data members
 
 ```cpp
 template<typename T>
@@ -114,13 +115,13 @@ private:
 
 No matter where the matrix value data is stored, the result from a bloat point of view is that many `SquareMatrix`'s member functions can be simple inline calls to base class versions that are shared with all other matrices holding the same type of data, regardless of their size.
 
-### Efficiency concerns
+## Efficiency concerns
 
 In terms of efficiency, it is possible that the version of `invert` with the matrix sizes hardwired into them generates better code than the shared version whose size is passed as a function parameter or is stored in the object: in the size-specific versions, the sizes would be compile-time constants, hence eligible for optimizations such as constant propagation (they'll be folded into the generated instructions as imeediate operands), which can't be done in the size-independent version.
 
 On the other side, the size-independent version decreases the size of executable by having only one version of `invert` for multiple matrix sizes, and this could reduce the program's working set size and improve locality of reference in the instruction cache, which may in term compensating for any lost optimizations in size-specific versions of `invert`. The only way to tell which version is better one is to try them both and observe the behavior on the particular platform and on representative data sets.
 
-### Other trade-offs
+## Other trade-offs
 
 Speaking of size of objects, we should observe that there's an extra size of a pointer in each `SquareMatrix` object, because, as the derived class, `SquareMatrix` could get to the data by alternative designs such as having the base class store a `protected` pointer to the matrix data. However, this new design also has some disadvantages:
 
@@ -129,7 +130,7 @@ Speaking of size of objects, we should observe that there's an extra size of a p
 
 At some point, a little code replication seems like a mercy to keep away from complication.
 
-## Bloat due to type parameters
+# Bloat due to type parameters
 
 On many platforms, `int` and `long` have the same binary representation, so the member functions for `vector<int>` and `vector<long>` would likely be identical. Some linkers will merge identical function implementations, but some will not, and that means that some templates instantiated on both `int` and `long` could cause code bloat in some environments.
 

@@ -16,7 +16,7 @@ thumbnailImage: /images/2018/2018-12/16.gif
 What would it sound like if trading market data speaks? 
 <!--more-->
 
-#### A little background
+# A little background
 
 This little project tries to do one thing for fun: to transform the trading market history data into some sords of sound.
 

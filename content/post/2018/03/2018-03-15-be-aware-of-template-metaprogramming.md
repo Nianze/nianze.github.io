@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-03/2018-03-15.gif
 
 Template metaprogramming can shift work from runtime to compile-time (thus enabling earlier error dettection and higher runtime performance), can be used to generate custom code based on combinations of policy choices, and can also be used to avoid generating code inappropriate for particular types.
 <!--more-->
+<!-- toc -->
 
 Template metaprogramming (TMP) is the process of writing template-based C++ programs that execute inside the C++ compiler, ending up with pieces of C++ source code instantiated from templates, which are then compiled as usual. TMP was discovered, not designed, in the early 1990s, and has later been shown to be Turing-complete, which means that it is powerful enough to compute anything (declare variables, perform loops, write and call functions, etc).
 
-## Strength of TMP
+# Strength of TMP
 
 TMP has two great strengths:
 
@@ -32,7 +33,7 @@ By making use of TMP, we can expect following good consequences:
 
 To take a glimpse into how things work in TMP, let's look at two examples.
 
-### Examples
+## Examples
 
 * **Ex1: `if...else` conditionals in TMP**
 
@@ -92,13 +93,13 @@ To take a glimpse into how things work in TMP, let's look at two examples.
 
     To sum up the technique keywords: templates and specializations and recursive instantiations and enum hacks.
 
-## What can be accomplished in TMP
+# What can be accomplished in TMP
 
-### 1. Ensuring dimensional unit correctness
+## 1. Ensuring dimensional unit correctness
 
 In scientific and engineering applications, it's essential that dimensional units (e.g., mass, distance, time, etc.) be combined correctly. Using TMP, it's possible to ensure (during compilation) that all dimensional unit combinations in a program are correct, no matter how complex the calculations - good example for early error detection.
 
-### 2. Optimizang matrix operations
+## 2. Optimizang matrix operations
 
 Consider the following code,
 
@@ -113,7 +114,7 @@ Calculating `result` in the "normal" way calls for the creation of four temporar
 
 Using an advanced template technology related to TMP called _expression templates_, it's possible to eliminate the temporaries and merge the loops, without changing the syntax of the client code above while enabling the program consume less memory and run dramatically fast.
 
-### 3. Generating custom design pattern implementations
+## 3. Generating custom design pattern implementations
 
 Design patterns like Strategy (item 35), Observer, Visitor, etc. can be implemented in many ways. Using a TMP-based technology called `policy-based design`, it's possible to create templates representing independent design choices ("policies") that can be combined in arbitrary ways to yield pattern implementations with custom behavior.
 

@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-03/2018-03-29.gif
 
 If we don't have a good reason for overloading an operator, don't overload it. In the case of `&&`, `||`, and `,`, it's difficult to have a good reason: we can't make them behave the way they're supposed to.
 <!--more-->
+<!-- toc -->
 
-## Overloading `operator&&` and `operator||`
+# Overloading `operator&&` and `operator||`
 
 C++ employs short-circuit evaluation of boolean expressions: once the truth or falsehood of an expression has been determined, evaluation of the expression ceases, even if somem parts of the expression haven't yet been examined.
 
@@ -41,7 +42,7 @@ In two crucial ways, the funciton call semantics differ from short-circuit seman
 
 As a result, overloaded `&&` or `||` will never offer programmers the behavior they both exprect and have come to depend on. So do not overload `&&` or `||`.
 
-## Overloading `operator,`
+# Overloading `operator,`
 
 The comma operator is used for _expressions_, and we're most likely to run across it in the update part of a `for` loop:
 
@@ -66,7 +67,7 @@ Unfortunately, when writing our own comma operator, we can't mimic this behavior
 * if we write `operator,` as a non-member function, then both operands around `,` will be passed as arguments in a function call, and there's no way to control over the order in which a funciton's arguments are evaluated.
 * if we write `operator,` as a member function, we still can't rely on the left-hand operand to the comma being evaluated first, because compilers are not constrained to do thing that way.
 
-## Limits on operator overloading
+# Limits on operator overloading
 
 According to C++, following operators can't be overloaded:
 

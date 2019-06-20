@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-04/2018-04-12.gif
 
 The old Computer Science story: trade space for time[^1].
 <!--more-->
+<!-- toc -->
 
 In order to improve program efficiency, we may use lazy evaluation (MECpp item 17), which is a technique for improving the efficiency of programs where results are not always needed. On the other side, when we must support operations whose results are almost always needed or whose results are often needed more than once, we may adopt "over-eager evaluation to amortize the cost of anticipated computations, such as caching and prefetching.
 
-### Caching
+# Caching
 
 Say we're writing a program to provide information about employees, and one of the pieces of information we expect to request frequently is an employee's cubicle number, which is stored in a database, but the database is not optimized to find it. In this case, we could cache the cubicle numbers to save the subsequent database lookups.
 
@@ -39,7 +40,7 @@ int findCubicleNumber(const string& employeeName)
 }
 ```
 
-### Prefetching
+# Prefetching
 
 According to the infamous _locality of reference_ phenomenon, if data in one place is requested, it's quite common to want nearby data, too, which justifies disk caches, memory caches for both instructions and data, and instruction prefetches.
 

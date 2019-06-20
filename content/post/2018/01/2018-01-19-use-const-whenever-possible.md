@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-01/2018-01-19.jpg
 
 Useful tips on using `const` in C++.
 <!--more-->
+<!-- toc -->
 
 The `const` keyword allows you to specify a semantic constraint and compilers will enforce that constraint. It is remarkably versatile:
 
@@ -22,7 +23,7 @@ The `const` keyword allows you to specify a semantic constraint and compilers wi
 2. inside classes, you may use it for both static and non-static data members, for pointers
 3. when declaring functions, you may also refer `const` to function's return value, function parameters, and, for member functions, to the function as a whole
 
-## 1. `const` pointer
+# 1. `const` pointer
 
 ```cpp
 char greeting[] = "Hello";
@@ -35,7 +36,7 @@ char const * const p = greeting; // const pointer, const data
 
 If the `const` appears to the left of the asterisk, what's pointed to is constant; if the word `const` appears to the right of the asterisk, the pointer itself is constant. It's helpful to read pointer declarations right to left: `const char * const p` reads as "p is a constant pointer to constant chars".
 
-## 2. `const` iterator
+# 2. `const` iterator
 
 STL iterators are modeled on pointers. Treat it like this:
 
@@ -55,7 +56,7 @@ std::vector<int>::const_iterator cIter = vec.begin(); // acts like const T*
 ++cIter;     // OK.
 ```
 
-## 3. `const` function return value
+# 3. `const` function return value
 
 Generally speaking, having a function return a constant value is inappropriate, but sometimes doing so may reduce implicit errors out of incidence without giving up safety or efficiency.
 
@@ -73,20 +74,20 @@ Declaring the return value of `operator*` to be const prevent typos like this:
 if (a * b = c) // meant to do a comparison for some user-defined objects
 ```
 
-## 4. `const` function parameters
+# 4. `const` function parameters
 
 `const` parameters act just like local `const` objects. Unless there's a need to modify aparameter or local object, be sure to declare it `const`, for it may save you from annoying errors like `if (a = b)` above.
 
-## 5. `const` member functions
+# 5. `const` member functions
 
 The purpose of `const` on member functions is to identify which member functions may be invoked on `const` objects, which benefits us for:
 
 1. making the interface of a class easier to understand (which functions may modify an object and which may not)
 2. making it possible to work with `const`-qualified objects (which makes up a very important C++ feature: overloading member functions differing only in their constness)
 
-### 5.1 Bitwise constness vs. Logical constness
+## 5.1 Bitwise constness vs. Logical constness
 
-#### 5.1.1 Bitwise constness
+## 5.1.1 Bitwise constness
 
 >Bitwise constness: a member function is const if and only if it doesn't modify any of the object's data members (excluding those that are static). This is also C++'s definition of constness
 
@@ -141,7 +142,7 @@ ctb[0] = 'x';        // error! call to a const TextBlock object is fine
                      // but making an assignment to returned const char& type gives us an error
 ```
 
-#### 5.1.2 Logical constness
+## 5.1.2 Logical constness
 
 >Logical constness: a const member function might modify some of the bits in the object on which it's invoked, but only in ways that clients cannot detect.
 
@@ -198,7 +199,7 @@ According to the mutable's definition, you may notice that `const` member functi
 3. For non-static data member `lengthIsValid = true;`, think of it as `this->lengthIsValid = true;`, which is not compilable when the type of `this` is `const CTextBlock*` without `mutable` added.
 4. Think of static data member `staticMember` as `CTextBlock::staticMember`, so there's no constraints from `const` type `this` pointer.
 
-### 5.2 Avoiding duplication in `const` and non-`const` member function
+## 5.2 Avoiding duplication in `const` and non-`const` member function
 
 There are two versions of operator[] in class TextBlock, which is duplication and tempts us to have one version of operator[] call the other one. Although generally speaking casting is a bad idea, here we may find enough reasons to justify its usage so long as we use it properly (note that we call `const` version in non-`const` version, not the other way around!):
 

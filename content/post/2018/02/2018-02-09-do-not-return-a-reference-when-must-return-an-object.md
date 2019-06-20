@@ -15,6 +15,9 @@ thumbnailImage: /images/2018/2018-02/2018-02-09.jpg
 
 Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a "counter" example that is reasonable in single-threaded environments).
 <!--more-->
+<!-- toc -->
+
+# Case Study
 
 There are some situations where we **must** return an object, no matter how much effort we want to put into rooting out the evil of pass-by-value to pursue the heighest efficiency. Otherwise, we may invariably make a fatal mistake: pass references to objects that don't exist.
 
@@ -39,7 +42,7 @@ We may want to remove the cost of construction and destruction from return-by-va
 
 A function can create a new object in only two ways: on the stack or on the heap.
 
-## Return a pointer or reference to a local stack object
+# Return a pointer or reference to a local stack object
 
 Creation on the stack is accomplished by defining a local variable:
 
@@ -55,7 +58,7 @@ There's a serious problem: the function returns a reference to `result`, which i
 
 The fact is, any function returning a reference (or a pointer) to a local object is brocken.
 
-## Return a reference to a heap-allocated object
+# Return a reference to a heap-allocated object
 
 Heap-based objects come into being through the use of `new`, so the heap-based `opearator*` looks like this:
 
@@ -79,7 +82,7 @@ Rational w = x * y * z; // same as operator*(operator*(x,y),z)
 
 There are twoe uses of `new` that need to be undone with uses of `delete`. Yet there's no reasonable way for clients to get at the pointers hidden behind the references being returned from the calls to `operator*` and make calls to `delete`. This is a guaranteed resource leak.
 
-## Return a reference to a local static object
+# Return a reference to a local static object
 
 If, however, we jump outside of the box, considering returning a reference to a _static_ `Rational`, and think that this will avoid all but one initial constructor call without suffering from calling a constructor for each product result returned from `operatior*` in above on-the-stack and on-the-heap approaches:
 
@@ -126,7 +129,7 @@ The problem is, however, it is very hard to implement this arry of size `n`:
 * how to put the values we need into the array's objects and what is the cost. The most direct way is via assignment, which cost the same as a call to a destructor (to destroy the old value) plus a call to a constructor (to copy over the new value)
 * how to decide the position of target result in the array
 
-## The right way: return by value
+# The right way: return by value
 
 The right way to write a function that must return a new object is to have that function reutrn a new object like this or something essentially equivalent:
 

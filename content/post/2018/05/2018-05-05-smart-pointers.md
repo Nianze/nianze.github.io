@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-05/2018-05-05.gif
 
 _Smart pointers_ are designed to look, act, and feel like built-in pointers, but to offer greater functionality.
 <!--more-->
+<!-- toc -->
 
-## Advantages of smart pointers
+# Advantages of smart pointers
 
 With the help of smart pointers, we gain control over the following aspects of pointer behavior:
 
@@ -24,7 +25,7 @@ With the help of smart pointers, we gain control over the following aspects of p
 2. Copying and assignment (deep copy, not allowed to copy, etc)
 3. Dereferencing (lazy fetching, etc)
 
-### Using smart pointer in client perspective
+## Using smart pointer in client perspective
 
 Consider a distributed system in which some objects are local and some are remote. We can use smart pointer to manage the local and remote objects handling in order to offer such an illusion that all objects appear to be located in the same place.
 
@@ -68,7 +69,7 @@ Notice the use of `LogEntry` object here is to take the advantage of `LogEntry`'
 
 In a word, clients of smart pointers are _supposed_ to be able to treat them as dumb pointers.
 
-## Construction, assignment, and destruction of smart pointers
+# Construction, assignment, and destruction of smart pointers
 
 Construction of a smart pointer is usually straightforward: locate an object to point to, then make the smart pointer's internal dumb pointer point there. If no object can be located, set the internal pointer to 0 or signal an error (by throwing an exception).
 
@@ -115,7 +116,7 @@ auto_ptr<T>& auto_ptr<T>::operator=(auto_ptr<T>& rhs)
 
 For this design, there are three points woth noting:
 
-#### 1. Pass by reference to const
+## 1. Pass by reference to const
 
 Because object ownership is transferred when `auto_ptr`'s copy constructor is called, passing `auto_ptr`s by value is often a very bad idea:
 
@@ -144,11 +145,11 @@ void printTreeNode(ostream& s, const auto_ptr<TreeNode>& p)
 
 Since this is pass by reference, no constructor is called to initialize `p`, and `ptn` retains ownership of the object it points after function execution.
 
-#### 2. Unconventional copy constructor and assignment operator
+## 2. Unconventional copy constructor and assignment operator
 
 Normally the copy constructor and assignment operator take `const` parameters during the copy or the assignment. However, `auto_ptr` objects are modified if they are copied or are the source of an assignment, so we don't declare `const` here for the copy constructor and assignment operator in `auto_ptr`.
 
-#### 3. No ownership testing in desturctor
+## 3. No ownership testing in desturctor
 
 An `auto_ptr` always owns what it points to, so there is no need for the ownership test in destructor. However, a smart pointers that employs reference counting (MECpp item 29) must adjust a reference count before detrmining whether it has the right to delete what it points to, so their destructor often looks like this:
 
@@ -162,9 +163,9 @@ SmartPtr<T>::~SmartPtr()
 }
 ```
 
-## Implementing the dereferencing operators
+# Implementing the dereferencing operators
 
-#### `operator*`
+## `operator*`
 
 ```cpp
 template<class T>
@@ -184,7 +185,7 @@ A few things woth noting:
 3. The result of dereferencing a null pointer is undefined, so we are free to do anything we want if `operator*` is invoked with a null smart pointer. (i.e., throw an exception, call `abort`, etc)
 
 
-#### `operator->`
+## `operator->`
 
 When we call `operator->` in the statement `pt->displayEditDialog();`, the compilers treat it as:
 
@@ -212,7 +213,7 @@ T* SmartPtr::operator->() const
 
 Note that since this function returns a pointer, virtual function calls via `operator->` will behave the way they're supposed to.
 
-## Testing smart pointers for nullness
+# Testing smart pointers for nullness
 
 So far we can not do the following operation to find out if a smart pointer is null:
 
@@ -263,7 +264,7 @@ if (!pa == !po) ...  // this still compiles
 
 Fortunately, programmers usually don't write code like this.
 
-## Converting smart pointers to dumb pointers
+# Converting smart pointers to dumb pointers
 
 When a dump pointer is expected for some lagacy libraries (say `normalize(Tuple *pt);`), we can not simply call the library function with a smart pointer-to-`Tuple`, because there is no way to convert a `DBPtr<Tuple>` to a `Tuple*`. We can make it work by doing this:
 
@@ -329,7 +330,7 @@ delete pt;  // this compiles
 
 All in all, keep in mind the bottom line: don't provide implicit conversion operators to dumb pointers unless there is a compelling reason to do so.
 
-## Smart pointers and inheritance-based type conversions
+# Smart pointers and inheritance-based type conversions
 
 Given the following public inheritance hierarchy:
 
@@ -377,7 +378,7 @@ displayAndPlay(nightmareMusic, 0);
 
 However, as far as compilers are converned, `SmartPtr<CD>`, `SmartPtr<Cassette>`, and `SmartPtr<MusicProduct>` are three seperate classes without any relationship to one another, so if we pass an object of type `SmartPtr<CD>` into a function with signature `void displayAndPlay(const SmartPtr<MusicProduct>, int)`, there will be error.
 
-#### Manually adding implicit conversion operator
+## Manually adding implicit conversion operator
 
 A naive solution: adding into each smart pointer class an implicit type conversion operator. Take `SmartPtr<Cassette>` for example:
 
@@ -395,7 +396,7 @@ Yet there are two drawbacks in this design:
 1. manually adding the necessary implicit type conversion operators specializes the `SmartPtr` class instantiations, which defeats the purpose of templates
 2. too many conversion operators to add - given a deep inheritance hierarchy, we must provide a conversion operator for _each_ base class from that object directly or indirectly inherits (again, compilers are prohibited from employing more than one user-defined type conversion function at a time.)
 
-#### Generating conversion operators via member templates
+## Generating conversion operators via member templates
 
 The right way to take is to take advantage of _member function templates_ (or just _member templates_):
 
@@ -455,7 +456,7 @@ displayAndPlay(dumbMusic, 1);  // error!
 
 When invoking `displayAndPlay` with a `SmartPtr<CasSingle>`, according to the inheritance hierarchy, we may expect the `SmartPtr<Cassette>` function to be chosen, because `CasSingle` inherits directly from `Casssette` and only indirectly from `MusicProduct`. However, it will only work in the case of dumb pointers. For our smart pointers, as far as C++ compilers are concerned, both calls to conversion functions here are equally good (the conversion from `SmartPtr<CasSingle>` to `SmartPtr<Cassette>` is no better than the conversion to `SmartPtr<MusicProduct>`), leading to an error of ambiguous call to `displayAndPlay`. The best we can do, then, is to use casts (MECpp item 2) in this ambiguous case.
 
-## Smart pointers and const
+# Smart pointers and const
 
 To mimic the flexibility of constness in terms of smart pointers, we use follwoing ways to create four combinations of `const` and non-`const` objects and pointers:
 

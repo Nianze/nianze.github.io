@@ -15,10 +15,11 @@ thumbnailImage: /images/2018/2018-04/2018-04-23.gif
 
 Depending on the different input or dynamic types of function parameters, "virtualization" is a useful technique to construct new objects of different types accordingly, or to conceive of non-member functions whose behavior changes accordingly.
 <!--more-->
+<!-- toc -->
 
 Constructors and non-member functions can't really be virtual. We just make them act "virtually" so that it is easier to use. The term "virtual" means that a function will achieve type-specific behavior when we have a pointer or reference to an object without knowing its dynamic type in advance.
 
-## Virtual constructor
+# Virtual constructor
 
 Suppose we write applications for working with newsletters, where a newsletter consists of components that are either textual or graphical:
 
@@ -100,7 +101,7 @@ NewsLetter::NewsLetter(const NewsLetter& rhs); // normal copy constructor impl. 
 }
 ```
 
-## Virtual Non-member functions
+# Virtual Non-member functions
 
 Suppose we'd like to implement output operators for the `TextBlock` and `Graphic` classes. Given that the defaultly output operator `operator<<` takes an `ostream&` as its left-hand argument, we can not make it a member function of the `TextBlock` or `Graphic` classes, so it can't be declared as `virtual`. On the other hand, if we insist on declaring a virtual function for printing (e.g., `print`), and thus define a `print` for the `TextBlock` and `Graphic`, the syntax for printing `TextBlock` and `Graphic` objects is inconsistent with that for the other types in the language, which makes our clients unhappy.
 

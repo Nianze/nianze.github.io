@@ -18,8 +18,9 @@ metaAlignment: center
 
 Some of my early clarinet cover is collected here in this article.
 <!--more-->
+<!-- toc -->
 
-### Why I launched the clarinet cover project
+# Why I launched the clarinet cover project
 
 In the summer of 2015, I started recording my clarinet cover inspired by [ShonHayashi](https://www.youtube.com/user/linnaes) when I accidentally found his Youtube channel. At that time, actually, I haven't touched my clarinet for a long time, partially due to my old opinion that clarinet is such a classical instrument that it is never a good fit for performing mordern style music.
 
@@ -36,27 +37,27 @@ So, since I happen to know how to play this instrument, why not to have fun with
   <figcaption><a href="http://sherrae78.deviantart.com/art/Listen-to-the-Clarinet-290994868" title="Listen to the Clarinet, on DeviantArt">Listen to the Clarinet by sherrae78, on DeviantArt</a>.</figcaption>
 </figure>
 
-### My early covers in summer of 2015
+# My early covers in summer of 2015
 
 At that moment, I did not know how to transcribe a sheet on my own, so I simply picked some of my favorite covers from ShonHayashi. All of these clarinet sheets below are transcribed by [him](https://www.youtube.com/user/linnaes). 
 
-#### 地球最後の告白を
+## 地球最後の告白を
 
 {{< youtube Eh8NIP1-akg >}}
 
-#### Let it go
+## Let it go
 
 {{< youtube 7ktLwr_nCuY >}}
 
-#### Jenga (ジェンガ)
+## Jenga (ジェンガ)
 
 {{< youtube OUc6z6D0jeI >}}
 
-#### Vogel im Käfig
+## Vogel im Käfig
 
 {{< youtube gdtaa--NLl8 >}}
 
-#### ODDS & ENDS
+## ODDS & ENDS
 
 {{< youtube Ce1CVU7w9hM >}}
 

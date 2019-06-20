@@ -15,6 +15,7 @@ thumbnailImage: /images/2018/2018-03/2018-03-05.gif
 
 Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.
 <!--more-->
+<!-- toc -->
 
 The behavior of private inheritance is that
 
@@ -34,7 +35,7 @@ When must we?
 * Primarily when we need to inherit protected members and/or virtual functions 
 * Sometimes when we want to take advance of empty base optimization (which is the edge case)
 
-## Typical usage
+# Typical usage
 
 Let's see a typical usecase for private inheritance. Suppose we want to periodically examine the the internal status of class `Widget`, and we'd like to reuse the following utility class:
 
@@ -60,7 +61,7 @@ private:
 
 After private inheritance, `Timer`'s public `onTick` function becomes private in `Widget`, so keep it as private when we redeclare it[^2].
 
-### Alternatives
+## Alternatives
 
 This is a nice design, but it's worth noting that private inheritance isn't strictly necessary - we could use composition instead:
 
@@ -82,7 +83,7 @@ This design is more complicated involving both (public) inheritance and composit
 1. Because `Widget`'s derived classes have no access to the private `WidgetTimer` data member, we prevent derived classes from redefining `onTick`[^3].
 2. We've minimized `Widget`'s compilation dependencies: if `Widget` inherits from `Timer`, `Timer`'s definition must be available when `Widget` is compiled, so we probably has to `#include Timer.h`. If `WidgetTimer` is moved out of `Widget` and `Widget` only contains a pointer to  a `WidgetTimer`, we only need to simply forward decalare the `WidgetTimer` class without `#include` anything. Such decouplings can be important for large systems (details in item 31).
 
-## Edge case
+# Edge case
 
 The edge case, as the name suggests, is edgy indeed: it applies only when we're dealing with a class that has no data in it: no non-static data members; no virtual functions (which introduces `vptr` to each object, item 7); and no virual base classes (which also incurs a size overhead, item 40). Conceptually, such an _empty_ class should use no space, but C++ requires that freestanding objects must have non-zero size for some technical reasons. That being said,
 
@@ -111,7 +112,7 @@ Now `sizeof(HoldsAnInt) == sizeof(int)`, thanks to _empty base optimization (EBO
 
 In practice, "empty" base classes often contain typedefs, enums, static data members, or non-virtual functions, such as those in the STL that contains useful members (usually typedefs), and thus classes for user-defined function objects may inherit from them without worrying about size increase thanks to EBO.
 
-## In summary
+# In summary
 
 Private inheritance is most likely to be a legitimate design strategy when we're dealing with two classes not related by is-a where one either needs access to the protected members of another or needs to redefine one or more of its virtual functions. Even in this case, however, a mixture of public inheritance and composition can often yield the expected behavior, albeit with more design complexity. 
 

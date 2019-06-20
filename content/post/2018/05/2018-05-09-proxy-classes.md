@@ -15,8 +15,9 @@ thumbnailImage: /images/2018/2018-05/2018-05-09.gif
 
 Objects that stand for other objects are often called _proxy objects_ (or _surrogates_), and the classes that give rise to proxy objects are often called _proxy classes_, which is useful for implementing multidimensional arrays, differentiating lvalue/rvalue, and suppressing implicit conversions.
 <!--more-->
+<!-- toc -->
 
-## Implementing Two-Dimensional Arrays
+# Implementing Two-Dimensional Arrays
 
 Consider this statement:
 
@@ -56,7 +57,7 @@ cout << data[3][6];
 
 Conceptually intances of `Array1D` class (which is a _proxy class_) do not exist for clients of `Array2D`. Such clients program as if they were using real, live two-dimensional arrays.
 
-## Distinguishing Reads from Writes via operator[]
+# Distinguishing Reads from Writes via operator[]
 
 `operator[]` can be called in two different contexts:
 
@@ -95,11 +96,11 @@ private:
 
 Now let's see how it works. Given reference-counted stirngs using proxies above `String s1, s2;`,
 
-#### For rvalue usage
+## For rvalue usage
 
 Consider this statement `cout << s1[5];`: `s1[5]` yields a `CharProxy` object, and compiler implicitly converts this `CharProxy` into `char` using the conversion operator declared in the `CharProxy` class. This is representitive of the _CharProxy-to-char_ conversion that takes place for all `CharProxy` objects used as rvalues.
 
-#### For lvalue usage
+## For lvalue usage
 
 Lvalue usage is handled differently:
 
@@ -154,11 +155,11 @@ String::CharProxy& String::CharProxy::operator=(char c)
 }
 ```
 
-## Preventing implicit conversions in single-argument constructor
+# Preventing implicit conversions in single-argument constructor
 
 Refer to MECpp item 5.
 
-## Limitations
+# Limitations
 
 1. Taking the address
     
