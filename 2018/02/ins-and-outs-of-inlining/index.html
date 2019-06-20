@@ -364,7 +364,20 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Limit most inlining to small, frequently called functions to facilitate debugging and binary upgradability, minimize potential code bloat, and maximize the chances of greater program speed.</p>
 
-<h2 id="performance-benifits">Performance benifits</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#performance-benifits">Performance benifits</a></li>
+<li><a href="#details-on-inline-functions">Details on inline functions</a>
+<ul>
+<li><a href="#causes-of-un-inlined-inline-function">Causes of un-inlined inline function</a></li>
+<li><a href="#inline-constructors-and-destructors">Inline constructors and destructors?</a></li>
+</ul></li>
+<li><a href="#other-costs-of-inlining">Other costs of inlining</a></li>
+<li><a href="#to-inline-or-not-to-inline">To inline or not to inline?</a></li>
+</ul>
+</nav>
+
+<h1 id="performance-benifits">Performance benifits</h1>
 
 <p>Inline functions have some wonderful advantages:</p>
 
@@ -377,7 +390,7 @@ Suffering is optional.</p>
 
 <p>However, on the other hand, it is also likely to increase the size of our object code. Overzealous inlining can give rise to programs too big for the available space on machines with limited memory. Even with virtual memory, inline-induced code bloat can lead to additional paging, a reduced instruction cache hit rate, and the performance penalties that accompany these things.</p>
 
-<h2 id="details-on-inline-functions">Details on inline functions</h2>
+<h1 id="details-on-inline-functions">Details on inline functions</h1>
 
 <p>There are two ways to give such a request: implicitly or explicitly:</p>
 
@@ -422,7 +435,7 @@ inline const T&amp; std::max(const T&amp; a, const T&amp; b) // request:: std::m
 </ul></li>
 </ol>
 
-<h3 id="causes-of-un-inlined-inline-function">Causes of un-inlined inline function</h3>
+<h2 id="causes-of-un-inlined-inline-function">Causes of un-inlined inline function</h2>
 
 <p>Bear in mind that <code>inline</code> is a <em>request</em> to compilers, rather than a command, so compilers may ignore it. Whether a given inline function is actually inlined depends on the build environment we&rsquo;re using - primarily on the compiler, and most compilers have a diagnostic level that will result in a warning (item 53) if they fail to inline a function we&rsquo;ve asked them to. When they refuse to inline a function, the typical reasons may be:</p>
 
@@ -439,7 +452,7 @@ f();                 // this call will be inlined, for it's a &quot;normal&quot;
 pf();                // this call probably won't be, for it's through a function pointer
 </code></pre>
 
-<h4 id="inline-constructors-and-destructors">Inline constructors and destructors?</h4>
+<h2 id="inline-constructors-and-destructors">Inline constructors and destructors?</h2>
 
 <p>Note that even if we never use function pointers, sometimes compilers will generate those pointers: compilers may generate out-of-line copies of constructors and destructors so that they can get pointers to those functions for use during construction and destruction of objects in arrays. Let alone that constructors and destructors are often worse candidates of inlining than a casual examination would indicate:</p>
 
@@ -497,7 +510,7 @@ private:
 
 <p>The same reasoning applies to the <code>Base</code> constructor, so if <code>Base</code>&rsquo;s constructor is inlined, and <code>string</code> constructor also happens to be inlined, the <code>Derived</code> constructor will gain <em>five</em> copies of <code>string</code>&rsquo;s constructor, one for each of the five strings in a <code>Derived</code> object - that is a big code bloat. Similar considerations apply to <code>Derived</code>&rsquo;s destructor.</p>
 
-<h2 id="other-costs-of-inlining">Other costs of inlining</h2>
+<h1 id="other-costs-of-inlining">Other costs of inlining</h1>
 
 <p>Apart from the cost of possible code bloat, there are other impact of declaring functions <code>inline</code>:</p>
 
@@ -506,7 +519,7 @@ private:
 <li><strong>on debugging</strong>: most debuggers have trouble with inline functions: after all, it is hard to set a breakpoint in a function that isn&rsquo;t there<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>.</li>
 </ol>
 
-<h2 id="to-inline-or-not-to-inline">To inline or not to inline?</h2>
+<h1 id="to-inline-or-not-to-inline">To inline or not to inline?</h1>
 
 <p>In summary, the logical strategy of determining which functions should be declared inline and which should not:</p>
 
@@ -607,7 +620,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -693,7 +706,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -782,6 +795,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -936,23 +966,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -960,7 +973,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

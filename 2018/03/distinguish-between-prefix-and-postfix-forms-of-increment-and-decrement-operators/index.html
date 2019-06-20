@@ -364,6 +364,19 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>The prefix and postfix forms of increment and decrement operators return <em>different types</em>: prefix forms return a reference, while postfix forms return a <em>const</em> object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#case-study">Case Study</a>
+<ul>
+<li><a href="#1-omit-the-parameter-name">1. Omit the parameter name</a></li>
+<li><a href="#2-return-a-const-object">2. Return a <code>const</code> object</a></li>
+<li><a href="#3-implement-postfix-operators-in-terms-of-the-prefix-ones">3. Implement postfix operators in terms of the prefix ones</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="case-study">Case Study</h1>
+
 <p>Overloaded functions are differentiated on the basis of the parameter types they take, but neither prefix nor postfix increment or decrement takes an argument. To surmount this linguistic pothole, it was decreed that postfix forms take in <code>int</code> argument, and compilers silently pass 0 as that <code>int</code> when those functions are called:</p>
 
 <pre><code class="language-cpp">class UPInt {  // customized &quot;unlimited precisioin int&quot;
@@ -412,11 +425,11 @@ const UPInt UPInt::operator++(int)
 
 <p>Apart from the obvious inefficiency resulting from the fact that postfix increment function creates a temporary object for its return value (MECpp item 19), as well as the explicit temporary object <code>oldVal</code> that has to be constructed and destructed, leading to the conclusion that prefix increment should be used whenever possible for its inherently higher efficiency, there are three points worth noting for the implementation of postfix form of <code>operator++</code>:</p>
 
-<h3 id="1-omit-the-parameter-name">1. Omit the parameter name</h3>
+<h2 id="1-omit-the-parameter-name">1. Omit the parameter name</h2>
 
 <p>Since the purpose of the parameter is only to distinguish prefix from postfix function invocation, the postfix operator makes no use of its parameter. Omitting parameter names avoids warnings from some compilers who insist that we use named parameters in the body of the function to which they apply.</p>
 
-<h3 id="2-return-a-const-object">2. Return a <code>const</code> object</h3>
+<h2 id="2-return-a-const-object">2. Return a <code>const</code> object</h2>
 
 <p>There are two reasons to return a <code>const</code> object:</p>
 
@@ -431,7 +444,7 @@ i++++;  // error!
 <li>if return value is not const, the behavior will be counterintuitive and confusing: after applying <code>i++++</code>, the second <code>operator++</code> changes the value of the object returned from the first invocation, instead of the value of the original object. Hence, <code>i</code> ends up being incremented only once.</li>
 </ul>
 
-<h3 id="3-implement-postfix-operators-in-terms-of-the-prefix-ones">3. Implement postfix operators in terms of the prefix ones</h3>
+<h2 id="3-implement-postfix-operators-in-terms-of-the-prefix-ones">3. Implement postfix operators in terms of the prefix ones</h2>
 
 <p>Both the prefix and postfix increment operators do the same thing: incrementing a value. In order to guarantee implementation won&rsquo;t diverge over time, postfix increment and decrement should be implemented <em>in terms of</em> their prefix counterparts. Then we only need to maintain the prefix versions.</p></li>
 </ul>
@@ -514,7 +527,7 @@ i++++;  // error!
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -600,7 +613,7 @@ i++++;  // error!
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -689,6 +702,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -843,23 +873,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -867,7 +880,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

@@ -364,11 +364,25 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>It&rsquo;s important to have a basic understanding of the cost of some C++ features that can have a noticeable impact on the size of objects and the speed at which member functions execute.</p>
 
-<h2 id="virtual-functions">Virtual Functions</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#virtual-functions">Virtual Functions</a>
+<ul>
+<li><a href="#cost-of-vtbl">Cost of vtbl</a></li>
+<li><a href="#cost-of-vptr">Cost of vptr</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul></li>
+<li><a href="#multiple-inheritance">Multiple Inheritance</a></li>
+<li><a href="#virtual-base-classes">Virtual Base Classes</a></li>
+<li><a href="#rtti">RTTI</a></li>
+</ul>
+</nav>
+
+<h1 id="virtual-functions">Virtual Functions</h1>
 
 <p>Virtual function feature in C++ gives us the ability to execute the code corresponding to the dynamic type of the object on which the virtual function is invoked. Most implementations use <em>virtual tables</em> (<em>vtbls</em>) and <em>virtual table pointers</em> (<em>vptrs</em>).</p>
 
-<h4 id="cost-of-vtbl">Cost of vtbl</h4>
+<h2 id="cost-of-vtbl">Cost of vtbl</h2>
 
 <p>A vtble is usually an array of pointers to functions. Each class that declares or inherits virtual functions has its own vtbl, which holds pointers to the implementations of the virtual functions for that class.</p>
 
@@ -435,7 +449,7 @@ public:
 <li>In practical real world situation, virtual function calls are made through <em>pointers</em> or <em>reference</em> to objects, which are not inlined; only the virtual functions invoked through <em>objects</em> can be inlined, which is usually pointless.</li>
 </ul>
 
-<h4 id="cost-of-vptr">Cost of vptr</h4>
+<h2 id="cost-of-vptr">Cost of vptr</h2>
 
 <p>Each object whose class declares virtual functions will be added by compilers a hidden member that points to the virtual table for that class, so we&rsquo;ll pay for an extra pointer indise each object that is of a class containing virtual functions:</p>
 
@@ -470,11 +484,11 @@ public:
 
 <p>On most machines this is almost as efficient as a non-virtual function call, with only a few more instructions, so the cost of calling a virtual function is basically the same as that of calling a function through a function pointer.</p>
 
-<h4 id="summary">Summary</h4>
+<h2 id="summary">Summary</h2>
 
 <p>Both the per-class and the per-object space overhead for virtual functions increases, and the runtime invocation cost grows slightly.</p>
 
-<h2 id="multiple-inheritance">Multiple Inheritance</h2>
+<h1 id="multiple-inheritance">Multiple Inheritance</h1>
 
 <p>The same effect applies to multiple inheritance, except that things get more complex:</p>
 
@@ -484,7 +498,7 @@ public:
 <li>special vtbls must be generated for base classes in addition to the stand-alone vtbls</li>
 </ul>
 
-<h2 id="virtual-base-classes">Virtual Base Classes</h2>
+<h1 id="virtual-base-classes">Virtual Base Classes</h1>
 
 <p>Multiple inheritance often leads to the need for virtual base classes to eliminate the duplicated copies of base class in each deriving path.</p>
 
@@ -545,7 +559,7 @@ class D: public B, public C {...};
 
 <p>Notice that in the above diagram there are only thre vptrs while four classes are involved, this is because  <code>D</code> can share the vptr with <code>B</code>. Most implementations take use of this to reduce the compiler-generated overhead.</p>
 
-<h2 id="rtti">RTTI</h2>
+<h1 id="rtti">RTTI</h1>
 
 <blockquote>
 <p>RTTI (Runtime type identification) lets us discover information about objects and classes at runtime. The information is stored in an object of type <code>type_+info</code>, which can be accessed by using the <code>typeid</code> operator.</p>
@@ -658,7 +672,7 @@ class D: public B, public C {...};
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -744,7 +758,7 @@ class D: public B, public C {...};
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -833,6 +847,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -987,23 +1018,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1011,7 +1025,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

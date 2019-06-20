@@ -387,7 +387,7 @@ class Asteroid: public GameObjecct {...};
 
 <p>Now comes the <em>double dispatch</em>: since collisions betwenn different <code>GameObject</code> effects the environment differently, we want <code>processCollision</code> to act virtual on both <code>object1</code> and <code>object2</code>, but C++ only offers virtual support for one parameter, like <code>object1.processCollision(object2)</code>. We must come up with some approaches ourselves instead of relyin on compilers.</p>
 
-<h2 id="using-virtual-function-and-rtti">Using Virtual Function and RTTI</h2>
+<h1 id="using-virtual-function-and-rtti">Using Virtual Function and RTTI</h1>
 
 <p>We need double dispatch, so we can use virtual functions for first half of what we need, and use chains of <code>if-then-else</code>s for rest half:</p>
 
@@ -435,7 +435,7 @@ void SpaceShip::collide(GameObject&amp; otherObject)
 
 <p>The danger in this design: each <code>collide</code> function must be aware of each of its sibling classes, so if a new type of object is added to the game, we must update each RTTI-based <code>if-then-else</code> chain in the proram that might encounter the new object, which in essence is unmaintainable in the long run. We added a final <code>else</code> clause where control winds up if we hit an unnknown object, throwing an exception to callers in the hope that they handle the error better than we can (but since we are running into something we didn&rsquo;t know existed, they almost can&rsquo;t do anything more satisfying.)</p>
 
-<h2 id="using-virtual-functions-only">Using Virtual Functions Only</h2>
+<h1 id="using-virtual-functions-only">Using Virtual Functions Only</h1>
 
 <p>We can also implement double-dispatching as two separate virtual function calls:</p>
 
@@ -494,7 +494,7 @@ void Spaceship::collide(SpaceStation&amp; otherObject) {
 <li>The best recourse is to modify the design to eliminate the need for double-dispatching.</li>
 </ol>
 
-<h2 id="emulating-virtual-function-tables">Emulating Virtual Function Tables</h2>
+<h1 id="emulating-virtual-function-tables">Emulating Virtual Function Tables</h1>
 
 <p>Actually, we can build our own virtual function tables, similar to how compilers implement virtual functions by creating an array of function pointers (the vtbl) and then indexing into that array when a virtual function is called, except that this customized version support double-dispatching. Moreover, the virtual function tables is more efficient than the RTTI-based code (indexing into an array and following a function pointer vs running through a series of <code>if-then-else</code> tests), and we isolate the use of RTTI to a single location where the array of function pointers is initialized.</p>
 
@@ -590,7 +590,7 @@ SpaceShip::HitMap * SpaceShip::initializeCollisionMap()
 
 <p>Here we tell the compiler that <code>hitSpaceShip</code>, <code>hitSpaceStation</code>, and <code>hitAsteroid</code> are functions expecting a <code>GameObject</code> argument, which is not true. <code>hitSpaceShip</code> expects a <code>SpaceShip</code>, <code>hitSpaceStation</code> expects a <code>SpaceStation</code>, and <code>hitAsteroid</code> expects an <code>Asteroid</code>. All these functions are declared as pass-by-reference, which in fact is implemented by passing a pointer to an object, so ideally compilers will pass the declared type of the parameter(say <code>hitSpaceShip</code> for function <code>hitSpaceShip</code>) in the function being called. However, due to the object layout of classes under an inheritance path, after the cast above, it is possible that the wrong address (say <code>GameObject</code>) is passed into the function, because inside a <code>SpaceShip</code> object there are both a derived class part as well as a base class part, each having a different address (for detailed discussion, refer to <em>More Effective C++</em> Item 31-Initializing Emulated Virtual Function Talbes).</p>
 
-<h3 id="using-non-member-collision-processing-functions">Using Non-Member Collision-Processing Functions</h3>
+<h2 id="using-non-member-collision-processing-functions">Using Non-Member Collision-Processing Functions</h2>
 
 <p>Still, similar to pure virtual functions based approach, there is one remaining problem: because the associative array contains pointers to <em>member functions</em>, once a new type of <code>GameObject</code> is added to the game, every class definition needs to be updated and recompiled, even if that class does not care about the new type of object.</p>
 
@@ -666,7 +666,7 @@ HitFunctionPtr lookup(const string&amp; class1, const string&amp; class2)
 
 <p>For example, suppose the concrete classes <code>CommercialShip</code> and <code>MilitaryShip</code> inherit from the newly abstract class <code>SpaceShip</code> (according to the guidance of MECpp item 33). If a <code>MilitaryShip</code> object and an <code>Asteroid</code> collided, we&rsquo;d expect <code>void shipAsteroid(GameObject&amp;, GameObject&amp;)</code>  to be called. However, in fact, an <code>UnknownCollision</code> would be thrown, because <code>lookup</code> would be asked to find a function corresponding to the type names <code>MilitaryShip</code> and <code>Asteroid</code>, and no such function would be found in <code>collisionMap</code> - after all, <code>lookup</code> has no way of knowing that <code>MilitaryShip</code> can be treated like a <code>SpaceShip</code>.</p>
 
-<h3 id="modifying-emulated-virtual-function-talbes-dynamically">Modifying Emulated Virtual Function Talbes Dynamically</h3>
+<h2 id="modifying-emulated-virtual-function-talbes-dynamically">Modifying Emulated Virtual Function Talbes Dynamically</h2>
 
 <p>If we&rsquo;d like to add, remove, or change collision-processing functions as the game proceeds, the static <code>collisionMap</code> will not meet this requirement. In this case, we can turn the concept of a static map into a class that offers member functions allowing us to modify the contents of the map dynamically:</p>
 
@@ -985,6 +985,23 @@ Suffering is optional.</p>
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.tk/2019/06/basic-musicianship-review/">
                 <h3 class="media-heading">Basic Musicianship Review</h3>
               </a>
@@ -1135,23 +1152,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1159,7 +1159,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

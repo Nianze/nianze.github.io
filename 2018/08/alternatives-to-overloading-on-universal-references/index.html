@@ -364,15 +364,25 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Universal reference parameters often have efficiency advantages, but they typically have usability disadvantages.</p>
 
-<h4 id="abandon-overloading">Abandon overloading</h4>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#abandon-overloading">Abandon overloading</a></li>
+<li><a href="#pass-by-const-t">Pass by <code>const T&amp;</code></a></li>
+<li><a href="#pass-by-value">Pass by value</a></li>
+<li><a href="#use-tag-dispatch">Use Tag dispatch</a></li>
+<li><a href="#use-enable-if-to-constrain-templates-that-take-universal-references">Use <code>enable_if</code> to constrain templates that take universal references</a></li>
+</ul>
+</nav>
+
+<h1 id="abandon-overloading">Abandon overloading</h1>
 
 <p>This solution works for overloaded <code>logAndAdd</code> example in Item 26, where we break the overloaded function into two: <code>logAndAddName</code> and <code>logAndAddIdx</code>. However, this will not work for <code>Person</code> constructor - the constructor names are fixed by the language.</p>
 
-<h4 id="pass-by-const-t">Pass by <code>const T&amp;</code></h4>
+<h1 id="pass-by-const-t">Pass by <code>const T&amp;</code></h1>
 
 <p>This is the original function <code>void logAndAdd(const std::string&amp; name)</code> we see in Item 26. Not efficient in some cases, but works as expected.</p>
 
-<h4 id="pass-by-value">Pass by value</h4>
+<h1 id="pass-by-value">Pass by value</h1>
 
 <p>According to the advice in Item 41, we may consider passing objects by value when we know we&rsquo;ll copy them. Thus, the <code>Person</code> example may get revised like this:</p>
 
@@ -390,7 +400,7 @@ private:
 
 <p>With this design, <code>int</code>-like arguments get passed to <code>int</code> overload, and arguments of type <code>std::string</code> (and anything from which <code>std::string</code> could be created, e.g., literals) get passed to the <code>std::string</code> overload.</p>
 
-<h4 id="use-tag-dispatch">Use Tag dispatch</h4>
+<h1 id="use-tag-dispatch">Use Tag dispatch</h1>
 
 <p>Add another &ldquo;tag&rdquo; parameter to help compiler differentiate the overloading cases as we want:</p>
 
@@ -424,7 +434,7 @@ void logAndAddImpl(T&amp;&amp; name, std::true_type)
 
 <p>Tag dispatch is a standard building block of template metaprogramming to let the tag determine which overload gets called, so that overloading on universal references may work as expect.</p>
 
-<h4 id="use-enable-if-to-constrain-templates-that-take-universal-references">Use <code>enable_if</code> to constrain templates that take universal references</h4>
+<h1 id="use-enable-if-to-constrain-templates-that-take-universal-references">Use <code>enable_if</code> to constrain templates that take universal references</h1>
 
 <p>Tag dispatch solves some of the problems related with templates taking universal references, but not all of them. The perfect-forwarding constructor for the <code>Person</code> class, for example, remains problematic: even if we write only one constructor and apply tag dispactch technique to it, some constructor calls (copy from <code>const</code> vs non-<code>const</code> lvalues) may sometimes be handled by compiler-generated functions (e.g., copy and move constructors) that bypass the tag dispatch system.</p>
 
@@ -608,7 +618,7 @@ public;
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -694,7 +704,7 @@ public;
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -783,6 +793,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -937,23 +964,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -961,7 +971,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

@@ -364,6 +364,14 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>When writing a class template that offers functions related to the template that support implicit type conversions on all parameters, define those functions as friends inside the class template.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#solve-the-compiling-issue">Solve the compiling issue</a></li>
+<li><a href="#solve-the-linking-issue">Solve the linking issue</a></li>
+<li><a href="#have-the-friend-call-a-helper">Have the friend call a helper</a></li>
+</ul>
+</nav>
+
 <p>If we want  to do implicit type conversion on all arguments, we should use non-member functions (item 24). Now we want a templatized version of <code>Rational</code> class to support the same mixed-mode arithmetic as shown in item 24, and the code could start like this:</p>
 
 <pre><code class="language-cpp">template&lt;typename T&gt;
@@ -389,7 +397,7 @@ Rational&lt;int&gt; result = oneHalf * 2;  // error! won't compile
 
 <p>The problem here is that <strong>implicit type conversion functions are <em>never</em> considered during template argument deduction</strong>. This means it is impossible for the compilers to convert the second parameter <code>2</code> into a <code>Rational&lt;int&gt;</code> using non-explicit constructor, so compilers can&rsquo;t figure out what <code>T</code> is for this function template named <code>operator*</code> taking two parameters of type <code>Rational&lt;T&gt;</code>, can&rsquo;t deduce parameter types for this function templates, and thus can&rsquo;t instantiate the appropriate functions. In the end, the function we want to call fails to be declared, before we could apply implicit type conversions during a later function call.</p>
 
-<h3 id="solve-the-compiling-issue">Solve the compiling issue</h3>
+<h1 id="solve-the-compiling-issue">Solve the compiling issue</h1>
 
 <p>How to declare the <code>operator*</code> properly? Notice that class templates don&rsquo;t depend on template argument deduction (this process only applies to function templates), so <code>T</code> is always known at the time the class <code>Rational&lt;T&gt;</code> is instantiated. Combine this knowledge with another fact that a <code>friend</code> declaration in a template class refers to a specific <em>function</em> (not a function <em>template</em>), so as part of the class instantiation process, the friend function will be automatically declared. Taking advantage of these 2 points, we could update the code to a new version<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
 
@@ -411,7 +419,7 @@ const Rational&lt;T&gt; operator*(const Rational&lt;T&gt;&amp; lhs,
 
 <p>When the <code>oneHalf</code> is declared to be of type <code>Rational&lt;int&gt;</code>, the class <code>Rational&lt;int&gt;</code> is instantiated, and the friend function <code>operator*</code> that takes <code>Rational&lt;int&gt;</code> parameters is then declared automatically. As a declared function, compilers can use implicit conversion functions (such as <code>Rational</code>&rsquo;s non-explicit constructor) when calling it, making the mixed-mode call compile.</p>
 
-<h3 id="solve-the-linking-issue">Solve the linking issue</h3>
+<h1 id="solve-the-linking-issue">Solve the linking issue</h1>
 
 <p>Yes, the code compiles. Yet it won&rsquo;t link.</p>
 
@@ -444,7 +452,7 @@ public:
 <li>the only way to declare a non-member function inside a class is to make it a friend</li>
 </ul>
 
-<h3 id="have-the-friend-call-a-helper">Have the friend call a helper</h3>
+<h1 id="have-the-friend-call-a-helper">Have the friend call a helper</h1>
 
 <p>Such functions as <code>operator*</code> defined inside a class are implicitly declared <code>inline</code> (item 30), so we may minimize the impact of such <code>inline</code> declarations by having <code>operator*</code> do nothing but call a helper function defined outside of the class, especially when the function body is complex.</p>
 
@@ -570,7 +578,7 @@ const Rational&lt;T&gt; doMultiply(const Rational&lt;T&gt;&amp; lhs,
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -656,7 +664,7 @@ const Rational&lt;T&gt; doMultiply(const Rational&lt;T&gt;&amp; lhs,
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -745,6 +753,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -899,23 +924,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -923,7 +931,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

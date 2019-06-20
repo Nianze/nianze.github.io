@@ -364,6 +364,22 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Useful tips on using <code>const</code> in C++.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#1-const-pointer">1. <code>const</code> pointer</a></li>
+<li><a href="#2-const-iterator">2. <code>const</code> iterator</a></li>
+<li><a href="#3-const-function-return-value">3. <code>const</code> function return value</a></li>
+<li><a href="#4-const-function-parameters">4. <code>const</code> function parameters</a></li>
+<li><a href="#5-const-member-functions">5. <code>const</code> member functions</a>
+<ul>
+<li><a href="#5-1-bitwise-constness-vs-logical-constness">5.1 Bitwise constness vs. Logical constness</a></li>
+<li><a href="#5-1-1-bitwise-constness">5.1.1 Bitwise constness</a></li>
+<li><a href="#5-1-2-logical-constness">5.1.2 Logical constness</a></li>
+<li><a href="#5-2-avoiding-duplication-in-const-and-non-const-member-function">5.2 Avoiding duplication in <code>const</code> and non-<code>const</code> member function</a></li>
+</ul></li>
+</ul>
+</nav>
+
 <p>The <code>const</code> keyword allows you to specify a semantic constraint and compilers will enforce that constraint. It is remarkably versatile:</p>
 
 <ol>
@@ -372,7 +388,7 @@ Suffering is optional.</p>
 <li>when declaring functions, you may also refer <code>const</code> to function&rsquo;s return value, function parameters, and, for member functions, to the function as a whole</li>
 </ol>
 
-<h2 id="1-const-pointer">1. <code>const</code> pointer</h2>
+<h1 id="1-const-pointer">1. <code>const</code> pointer</h1>
 
 <pre><code class="language-cpp">char greeting[] = &quot;Hello&quot;;
 char *p = greeting; // non-const pointer, non-const data
@@ -384,7 +400,7 @@ char const * const p = greeting; // const pointer, const data
 
 <p>If the <code>const</code> appears to the left of the asterisk, what&rsquo;s pointed to is constant; if the word <code>const</code> appears to the right of the asterisk, the pointer itself is constant. It&rsquo;s helpful to read pointer declarations right to left: <code>const char * const p</code> reads as &ldquo;p is a constant pointer to constant chars&rdquo;.</p>
 
-<h2 id="2-const-iterator">2. <code>const</code> iterator</h2>
+<h1 id="2-const-iterator">2. <code>const</code> iterator</h1>
 
 <p>STL iterators are modeled on pointers. Treat it like this:</p>
 
@@ -405,7 +421,7 @@ std::vector&lt;int&gt;::const_iterator cIter = vec.begin(); // acts like const T
 ++cIter;     // OK.
 </code></pre>
 
-<h2 id="3-const-function-return-value">3. <code>const</code> function return value</h2>
+<h1 id="3-const-function-return-value">3. <code>const</code> function return value</h1>
 
 <p>Generally speaking, having a function return a constant value is inappropriate, but sometimes doing so may reduce implicit errors out of incidence without giving up safety or efficiency.</p>
 
@@ -421,11 +437,11 @@ const Rational operator*(const Rational&amp; lhs,
 <pre><code class="language-cpp">if (a * b = c) // meant to do a comparison for some user-defined objects
 </code></pre>
 
-<h2 id="4-const-function-parameters">4. <code>const</code> function parameters</h2>
+<h1 id="4-const-function-parameters">4. <code>const</code> function parameters</h1>
 
 <p><code>const</code> parameters act just like local <code>const</code> objects. Unless there&rsquo;s a need to modify aparameter or local object, be sure to declare it <code>const</code>, for it may save you from annoying errors like <code>if (a = b)</code> above.</p>
 
-<h2 id="5-const-member-functions">5. <code>const</code> member functions</h2>
+<h1 id="5-const-member-functions">5. <code>const</code> member functions</h1>
 
 <p>The purpose of <code>const</code> on member functions is to identify which member functions may be invoked on <code>const</code> objects, which benefits us for:</p>
 
@@ -434,9 +450,9 @@ const Rational operator*(const Rational&amp; lhs,
 <li>making it possible to work with <code>const</code>-qualified objects (which makes up a very important C++ feature: overloading member functions differing only in their constness)</li>
 </ol>
 
-<h3 id="5-1-bitwise-constness-vs-logical-constness">5.1 Bitwise constness vs. Logical constness</h3>
+<h2 id="5-1-bitwise-constness-vs-logical-constness">5.1 Bitwise constness vs. Logical constness</h2>
 
-<h4 id="5-1-1-bitwise-constness">5.1.1 Bitwise constness</h4>
+<h2 id="5-1-1-bitwise-constness">5.1.1 Bitwise constness</h2>
 
 <blockquote>
 <p>Bitwise constness: a member function is const if and only if it doesn&rsquo;t modify any of the object&rsquo;s data members (excluding those that are static). This is also C++&rsquo;s definition of constness</p>
@@ -489,7 +505,7 @@ ctb[0] = 'x';        // error! call to a const TextBlock object is fine
                      // but making an assignment to returned const char&amp; type gives us an error
 </code></pre>
 
-<h4 id="5-1-2-logical-constness">5.1.2 Logical constness</h4>
+<h2 id="5-1-2-logical-constness">5.1.2 Logical constness</h2>
 
 <blockquote>
 <p>Logical constness: a const member function might modify some of the bits in the object on which it&rsquo;s invoked, but only in ways that clients cannot detect.</p>
@@ -548,7 +564,7 @@ std::size_t CTextBlock::length() const
 <li>Think of static data member <code>staticMember</code> as <code>CTextBlock::staticMember</code>, so there&rsquo;s no constraints from <code>const</code> type <code>this</code> pointer.</li>
 </ol>
 
-<h3 id="5-2-avoiding-duplication-in-const-and-non-const-member-function">5.2 Avoiding duplication in <code>const</code> and non-<code>const</code> member function</h3>
+<h2 id="5-2-avoiding-duplication-in-const-and-non-const-member-function">5.2 Avoiding duplication in <code>const</code> and non-<code>const</code> member function</h2>
 
 <p>There are two versions of operator[] in class TextBlock, which is duplication and tempts us to have one version of operator[] call the other one. Although generally speaking casting is a bad idea, here we may find enough reasons to justify its usage so long as we use it properly (note that we call <code>const</code> version in non-<code>const</code> version, not the other way around!):</p>
 
@@ -651,7 +667,7 @@ public:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -737,7 +753,7 @@ public:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -826,6 +842,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -980,23 +1013,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1004,7 +1020,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

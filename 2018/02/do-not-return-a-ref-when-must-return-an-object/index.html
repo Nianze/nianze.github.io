@@ -364,6 +364,18 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a &ldquo;counter&rdquo; example that is reasonable in single-threaded environments).</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#case-study">Case Study</a></li>
+<li><a href="#return-a-pointer-or-reference-to-a-local-stack-object">Return a pointer or reference to a local stack object</a></li>
+<li><a href="#return-a-reference-to-a-heap-allocated-object">Return a reference to a heap-allocated object</a></li>
+<li><a href="#return-a-reference-to-a-local-static-object">Return a reference to a local static object</a></li>
+<li><a href="#the-right-way-return-by-value">The right way: return by value</a></li>
+</ul>
+</nav>
+
+<h1 id="case-study">Case Study</h1>
+
 <p>There are some situations where we <strong>must</strong> return an object, no matter how much effort we want to put into rooting out the evil of pass-by-value to pursue the heighest efficiency. Otherwise, we may invariably make a fatal mistake: pass references to objects that don&rsquo;t exist.</p>
 
 <p>Consider following class for representing rational numbers with a multiplying function:</p>
@@ -386,7 +398,7 @@ friend:
 
 <p>A function can create a new object in only two ways: on the stack or on the heap.</p>
 
-<h2 id="return-a-pointer-or-reference-to-a-local-stack-object">Return a pointer or reference to a local stack object</h2>
+<h1 id="return-a-pointer-or-reference-to-a-local-stack-object">Return a pointer or reference to a local stack object</h1>
 
 <p>Creation on the stack is accomplished by defining a local variable:</p>
 
@@ -401,7 +413,7 @@ friend:
 
 <p>The fact is, any function returning a reference (or a pointer) to a local object is brocken.</p>
 
-<h2 id="return-a-reference-to-a-heap-allocated-object">Return a reference to a heap-allocated object</h2>
+<h1 id="return-a-reference-to-a-heap-allocated-object">Return a reference to a heap-allocated object</h1>
 
 <p>Heap-based objects come into being through the use of <code>new</code>, so the heap-based <code>opearator*</code> looks like this:</p>
 
@@ -423,7 +435,7 @@ Rational w = x * y * z; // same as operator*(operator*(x,y),z)
 
 <p>There are twoe uses of <code>new</code> that need to be undone with uses of <code>delete</code>. Yet there&rsquo;s no reasonable way for clients to get at the pointers hidden behind the references being returned from the calls to <code>operator*</code> and make calls to <code>delete</code>. This is a guaranteed resource leak.</p>
 
-<h2 id="return-a-reference-to-a-local-static-object">Return a reference to a local static object</h2>
+<h1 id="return-a-reference-to-a-local-static-object">Return a reference to a local static object</h1>
 
 <p>If, however, we jump outside of the box, considering returning a reference to a <em>static</em> <code>Rational</code>, and think that this will avoid all but one initial constructor call without suffering from calling a constructor for each product result returned from <code>operatior*</code> in above on-the-stack and on-the-heap approaches:</p>
 
@@ -471,7 +483,7 @@ if ((a * b) == (c * d)) {
 <li>how to decide the position of target result in the array</li>
 </ul>
 
-<h2 id="the-right-way-return-by-value">The right way: return by value</h2>
+<h1 id="the-right-way-return-by-value">The right way: return by value</h1>
 
 <p>The right way to write a function that must return a new object is to have that function reutrn a new object like this or something essentially equivalent:</p>
 
@@ -563,7 +575,7 @@ if ((a * b) == (c * d)) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -649,7 +661,7 @@ if ((a * b) == (c * d)) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -738,6 +750,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -892,23 +921,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -916,7 +928,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

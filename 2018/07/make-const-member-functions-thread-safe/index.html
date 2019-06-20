@@ -364,6 +364,14 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Make <code>const</code> member functions thread safe unless we&rsquo;re <em>certain</em> they&rsquo;ll never be used in a concurrent context.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#solution-mutex">Solution: mutex</a></li>
+<li><a href="#for-a-single-variable-requiring-synchronization">For a single variable requiring synchronization</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</nav>
+
 <p>Due to <code>mutable</code> member datas, <code>const</code> member functions may not be thread safe. For a classic use case for <code>mutable</code>:</p>
 
 <pre><code class="language-cpp">class Polynomial {
@@ -394,7 +402,7 @@ auto rootsOfP = p.roots();    auto valsGivingZero = p.roots();
 
 <p>Having multiple threads perform a read operation without synchronization is safe. However, although <code>roots</code> is declared <code>const</code>, it&rsquo;s not thread safe: more than one threads might try to modify the data members <code>rootsAreValid</code> and <code>rootVals</code> inside <code>roots</code>, reading and writing the same memory without synchronization - which is data racing, leading to undefined behavior.</p>
 
-<h4 id="solution-mutex">Solution: mutex</h4>
+<h1 id="solution-mutex">Solution: mutex</h1>
 
 <pre><code class="language-cpp">class Polynomial {
 public:
@@ -420,7 +428,7 @@ private:
 
 <p>Another point worth noting is that <code>std::mutex</code> can be neither copied nor moved, so a side effect of adding <code>m</code> to <code>Polynomial</code> is that <code>Polynomial</code> loses the ability to be copied and moved.</p>
 
-<h4 id="for-a-single-variable-requiring-synchronization">For a single variable requiring synchronization</h4>
+<h1 id="for-a-single-variable-requiring-synchronization">For a single variable requiring synchronization</h1>
 
 <p>Sometimes when there&rsquo;s only one variable or memory location requiring synchronization, <code>mutex</code> might be overkill, and we might consider <code>std::atomic</code> counter (EMCpp item 40), which is often a less expensive way to go<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
 
@@ -440,7 +448,7 @@ private:
 
 <p>The same side effect goes here: the existance of <code>callCount</code> in <code>Point</code> makes <code>Point</code> neither copyable nor movable.</p>
 
-<h4 id="summary">Summary</h4>
+<h1 id="summary">Summary</h1>
 
 <p>The point in this item: when we write a <code>const</code> member function, we might avoid the costs associated with mutexes and <code>std::stomic</code>s as well as the side effect of uncopyability as well as unmovability, if we can guarantee that there will never be more than one thread executing that member function on an object.</p>
 
@@ -533,7 +541,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -619,7 +627,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -708,6 +716,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -862,23 +887,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -886,7 +894,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

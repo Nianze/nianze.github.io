@@ -364,6 +364,15 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Good interfaces are easy to use correctly and hard to use incorrectly.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#creating-new-types">Creating new types</a></li>
+<li><a href="#constraining-object-values">Constraining object values</a></li>
+<li><a href="#restricting-operations-on-types">Restricting operations on types</a></li>
+<li><a href="#eliminating-client-resource-management-responsibilities">Eliminating client resource management responsibilities</a></li>
+</ul>
+</nav>
+
 <p>To design a good interface, it&rsquo;s always good to make the interface in consistency and behave in compatibility with built-in types. After all, clients already know how types like <code>int</code> behave, so we should strive to make our types behave the same way. A good (though not perfect) example is the interface to STL containers: every STL container has a <em>member function</em> named <code>size</code> that tells how many objects are in the container. On the contrary, in <strong>Java</strong>, we use the <code>length</code> <em>property</em> for arrays, the <code>length</code> <em>method</em> for <code>String</code>s, and the <code>size</code> <em>method</em> for <code>List</code>s; as for <strong>.Net</strong>, <code>Arrays</code> have a property named <code>Length</code>, while <code>ArrayList</code>s have a property named <code>Count</code>. No matter how convenient modern IDEs may be, inconsistency imposes mental fricition into a developer&rsquo;s work.</p>
 
 <p>A good way to think of the interface design is to consider the kinds of mistakes that clients might make, and we could try the following 4 ways:</p>
@@ -375,7 +384,7 @@ Suffering is optional.</p>
 <li>Eliminating client resource management responsibilities</li>
 </ol>
 
-<h3 id="creating-new-types">Creating new types</h3>
+<h1 id="creating-new-types">Creating new types</h1>
 
 <p>Say we&rsquo;re designing the constructor for a class representing dates in time:</p>
 
@@ -435,7 +444,7 @@ Date d(Day(30), Month(3), Year(1995));  // error: wrong type!
 Date d(Month(3), Day(30), Year(1995));  // fine
 </code></pre>
 
-<h3 id="constraining-object-values">Constraining object values</h3>
+<h1 id="constraining-object-values">Constraining object values</h1>
 
 <p>Once the type is right, we may consider adding some restriction on the values of those types. The <code>Month</code> in example above only has 12 valid values, so the <code>Month</code> type should reflect this restriction. One way is to use an enum to represent the month, but considering enums can be used like <code>ints</code> (item 2), it is not as type-safe as we might like. A safer solution is to predefine the set of all valid <code>Month</code>s:</p>
 
@@ -460,7 +469,7 @@ Date d(Month::Mar(), Day(30), Year(1995));
 <p>the relative order of initialization of non-local static objects defined in different translation units is undefined.</p>
 </blockquote>
 
-<h3 id="restricting-operations-on-types">Restricting operations on types</h3>
+<h1 id="restricting-operations-on-types">Restricting operations on types</h1>
 
 <p>A good example for restricting operations on types is in item 3 explaining how <code>const</code> qualifying the return type from <code>operator*</code> can prevent clients from making following errors for user-defined types:</p>
 
@@ -469,7 +478,7 @@ Date d(Month::Mar(), Day(30), Year(1995));
 
 <p>Again, it is always good to have our types behave consistently with the built-in types. Such kind of operation is illegal for <code>int</code> type, so unless there&rsquo;s a good reason, it should be illegal for our types, too.</p>
 
-<h3 id="eliminating-client-resource-management-responsibilities">Eliminating client resource management responsibilities</h3>
+<h1 id="eliminating-client-resource-management-responsibilities">Eliminating client resource management responsibilities</h1>
 
 <p>Any interface that requires that client remember to do something is prone to incorrect use. A bad example is function <code>createInvestment</code> in item 13, which returns pointers to dynamically allocated objeects in an <code>Investment</code> hierarchy.</p>
 
@@ -593,7 +602,7 @@ Date d(Month::Mar(), Day(30), Year(1995));
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -679,7 +688,7 @@ Date d(Month::Mar(), Day(30), Year(1995));
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -768,6 +777,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -922,23 +948,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -946,7 +955,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

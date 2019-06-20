@@ -364,6 +364,18 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Reference counting is technique that allows multiple objects with the same value to share a sinple representation of that value.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#implementing-reference-counting">Implementing Reference Counting</a></li>
+<li><a href="#copy-on-write">Copy-on-write</a></li>
+<li><a href="#pointers-references-and-copy-on-write">Pointers, References, and Copy-on-write</a></li>
+<li><a href="#a-reference-counting-base-class">A Reference-Counting Base class</a></li>
+<li><a href="#automating-reference-count-manipulations">Automating Reference Count Manipulations</a></li>
+<li><a href="#puting-everyting-together">Puting Everyting Together</a></li>
+<li><a href="#adding-refenrence-counting-to-existing-classes">Adding Refenrence Counting to Existing Classes</a></li>
+</ul>
+</nav>
+
 <p>Consider a customized naive version of <code>class String;</code>: its assignment operator is implemented in a naive way:</p>
 
 <pre><code class="language-cpp">class String {
@@ -437,7 +449,7 @@ String&amp; String::operator=(const String&amp; rhs)
 └───┘    
 </code></pre>
 
-<h2 id="implementing-reference-counting">Implementing Reference Counting</h2>
+<h1 id="implementing-reference-counting">Implementing Reference Counting</h1>
 
 <p>From the picture above, we can see we need one reference count per string <em>value</em>, instead of one per string <em>object</em>. This implies a decoupling between values and reference counts, leading to our first design: nesting a <code>StringValue</code> struct in the private part of <code>String</code> class, so that all the members of <code>String</code> class get full access to this inner data structure, while everybody else get denied (except friends of the class).</p>
 
@@ -510,7 +522,7 @@ String&amp; String::operator=(const String&amp; rhs)
 }
 </code></pre>
 
-<h2 id="copy-on-write">Copy-on-write</h2>
+<h1 id="copy-on-write">Copy-on-write</h1>
 
 <p>Now comes the troublesome one: an array-bracket operator([]), which allows individual characters within strings to be read and written:</p>
 
@@ -546,7 +558,7 @@ public:
 
 <p>This technique - to share a value with other objects until we have to write on our own copy of the value - is the well-knwon <em>copy-on-write</em>, which is a specific example of <em>lazy evaluation</em> (MECpp item 17), which is a more general approach to efficiency.</p>
 
-<h2 id="pointers-references-and-copy-on-write">Pointers, References, and Copy-on-write</h2>
+<h1 id="pointers-references-and-copy-on-write">Pointers, References, and Copy-on-write</h1>
 
 <p>Consider this code:</p>
 
@@ -613,7 +625,7 @@ char&amp; String::operator[](int index)
 }
 </code></pre>
 
-<h2 id="a-reference-counting-base-class">A Reference-Counting Base class</h2>
+<h1 id="a-reference-counting-base-class">A Reference-Counting Base class</h1>
 
 <p>Reference counting is useful for more than just strings, so it&rsquo;s good practice to separate reference counting code in a context-independent manner. This leads us to the design of a base class <code>RCObject</code>. Any class wishing to take advantage of automatic reference counting may inherit from this class. Basically, for general purpose usage, <code>RCObject</code> class should include</p>
 
@@ -703,7 +715,7 @@ String::StringValue::~StringValue()
 
 <p>After this change, <code>RCObject</code> now provide the manipulation ability of the <code>refCount</code> field, instead of <code>StringValue</code>.</p>
 
-<h2 id="automating-reference-count-manipulations">Automating Reference Count Manipulations</h2>
+<h1 id="automating-reference-count-manipulations">Automating Reference Count Manipulations</h1>
 
 <p>The <code>RCObject</code> class only gives us a place to store a reference count, as well as the member functions to manipulate the <code>refCount</code> field. However, the <em>calls</em> to these functions must still be mannually inserted in other classes: <code>String</code> copy constructor and assignment operator need to call <code>addReference</code> and <code>removeReference</code> on <code>StringValue</code> objects, which is not good practice for reuse.</p>
 
@@ -796,7 +808,7 @@ strcpy(data, rhs.data);
 <li><code>T</code> should prove all the functionality that <code>RCObject</code> does, either or not by inheriting from <code>RCObject</code>.</li>
 </ol>
 
-<h2 id="puting-everyting-together">Puting Everyting Together</h2>
+<h1 id="puting-everyting-together">Puting Everyting Together</h1>
 
 <pre><code>                 ┌──────────┐  
 ┌──────────┐         │ RCObject │ 
@@ -971,7 +983,7 @@ char&amp; String::operator[](int index)
 }
 </code></pre>
 
-<h2 id="adding-refenrence-counting-to-existing-classes">Adding Refenrence Counting to Existing Classes</h2>
+<h1 id="adding-refenrence-counting-to-existing-classes">Adding Refenrence Counting to Existing Classes</h1>
 
 <p>Given some class <code>Widget</code> that&rsquo;s in a library we can&rsquo;t modify, and suppose we want to apply the benefits of reference counting to <code>Widget</code> without being able to inherit <code>Widget</code> from <code>RCObject</code>, we solve the problem with an additional level of indirection by adding a new class <code>CountHolder</code>, which does three jobs:</p>
 
@@ -1190,7 +1202,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -1276,7 +1288,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -1365,6 +1377,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -1519,23 +1548,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1543,7 +1555,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

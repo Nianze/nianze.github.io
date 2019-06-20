@@ -364,7 +364,24 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>There are three primary ways in which passing an object to a function or using that object to invoke a virtual function differs from throwing the object as an exception.</p>
 
-<h2 id="similarity">Similarity</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#similarity">Similarity</a></li>
+<li><a href="#differences">Differences</a>
+<ul>
+<li><a href="#difference-in-augument-passing">Difference in augument passing</a>
+<ul>
+<li><a href="#copying-based-on-static-type">Copying based on static type</a></li>
+<li><a href="#rethrow">Rethrow</a></li>
+<li><a href="#different-catch-syntax">Different <code>catch</code> syntax</a></li>
+</ul></li>
+<li><a href="#difference-in-type-matching">Difference in type matching</a></li>
+<li><a href="#difference-in-fitting-strategy">Difference in fitting strategy</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="similarity">Similarity</h1>
 
 <p>There is similarity between passing an argument from a function call site to the function&rsquo;s parameter and passing an exception from a <code>throw</code> site to a <code>catch</code> clause:</p>
 
@@ -383,7 +400,7 @@ catch (Widget *pw) ...
 catch (const Widget *pw) ...
 </code></pre>
 
-<h2 id="differences">Differences</h2>
+<h1 id="differences">Differences</h1>
 
 <p>However, there are still three difference:</p>
 
@@ -393,7 +410,7 @@ catch (const Widget *pw) ...
 <li><code>catch</code> clauses are examined in the order in which they appear in the source code, and the first one that can succeed is selected for execution, while a virtual funciton invoked by an object is the one that provides the <em>best</em> match for the type of the object, even if it&rsquo;s not the first one listed in the source code.</li>
 </ol>
 
-<h3 id="difference-in-augument-passing">Difference in augument passing</h3>
+<h2 id="difference-in-augument-passing">Difference in augument passing</h2>
 
 <p>The first difference essentially grows out of the fact that when we call a function, control eventually returns to the call site, but when we throw an exception, constrol does <em>not</em> return to the <code>throw</code> site. For example:</p>
 
@@ -411,7 +428,7 @@ catch (const Widget *pw) ...
 <li>Throwing an exception is typically much slower than parameter passing.</li>
 </ul>
 
-<h4 id="copying-based-on-static-type">Copying based on static type</h4>
+<h3 id="copying-based-on-static-type">Copying based on static type</h3>
 
 <p>It is worth noting that in C++ copying is always based on an object&rsquo;s static type (MECpp item 25 shows a technique to copy based on dynamic type). Thus,</p>
 
@@ -426,7 +443,7 @@ void throwWidget()
 }
 </code></pre>
 
-<h4 id="rethrow">Rethrow</h4>
+<h3 id="rethrow">Rethrow</h3>
 
 <p>Another impact caused from copying exceptions objects is that there&rsquo;s difference between different rethrow statements:</p>
 
@@ -452,7 +469,7 @@ catch (Widget&amp; w)  // catch Widget exceptions
 
 <p>syntax to rethrow the current exception for its consistency and efficiency.</p>
 
-<h4 id="different-catch-syntax">Different <code>catch</code> syntax</h4>
+<h3 id="different-catch-syntax">Different <code>catch</code> syntax</h3>
 
 <p>There are three kinds of <code>catch</code> clauses for exception of type <code>Widget</code>:</p>
 
@@ -470,7 +487,7 @@ catch (const Widget&amp; w) ... // catch by reference-to-const
 <li>Throw by pointer is equivalent to pass by pointer. Either way, a copy of the pointer is passed. Just remember not to throw a pointer to a local object.</li>
 </ul>
 
-<h3 id="difference-in-type-matching">Difference in type matching</h3>
+<h2 id="difference-in-type-matching">Difference in type matching</h2>
 
 <p>Implicit conversions (such from <code>int</code> to <code>double</code>) are not applied when matching exceptions to <code>catch</code> clauses:</p>
 
@@ -514,7 +531,7 @@ catch (const runtime_error*) ...  // range_error*, or overflow_error*
 </code></pre></li>
 </ol>
 
-<h3 id="difference-in-fitting-strategy">Difference in fitting strategy</h3>
+<h2 id="difference-in-fitting-strategy">Difference in fitting strategy</h2>
 
 <p>Catch clauses are always tried in the order of their appearance (employing a &ldquo;first fit&rdquo; strategy). For exampel:</p>
 
@@ -609,7 +626,7 @@ catch (invalid_argument&amp; ed) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -695,7 +712,7 @@ catch (invalid_argument&amp; ed) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -784,6 +801,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -938,23 +972,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -962,7 +979,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

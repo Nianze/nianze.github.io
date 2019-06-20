@@ -364,7 +364,15 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p><code>set-new-handler</code> allows you to specify a function to be called when memory allocation requests cannot be satisfied.</p>
 
-<h2 id="the-basic">The basic</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#the-basic">The basic</a></li>
+<li><a href="#customize-the-new-handler-per-class">Customize the <code>new-handler</code> per class</a></li>
+<li><a href="#traditional-failure-yields-null-alternative-for-operator-new">Traditional failure-yields-null alternative for <code>operator new</code></a></li>
+</ul>
+</nav>
+
+<h1 id="the-basic">The basic</h1>
 
 <p>If <code>operator new</code> can&rsquo;t satisfy a memory allocation request, it will call a client-specifiable error-handling function called a <code>new-handler</code> before throwing a <code>bad_alloc</code> exception. To specify this out-of-memory-handling function, clients call <code>set_new_handler</code>, a standard library function declared in <code>&lt;new&gt;</code>:</p>
 
@@ -402,7 +410,7 @@ int main()
 }
 </code></pre>
 
-<h2 id="customize-the-new-handler-per-class">Customize the <code>new-handler</code> per class</h2>
+<h1 id="customize-the-new-handler-per-class">Customize the <code>new-handler</code> per class</h1>
 
 <p>C++ has no support for class-specific new-handlers, so we implement this by ourselves: we have each class provide its own versions of <code>set_new_handler</code> (which allows clients to specify the customized <code>new-handler</code>) and <code>operator new</code> (which ensures the class-specific <code>new-handler</code> is used in place of the global <code>new-handler</code> when memory allocation request fails).</p>
 
@@ -487,7 +495,7 @@ Widget::set_new_handler(0);  // set the Widget-specific new-handler to nothing (
 Widget *pw2 = new Widget;  // there's no new-handling func. for Widget now, so if mem. alloc. fails, throw an exception immediately
 </code></pre>
 
-<h2 id="traditional-failure-yields-null-alternative-for-operator-new">Traditional failure-yields-null alternative for <code>operator new</code></h2>
+<h1 id="traditional-failure-yields-null-alternative-for-operator-new">Traditional failure-yields-null alternative for <code>operator new</code></h1>
 
 <p>Althought now it is specified to throw a <code>bad_alloc</code> exception, until 1993, C++ required that <code>operator new</code> return null when it way unable to allocate the requested memory. Unwilling to abandon the traditional behavior, the C++ standardization committee provided an alternative form of <code>operator new</code> called &ldquo;nothrow&rdquo; forms, in part because the forms employ <code>nothrow</code> objects defined in the header <code>&lt;new&gt;</code>:</p>
 
@@ -591,7 +599,7 @@ if (pw2 == 0) ... // this test may succeed
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -677,7 +685,7 @@ if (pw2 == 0) ... // this test may succeed
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -766,6 +774,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -920,23 +945,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -944,7 +952,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

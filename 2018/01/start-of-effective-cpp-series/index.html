@@ -364,11 +364,22 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>A new (hopefully) daily review on <code>C++</code>.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#prefer-const-to-define">Prefer <code>const</code> to <code>#define</code></a>
+<ul>
+<li><a href="#tricks-on-const-definition">Tricks on <code>const</code> definition</a></li>
+</ul></li>
+<li><a href="#prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></a></li>
+<li><a href="#when-to-use-preprocessor">When to use preprocessor</a></li>
+</ul>
+</nav>
+
 <p>This is another new series, which I plan to update daily (well, hopefully :P). It&rsquo;s mainly about <code>C++</code>, which is my current main development language. Each day I&rsquo;ll follow 1 item in the <em>Effective C++ 2nd edition</em> by <a href="https://www.aristeia.com/books.html">Scott Meyers</a> to discuss 1 tiny point of <code>C++</code>.</p>
 
 <p>The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer <code>const</code>s, <code>enum</code>s and <code>inline</code>s to <code>#define</code>. Now let&rsquo;s take a closer look.</p>
 
-<h3 id="prefer-const-to-define">Prefer <code>const</code> to <code>#define</code></h3>
+<h1 id="prefer-const-to-define">Prefer <code>const</code> to <code>#define</code></h1>
 
 <p>There are two ways we may consider, when we want to define a constant:</p>
 
@@ -380,7 +391,7 @@ const double PI_2 = 3.1415926;
 
 <p>However, since <code>PI_1</code> may be removed by preprocessor and never be seen by compilers, making it absent in the symbol table, this can be confusing during debugging if we get an error refering to 3.1415926 rather than <code>PI_1</code> (especially when <code>PI_1</code> is defined in a header file written by somebody else). Thus, instead of using a preprocessor macro, we&rsquo;d better go with <code>const</code>. Below is some tricks with <code>const</code>.</p>
 
-<h4 id="tricks-on-const-definition">Tricks on <code>const</code> definition</h4>
+<h2 id="tricks-on-const-definition">Tricks on <code>const</code> definition</h2>
 
 <ol>
 <li><p>When defining constant pointers, use two <code>const</code> to make sure both the pointer as well as the content pointed by the pointer are immutable:</p>
@@ -426,7 +437,7 @@ private:
 <p>For modern compilers, on the other hand, rules change a bit in a more convenient way. Usually C++ requires that you provide a difinition for anything you use, but class-specific <code>constant</code>s that are <code>stitic</code> and of <code>integral type</code> (e.g., <em>integers</em>, <em>chars</em>, <em>bools</em>) are an exception. As long as you don&rsquo;t take thier address, you can declare and read them <strong>without</strong> providing a definition, and (good) compilers will not allocate unneccessary memory for these integral-type const objects, which will make the static const integral an lvalue.</p></li>
 </ol>
 
-<h3 id="prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></h3>
+<h1 id="prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></h1>
 
 <p>Another common (mis)use of the <code>#define</code> is using it to implement macros that look like functions:</p>
 
@@ -455,7 +466,7 @@ inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a :
 
 <p>Basically, this template generates a whole family of functions, each of which takes two objects convertible to the same type and returns a reference to the greater of the two objects in const version.</p>
 
-<h3 id="when-to-use-preprocessor">When to use preprocessor</h3>
+<h1 id="when-to-use-preprocessor">When to use preprocessor</h1>
 
 <p>However, preprocessor is never dead. We still need preprocessor for tasks such as <code>#include</code> to include libraries, as well as <code>#ifdef</code>/<code>#ifndef</code> to control compilation.</p>
               
@@ -537,7 +548,7 @@ inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a :
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -623,7 +634,7 @@ inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a :
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -712,6 +723,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -866,23 +894,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -890,7 +901,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

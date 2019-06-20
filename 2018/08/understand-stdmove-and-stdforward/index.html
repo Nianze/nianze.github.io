@@ -364,6 +364,14 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p><code>std::move</code> performs an unconditional cast to an rvalue, while <code>std::forward</code> casts its argument to an rvalue only if that argument is bound to an rvalue.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#std-move">std::move</a></li>
+<li><a href="#std-forward">std::forward</a></li>
+<li><a href="#comparison">Comparison</a></li>
+</ul>
+</nav>
+
 <p>Some facts:</p>
 
 <ul>
@@ -371,7 +379,7 @@ Suffering is optional.</p>
 <li>Move request on <code>const</code> objects are treated as copy requests.</li>
 </ul>
 
-<h4 id="std-move">std::move</h4>
+<h1 id="std-move">std::move</h1>
 
 <p>To make things concrete, a very basic implementation of <code>std::move</code> in C++11 looks like this:</p>
 
@@ -396,7 +404,7 @@ decltype&lt;auto&gt; move(T&amp;&amp; param)
 
 <p>Basically, <code>std::move</code> does nothing but cast its argument to an rvalue, and we might think it as <code>rvalue_cast</code>. Usually we want <code>move</code> operation on rvalues, so every time we see a <code>move</code> over some parameter, we know we want to perform move operation over the resulting rvalue. However, not all rvalues are candidates for moving, especailly those annotated by <code>const</code> - <em>move requests on <code>const</code> objects are silentlly transformed into copy operation</em>.</p>
 
-<h4 id="std-forward">std::forward</h4>
+<h1 id="std-forward">std::forward</h1>
 
 <p><code>std::move</code> unconditionally casts its argument to an rvalue, while <code>std::forward</code> conditionally do so: it casts to an rvalue only if its argument was initialized with an rvalue.</p>
 
@@ -421,7 +429,7 @@ logAndProcess(std::move(w));  // call with rvalue
 
 <p>In the code above, <code>std::forward</code> is able to tell whether <code>param</code> is initialized with an lvalue or an rvalue because that information is encoded in <code>logAndProcess</code>&rsquo;s template parameter <code>T</code>, which is then passed to <code>std::forward</code>, which is able to recover the encoded information. For details, refer to EMCpp item 28.</p>
 
-<h4 id="comparison">Comparison</h4>
+<h1 id="comparison">Comparison</h1>
 
 <p>Depending on the usecase scenario, we can tell when to use which:</p>
 
@@ -508,7 +516,7 @@ logAndProcess(std::move(w));  // call with rvalue
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -594,7 +602,7 @@ logAndProcess(std::move(w));  // call with rvalue
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -683,6 +691,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -837,23 +862,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -861,7 +869,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

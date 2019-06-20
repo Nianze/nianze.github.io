@@ -364,6 +364,18 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Including meaningless default constructors affects the efficiency of classes, so avoiding them in classes guarantees fully-initialized objects, with the cost of some limits on how such classes can be used.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#with-default-constructor">With default constructor</a></li>
+<li><a href="#without-default-constructor">Without default constructor</a>
+<ul>
+<li><a href="#1-creation-of-arrays">1. Creation of arrays</a></li>
+<li><a href="#2-ineligible-for-some-template-based-container-classes">2. Ineligible for some template-based container classes</a></li>
+<li><a href="#3-virtual-base-classes">3. Virtual base classes</a></li>
+</ul></li>
+</ul>
+</nav>
+
 <p>For many objects, there is no reasonable way to perform a complete initialization in the absence of outside information. Consider a class for company equipment in which the corporate ID number of the quipment is a mandatory constructor argument:</p>
 
 <pre><code class="language-cpp">class EquipmentPiece {
@@ -373,7 +385,7 @@ public:
 };
 </code></pre>
 
-<h2 id="with-default-constructor">With default constructor</h2>
+<h1 id="with-default-constructor">With default constructor</h1>
 
 <p>Some people believe <em>all</em> classes should include a default constructors, even if a default constructor doesn&rsquo;t have enough information to fully initialize objects of the class. Adherents to this philosophy will modify <code>EquipmentPiece</code> as follows:</p>
 
@@ -393,7 +405,7 @@ private:
 <li>The meaningless default constructors affects the efficiency of classes: member functions have to include extra code to test object&rsquo;s validness and deal with the failure tests, and clients of those functions have to pay for the time those tests take as well as the space the extra code occupies.</li>
 </ol>
 
-<h2 id="without-default-constructor">Without default constructor</h2>
+<h1 id="without-default-constructor">Without default constructor</h1>
 
 <p>If a class lacks a default constructor, there are restrictions on how you can use that class. Specifically, in three constexts:</p>
 
@@ -403,7 +415,7 @@ private:
 <li>Virtual base classes</li>
 </ul>
 
-<h3 id="1-creation-of-arrays">1. Creation of arrays</h3>
+<h2 id="1-creation-of-arrays">1. Creation of arrays</h2>
 
 <p>There is, in general, no way to specify constructor arguments for objects in arrays:</p>
 
@@ -473,7 +485,7 @@ operator delete[](rawMemory);
 </code></pre></li>
 </ol>
 
-<h3 id="2-ineligible-for-some-template-based-container-classes">2. Ineligible for some template-based container classes</h3>
+<h2 id="2-ineligible-for-some-template-based-container-classes">2. Ineligible for some template-based container classes</h2>
 
 <p>Some templates requires that the type used to instantiate the template proved a default constructor for purpose such as createing an array of the template parameter type inside the template:</p>
 
@@ -496,7 +508,7 @@ Array&lt;T&gt;::Array(int size)
 
 <p>Although careful template design can eliminate the need for a default constructor (such as <code>vector</code> template), there are templates designed with that requirement. That being the case, classes without default constructors will be incompatible with such templates.</p>
 
-<h3 id="3-virtual-base-classes">3. Virtual base classes</h3>
+<h2 id="3-virtual-base-classes">3. Virtual base classes</h2>
 
 <p>Arguments for virtual base class construcctors must be provided by the most derived class of the object being constructed. As a result, a virtual base class lacking a default constructor requires that <em>all</em> classes derived from that class must know about, understand the meaning of, and provide for the virtual base class&rsquo;s constructors&rsquo; arguments, which is neigher expected not appreciated by authors of derived classes.</p>
 <div class="footnotes">
@@ -587,7 +599,7 @@ Array&lt;T&gt;::Array(int size)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -673,7 +685,7 @@ Array&lt;T&gt;::Array(int size)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -762,6 +774,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -916,23 +945,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -940,7 +952,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

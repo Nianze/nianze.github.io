@@ -364,6 +364,17 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#typical-usage">Typical usage</a>
+<ul>
+<li><a href="#alternatives">Alternatives</a></li>
+</ul></li>
+<li><a href="#edge-case">Edge case</a></li>
+<li><a href="#in-summary">In summary</a></li>
+</ul>
+</nav>
+
 <p>The behavior of private inheritance is that</p>
 
 <ul>
@@ -390,7 +401,7 @@ Suffering is optional.</p>
 <li>Sometimes when we want to take advance of empty base optimization (which is the edge case)</li>
 </ul>
 
-<h2 id="typical-usage">Typical usage</h2>
+<h1 id="typical-usage">Typical usage</h1>
 
 <p>Let&rsquo;s see a typical usecase for private inheritance. Suppose we want to periodically examine the the internal status of class <code>Widget</code>, and we&rsquo;d like to reuse the following utility class:</p>
 
@@ -414,7 +425,7 @@ private:
 
 <p>After private inheritance, <code>Timer</code>&rsquo;s public <code>onTick</code> function becomes private in <code>Widget</code>, so keep it as private when we redeclare it<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
 
-<h3 id="alternatives">Alternatives</h3>
+<h2 id="alternatives">Alternatives</h2>
 
 <p>This is a nice design, but it&rsquo;s worth noting that private inheritance isn&rsquo;t strictly necessary - we could use composition instead:</p>
 
@@ -437,7 +448,7 @@ private:
 <li>We&rsquo;ve minimized <code>Widget</code>&rsquo;s compilation dependencies: if <code>Widget</code> inherits from <code>Timer</code>, <code>Timer</code>&rsquo;s definition must be available when <code>Widget</code> is compiled, so we probably has to <code>#include Timer.h</code>. If <code>WidgetTimer</code> is moved out of <code>Widget</code> and <code>Widget</code> only contains a pointer to  a <code>WidgetTimer</code>, we only need to simply forward decalare the <code>WidgetTimer</code> class without <code>#include</code> anything. Such decouplings can be important for large systems (details in item 31).</li>
 </ol>
 
-<h2 id="edge-case">Edge case</h2>
+<h1 id="edge-case">Edge case</h1>
 
 <p>The edge case, as the name suggests, is edgy indeed: it applies only when we&rsquo;re dealing with a class that has no data in it: no non-static data members; no virtual functions (which introduces <code>vptr</code> to each object, item 7); and no virual base classes (which also incurs a size overhead, item 40). Conceptually, such an <em>empty</em> class should use no space, but C++ requires that freestanding objects must have non-zero size for some technical reasons. That being said,</p>
 
@@ -464,7 +475,7 @@ private:
 
 <p>In practice, &ldquo;empty&rdquo; base classes often contain typedefs, enums, static data members, or non-virtual functions, such as those in the STL that contains useful members (usually typedefs), and thus classes for user-defined function objects may inherit from them without worrying about size increase thanks to EBO.</p>
 
-<h2 id="in-summary">In summary</h2>
+<h1 id="in-summary">In summary</h1>
 
 <p>Private inheritance is most likely to be a legitimate design strategy when we&rsquo;re dealing with two classes not related by is-a where one either needs access to the protected members of another or needs to redefine one or more of its virtual functions. Even in this case, however, a mixture of public inheritance and composition can often yield the expected behavior, albeit with more design complexity.</p>
 
@@ -565,7 +576,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -651,7 +662,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -740,6 +751,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -894,23 +922,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -918,7 +929,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

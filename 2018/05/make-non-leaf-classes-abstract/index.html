@@ -364,7 +364,20 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>The general rule: non-leaf classes should be abstract. This will yields dividends in the form of increased reliability, robustness, comprehensibility, and extensibility throughout our software.</p>
 
-<h2 id="redesign-concrete-base-classes-to-abstract-ones">Redesign concrete base classes to abstract ones</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#redesign-concrete-base-classes-to-abstract-ones">Redesign concrete base classes to abstract ones</a>
+<ul>
+<li><a href="#solution-1-virtual-functions">Solution 1: virtual functions</a></li>
+<li><a href="#solution-2-adding-another-function">Solution 2: adding another function</a></li>
+<li><a href="#solution-3-making-partial-assignment-illegal">Solution 3: making partial assignment illegal</a></li>
+<li><a href="#solution-4-redesign-the-inheritance-hierarchy">Solution 4: redesign the inheritance hierarchy</a></li>
+</ul></li>
+<li><a href="#in-reality-when-facing-constraints">In reality when facing constraints</a></li>
+</ul>
+</nav>
+
+<h1 id="redesign-concrete-base-classes-to-abstract-ones">Redesign concrete base classes to abstract ones</h1>
 
 <p>If we have two concrete classes C1 and C2 and we&rsquo;d like C2 to publicly inherit from C1, we should transform that two-class hierarchy into a three-class hierarchy by creating a new class A and having both C1 and C2 publicly inherit from it:</p>
 
@@ -427,7 +440,7 @@ Animal *pAni2 = &amp;liz2;
 <li>it&rsquo;s not uncommon for programmers to make assignments to objects via pointers.</li>
 </ol>
 
-<h3 id="solution-1-virtual-functions">Solution 1: virtual functions</h3>
+<h2 id="solution-1-virtual-functions">Solution 1: virtual functions</h2>
 
 <pre><code class="language-cpp">class Animal {
 public:
@@ -473,7 +486,7 @@ Animal *pAni2 = &amp;chick;
 
 <p>In this case, we have to worry about <code>std::bad_cast</code> exceptions thrown by <code>dynamic_cast</code> when <code>rhs</code> is not a <code>Lizard</code>, while paying for extra runtime check cost for valid assignment cases, as well as the harder to maintain code.</p>
 
-<h3 id="solution-2-adding-another-function">Solution 2: adding another function</h3>
+<h2 id="solution-2-adding-another-function">Solution 2: adding another function</h2>
 
 <p>If we don&rsquo;t want to pay for the complexity or cost of a <code>dynamic_cast</code> in the case of valid assignment, we add to <code>Lizard</code> the conventional assignment operator:</p>
 
@@ -502,7 +515,7 @@ Animal *pAni2 = &amp;liz2;
 
 <p>Still, clients of <code>Lizard</code> and <code>Chicken</code> have to be prepared to catch <code>bad_cast</code> exceptions and do something sensible with them each time they perform an assignment, which most programmers are unwilling to do.</p>
 
-<h3 id="solution-3-making-partial-assignment-illegal">Solution 3: making partial assignment illegal</h3>
+<h2 id="solution-3-making-partial-assignment-illegal">Solution 3: making partial assignment illegal</h2>
 
 <p>The easiest way to prevent partial assignments is to make <code>Animal::operator=</code> private so that <code>*pAni1 = *pAni2;</code> is illegal (which calls private <code>Animal::operator=</code>), but this naive solution has 2 problems:</p>
 
@@ -521,7 +534,7 @@ Animal *pAni2 = &amp;liz2;
 
 <p>Declaring <code>Animal::operator=</code> as <code>protected</code> will solve the latter problem, but the first one still remains.</p>
 
-<h3 id="solution-4-redesign-the-inheritance-hierarchy">Solution 4: redesign the inheritance hierarchy</h3>
+<h2 id="solution-4-redesign-the-inheritance-hierarchy">Solution 4: redesign the inheritance hierarchy</h2>
 
 <p>Because our orignimal design for the system presupposed that <code>Animal</code> objects were necessary, we can not abstract <code>Animal</code> class. Instead, we create a new class - <code>AbstractAnimal</code> that consists of the common features of <code>Animal</code>, <code>Lizard</code>, and <code>Chicken</code>, and we make <em>that</em> class abstract by making its destructor a pure virtual function<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
 
@@ -561,7 +574,7 @@ Chicken&amp; operator=(const Chicken&amp; rhs);
 <li>non of the code written in terms of the <code>Animal</code>, <code>Lizard</code>, or <code>Chicken</code> requires modification - they behave as they did before <code>AbstractAnimal</code> was introduced - though the code does need to be recompiled</li>
 </ul>
 
-<h2 id="in-reality-when-facing-constraints">In reality when facing constraints</h2>
+<h1 id="in-reality-when-facing-constraints">In reality when facing constraints</h1>
 
 <p>If we want wot create a concrete class that inherits from a concrete class in a thirt-party libraries to which we have only read access, what are we to do?</p>
 
@@ -687,7 +700,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -773,7 +786,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -862,6 +875,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -1016,23 +1046,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1040,7 +1053,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

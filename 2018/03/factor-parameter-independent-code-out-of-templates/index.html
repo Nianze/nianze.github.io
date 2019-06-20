@@ -364,9 +364,22 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Templates generate multiple classes and multiple functions, so any template code not dependent on a template parameter (either non-type template parameters or type parameters) causes bloat: eliminate bloat due to non-type template parameters by replacing template parameters with function parameters or class data members; reduce bloat caused from type parameters by sharing implementations for instantiation types with identical binary representations.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</a>
+<ul>
+<li><a href="#replace-with-function-parameters">Replace with function parameters</a></li>
+<li><a href="#replace-with-class-data-members">Replace with class data members</a></li>
+<li><a href="#efficiency-concerns">Efficiency concerns</a></li>
+<li><a href="#other-trade-offs">Other trade-offs</a></li>
+</ul></li>
+<li><a href="#bloat-due-to-type-parameters">Bloat due to type parameters</a></li>
+</ul>
+</nav>
+
 <p>When writing templates, since there&rsquo;s only one copy of the template source code, we have to analyze it carefully to avoid the implicit replication that may take place when a template is instantiated multiple times.</p>
 
-<h2 id="bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</h2>
+<h1 id="bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</h1>
 
 <p>For example, suppose we&rsquo;d like to write a template for fixed-size square matrices that support matrix inversion:</p>
 
@@ -388,7 +401,7 @@ sm2.invert();  // call SquareMatrix&lt;double, 10&gt;::invert
 
 <p>In the statements above, two copies of <code>invert</code> will be instantiated, and these two version of <code>invert</code> are character-for-character identical except for the use of 5 in one version and 10 in the other. To reduce the code bloat, we could redesign and call a parameterized function instead.</p>
 
-<h3 id="replace-with-function-parameters">Replace with function parameters</h3>
+<h2 id="replace-with-function-parameters">Replace with function parameters</h2>
 
 <pre><code class="language-cpp">template&lt;typename T&gt;     // size-independent base class for square matrices
 class SquareMatrixBase{  // all matrices holding a givin type of object will share a single base class with a single copy of this base class's version of invert
@@ -413,7 +426,7 @@ public:
 
 <p>However, an alternative and possibly better solution will be to have <code>SquareMatrixBase</code> store both a pointer to the memory for the matrix values, as well as the matrix size, so that any other functions asking for the matrix memory address or matrix size can be written in a address-independent-and-size-independent manner, and moved into <code>SquareMatrixBase</code>.</p>
 
-<h3 id="replace-with-class-data-members">Replace with class data members</h3>
+<h2 id="replace-with-class-data-members">Replace with class data members</h2>
 
 <pre><code class="language-cpp">template&lt;typename T&gt;
 class SquareMatrixBase {
@@ -456,13 +469,13 @@ private:
 
 <p>No matter where the matrix value data is stored, the result from a bloat point of view is that many <code>SquareMatrix</code>&rsquo;s member functions can be simple inline calls to base class versions that are shared with all other matrices holding the same type of data, regardless of their size.</p>
 
-<h3 id="efficiency-concerns">Efficiency concerns</h3>
+<h2 id="efficiency-concerns">Efficiency concerns</h2>
 
 <p>In terms of efficiency, it is possible that the version of <code>invert</code> with the matrix sizes hardwired into them generates better code than the shared version whose size is passed as a function parameter or is stored in the object: in the size-specific versions, the sizes would be compile-time constants, hence eligible for optimizations such as constant propagation (they&rsquo;ll be folded into the generated instructions as imeediate operands), which can&rsquo;t be done in the size-independent version.</p>
 
 <p>On the other side, the size-independent version decreases the size of executable by having only one version of <code>invert</code> for multiple matrix sizes, and this could reduce the program&rsquo;s working set size and improve locality of reference in the instruction cache, which may in term compensating for any lost optimizations in size-specific versions of <code>invert</code>. The only way to tell which version is better one is to try them both and observe the behavior on the particular platform and on representative data sets.</p>
 
-<h3 id="other-trade-offs">Other trade-offs</h3>
+<h2 id="other-trade-offs">Other trade-offs</h2>
 
 <p>Speaking of size of objects, we should observe that there&rsquo;s an extra size of a pointer in each <code>SquareMatrix</code> object, because, as the derived class, <code>SquareMatrix</code> could get to the data by alternative designs such as having the base class store a <code>protected</code> pointer to the matrix data. However, this new design also has some disadvantages:</p>
 
@@ -473,7 +486,7 @@ private:
 
 <p>At some point, a little code replication seems like a mercy to keep away from complication.</p>
 
-<h2 id="bloat-due-to-type-parameters">Bloat due to type parameters</h2>
+<h1 id="bloat-due-to-type-parameters">Bloat due to type parameters</h1>
 
 <p>On many platforms, <code>int</code> and <code>long</code> have the same binary representation, so the member functions for <code>vector&lt;int&gt;</code> and <code>vector&lt;long&gt;</code> would likely be identical. Some linkers will merge identical function implementations, but some will not, and that means that some templates instantiated on both <code>int</code> and <code>long</code> could cause code bloat in some environments.</p>
 
@@ -557,7 +570,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -643,7 +656,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -732,6 +745,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -886,23 +916,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -910,7 +923,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

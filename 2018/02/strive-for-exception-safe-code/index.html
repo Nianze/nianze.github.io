@@ -364,6 +364,25 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Exception-safe functions leak no resources and allow no data structures to become corrupted, even when exceptions are thrown. Such functions offer the basic, strong, and nothrow guarantees.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#example">Example</a>
+<ul>
+<li><a href="#resource-leak">Resource leak</a></li>
+<li><a href="#data-structure-corruption">Data structure corruption</a>
+<ul>
+<li><a href="#copy-and-swap-strategy">Copy-and-<code>swap</code> strategy</a></li>
+<li><a href="#side-effects-and-efficiency">Side effects and efficiency</a>
+<ul>
+<li><a href="#1-side-effects">1. Side effects</a></li>
+<li><a href="#2-efficiency">2. Efficiency</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#in-practice">In practice</a></li>
+</ul>
+</nav>
+
 <p>For exception-safe functions, there are two requirements when an exception is thrown:</p>
 
 <ol>
@@ -379,7 +398,7 @@ Suffering is optional.</p>
 <li>The <strong>nothrow guarantee</strong> promises never to throw exceptions - all operators on built-in types (e.g., <code>int</code>s, pointers, etc.) are nothrow. This is a critical building block of exception-safe code.</li>
 </ol>
 
-<h2 id="example">Example</h2>
+<h1 id="example">Example</h1>
 
 <p>With all these terminologies bear in mind, let&rsquo;s see an example representing exception-unsafe style. Suppose there&rsquo;s a class for GUI menus with background images, and it will be used in a threaded environment, so it has a mutex for concurrency control:</p>
 
@@ -408,7 +427,7 @@ private:
 
 <p>Secondly, this function guarantees none of the 3 promises in terms of data structure corruption above: when <code>new Image(Src)</code> throws, <code>bgImage</code> is left pointing to a deleted object, and <code>imageChanges</code> has been increamented before the new image has been installed, resulting to invalid object state.</p>
 
-<h3 id="resource-leak">Resource leak</h3>
+<h2 id="resource-leak">Resource leak</h2>
 
 <p>To address the resource leak issue, we can use objects to manage resources (item 13), and take advantage of <code>Lock</code> class to ensure that mutexes are released in a timely fashion (item 14):</p>
 
@@ -421,7 +440,7 @@ private:
 }
 </code></pre>
 
-<h3 id="data-structure-corruption">Data structure corruption</h3>
+<h2 id="data-structure-corruption">Data structure corruption</h2>
 
 <p>To address the issue of data structure corruption, we may need to determine which guarantee to offer. As a general rule,</p>
 
@@ -470,7 +489,7 @@ private:
 
 <p>After these two changes, <code>changeBackground</code> <em>almost</em> offer the strong exception safety guarantee. The only weakness now is the parameter <code>imgSrc</code>: if the <code>Image</code> constructor throws an exception, it&rsquo;s possible that the read marker for the input stream has been moved, which is a change in state visible to the rest of the program, leading to offering only the basic exception safety guarantee.</p>
 
-<h4 id="copy-and-swap-strategy">Copy-and-<code>swap</code> strategy</h4>
+<h3 id="copy-and-swap-strategy">Copy-and-<code>swap</code> strategy</h3>
 
 <p>There actually is a general design strategy for offering the strong guarantee:</p>
 
@@ -510,11 +529,11 @@ private:
 
 <p>We don&rsquo;t have to make the struct <code>PMImpl</code> as a class, because the encapsulation of <code>PrettyMenu</code> data is assured by <code>pImpl</code> being private, and it is more convenient to use struct. If desired, <code>PMImpl</code> could be nested inside <code>PrettyMenu</code> when considering packaging issues.</p>
 
-<h4 id="side-effects-and-efficiency">Side effects and efficiency</h4>
+<h3 id="side-effects-and-efficiency">Side effects and efficiency</h3>
 
 <p>Even with the help of copy-and-<code>swap</code> strategy, there are two possible reasons that downgrade the overall exception safety level from strong to basic: <em>side effects</em> and <em>efficiency</em>.</p>
 
-<h5 id="1-side-effects">1. Side effects</h5>
+<h4 id="1-side-effects">1. Side effects</h4>
 
 <p>Suppose <code>someFunc</code> uses copy-and-<code>swap</code> and includes calls to two other functions, <code>f1</code> and <code>f2</code>:</p>
 
@@ -531,13 +550,13 @@ private:
 
 <p>For example, if a side effect of calling <code>f1</code> is that a database is modified, and there is, in general, no way to undo a database modification that has already been committed; so after successfully calling <code>f1</code>, if <code>f2</code> then throws an exception, the state of the program is not the same as it was when calling <code>someFunc</code>, even though <code>f2</code> didn&rsquo;t change anything.</p>
 
-<h5 id="2-efficiency">2. Efficiency</h5>
+<h4 id="2-efficiency">2. Efficiency</h4>
 
 <p>Copy and <code>swap</code> strategy requires making a copy of each object to be modified, which takes time and space we may be unable or unwilling to make available. It&rsquo;s just not practical 100% of the time when we want to offer the strong guarantee.</p>
 
 <p>When it&rsquo;s not, we&rsquo;ll have to offer the basic guarantee. In practice, we can usually offer the strong guarantee for some functions, but the const in efficiency or complexity will make it untenable for many others. For those functions, the basic guarantee is a perfectly resonable choice, as long as we&rsquo;ve made a reasonable effort to offer the strong guarantee whenever it&rsquo;s practical.</p>
 
-<h2 id="in-practice">In practice</h2>
+<h1 id="in-practice">In practice</h1>
 
 <p>A software system is either exception-safe or it&rsquo;s not. There&rsquo;s no such thing as a partially exception-safe system. If a system has even a single function that&rsquo;s not exception-safe, the system as a whole is not exception-safe. Unfortunately, much C++ legacy code was written without exception safety in mind, so many system incorporating legacy code today are not exception-safe.</p>
 
@@ -627,7 +646,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -713,7 +732,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -802,6 +821,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -956,23 +992,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -980,7 +999,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

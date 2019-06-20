@@ -364,7 +364,20 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>There are five points worth noting if we want to mix C++ and C in the same program.</p>
 
-<h2 id="summary">Summary</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#summary">Summary</a>
+<ul>
+<li><a href="#1-compatible-object-files">1. Compatible object files</a></li>
+<li><a href="#2-name-mangling">2. Name Mangling</a></li>
+<li><a href="#3-initialization-of-statics">3. Initialization of Statics</a></li>
+<li><a href="#4-dynamic-memory-allocation">4. Dynamic Memory Allocation</a></li>
+<li><a href="#5-data-structure-compatibility">5. Data Structure Compatibility</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="summary">Summary</h1>
 
 <ul>
 <li>Make sure the C++ and C compilers produce compatible object files</li>
@@ -374,11 +387,11 @@ Suffering is optional.</p>
 <li>Limit what we pass between the two languages to data structures that compile under C; the C++ version of structs may contain nonvirtual member functions</li>
 </ul>
 
-<h3 id="1-compatible-object-files">1. Compatible object files</h3>
+<h2 id="1-compatible-object-files">1. Compatible object files</h2>
 
 <p>Before mix together object files produced by some C compiler with those from C++ compiler, we have to make sure they both share the same implementation-dependent features, such as the size of <code>int</code>s and <code>double</code>s, the mechanism by which parameters are passed from caller to callee, and whether the caller or the callee orchestrates the passing.</p>
 
-<h3 id="2-name-mangling">2. Name Mangling</h3>
+<h2 id="2-name-mangling">2. Name Mangling</h2>
 
 <p>Name mangling is the process through which the C++ compilers give each function in our program a unique name, which is unnecessary in C because we can&rsquo;t overload function names in C.</p>
 
@@ -418,7 +431,7 @@ extern &quot;C&quot; {
 #endif
 </code></pre>
 
-<h3 id="3-initialization-of-statics">3. Initialization of Statics</h3>
+<h2 id="3-initialization-of-statics">3. Initialization of Statics</h2>
 
 <p>In C++, the constructors of static class objects and objects at global, namespace, and file scope are usually called before the body of <code>main</code> is executed, which is known as <em>static initialization</em>. Similarly, objects that are created through static initialization must have their destructors called during <em>static destruction</em>, which typically take place after <code>main</code> has finished executing.</p>
 
@@ -447,7 +460,7 @@ int main(int argc, char *argv[]) // write this in C++
 }
 </code></pre>
 
-<h3 id="4-dynamic-memory-allocation">4. Dynamic Memory Allocation</h3>
+<h2 id="4-dynamic-memory-allocation">4. Dynamic Memory Allocation</h2>
 
 <p>Recall MECpp Item 8: the C++ parts of a program use <code>new</code> and <code>delete</code>, and the C parts of a program use <code>malloc</code> (and its variants) and <code>free</code>. Mismatched allocation and deallocation operation for dynamic memory yields undefined behavior, so never call <code>free</code> on a <code>new</code>ed pointer, nor <code>delete</code>ing a <code>malloc</code>ed pointer.</p>
 
@@ -458,7 +471,7 @@ int main(int argc, char *argv[]) // write this in C++
 
 <p>If the <code>strdup</code> is from a C library, we need to call <code>free</code>; if it was written for a C++ library, we should call <code>delete</code>. If we can&rsquo;t make sure, then simply avoid calling such functions.</p>
 
-<h3 id="5-data-structure-compatibility">5. Data Structure Compatibility</h3>
+<h2 id="5-data-structure-compatibility">5. Data Structure Compatibility</h2>
 
 <p>C functions can not understand C++ features, so if we want to pass data between C++ and C programs, we are limited to those concepts that C can express: naturally, <code>struct</code>s and variables of built-in types (e.g., <code>int</code>s, <code>char</code>s, etc.)</p>
 
@@ -544,7 +557,7 @@ int main(int argc, char *argv[]) // write this in C++
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -630,7 +643,7 @@ int main(int argc, char *argv[]) // write this in C++
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -719,6 +732,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -873,23 +903,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -897,7 +910,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

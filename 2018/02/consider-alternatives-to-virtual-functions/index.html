@@ -364,6 +364,18 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Alternatives to virtual functions include the NVI idiom (as an example of the Template Method design pattern) and various forms of the Strategy design pattern.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#the-template-method-pattern-via-the-non-virtual-interface-idiom">The template method pattern via the non-virtual interface idiom</a></li>
+<li><a href="#the-strategy-pattern">The strategy pattern</a>
+<ul>
+<li><a href="#the-strategy-pattern-via-function-pointers">The strategy pattern via function pointers</a></li>
+<li><a href="#the-strategy-pattern-via-tr1-function">The strategy pattern via <code>TR1::function</code></a></li>
+<li><a href="#the-classic-strategy-pattern">The &ldquo;Classic&rdquo; strategy pattern</a></li>
+</ul></li>
+</ul>
+</nav>
+
 <p>Suppose we want to implement a member function named <code>healthValue</code>, which will calculate the health value for different characters in differen ways in a video game. Declaring <code>healthValue</code> virtual seems the obvious way to design things:</p>
 
 <pre><code class="language-cpp">class GameCharacter {
@@ -390,7 +402,7 @@ public:
 
 <p>Let&rsquo;s take a look at the pros and cons of these alternatives.</p>
 
-<h2 id="the-template-method-pattern-via-the-non-virtual-interface-idiom">The template method pattern via the non-virtual interface idiom</h2>
+<h1 id="the-template-method-pattern-via-the-non-virtual-interface-idiom">The template method pattern via the non-virtual interface idiom</h1>
 
 <p>The <em>non-virtual interface (NVI) idiom</em> argues that clients should call private virtual functions indirectly through public non-virtual member functions, which act like a <em>wrapper</em> around the virtual functions. This is a particular manifestation of the more general design pattern known as Template Method<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.</p>
 
@@ -418,13 +430,13 @@ private:
 
 <p>The advantage of the NVI idiom is in the &ldquo;&ldquo;do &lsquo;before&rsquo; stuff&rdquo; and  &ldquo;do &lsquo;after&rsquo; stuff&rdquo; part in the code above, which enable the wrapper abilities to ensure that before a virtual function is called, the proper context is set up (e.g., locking a mutex, making a log entry, verifying the class invariants and function pereconditions, etc), and after the call is over, the context is cleaned up (e.g., unlocking a mutex, verifying function postconditions, etc). If letting clients call virtual functions directly, there&rsquo;s no good way to do these stuff.</p>
 
-<h2 id="the-strategy-pattern">The strategy pattern</h2>
+<h1 id="the-strategy-pattern">The strategy pattern</h1>
 
 <p>The NVI idiom is still using virtual functions to calculate a character&rsquo;s health. A more dramatic design assertion, such as the strategy pattern, says that calculating a character&rsquo;s health is independent of the character&rsquo;s type - the calculation need not to be part of the character.</p>
 
 <p>It is worth noting that, due to its being outside the <code>GameCharacter</code> hierarchy, the calculation has no special access to the internal parts of the object whose health it&rsquo;s calculating, so this design pattern works only if a character&rsquo;s health can be calculated based purely on information available through the character&rsquo;s public interface. Thus it may require the class&rsquo;s encapsulation to be weakened (e.g., make the non-member functions to be <code>friend</code>, or offer public accessor functions for class implementation that is previously hidden).</p>
 
-<h3 id="the-strategy-pattern-via-function-pointers">The strategy pattern via function pointers</h3>
+<h2 id="the-strategy-pattern-via-function-pointers">The strategy pattern via function pointers</h2>
 
 <pre><code class="language-cpp">class GameCharacter; // forward declaration
 
@@ -454,7 +466,7 @@ private:
 <li>health calculation functions for a particular character may be changed at runtime. For example, <code>GameCharacter</code> might offer a member function <code>setHealthCalculator</code> that allowed replacement of the current health calculation function.</li>
 </ul>
 
-<h3 id="the-strategy-pattern-via-tr1-function">The strategy pattern via <code>TR1::function</code></h3>
+<h2 id="the-strategy-pattern-via-tr1-function">The strategy pattern via <code>TR1::function</code></h2>
 
 <p>To generalized the approach above, we could replace the function pointer <code>healthFunc</code> with an object of type <code>tr1::function</code>. As item 54 explains, such objects may hold <em>any callable entity</em> (e.g., function pointer, function object, member function pointer) whose signature is compatible<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup> with the given target signature:</p>
 
@@ -528,7 +540,7 @@ EvilBadGuy ebg2(  // character using a health calculation member function
 <li>by passing <code>_1</code>, it specifies that when calling <code>GameLevel::health</code> for <code>ebg2</code>, always use <code>currentLevel</code> as the first parameter of <code>GameLevel</code> object</li>
 </ul>
 
-<h3 id="the-classic-strategy-pattern">The &ldquo;Classic&rdquo; strategy pattern</h3>
+<h2 id="the-classic-strategy-pattern">The &ldquo;Classic&rdquo; strategy pattern</h2>
 
 <p>The conventional approach to Strategy design pattern would be to make the health-calculation function a virtual member function of a separate health-calculation hierarchy with root being <code>HealthCalcFunc</code>, so that different health calculation algorithm could be implemented in the derived classes in this inheritance hierarchy. Each object of type <code>GameCharacter</code> just contains a pointer to an object from the <code>HealthCalcFunc</code> hierarchy:</p>
 
@@ -644,7 +656,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -730,7 +742,7 @@ private:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -819,6 +831,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -973,23 +1002,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -997,7 +1009,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

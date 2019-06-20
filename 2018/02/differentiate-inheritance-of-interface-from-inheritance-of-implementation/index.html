@@ -364,6 +364,20 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Inheritance of interface is different from inheritance of implementatino.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#pure-virtual-functions">Pure virtual functions</a></li>
+<li><a href="#simple-impure-virtual-functions">Simple (impure) virtual functions</a>
+<ul>
+<li><a href="#potential-danger">Potential danger</a></li>
+<li><a href="#separate-interface-from-default-implementation">Separate interface from default implementation</a></li>
+<li><a href="#take-use-of-pure-virtual-function">Take use of pure virtual function</a></li>
+</ul></li>
+<li><a href="#non-virtual-function">Non-virtual function</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</nav>
+
 <p>Under public inheritance, derived classes always inherit base class interfaces, but may act differently in terms of base class implementation inheritance:</p>
 
 <ul>
@@ -387,7 +401,7 @@ class Ellipse: public Shape {...};
 
 <p>Since derived classes <code>Rectangle</code> and <code>Ellipse</code> are both public inherited, according to item 32, this means <code>is-a</code>, so anything that is true of the base class must also apply to derived classes. Thus, the member function <em>interfaces</em> are always inherited.</p>
 
-<h2 id="pure-virtual-functions">Pure virtual functions</h2>
+<h1 id="pure-virtual-functions">Pure virtual functions</h1>
 
 <p>For pure virtual functions, there are two features we have to note:</p>
 
@@ -414,7 +428,7 @@ ps1-&gt;Shape::draw(); // call Shape::draw
 
 <p>This feature is generally of limited utility, except that it can be employed as a mechanism for providing a safer-than-usual default implementation for simple virtual functions as we&rsquo;ll see below.</p>
 
-<h2 id="simple-impure-virtual-functions">Simple (impure) virtual functions</h2>
+<h1 id="simple-impure-virtual-functions">Simple (impure) virtual functions</h1>
 
 <p>Simple virtual functions provide an implementation that derived classes may override, which means that</p>
 
@@ -424,7 +438,7 @@ ps1-&gt;Shape::draw(); // call Shape::draw
 
 <p>For example, the declaration of <code>error</code> function tells us that &ldquo;You have to supoort an <code>error</code> function, but if you don&rsquo;t want to write your own, you can fall back on the default version in the <code>Shape</code> class.&rdquo;</p>
 
-<h3 id="potential-danger">Potential danger</h3>
+<h2 id="potential-danger">Potential danger</h2>
 
 <p>However, in the perspective of class design, there&rsquo;s a potential danger to allow simple virtual functions to specify both a function interface and a default implementation. That is: a derived class is allowed to inherit the default implementation without <strong>explicitly</strong> saying that it wanted to. For example:</p>
 
@@ -447,7 +461,7 @@ class ModelB: public Airplane{...};
 
 <p>Suppose both <code>ModelA</code> and <code>ModelB</code> inherit the base class <code>Airplane</code> without re-implementing the simple virtual function <code>fly</code>. Chances are that <code>ModelB</code> is actually a new type of model, yet its programmer simply forgets to redefine the <code>fly</code> function.</p>
 
-<h4 id="separate-interface-from-default-implementation">Separate interface from default implementation</h4>
+<h2 id="separate-interface-from-default-implementation">Separate interface from default implementation</h2>
 
 <p>To make our design more foolproof, we may separate functions for providing interface and default implementation, such as below:</p>
 
@@ -483,7 +497,7 @@ void ModelB::fly(const Airport&amp; destination)
 }
 </code></pre>
 
-<h4 id="take-use-of-pure-virtual-function">Take use of pure virtual function</h4>
+<h2 id="take-use-of-pure-virtual-function">Take use of pure virtual function</h2>
 
 <p>Some people may feel this design is redundant, arguing that this will polllute the class namespace with a proliferation of closely related function names. Then we may take advantage of the fact that pure virtual functions, which insists on redeclaring in concrete derived classes, may also have implementations of their own:</p>
 
@@ -528,7 +542,7 @@ void ModelB::fly(const Airport&amp; destination)
 
 <p>However, in merging <code>fly</code> and <code>defaultFly</code>, we have lost the ability to give the two functions different protection levels: previously <code>protected</code> code in <code>defaultFly</code> is now <code>public</code> in <code>fly</code>.</p>
 
-<h2 id="non-virtual-function">Non-virtual function</h2>
+<h1 id="non-virtual-function">Non-virtual function</h1>
 
 <p>A non-virtual member function specifies an <em>invariant over specialization</em> (a point discussed in item 36), identifying behavior that is not supposed to change, no matter how specialized a derived class becomes. Thus:</p>
 
@@ -538,7 +552,7 @@ void ModelB::fly(const Airport&amp; destination)
 
 <p>The declaration for <code>Shape::objectId</code> is basically say, &ldquo;Every <code>Shape</code> object has a function that yields an object identifier, and that identifier is always conputed the same way. That way is determined by the definition of <code>Shape::objectID</code>, and no derived class should try to chagne how it&rsquo;s done.&rdquo;</p>
 
-<h2 id="summary">Summary</h2>
+<h1 id="summary">Summary</h1>
 
 <p>The differences in declarations for pure virtual, simple virtual and non-virtual functions allow us to specify with precision what we want derived classes to inherit: interface only, interface and a default implementation, or interface and a mandatory implementation, respectively.</p>
               
@@ -620,7 +634,7 @@ void ModelB::fly(const Airport&amp; destination)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -706,7 +720,7 @@ void ModelB::fly(const Airport&amp; destination)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -795,6 +809,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -949,23 +980,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -973,7 +987,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

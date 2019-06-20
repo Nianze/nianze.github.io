@@ -364,9 +364,27 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Techniques for requiring or prohibiting heap-based objects</p>
 
-<h2 id="requiring-heap-based-objects">Requiring Heap-Based Objects</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#requiring-heap-based-objects">Requiring Heap-Based Objects</a>
+<ul>
+<li><a href="#1-the-straightforward-way">1. The straightforward way</a></li>
+<li><a href="#2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</a></li>
+<li><a href="#3-determining-whether-an-object-is-on-the-heap">3. Determining Whether an Object is On The Heap</a></li>
+<li><a href="#4-determine-whether-it-s-safe-to-delete-a-pointer">4. Determine whether it&rsquo;s safe to delete a pointer</a></li>
+</ul></li>
+<li><a href="#prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</a>
+<ul>
+<li><a href="#1-preventing-directly-instantiation-on-heap">1. Preventing directly instantiation on heap</a></li>
+<li><a href="#2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</a></li>
+<li><a href="#3-preventing-base-class-parts-instantiated-on-heap">3. Preventing base class parts instantiated on heap</a></li>
+</ul></li>
+</ul>
+</nav>
 
-<h3 id="1-the-straightforward-way">1. The straightforward way</h3>
+<h1 id="requiring-heap-based-objects">Requiring Heap-Based Objects</h1>
+
+<h2 id="1-the-straightforward-way">1. The straightforward way</h2>
 
 <p>The brutle way is to declare the constructors and the destructor <code>private</code>, but this is overkill. Either one of them need to be private to ensure objects only be created on the heap. Since there are usually many constructors but only one destructor per class, a more elegant way is to make the destructor private and the constructors public, prividing privileged pseudo-destructor function (which has access to the real destructor) for clients to call, as suggested in MECpp item 26.</p>
 
@@ -395,7 +413,7 @@ delete p; // error! attempt to call private dtor
 p-&gt;destroy(); // fine
 </code></pre>
 
-<h3 id="2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</h3>
+<h2 id="2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</h2>
 
 <p>Restricting access to a class&rsquo;s destructor or constructors prevents the creation of not only non-heap objects, but also both inheritance and containment. To work this out:</p>
 
@@ -424,7 +442,7 @@ Asset::~Asset()
 { value-&gt;destroy(); }  // fine
 </code></pre>
 
-<h3 id="3-determining-whether-an-object-is-on-the-heap">3. Determining Whether an Object is On The Heap</h3>
+<h2 id="3-determining-whether-an-object-is-on-the-heap">3. Determining Whether an Object is On The Heap</h2>
 
 <p>It&rsquo;s hard to tell whether an object is on the heap. For example, given the class definition above, it&rsquo;s ligal to define a non-heap <code>NonNegativeUPNumber</code> object, which will not construct its base <code>UPNumber</code> part on the heap. There is no way to detect whether a constructor is being invoked as the base class part of a heap-based object, which means for the following contexts, it is not possible for the <code>UPNumber</code> constructor to detect the difference:</p>
 
@@ -436,7 +454,7 @@ NonNegativeUPNumber n2; // not on heap
 
 <p>We&rsquo;ll have to turn to unportable, implementation-dependent system calls if we absolutely have to tell whether an address is on the heap. That being the case, we&rsquo;d better off trying to redesign the software so we don&rsquo;t need to determine whether an object is on the heap in the first place.</p>
 
-<h4 id="4-determine-whether-it-s-safe-to-delete-a-pointer">4. Determine whether it&rsquo;s safe to delete a pointer</h4>
+<h2 id="4-determine-whether-it-s-safe-to-delete-a-pointer">4. Determine whether it&rsquo;s safe to delete a pointer</h2>
 
 <p>To answer this easier question, all we need to do is to create a collection of addresses that have been returned by <code>operator new</code>. One possible solution is to provide an abstract mixin base class that offers derived classes the ability to determine whether a pointer was allocated from <code>operator new</code>:</p>
 
@@ -517,7 +535,7 @@ private:
 
 <p>Since built-in types such as <code>int</code> and <code>char</code> can&rsquo;t inherit from anything, <code>HeapTracked</code> can&rsquo;t be used with these built-in types. Still, the most common reason for wanting to use a class like <code>HeapTracked</code> is to determine whether it&rsquo;s okay to <code>delete this</code>, and we don&rsquo;t want to do that with a built-in type because such types have no <code>this</code> pointer.</p>
 
-<h2 id="prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</h2>
+<h1 id="prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</h1>
 
 <p>To preventing objects from being allocated on the heap, there are three cases:</p>
 
@@ -527,7 +545,7 @@ private:
 <li>objects embedded inside other objects</li>
 </ol>
 
-<h4 id="1-preventing-directly-instantiation-on-heap">1. Preventing directly instantiation on heap</h4>
+<h2 id="1-preventing-directly-instantiation-on-heap">1. Preventing directly instantiation on heap</h2>
 
 <p>To prevent clients from directly instantiating objects on the heap: we can declare <code>operator new</code> (and possibly <code>operator new[]</code>) as <code>private</code>:</p>
 
@@ -556,11 +574,11 @@ static NonNegativeUPNumber n2; // okay
 NonNegativeUPNumber *p = new NonNegativeUPNumber; // error! attempt to call private operator new
 </code></pre>
 
-<h4 id="2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</h4>
+<h2 id="2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</h2>
 
 <p>However, if the derived class declares an <code>operator new</code> of its own, which will be called when allocating derived class objects on the heap, it is hard to prevent <code>UPNumber</code> base class parts from winding up there.</p>
 
-<h4 id="3-preventing-base-class-parts-instantiated-on-heap">3. Preventing base class parts instantiated on heap</h4>
+<h2 id="3-preventing-base-class-parts-instantiated-on-heap">3. Preventing base class parts instantiated on heap</h2>
 
 <p>Similarly, the fact that <code>UPNumber</code>&rsquo;s <code>operator new</code> is private has no effect on attempts to allocate objects containing <code>UPNumber</code> objects as members:</p>
 
@@ -656,7 +674,7 @@ Asset *pa = new Asset(100);  // fine, calls Asset::operator new or ::operator ne
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -742,7 +760,7 @@ Asset *pa = new Asset(100);  // fine, calls Asset::operator new or ::operator ne
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -831,6 +849,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -985,23 +1020,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1009,7 +1027,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

@@ -364,6 +364,24 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time <code>if...else</code> tests on types.</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#five-iterator-categories">Five iterator categories</a></li>
+<li><a href="#pseudocode-for-advance">Pseudocode for <code>advance</code></a></li>
+<li><a href="#traits">Traits</a>
+<ul>
+<li><a href="#for-user-defined-types">For user-defined types</a></li>
+<li><a href="#for-pointer-types">For pointer types</a></li>
+<li><a href="#workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</a></li>
+</ul></li>
+<li><a href="#implementing-advance">Implementing <code>advance</code></a>
+<ul>
+<li><a href="#template-metaprogramming">Template metaprogramming</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul></li>
+</ul>
+</nav>
+
 <p>In this item, let&rsquo;s look at how STL supports the utility template <code>advance</code>, which moves a specified iterator a specified distance:</p>
 
 <pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;  
@@ -372,7 +390,7 @@ void advance(IterT&amp; iter, DistT d); // move iter d units forward; if d &lt; 
 
 <p>Before we step into the field of <code>advance</code> implementation, we should be familiar about STL iterator categoryies, because different iterators support different operations.</p>
 
-<h2 id="five-iterator-categories">Five iterator categories</h2>
+<h1 id="five-iterator-categories">Five iterator categories</h1>
 
 <p>According to the operations they support, there are five categories of iterators<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
 
@@ -393,7 +411,7 @@ struct bidirectional_iterator_tag: public forward_iterator_tag {};
 struct random_access_iterator_tag: public bidirectional_iterator_tag {};
 </code></pre>
 
-<h2 id="pseudocode-for-advance">Pseudocode for <code>advance</code></h2>
+<h1 id="pseudocode-for-advance">Pseudocode for <code>advance</code></h1>
 
 <p>Knowing that different categories support different operations, <code>advance</code> will essentially be implemented like this:</p>
 
@@ -412,11 +430,11 @@ void advance(IterT&amp; iter, DistT d)
 
 <p>How to determine whether <code>iter</code> is a random access iterator? Here comes the technique of <em>traits</em>, which allow us to get type information during compilation.</p>
 
-<h2 id="traits">Traits</h2>
+<h1 id="traits">Traits</h1>
 
 <p>Traits aren&rsquo;t a keyword or a predefined construct in C++, but simply a technique and a convention followed by C++ programmers. It has some requirements, one of which asks that it has to work as well for built-in types as it does for user-defined types. This demand leads to the conclusion that the traits information for a type must be external to the type<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
 
-<h4 id="for-user-defined-types">For user-defined types</h4>
+<h2 id="for-user-defined-types">For user-defined types</h2>
 
 <p>The standard technique is to put the information into a template and one or more specializations of that template. For iterators, the template in the standard library is named <code>iterator_traits</code><sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>:</p>
 
@@ -455,7 +473,7 @@ public:
 };
 </code></pre>
 
-<h4 id="for-pointer-types">For pointer types</h4>
+<h2 id="for-pointer-types">For pointer types</h2>
 
 <p>The code above works well for user-defined types, but it doasn&rsquo;t work for iterators that are pointers, since there&rsquo;s no such thing as a nested typedef inside a built-in pointer. To make it work, <code>iterator_traits</code> need to offer a <em>partial template specialization</em> for pointer types:</p>
 
@@ -467,7 +485,7 @@ struct iterator_traits&lt;IterT*&gt; // for built-in pointer types
 }
 </code></pre>
 
-<h3 id="workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</h3>
+<h2 id="workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</h2>
 
 <ul>
 <li>Identify some information about types we&rsquo;d like to make available (e.g., iterator category for iterator types)</li>
@@ -475,7 +493,7 @@ struct iterator_traits&lt;IterT*&gt; // for built-in pointer types
 <li>Provide a template and set of specializations (e.g., <code>iterator_traits</code>) that contain the information for the types we want to support</li>
 </ul>
 
-<h2 id="implementing-advance">Implementing <code>advance</code></h2>
+<h1 id="implementing-advance">Implementing <code>advance</code></h1>
 
 <p>Given <code>std::iterator_traits</code>, we can refine our pseudocode for <code>advance</code>:</p>
 
@@ -490,7 +508,7 @@ void advance(IterT&amp; iter, DistT d)
 
 <p>Sadly, this is not what we want: for one thing, it will lead to compilation problems (refer to item 48); anther issue, which is more fundamental, is that <code>if</code> statement is evaluated at runtime but <code>iterator_traits&lt;IterT&gt;::iterator_category</code> can be determined during compilation already. There&rsquo;s no point to move the evaluation from compile-time to runtime to waste time and bloat the executable.</p>
 
-<h3 id="template-metaprogramming">Template metaprogramming</h3>
+<h2 id="template-metaprogramming">Template metaprogramming</h2>
 
 <p>What we want is a conditional construct for types that is evaluated during compilation. Actually this demand brings us to the realm of template metaprogramming (item 48), but the technique we&rsquo;ll use turns out to be quit familiar: <em>overloading</em>:</p>
 
@@ -524,7 +542,7 @@ void advance(IterT&amp; iter, DistT d)
 };
 </code></pre>
 
-<h3 id="summary">Summary</h3>
+<h2 id="summary">Summary</h2>
 
 <p>How to use a traits class:</p>
 
@@ -624,7 +642,7 @@ void advance(IterT&amp; iter, DistT d)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -710,7 +728,7 @@ void advance(IterT&amp; iter, DistT d)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -799,6 +817,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -953,23 +988,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -977,7 +995,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

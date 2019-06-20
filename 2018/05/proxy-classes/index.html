@@ -364,7 +364,20 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Objects that stand for other objects are often called <em>proxy objects</em> (or <em>surrogates</em>), and the classes that give rise to proxy objects are often called <em>proxy classes</em>, which is useful for implementing multidimensional arrays, differentiating lvalue/rvalue, and suppressing implicit conversions.</p>
 
-<h2 id="implementing-two-dimensional-arrays">Implementing Two-Dimensional Arrays</h2>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#implementing-two-dimensional-arrays">Implementing Two-Dimensional Arrays</a></li>
+<li><a href="#distinguishing-reads-from-writes-via-operator">Distinguishing Reads from Writes via operator[]</a>
+<ul>
+<li><a href="#for-rvalue-usage">For rvalue usage</a></li>
+<li><a href="#for-lvalue-usage">For lvalue usage</a></li>
+</ul></li>
+<li><a href="#preventing-implicit-conversions-in-single-argument-constructor">Preventing implicit conversions in single-argument constructor</a></li>
+<li><a href="#limitations">Limitations</a></li>
+</ul>
+</nav>
+
+<h1 id="implementing-two-dimensional-arrays">Implementing Two-Dimensional Arrays</h1>
 
 <p>Consider this statement:</p>
 
@@ -401,7 +414,7 @@ cout &lt;&lt; data[3][6];
 
 <p>Conceptually intances of <code>Array1D</code> class (which is a <em>proxy class</em>) do not exist for clients of <code>Array2D</code>. Such clients program as if they were using real, live two-dimensional arrays.</p>
 
-<h2 id="distinguishing-reads-from-writes-via-operator">Distinguishing Reads from Writes via operator[]</h2>
+<h1 id="distinguishing-reads-from-writes-via-operator">Distinguishing Reads from Writes via operator[]</h1>
 
 <p><code>operator[]</code> can be called in two different contexts:</p>
 
@@ -441,11 +454,11 @@ private:
 
 <p>Now let&rsquo;s see how it works. Given reference-counted stirngs using proxies above <code>String s1, s2;</code>,</p>
 
-<h4 id="for-rvalue-usage">For rvalue usage</h4>
+<h2 id="for-rvalue-usage">For rvalue usage</h2>
 
 <p>Consider this statement <code>cout &lt;&lt; s1[5];</code>: <code>s1[5]</code> yields a <code>CharProxy</code> object, and compiler implicitly converts this <code>CharProxy</code> into <code>char</code> using the conversion operator declared in the <code>CharProxy</code> class. This is representitive of the <em>CharProxy-to-char</em> conversion that takes place for all <code>CharProxy</code> objects used as rvalues.</p>
 
-<h4 id="for-lvalue-usage">For lvalue usage</h4>
+<h2 id="for-lvalue-usage">For lvalue usage</h2>
 
 <p>Lvalue usage is handled differently:</p>
 
@@ -499,11 +512,11 @@ String::CharProxy&amp; String::CharProxy::operator=(char c)
 }
 </code></pre>
 
-<h2 id="preventing-implicit-conversions-in-single-argument-constructor">Preventing implicit conversions in single-argument constructor</h2>
+<h1 id="preventing-implicit-conversions-in-single-argument-constructor">Preventing implicit conversions in single-argument constructor</h1>
 
 <p>Refer to MECpp item 5.</p>
 
-<h2 id="limitations">Limitations</h2>
+<h1 id="limitations">Limitations</h1>
 
 <ol>
 <li><p>Taking the address</p>
@@ -661,7 +674,7 @@ swap(s[0], s[1]);  // won't compile
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -747,7 +760,7 @@ swap(s[0], s[1]);  // won't compile
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -836,6 +849,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -990,23 +1020,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1014,7 +1027,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

@@ -364,9 +364,17 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>When <code>std::swap</code> would be inefficient for your type,provide a non-throwing <code>swap</code> member function, a non-member <code>swap</code> calling the member, and possibly a specialized <code>std::swap</code> for the case of classes (not templates).</p>
 
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#customization">Customization</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</nav>
+
 <p><code>swap</code>, since its introduction into STL, is useful for exception-safe programming (item 29) and a common mechanism for coping with the possibility of assignment to self (item 11). Due to its importance, it should be implemented properly, which is exactly what this item explores about.</p>
 
-<h2 id="customization">Customization</h2>
+<h1 id="customization">Customization</h1>
 
 <p>By default, swapping is accomplished via the standard <code>swap</code> algorithm:</p>
 
@@ -490,11 +498,12 @@ void swap&lt;Widget&lt;T&gt;&gt;(Widget&lt;T&gt;&amp; a, Widget&lt;T&gt;&amp; b)
         a.swap(b);
     }
 }
+
 </code></pre>
 
 <p>The name lookup rules in C++ (specifically the rules known as <em>argument-dependent lookup</em> or <em>Koenig lookup</em>) will guarantee the Widget-specific version of <code>swap</code> in <code>WidgetStuff</code> will be invoked if any code calls <code>swap</code> on two <code>Widget</code> objects.</p>
 
-<h2 id="usage">Usage</h2>
+<h1 id="usage">Usage</h1>
 
 <p>Let&rsquo;s look from a client&rsquo;s point of view and see how to use the <code>swap</code>. Ideally, we want to call a T-specific version of <code>swap</code> if there is one, but to fall back on the general version in <code>std</code> if there&rsquo;s not. To fulfill this idea:</p>
 
@@ -527,7 +536,7 @@ void doSomething(T&amp; obj1, T&amp; obj2)
 
 <p>here we force compilers to consider only the <code>swap</code> in <code>std</code> (including any template specializations), thus eliminating the possibility of getting a more appropriate T-specific version defined elsewhere. Alas, some misguided programmers (or even some standard library) <em>do</em> qualify calls to <code>swap</code> in this way. To make code work as efficiently as possible, we&rsquo;d better totally specialize <code>std::swap</code> for our classes.</p>
 
-<h2 id="summary">Summary</h2>
+<h1 id="summary">Summary</h1>
 
 <p>We&rsquo;ve discussed the default <code>swap</code>, member <code>swap</code>s, non-member <code>swap</code>s, specializations of <code>std::swap</code>, and calls to <code>swap</code>. Below is a good practice on implementing and using customized <code>swap</code>:</p>
 
@@ -631,7 +640,7 @@ void doSomething(T&amp; obj1, T&amp; obj2)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -717,7 +726,7 @@ void doSomething(T&amp; obj1, T&amp; obj2)
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -806,6 +815,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -960,23 +986,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -984,7 +993,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>

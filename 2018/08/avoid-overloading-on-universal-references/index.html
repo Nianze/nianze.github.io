@@ -364,7 +364,16 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>Overloading on universal references almost always leads to the universal reference overload being called more frequently than expected.</p>
 
-<h4 id="why-universal-references">Why universal references?</h4>
+<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#why-universal-references">Why universal references?</a></li>
+<li><a href="#what-trouble-universal-references-introduces">What trouble universal references introduces?</a></li>
+<li><a href="#more-problematic-perfect-forwarding-consturctors">More problematic: Perfect-forwarding consturctors</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</nav>
+
+<h1 id="why-universal-references">Why universal references?</h1>
 
 <p>We want to introduce universal references because we can eliminate some inefficiencies via it. For example,</p>
 
@@ -400,7 +409,7 @@ void logAndAdd(T&amp;&amp; name)
 }
 </code></pre>
 
-<h4 id="what-trouble-universal-references-introduces">What trouble universal references introduces?</h4>
+<h1 id="what-trouble-universal-references-introduces">What trouble universal references introduces?</h1>
 
 <p>Functions taking universal references are the greediest functions in C++, so the usually overload more argument types than the developer generally expects. Suppose there&rsquo;s another function overloading for the type of <code>int</code>:</p>
 
@@ -422,7 +431,7 @@ logAndAdd(nameIdx);  // error!
 
 <p>We generally assume the last call will invoke the <code>int</code> overload, but instead it will invoke the <code>T&amp;&amp;</code> one, since the universal reference overload version exactly matches the <code>short</code> argument by deduce <code>T</code> to be <code>short&amp;</code>, while <code>int</code> version has to match <code>short</code> with a promotion. As a result, the exact match beats a match with a promotion. However, within the <code>T&amp;&amp;</code> overload, the parameter <code>name</code> with type <code>short&amp;</code> first get passed into <code>std::forward</code>, which will not get casted into a rvalue since <code>name</code> is initialized with an lvalue (refer to EMCpp item 24), and then get passed into <code>emplace</code> member function on <code>names</code>, which finally forwards it to the <code>std::string</code> constructor, and we get an error here because no constructor for <code>std::string</code> will take a short.</p>
 
-<h4 id="more-problematic-perfect-forwarding-consturctors">More problematic: Perfect-forwarding consturctors</h4>
+<h1 id="more-problematic-perfect-forwarding-consturctors">More problematic: Perfect-forwarding consturctors</h1>
 
 <p>Perfect-forwarding constructors are typically better matches than copy constructors for non-<code>const</code> lvalues, and they can hijack derived class calls to base class copy and move constructors, which makes them problematic. For example:</p>
 
@@ -470,7 +479,7 @@ public:
 
 <p>Here, the derived class will call the perfect forwarding constructor for their copy and move constructors, because they are using arguments of type <code>SpecialPerson</code> to pass to their base class, and base class&rsquo;s forwarding constructor will happily instantiate an exact match for this call. Since there&rsquo;s no <code>std::string</code> constructor taking a <code>SpecialPerson</code>, the code won&rsquo;t compile.</p>
 
-<h4 id="conclusion">Conclusion</h4>
+<h1 id="conclusion">Conclusion</h1>
 
 <p>Overloading on universal reference is something we should avoid if possible. However, if we do want a function that forwards most argument types, while still support special treatment for some special types, we can find some alternatives to achieve this goal in EMCpp item 27.</p>
               
@@ -552,7 +561,7 @@ public:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -638,7 +647,7 @@ public:
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -727,6 +736,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/06/two-kinds-of-people/">
+                <h3 class="media-heading">世上只有两类人</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jun 6, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>要么牛b要么去死。</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -881,23 +907,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-                <h3 class="media-heading">[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -905,7 +914,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         172 posts found
+         173 posts found
       </p>
     </div>
   </div>
