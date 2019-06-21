@@ -5,7 +5,7 @@ categories:
 - thoughts 
 tags:
 - meaning
-- daeth
+- death
 - nyu
 slug: two-kinds-of-people
 autoThumbnailImage: true
