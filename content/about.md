@@ -7,6 +7,12 @@ showPagination: false
 showSocial: false
 comments: false
 ---
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>
+
 <h4 class='text-center'>
     <a href='https://drive.google.com/open?id=1W9VTQuNzg3rrCC91RMHi6NxMopeg8poE'>Download Resume</a>
 </h4>
