@@ -11,6 +11,8 @@ slug: two-kinds-of-people
 autoThumbnailImage: true
 thumbnailImagePosition: right
 thumbnailImage: /images/2019/06/19/Twyla_Tharp_1981.jpg
+coverImage: /images/2019/06/19/webphoto-littleballet1.jpg
+metaAlignment: center
 ---
 
 要么牛b要么去死。
