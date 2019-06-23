@@ -76,9 +76,11 @@ Computer always fascinates me. I chose Electronic Science & Technology as my und
 
 Among all those hardwares I've played with, I still remember the excitement I firstly saw Microsoft kinect being able to detecte human skeleton, which made me decide to take advantage of this interesting hardware to build a [robot](https://youtu.be/Y7ey0uSVP0o), or specifically a vending-machine-like robot with kinect as its eyes. Teamed up with two of my classmates, we took part in the China National Kinect for Windows Application Development Contest, in which we've got 1st prize among all 151 teams selected nationwide. We also took the robot to Microsoft Imagine Cup, where we've got 2nd prize.
 
-With my knowledge of computer science increased, I've realized that programming is an increasingly powerful skill nowadays. So after publishing a paper on [Nanoscale-DOI:10.1039/C4NR06883A](http://pubs.rsc.org/en/content/articlelanding/2015/nr/c4nr06883a#!divAbstract) (thanks to which I received Microsoft Research - IEEE Young Fellow Scholarship), I decided to hone my coding skills. I graduated with honors in 2015 and obtained my Bachelor's degree of Engineering from **Southeast University**. Shortly after, I went to **Cornell University** for my master degree in Electrical and Computer Engineering.
+With my knowledge of computer science increased, I've realized that programming is an increasingly powerful skill nowadays. So after publishing a paper on [Nanoscale-DOI:10.1039/C4NR06883A](http://pubs.rsc.org/en/content/articlelanding/2015/nr/c4nr06883a#!divAbstract) (thanks to which I received Microsoft Research - IEEE Young Fellow Scholarship), I decided to hone my coding skills. I graduated with honors in 2015 and obtained my Bachelor's degree of Engineering from **Southeast University**. Shortly after, I went to **Cornell University** for my master's degree in Electrical and Computer Engineering.
 
-My undergrad coursework included:
+After spending three years playing the clarinet in school concert band and recording tens of music covers with clarinet during leisure time, I realized very few things in this world could touch my soul so directly like music. Not satisfied with only transcribing favorite music pieces into clarinet versions and recording them myself, I started to explore more genres by teaching myself piano and guitar, to actively look for music production opportunities and coordinate with others in events such as Ludum Dare Game Jam. Therefore, when I came to know the music technology program in **NYU Steinhardt**, it suddenly made my mind clear that this would be a perfect match for what I am always looking for: to integrate both my favorite means of creativity, the tech and the music, together to create something greater than I could imagine. So after working as a full-time software developer in Bloomberg L.P. for two year, I started my second master degree during my part time, focusing on integrating music and technology.
+
+Undergraduate courses:
 
 * Algorithm
 * Circuit & Electronic Circuit
@@ -99,7 +101,7 @@ My undergrad coursework included:
 * Signals & Systems
 * Digital Signal Processing
 
-My courses during Cornell include:
+Graduate courses in Cornell University:
 
 * Computer Networks and Telecommunications
 * Data structures and Functional Programming
@@ -110,21 +112,27 @@ My courses during Cornell include:
 * Intro to Computer Graphics
 * Intro to Computer Music
 
+Graduate courses in NYU Steinhardt:
+
+* Review of Tonal Theory I,II
+* Grad Fundamentals in Mtech
+* Music History
+* Fund. Digital Signal Theory
+* Advanced Musical Acoustics
+* Computer Music Composition
+
 # Hobbies
 
 ## Music
 
-I started learning the clarinet since my elementary school and joint school concert band since junior high. Music has become a pleasing way of self-expression. After covering some of my favorite songs in clarinet during the summer of 2015, I determined to make it one step further: why not to write my own music? So I started to practice with piano, guitar and launchpad, only in hope of making my own sound. Everytime I feel tired of practicing, listening to songs from Ed Sheeran, 米津玄師 and 40㍍P will always vitalize myself again.
-
-Recently my music list includes such genres like Jazz, Electronic and JPop. Check out my music channels:
+I started learning the clarinet since my elementary school and joint school concert band since junior high. Music has become a pleasing way of self-expression. After covering some of my favorite songs in clarinet during the summer of 2015, I determined to make it one step further: why not to write my own music? So I started to practice with piano, guitar and launchpad, only in hope of making my own sound. Check out my channels:
 
 * [YouTube](https://www.youtube.com/user/daoxinzhishui/)
 * [Bilibili](https://space.bilibili.com/2844586/)
 
 ## Photography
 
-I've received my first DSLR (Pentax K5) as a gift at the summer vacation of my fresh year, and have fallen in love with photography since then. I like street photography as well as landscape, only taking portraits occasionally. Check out my photos:
+I've received my first DSLR (Pentax K5) as a gift in the summer vacation of my fresh year, and have fallen in love with photography since then. I like street photography as well as landscape, while taking portraits occasionally. Check out my photos:
 
-* [Favorite photographs album](/photo-faves/)
 * [Flickr](https://www.flickr.com/photos/129774362@N07/)
 * [Instagram](https://www.instagram.com/eznain/)
