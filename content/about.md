@@ -17,7 +17,7 @@ comments: false
     <a href='https://drive.google.com/open?id=1W9VTQuNzg3rrCC91RMHi6NxMopeg8poE'>Download Resume</a>
 </h4>
 
-## Work Experience
+# Work Experience
 
 <div class='display-card experience-card'>
     <h3 class='company'>Bloomberg L.P. <small class='dates'>May 2017 - Today</small></h3>
@@ -37,7 +37,7 @@ comments: false
     </h6>
 </div>
 
-## Skills
+# Skills
 
 <div class='display-card skills'>
     <h3 class='skill-category'>Programming</h3>
@@ -61,16 +61,16 @@ comments: false
     <span class='tooltip--top' data-tooltip="Tool I used to built this website">Hugo Static Site Generator</span>
 </div>
 
-## Education
+# Education
 
 **New York University**
-| Master of Music - Music Technology
+| Master of Music - _Music Technology_
 
 **Cornell University**
-| Master of Engineer - Electrical and Computer Engineering
+| Master of Engineering - _Electrical and Computer Engineering_
 
 **Southeast University**
-| Bachelor of Engineer - Electronic Science & Technology
+| Bachelor of Engineering - _Electronic Science & Technology_
 
 Computer always fascinates me. I chose Electronic Science & Technology as my undergrad major largely because I want to better understand the basic of computer hardware. 
 
@@ -110,9 +110,9 @@ My courses during Cornell include:
 * Intro to Computer Graphics
 * Intro to Computer Music
 
-## Hobbies
+# Hobbies
 
-### Music
+## Music
 
 I started learning the clarinet since my elementary school and joint school concert band since junior high. Music has become a pleasing way of self-expression. After covering some of my favorite songs in clarinet during the summer of 2015, I determined to make it one step further: why not to write my own music? So I started to practice with piano, guitar and launchpad, only in hope of making my own sound. Everytime I feel tired of practicing, listening to songs from Ed Sheeran, 米津玄師 and 40㍍P will always vitalize myself again.
 
@@ -121,7 +121,7 @@ Recently my music list includes such genres like Jazz, Electronic and JPop. Chec
 * [YouTube](https://www.youtube.com/user/daoxinzhishui/)
 * [Bilibili](https://space.bilibili.com/2844586/)
 
-### Photography
+## Photography
 
 I've received my first DSLR (Pentax K5) as a gift at the summer vacation of my fresh year, and have fallen in love with photography since then. I like street photography as well as landscape, only taking portraits occasionally. Check out my photos:
 
