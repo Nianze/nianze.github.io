@@ -8,25 +8,25 @@
 <meta name="generator" content="Hugo 0.55.6 with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="刀心の水|Nzo">
 <meta name="keywords" content=", photography, music, technology, blog">
-<meta name="description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
+<meta name="description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 
 
-<meta property="og:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
+<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Item-6 Disallow unwanted compiler-generated functions">
-<meta name="twitter:title" content="Item-6 Disallow unwanted compiler-generated functions">
+<meta property="og:title" content="Item-5 What functions C&#43;&#43; silently generates">
+<meta name="twitter:title" content="Item-5 What functions C&#43;&#43; silently generates">
 <meta property="og:url" content="http://nianze.tk/2018/01/functions-silently-created/">
 <meta property="twitter:url" content="http://nianze.tk/2018/01/functions-silently-created/">
 <meta property="og:site_name" content="To be creative">
-<meta property="og:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
-<meta name="twitter:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
+<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
+<meta name="twitter:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2018-01-24T16:18:59">
+    <meta property="article:published_time" content="2018-01-23T18:42:07">
   
   
-    <meta property="article:modified_time" content="2018-01-24T16:18:59">
+    <meta property="article:modified_time" content="2018-01-23T18:42:07">
   
   
   
@@ -53,8 +53,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/2018/2018-01/2018-01-24.jpg">
-  <meta property="twitter:image" content="http://nianze.tk/images/2018/2018-01/2018-01-24.jpg">
+  <meta property="og:image" content="http://nianze.tk/images/2018/2018-01/2018-01-23.jpg">
+  <meta property="twitter:image" content="http://nianze.tk/images/2018/2018-01/2018-01-23.jpg">
 
 
 
@@ -64,7 +64,7 @@
   <meta property="twitter:image" content="http://nianze.tk/images/bio-picture.png">
 
 
-    <title>Item-6 Disallow unwanted compiler-generated functions</title>
+    <title>Item-5 What functions C&#43;&#43; silently generates</title>
 
     <link rel="icon" href="http://nianze.tk/favicon.png">
     
@@ -362,15 +362,15 @@ Suffering is optional.</p>
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-6 Disallow unwanted compiler-generated functions
+      Item-5 What functions C&#43;&#43; silently generates
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-01-24T16:18:59-05:00">
+      <time itemprop="datePublished" datetime="2018-01-23T18:42:07-05:00">
         
-  January 24, 2018
+  January 23, 2018
 
       </time>
     
@@ -391,51 +391,76 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Declare unwanted member functions <em>private</em> without implementations to disallow functionality automatically provided by compilers.</p>
+              <p>Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.</p>
 
-<p>If we want to prevent functions such as copy constructor being generated in order to maintain the object uniqueness, explicitly declare the copy constructor and the copy assignment operator <em>private</em>, so that the client of the class will not be able to copy the object.</p>
+<p>All the compiler generated functions will be both <code>public</code> and <code>inline</code> (item 30). An empty class declared like this:</p>
 
-<p>To make it foolproof, declare member functions <em>private</em> and deliberately not implemente them so that member and friend functions will not be able to copy the object, either.</p>
-
-<p>Another possible solution to prevent copying is to inherit from a well-designed base class such as this:</p>
-
-<pre><code class="language-cpp">class Uncopyable {
-protected:
-    Uncopyable() {}    // allow construction of derived objects
-    ~Uncopyable() {}   // allow destruction of derived objects
-private:
-    Uncopyable(const Uncopyable&amp;);            // prevent copying
-    Uncopyable&amp; operator=(const Uncopyable&amp;); // prevent copying
-};
+<pre><code class="language-cpp">class Empty{};
 </code></pre>
 
-<p>To inherit from the base class, simply:</p>
+<p>is essentially equivalent to:</p>
 
-<pre><code class="language-cpp">class HomeForSale: private Uncopyable {
-... // no copy ctor or copy assign. operator declaration
-};
-</code></pre>
-
-<p>This will be the same effect as the following design:</p>
-
-<pre><code class="language-cpp">class HomeForSale{
+<pre><code class="language-cpp">class Empty {
 public:
-...
-private:
-...
-HomeForSale(const HomeForSale&amp;);
-HomeForSale&amp; operator=(const HomeForSale&amp;);
+    Empty() { ... } // default constructor
+    Empty(const Empty&amp; rhs) { ... } // copy constructor
+    ~Empty() { ... }  // destructor
+                      // will be _virtual_ only if inheriting 
+                      // from a base class with virtual destructor
+    Empty&amp; operator=(const Empty&amp; rhs) { ... } // copy assignment operator
 };
 </code></pre>
 
-<p>There are some subtleties about the implementation and use of <code>Uncopyable</code>:</p>
+<p>These functions are generated only if they are needed:</p>
+
+<pre><code class="language-cpp">Empty e1;     // default constructor and destructor generated
+Empty e2(e1); // copy constructor generated
+e2 = e1;      // copy assignment operator generated
+</code></pre>
+
+<p>Basically, the generated default <code>constructor</code> and the <code>destructor</code> will invocate constructors and destructors of base classes and non-static data members, while the <code>copy constructor</code> will simply copy each non-static data member of the source object to the target object.</p>
+
+<blockquote>
+<p>specifically,<br />
+1. for data member of user-defined type, call the data member&rsquo;s copy constructor with source object&rsquo;s corresponding member&rsquo;s value as argument<br />
+2. for data member of built-in type, directly copy the corresponding source data member&rsquo;s bits</p>
+</blockquote>
+
+<p>Copy assignment operator behaves generally the same as copy constructor, but the code is only generated when the resulting code is both legal and has a reasonable chance of making sense. For example:</p>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class NamedObject {
+public:
+    NamedObject(std::string&amp; name, const T&amp; value);
+    ...
+private:
+    std::string&amp; nameValue;  // a reference
+    const T objectValue;     // a const
+}
+</code></pre>
+
+<p>In below situation, implicitly generated copy assignment operator will make no sense for nameValue and illegal for objectValue:</p>
+
+<pre><code class="language-cpp">std::string youngMan(&quot;child&quot;);
+std::string oldMan(&quot;adult&quot;);
+
+NamedObject&lt;int&gt; p(youngMan, 10);
+NamedObject&lt;int&gt; s(oldMan, 50);
+
+p = s; // nameValue assignment will make no sense!
+       // objectValue assignment will be illegal due to its constness
+</code></pre>
+
+<p>Since p.nameValue and s.nameValue refer to different string object, the assignment will be in a conundrum:</p>
 
 <ol>
-<li>inheritance from <code>Uncopyable</code> needn&rsquo;t be public (item 32 and 39)</li>
-<li><code>Uncopyable</code> destructor needn&rsquo;t be <em>virtual</em> (item 7: the base class is not designed to be used polymorphically)</li>
-<li>it&rsquo;s eligible for the empty bass class optimization described in item 39, but use of this technique could lead to multiple inheritance (item 40), which will sometimes in turn disable the empty base class optimization (item 39)</li>
-<li>Boost (item 55) provides a similar class named <code>noncopyable</code></li>
+<li>should compiler choose to let p.nameValue refer to new string object? (actually C++ does not allow reference referring to different one)?</li>
+<li>should compiler choose to change the string content &ldquo;child&rdquo; to &ldquo;adult&rdquo;? (this will affect other objects that hold pointers or references to original string &ldquo;child&rdquo;)</li>
 </ol>
+
+<p>Neither will be sensible, so C++ refuses to compile the code. In this situation, a copy assignment operator must be defined manually.</p>
+
+<p>Finally, derived classes will not be able to have generated implicit copy assignment operators if base classes declare the copy assignment operator <em>private</em>, for derived copy assignment operators are supposed to handle base class parts, but they don&rsquo;t have the right to invoke the base member functions in this situation.</p>
               
             </div>
           </div>
@@ -462,7 +487,7 @@ HomeForSale&amp; operator=(const HomeForSale&amp;);
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -470,7 +495,7 @@ HomeForSale&amp; operator=(const HomeForSale&amp;);
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-5 What functions C&#43;&#43; silently generates">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fas fa-angle-right"></i>
@@ -555,7 +580,7 @@ HomeForSale&amp; operator=(const HomeForSale&amp;);
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -563,7 +588,7 @@ HomeForSale&amp; operator=(const HomeForSale&amp;);
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-5 What functions C&#43;&#43; silently generates">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fas fa-angle-right"></i>
@@ -697,6 +722,23 @@ Suffering is optional.</p>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/07/2019-07-07-street-photography/">
+                <h3 class="media-heading">[Weekly-10] July the 7th..</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jul 7, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly shots - 2019/07/07</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -851,23 +893,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/05/2019-05-11-street-photography/">
-                <h3 class="media-heading">[Weekly-2] May the 11th..</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  May 5, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly shots - 2019/05/11</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -875,7 +900,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         176 posts found
+         177 posts found
       </p>
     </div>
   </div>
