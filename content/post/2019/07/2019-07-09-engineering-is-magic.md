@@ -46,7 +46,7 @@ Code is the spell. Computer is the wand. Use the magic to create fun stuff might
 
 >As AI technology becomes increasingly available, artistry and technical advancement will only become more important in separating the remarkable AI artists from those repurposing old tools built by others or simply pushing a button to achieve an overused visual paradigm.[^3]
 
-## Substrate
+# Substrate
 
 Anyway，着手AI之前，我先小试了下p5.js，复现了Jared Tarbell在2003年的作品[Substrate](http://www.complexification.net/gallery/machines/substrate/)。将动态生成的过程迁移到浏览器以方便传播，效果还是很不错的。
 
