@@ -8,25 +8,25 @@
 <meta name="generator" content="Hugo 0.55.6 with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="刀心の水|Nzo">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
+<meta name="description" content="For std::unique_ptr pImpl pointers, declare special member functions in the class header, but implement them in the implementation file.">
 
 
-<meta property="og:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
+<meta property="og:description" content="For std::unique_ptr pImpl pointers, declare special member functions in the class header, but implement them in the implementation file.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New">
-<meta name="twitter:title" content="[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New">
+<meta property="og:title" content="[EMCpp]Item-22 When Using Pimple Idiom, Define Special Member Functions in the Implementation File">
+<meta name="twitter:title" content="[EMCpp]Item-22 When Using Pimple Idiom, Define Special Member Functions in the Implementation File">
 <meta property="og:url" content="http://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/">
 <meta property="twitter:url" content="http://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/">
 <meta property="og:site_name" content="To be creative">
-<meta property="og:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
-<meta name="twitter:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
+<meta property="og:description" content="For std::unique_ptr pImpl pointers, declare special member functions in the class header, but implement them in the implementation file.">
+<meta name="twitter:description" content="For std::unique_ptr pImpl pointers, declare special member functions in the class header, but implement them in the implementation file.">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2018-08-02T18:45:53">
+    <meta property="article:published_time" content="2018-08-05T23:46:08">
   
   
-    <meta property="article:modified_time" content="2018-08-02T18:45:53">
+    <meta property="article:modified_time" content="2018-08-05T23:46:08">
   
   
   
@@ -53,8 +53,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/2018/2018-08/02.gif">
-  <meta property="twitter:image" content="http://nianze.tk/images/2018/2018-08/02.gif">
+  <meta property="og:image" content="http://nianze.tk/images/2018/2018-08/05.gif">
+  <meta property="twitter:image" content="http://nianze.tk/images/2018/2018-08/05.gif">
 
 
 
@@ -64,7 +64,7 @@
   <meta property="twitter:image" content="http://nianze.tk/images/bio-picture.png">
 
 
-    <title>[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New</title>
+    <title>[EMCpp]Item-22 When Using Pimple Idiom, Define Special Member Functions in the Implementation File</title>
 
     <link rel="icon" href="http://nianze.tk/favicon.png">
     
@@ -362,15 +362,15 @@ Suffering is optional.</p>
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      [EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New
+      [EMCpp]Item-22 When Using Pimple Idiom, Define Special Member Functions in the Implementation File
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-08-02T18:45:53-04:00">
+      <time itemprop="datePublished" datetime="2018-08-05T23:46:08-04:00">
         
-  August 2, 2018
+  August 5, 2018
 
       </time>
     
@@ -391,153 +391,150 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Compared to <code>new</code>, make functions eliminate source code duplication, improve exception safety, and, for <code>std::make_shard</code> and <code>std::allocate_shared</code>, generate code that&rsquo;s smaller and faster.</p>
+              <p>For <code>std::unique_ptr</code> pImpl pointers, declare special member functions in the class header, but implement them in the implementation file.</p>
 
-<p><em>Make functions</em> take an arbitrary set of arguments, perfect forward them to the constructor for a dynamically allocacted object, and return a smart pointer to that objet. There are three <em>make functions</em>:</p>
+<p>The Pimpl Idiom decreases build times by reducing compilation dependeencies between class clients and class implementation. For example:</p>
+
+<pre><code class="language-cpp">// header file
+class Widget {
+public:
+    Widget();
+    ...
+private:
+    struct Impl;
+    std::unique_ptr&lt;Impl&gt; pImpl;
+};
+</code></pre>
+
+<pre><code class="language-cpp">// impl. file
+#include &quot;Widget.h&quot;
+#include &quot;gadget.h&quot;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+struct Widget::Impl {
+    std::string name;
+    std::vector&lt;double&gt; data;
+    Gadget g1, g2, g3;
+};
+
+Widget::Widget ()
+: pImpl(std::make_unique&lt;Impl&gt;())
+{}
+</code></pre>
+
+<p>However, even though the code above compiles, client code below won&rsquo;t compile:</p>
+
+<pre><code class="language-cpp">#include &quot;Widget.h&quot;
+Widget w; // error!
+</code></pre>
+
+<p>The issue arises due to the code that&rsquo;s generated when <code>w</code> goes out of scope and gets destroyed:</p>
 
 <ul>
-<li><code>std::make_unique</code></li>
-<li><code>std::make_shared</code></li>
-<li><code>std::allocate_shared</code><sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></li>
+<li>Since there&rsquo;s no user defined destructor, destructor for <code>Widget</code> is generated by compiler, inside which there is a call to the destructor for <code>pImpl</code></li>
+<li><code>pImpl</code> is a <code>std::unique_ptr&lt;Widget::Impl&gt;</code> using default deleter (a function that uses <code>delete</code> on the raw pointer inside the <code>std::unique_ptr</code>)</li>
+<li>prior to using <code>delete</code>, autogenerated implementation will have the default deleter employ C++11&rsquo;s <code>static_assert</code> to ensure the raw pointer doesn&rsquo;t point to an <em>incomplete type</em></li>
+<li>here this <code>static_assert</code> fails, because autogenerated destructors are implicitly <code>inline</code>, and thus the definition of <code>Widget::Impl</code> along with its autogenerated destructor inside <code>Widget.cpp</code> hasn&rsquo;t been seen by compilers</li>
 </ul>
 
-<p>According to the description above, a basic version of <code>std::make_unique</code> is simply:</p>
+<p>To solve the problem, we need to let the compiler see the body of <code>Widget</code>&rsquo;s destructor only inside the implementation file after <code>Widget::Impl</code> has been defined:</p>
 
-<pre><code class="language-cpp">template&lt;typename T, typename... Ts&gt;
-std::unique_ptr&lt;T&gt; make_unique(Ts&amp;&amp;... params){
-    return std::unique_ptr&lt;T&gt;(new T(std::forward&lt;Ts&gt;(params)...));
+<pre><code class="language-cpp">// header file
+class Widget {
+public:
+    Widget();
+    ~Widget();  // declaration only
+    ...
+private:
+    struct Impl;
+    std::unique_ptr&lt;Impl&gt; pImpl;
+};
+</code></pre>
+
+<pre><code class="language-cpp">// impl. file
+#include &quot;Widget.h&quot;
+#include &quot;gadget.h&quot;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+struct Widget::Impl {
+    std::string name;
+    std::vector&lt;double&gt; data;
+    Gadget g1, g2, g3;
+};
+
+Widget::Widget ()
+: pImpl(std::make_unique&lt;Impl&gt;())
+{}
+
+Widget::~Widget()
+{}
+</code></pre>
+
+<p>To emphasize the fact that the compiler-generated destructor would do the right thing, we can also write like this:</p>
+
+<pre><code class="language-cpp">Widget::~Widget() = default; 
+</code></pre>
+
+<p>The same reasoning goes with move operation:</p>
+
+<ul>
+<li>the compiler generated move assignment operator requires <code>Impl</code> to be complete because the object pointed to by <code>pImpl</code> needs to be destroyed before assignment</li>
+<li>the compiler generated move constructor requires <code>Impl</code> to be complete because compilers must be able to generate code to destroy <code>pImpl</code> in the event that an exception arises inside the move constructor (even it the constructor is <code>noexcept</code>)</li>
+</ul>
+
+<p>Once we added the move-related functions, compilers won&rsquo;t generate copy operations for us. So to support a well-defined deep copy, we need to write our own version.</p>
+
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget();
+    ~Widget();
+    Widget(Widget&amp;&amp; rhs) noexcept;
+    Widget&amp; operator=(Widget&amp;&amp; rhs) noexcept;
+    Widget(const Widget&amp; rhs);
+    Widgt&amp; operator=(const Widget&amp; rhs); 
+private:
+    struct Impl;
+    std::unique_str&lt;Impl&gt; pImpl;
+};
+</code></pre>
+
+<pre><code class="language-cpp">...
+Widget::~Widget() = default;
+Widget::Widget(Widget&amp;&amp; rhs) noexcept = default;
+Widget&amp; Widget::operator=(Widget&amp;&amp; rhs) noexcept = default;
+
+Widget::Widget(const Widget&amp; rhs)
+: pImpl(nullptr)
+{ if (rhs.pImpl) pImpl = std::make_unique&lt;Impl&gt;(*rhs.pImpl); }
+
+Widget&amp; Widget::operator=(const Widget&amp; rhs)
+{
+    if (!rhs.pImpl) pImpl.reset();
+    else if (!pImpl) pImpl = std::make_unique&lt;Impl&gt;(*rhs.pImpl);
+    else *pImpl = *rhs.pImpl;
+    return *this;
 }
 </code></pre>
 
-<h4 id="good-parts">Good parts</h4>
+<p>On the other hand, the above advice does not apply to <code>std::shared_ptr</code>, because in <code>std::shared_ptr</code>, the type of the deleter is not part of the type of the smart pointer, and pointed-to types need not be complete when compiler-generated special functions are employed:</p>
 
-<p>There are thee reasons to prefer make functions to direct use of <code>new</code>.</p>
-
-<ol>
-<li><p>Eliminate code duplication</p>
-
-<pre><code class="language-cpp">auto upw1(std::make_unique&lt;Widget&gt;());
-std::unique_ptr&lt;Widget&gt; upw2(new Widget);
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget();
+    ...  // no declaration for dtor or move operations
+private:
+    struct Impl;
+    std::shared_ptr&lt;Impl&gt; pImpl;
+};
 </code></pre>
 
-<p>As we can see above, using make functions avoids code duplication of the repeating type <code>Widget</code>.</p>
-
-<ol>
-<li>Improve exception safety</li>
-</ol>
-
-<p>Given following functions:</p>
-
-<pre><code class="language-cpp">void processWidget(std::shared_ptr&lt;Widget&gt; spw, int priority);
-int computePriority();
+<pre><code class="language-cpp">// client code compiles without problem
+Widget w1;
+auto w2(std::move(w1));  // move-construct w2
+w1 = std::move(w2);  // move-assign w1
 </code></pre>
-
-<p>then there will be potential resource leak if we directly use <code>new</code> like this:</p>
-
-<pre><code class="language-cpp">processWidget(std::shared_ptr&lt;Widget&gt;(new Widget), computePriority());
-</code></pre>
-
-<p>The potential edge case comes with compilers&rsquo; translation of source code into object code: compilers may emit code to execute the operations in this order:</p>
-
-<ol>
-<li>Perform &ldquo;new Widget&rdquo;</li>
-<li>Execute <code>computePriority</code></li>
-<li>Run <code>std::shared_ptr</code> constructor</li>
-</ol>
-
-<p>At runtime, if <code>computePriority</code> produces an exception, the dynamically allocated Widget from Step 1 will be leaked, since it will never be stored in the <code>std::shared_ptr</code> that&rsquo;s supposed to start managing it in Step 3.</p>
-
-<p>If we use <code>std::make_shared</code> instead of using <code>new</code> inside <code>std::shared_ptr</code>, there&rsquo;s no Step 1, so Step 2 will never be executed between a <code>new</code> operation and the construction of <code>std::shared_ptr</code>, which is thus exception-safe.</p>
-
-<ol>
-<li>Smaller and faster code for <code>std::shared_ptr</code></li>
-</ol>
-
-<p>Compared with direct use of <code>new</code>, the improved efficiency provided by <code>std::make_shared</code> and <code>std::allocate_shared</code> is related with its memory allocation mechanism.</p>
-
-<ul>
-<li>If we directly use <code>new</code> like this - <code>std::shared_ptr&lt;Widget&gt; spw(new Widget);</code> - there are two phaces of allocation involved:
-
-<ul>
-<li>one for <code>Widget</code> object,</li>
-<li>another for the control block associated with that object.</li>
-</ul></li>
-<li>Instead, <code>auto spw = std::make_shared&lt;Widget&gt;();</code>, one allocation suffices: <code>std::make_shared</code> allocates a single chunk of memory to hold both the <code>Widget</code> object and the constrol block.
-
-<ul>
-<li>This optimization reduces the static size of the program, since the code contains only one memory allocation call</li>
-<li>This operation also increases the speed of the executable code, since memory is allocated only once</li>
-<li>Further more, total memory footprint is potentially reduced, since some of the bookkeeping information in the control block is obviated.</li>
-</ul></li>
-</ul>
-
-<h4 id="weak-parts">Weak parts</h4>
-
-<ol>
-<li>Specify custom deleters</li>
-</ol>
-
-<p>There&rsquo;s no way to specify a custom deleter using a make function, but using <code>new</code> is straightforward:</p>
-
-<pre><code class="language-cpp">auto widgetDeleter = [](Widget* pw) {...};
-std::unique_ptr&lt;Widget, decltype(widgettDeleter)&gt; upw(new Widget, widgetDeleter);
-std::shared_ptr&lt;Widget&gt; spw(new Widget, widgetDeleter);
-</code></pre></li>
-
-<li><p>Pass braced initializers</p>
-
-<p>In these calls,</p>
-
-<pre><code class="language-cpp">auto upv = std::make_unique&lt;std::vector&lt;int&gt;&gt;(10, 20);
-auto spv = std::make_shared&lt;std::vector&lt;int&gt;&gt;(10, 20);
-</code></pre>
-
-<p>the resulting smart pointers point to <code>std::vector</code>s with 10 elements, each of value 20, which means within the make functions, the perfect forwarding code uses the non-<code>std::initializer_list</code> constructor. If we do want to perfect-forward a braced initializer, we use following workaround;</p>
-
-<pre><code class="language-cpp">auto initList = { 10, 20 }; // create std::initializer_list
-auto spv = std::make_shared&lt;std::vector&lt;int&gt;&gt;(initList); // create std:vector using std::initializer_list cotr
-</code></pre></li>
-
-<li><p>Custom memory management or memory restriction concerns for <code>std::shared_ptr</code></p>
-
-<p>Due to the extra control block in <code>std::shared_ptr</code>, there are two more edge cases where make functions may be ill-advised:</p>
-
-<ul>
-<li>classes with custom memory management:
-
-<ul>
-<li>if a class defines its own versions of <code>operator new</code> and <code>operator delete</code>, it implies the global memory allocation and deallocation routines for objects of this class are inappropriate.</li>
-<li>class-specific routines are often designed only to allocate and deallocate chunks of memory of pricisely the size of objects of this class</li>
-<li><code>std::allocate_shared</code> however requests to allocate the size of one object plus the size of a control block, so the class-specific routines are poor fit for <code>std::allocate_shared</code> and custom deleters.</li>
-</ul></li>
-<li>systems with memory concerns
-
-<ul>
-<li>when using <code>std::make_shared</code>, the memory allocation for the object and the control block is at the same time, which brings us the smaller and faster code mentioned above; however, this also means that the deallocation for the same chunk of memory has to be at the same time</li>
-<li>when an object&rsquo;s reference count goes to zero, the object is destroyed (via its destructor), but the memory it occupies will wait to be released until the control block also gets destroyed</li>
-<li>control block contains a <em>weak count</em> (a second reference count for <code>std::weak_ptr</code>); as long as the weak count is greater than zero, the control block must continue to exist</li>
-<li>if the object type is quite large and the time between destrution of the last <code>std::shared_ptr</code> and the last <code>std::weak_ptr</code> is significant, a lag occurres between when an object is destroyed and when the memory this object (and its control block) occupied is freed</li>
-<li>if memory is a concern, this lag will make us frown</li>
-</ul></li>
-</ul></li>
-</ol>
-
-<p>Due to the reasons above, we may have to give up make function and directly use <code>new</code>, but we also want to keep our program exception-safe. Here is a workaround, take the same <code>processWidget</code> for example:</p>
-
-<pre><code class="language-cpp">std::shared_ptr&lt;Widget&gt; spw(new Widget, cusDel);
-processWidget(std::move(spw), computePriority());  // keep arg as rvalue, so it's move-enabled
-</code></pre>
-
-<p>The <code>std::move</code> here is to make sure the argument we pass to <code>processWidget</code> is rvalue, so that expensive copy construction for a <code>std::shared_ptr</code> object, which involves atomic increment of its reference count, will be replaced by a move construction, which requires no reference count manipulation.</p>
-<div class="footnotes">
-
-<hr />
-
-<ol>
-<li id="fn:1"><code>std::allocate_shared</code> acts just like <code>std::make_shared</code>, except its first argument is an allocator object to be used for the dynamic memory allocation.
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
-</ol>
-</div>
               
             </div>
           </div>
@@ -564,7 +561,7 @@ processWidget(std::move(spw), computePriority());  // keep arg as rvalue, so it'
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/" data-tooltip="[EMCpp]Item-22 When Using Pimple Idiom, Define Special Member Functions in the Implementation File">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/understand-stdmove-and-stdforward/" data-tooltip="[EMCpp]Item-23 Understand std::Move and std::Forward">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -572,7 +569,7 @@ processWidget(std::move(spw), computePriority());  // keep arg as rvalue, so it'
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/use-weak_ptr-for-shared_ptr-like-pointers-that-can-dangle/" data-tooltip="[EMCpp]Item-20 Use Weak_ptr for Shared_ptr Like Pointers That Can Dangle">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/" data-tooltip="[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fas fa-angle-right"></i>
@@ -657,7 +654,7 @@ processWidget(std::move(spw), computePriority());  // keep arg as rvalue, so it'
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/" data-tooltip="[EMCpp]Item-22 When Using Pimple Idiom, Define Special Member Functions in the Implementation File">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/understand-stdmove-and-stdforward/" data-tooltip="[EMCpp]Item-23 Understand std::Move and std::Forward">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -665,7 +662,7 @@ processWidget(std::move(spw), computePriority());  // keep arg as rvalue, so it'
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/use-weak_ptr-for-shared_ptr-like-pointers-that-can-dangle/" data-tooltip="[EMCpp]Item-20 Use Weak_ptr for Shared_ptr Like Pointers That Can Dangle">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/" data-tooltip="[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fas fa-angle-right"></i>
