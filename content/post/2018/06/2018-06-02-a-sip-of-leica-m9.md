@@ -2,8 +2,8 @@
 title: "徕卡M9初体验"
 date: 2018-06-02T21:39:34-04:00
 categories:
-- photography
-- impressions
+- visual
+- camera
 tags:
 - camera
 slug: a sip of leica m9

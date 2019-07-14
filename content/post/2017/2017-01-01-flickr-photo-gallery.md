@@ -2,7 +2,7 @@
 title: "Flickr Photo Gallery"
 date: 2017-01-01
 categories:
-- photography
+- visual
 - gallery
 tags:
 - photography
