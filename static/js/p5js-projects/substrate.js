@@ -30,7 +30,7 @@ var sands = [] ;
 
 function setup() {
   var myCanvas = createCanvas(dimx,dimy);
-  myCanvas.parent("substrate")
+  myCanvas.parent("canvasParent")
 //  size(dimx,dimy,P3D);
   background(255);
   takecolor("/images/2019/07/09/pollockShimmering.gif");

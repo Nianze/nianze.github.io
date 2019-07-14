@@ -15,6 +15,7 @@ metaAlignment: center
 
 >Or at least the closest thing to magic that exists in the real world[^1].
 <!--more-->
+<!-- toc -->
 
 Code is the spell. Computer is the wand. Use the magic to create fun stuff might be one of the most exciting things in this age. Starting each day with a creative spell might be a good ritual to become a good magician.
 
@@ -45,15 +46,16 @@ Code is the spell. Computer is the wand. Use the magic to create fun stuff might
 
 >As AI technology becomes increasingly available, artistry and technical advancement will only become more important in separating the remarkable AI artists from those repurposing old tools built by others or simply pushing a button to achieve an overused visual paradigm.[^3]
 
+## Substrate
+
 Anyway，着手AI之前，我先小试了下p5.js，复现了Jared Tarbell在2003年的作品[Substrate](http://www.complexification.net/gallery/machines/substrate/)。将动态生成的过程迁移到浏览器以方便传播，效果还是很不错的。
 
-.
 <div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.1/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.1/addons/p5.dom.min.js"></script>
     <script src="/js/p5js-projects/substrate.js"></script>
 </div>
-<div id="substrate"></div>
+<div id="canvasParent"></div>
 
 期待有一天能做出类似[Greatness](https://vimeo.com/155733402)这样的作品来，再配合自己作的曲子就更完美了。
 
