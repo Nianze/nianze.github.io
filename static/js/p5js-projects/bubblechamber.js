@@ -10,14 +10,14 @@
 // four unique orbit decaying particle types.
 
 // dimensions of drawing area
-var dim = 600;
+var dim = 500;
 var cnv;
 
 // particle proportions
-var maxMuon = 550;
-var maxQuark = 339;
-var maxHadron = 100;
-var maxAxion = 11;
+var maxMuon = 450;
+var maxQuark = 239;
+var maxHadron = 80;
+var maxAxion = 9;
 
 // angle of collision (usually calculated with mouse position)
 var collisionTheta;

@@ -40,7 +40,7 @@ Weekly visual project - 2019/07/21
 
 {{< image classes="fancybox fig-100" src="/images/2019/07/21/TheMagicFlute.JPG"  title="↑The Magic Flute" >}}
 
-这周去Lincoln Center听了 _The Magic Flute_ ，非常新颖的将歌剧和默剧电影相结合，效果比单纯的歌剧更加生动形象。当记者问道,“What is The Magic Flute _really_ about/魔笛_究竟_讲了怎样一个故事？” 时，主创之一的Paul Barritt简单概括道：
+这周去Lincoln Center听了 _The Magic Flute_ ，非常新颖的将歌剧和默剧电影相结合，效果比单纯的歌剧更加生动形象。当记者问道,“What is The Magic Flute _really_ about/魔笛 _究竟_ 讲了怎样一个故事？” 时，主创之一的Paul Barritt简单概括道：
 
 >It's a love story, told as a fairy tale.
 
