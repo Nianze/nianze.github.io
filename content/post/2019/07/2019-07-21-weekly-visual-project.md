@@ -1,5 +1,5 @@
 ---
-title: "[Weekly-12] July the 21st.."
+title: "[Weekly-12] 2019.07.21"
 date: 2019-07-21T19:10:41-04:00
 categories:
 - visual

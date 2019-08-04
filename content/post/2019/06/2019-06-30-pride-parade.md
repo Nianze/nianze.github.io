@@ -1,5 +1,5 @@
 ---
-title: "[Weekly-9] June the 30th.."
+title: "[Weekly-9] 2019.06.30"
 date: 2019-06-30T22:25:55-04:00
 categories:
 - visual
