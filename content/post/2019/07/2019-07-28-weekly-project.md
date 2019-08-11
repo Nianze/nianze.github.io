@@ -10,7 +10,7 @@ tags:
 slug: 2019 07 28 visual project
 autoThumbnailImage: true
 thumbnailImagePosition: right
-thumbnailImage: /images/2019/07/28/girl&boy1.JPG
+thumbnailImage: /images/2019/07/28/thumbnail/girl&boy1.JPG
 coverImage: /images/2019/07/28/reflection.JPG
 metaAlignment: center
 ---
@@ -18,50 +18,49 @@ metaAlignment: center
 Weekly visual project - 2019/07/28
 <!--more-->
 <!-- toc -->
-
 # The children
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/atm_sit.JPG"  title="↑Boys" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/atm.JPG"  title="↑Atm" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/atm_sit.JPG" thumbnail="/images/2019/07/28/thumbnail/atm_sit.JPG" title="↑Boys" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/atm.JPG" thumbnail="/images/2019/07/28/thumbnail/atm.JPG" title="↑Atm" >}}
 
-{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy1.JPG"  title="↑Girl & Boy 1" >}}
-{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy2.JPG"  title="↑Girl & Boy 2" >}}
-{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy3.JPG"  title="↑Girl & Boy 3" >}}
-{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy4.JPG"  title="↑Girl & Boy 4" >}}
-{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy5.JPG"  title="↑Girl & Boy 5" >}}
-{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy6.JPG"  title="↑Girl & Boy 6" >}}
+{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy1.JPG" thumbnail="/images/2019/07/28/thumbnail/girl&boy1.JPG" title="↑Girl & Boy 1" >}}
+{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy1.JPG" thumbnail="/images/2019/07/28/thumbnail/girl&boy1.JPG" title="↑Girl & Boy 2" >}}
+{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy3.JPG" thumbnail="/images/2019/07/28/thumbnail/girl&boy3.JPG" title="↑Girl & Boy 3" >}}
+{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy4.JPG" thumbnail="/images/2019/07/28/thumbnail/girl&boy4.JPG" title="↑Girl & Boy 4" >}}
+{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy5.JPG" thumbnail="/images/2019/07/28/thumbnail/girl&boy5.JPG" title="↑Girl & Boy 5" >}}
+{{< image classes="fancybox fig-33" src="/images/2019/07/28/girl&boy6.JPG" thumbnail="/images/2019/07/28/thumbnail/girl&boy6.JPG" title="↑Girl & Boy 6" >}}
 
 # The people
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/sit.JPG"  title="↑Sit" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/memory.JPG"  title="↑Memory" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/sits.JPG"  title="↑Sits" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/back2back.JPG"  title="↑Back to back" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/family.JPG"  title="↑Family" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/rain.JPG"  title="↑Rain" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/subway.JPG"  title="↑Subway" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/sit.JPG" thumbnail="/images/2019/07/28/thumbnail/sit.JPG" title="↑Sit" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/memory.JPG" thumbnail="/images/2019/07/28/thumbnail/memory.JPG" title="↑Memory" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/sits.JPG" thumbnail="/images/2019/07/28/thumbnail/sits.JPG" title="↑Sits" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/back2back.JPG" thumbnail="/images/2019/07/28/thumbnail/back2back.JPG" title="↑Back to back" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/family.JPG" thumbnail="/images/2019/07/28/thumbnail/family.JPG" title="↑Family" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/rain.JPG" thumbnail="/images/2019/07/28/thumbnail/rain.JPG" title="↑Rain" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/subway.JPG" thumbnail="/images/2019/07/28/thumbnail/subway.JPG" title="↑Subway" >}}
 
 # The post
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/moustache.JPG"  title="↑Moustache" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/teeth.JPG"  title="↑Teeth" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/moustache.JPG" thumbnail="/images/2019/07/28/thumbnail/moustache.JPG" title="↑Moustache" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/teeth.JPG" thumbnail="/images/2019/07/28/thumbnail/teeth.JPG" title="↑Teeth" >}}
 
 # The street
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/balloons.JPG"  title="↑Balloons" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/crosstown.JPG"  title="↑Crosstown" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/facedown.JPG"  title="↑Plush toy" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/front_door.JPG"  title="↑Front door" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/doves.JPG"  title="Doves" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/balloons.JPG" thumbnail="/images/2019/07/28/thumbnail/balloons.JPG" title="↑Balloons" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/crosstown.JPG" thumbnail="/images/2019/07/28/thumbnail/crosstown.JPG" title="↑Crosstown" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/facedown.JPG" thumbnail="/images/2019/07/28/thumbnail/facedown.JPG" title="↑Plush toy" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/front_door.JPG" thumbnail="/images/2019/07/28/thumbnail/front_door.JPG" title="↑Front door" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/doves.JPG" thumbnail="/images/2019/07/28/thumbnail/doves.JPG" title="Doves" >}}
 {{< image classes="clear fig-50" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/phonecall.JPG"  title="↑Call" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/walk.JPG"  title="↑Walk" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/time_square.JPG"  title="↑Time Squre" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/light.JPG"  title="↑Light" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/phonecall.JPG" thumbnail="/images/2019/07/28/thumbnail/phonecall.JPG" title="↑Call" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/walk.JPG" thumbnail="/images/2019/07/28/thumbnail/walk.JPG" title="↑Walk" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/time_square.JPG" thumbnail="/images/2019/07/28/thumbnail/time_square.JPG" title="↑Time Squre" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/light.JPG" thumbnail="/images/2019/07/28/thumbnail/light.JPG" title="↑Light" >}}
 
 # The building
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/building_sky.JPG"  title="↑Sky" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/building_skyscraper.JPG"  title="↑Skyscraper" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/building1.JPG"  title="↑Water tower1" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/building2.JPG"  title="↑Water tower2" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/building3.JPG"  title="↑Church" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/gallery.JPG"  title="↑Gallery" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/building_sky.JPG" thumbnail="/images/2019/07/28/thumbnail/building_sky.JPG" title="↑Sky" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/building_skyscraper.JPG" thumbnail="/images/2019/07/28/thumbnail/building_skyscraper.JPG" title="↑Skyscraper" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/building1.JPG" thumbnail="/images/2019/07/28/thumbnail/building1.JPG" title="↑Water tower1" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/building2.JPG" thumbnail="/images/2019/07/28/thumbnail/building2.JPG"  title="↑Water tower2" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/building3.JPG" thumbnail="/images/2019/07/28/thumbnail/building3.JPG" title="↑Church" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/gallery.JPG" thumbnail="/images/2019/07/28/thumbnail/gallery.JPG" title="↑Gallery" >}}
 
 ## 碎言
 
@@ -78,17 +77,17 @@ Weekly visual project - 2019/07/28
 
 
 # The dog
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/ice_cream.JPG"  title="↑Ice cream" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/dog_in_car.JPG"  title="↑Dog in the car" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/ice_cream.JPG" thumbnail="/images/2019/07/28/thumbnail/ice_cream.JPG" title="↑Ice cream" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/dog_in_car.JPG" thumbnail="/images/2019/07/28/thumbnail/dog_in_car.JPG" title="↑Dog in the car" >}}
 
 # The story
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/story_photo.JPG"  title="↑Story photo" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/07/28/story_words.JPG"  title="↑Story behind the photo" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/story_photo.JPG" thumbnail="/images/2019/07/28/thumbnail/story_photo.JPG" title="↑Story photo" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/07/28/story_words.JPG" thumbnail="/images/2019/07/28/thumbnail/story_words.JPG" title="↑Story behind the photo" >}}
 {{< image classes="clear fig-50" >}}
 
 # The selfie
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/reflection.JPG"  title="↑reflection" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/07/28/me.JPG"  title="↑Selfie" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/reflection.JPG" thumbnail="/images/2019/07/28/reflection.JPG" title="↑reflection" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/07/28/me.JPG" thumbnail="/images/2019/07/28/me.JPG" title="↑Selfie" >}}
 
 # The excerpt
 >中外不少诗人死得早，哲学家多长寿。孟子说：“吾善养吾浩然之气。”这话很文学。“浩然”，形容词，可随时代和个人的差别而解释。文天祥用“浩然”，是爱国，曹雪芹又作别解。要我解，比文天祥胆小，比曹雪芹老实。我以为“浩然之气”，指元气，如你果然献身艺术，艺术会给你不尽元气，一份诚意，换一份元气。牺牲功利，牺牲爱情，背叛政治，得到艺术，真的要牺牲。  

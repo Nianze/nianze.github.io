@@ -11,7 +11,7 @@ tags:
 slug: 2019 07 21 visual project
 autoThumbnailImage: true
 thumbnailImagePosition: right
-thumbnailImage: /images/2019/07/21/smile.JPG
+thumbnailImage: /images/2019/07/21/thumbnail/smile.JPG
 coverImage: /images/2019/07/21/TheMagicFlute.JPG
 metaAlignment: center
 ---

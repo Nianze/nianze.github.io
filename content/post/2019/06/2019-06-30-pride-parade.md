@@ -10,7 +10,7 @@ tags:
 slug: 2019 06 30 street photography
 autoThumbnailImage: true
 thumbnailImagePosition: right
-thumbnailImage: /images/2019/06/30/tartar.jpg
+thumbnailImage: /images/2019/06/30/thumbnail/tartar.jpg
 coverImage: /images/2019/06/30/chat.JPG
 metaAlignment: center
 ---
@@ -20,28 +20,28 @@ Weekly shots - 2019/06/30
 <!-- toc -->
 
 # The street
-{{< image classes="fancybox fig-100" src="/images/2019/06/30/street.JPG"  title="↑Street" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/06/30/doorman.jpg"  title="↑Doorman" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/06/30/sunset.JPG"  title="↑Sunset" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/06/30/street.JPG" thumbnail="/images/2019/06/30/thumbnail/street.JPG" title="↑Street" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/06/30/doorman.jpg" thumbnail="/images/2019/06/30/thumbnail/doorman.jpg" title="↑Doorman" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/06/30/sunset.JPG" thumbnail="/images/2019/06/30/thumbnail/sunset.JPG" title="↑Sunset" >}}
 {{< image classes="clear fig-50" >}}
 
 # The people
-{{< image classes="fancybox fig-50" src="/images/2019/06/30/pride_parade.JPG"  title="↑Pride Parade" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/06/30/couple.jpg"  title="↑Holding hands" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/06/30/pride_parade.JPG" thumbnail="/images/2019/06/30/thumbnail/pride_parade.JPG" title="↑Pride Parade" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/06/30/couple.jpg" thumbnail="/images/2019/06/30/thumbnail/couple.jpg" title="↑Holding hands" >}}
 {{< image classes="clear fig-50" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/06/30/stare.JPG"  title="↑Stare" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/06/30/stare.JPG" thumbnail="/images/2019/06/30/thumbnail/stare.JPG" title="↑Stare" >}}
 
 # The event
-{{< image classes="fancybox fig-100" src="/images/2019/06/30/han_dan.JPG"  title="↑Han Dan" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/06/30/han_dan.JPG" thumbnail="/images/2019/06/30/thumbnail/han_dan.JPG" title="↑Han Dan" >}}
 
 # The mirror
-{{< image classes="fancybox fig-50" src="/images/2019/06/30/selfie1.jpg"  title="↑Selfie" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/06/30/selfie2.JPG"  title="↑Selfie" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/06/30/selfie1.jpg" thumbnail="/images/2019/06/30/thumbnail/selfie1.jpg" title="↑Selfie" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/06/30/selfie2.JPG" thumbnail="/images/2019/06/30/thumbnail/selfie2.JPG" title="↑Selfie" >}}
 {{< image classes="clear fig-50" >}}
 
 # The food
-{{< image classes="fancybox fig-100" src="/images/2019/06/30/duck.JPG"  title="↑Duck" >}}
-{{< image classes="fancybox fig-100" src="/images/2019/06/30/tartar.jpg"  title="↑Tartar" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/06/30/duck.JPG" thumbnail="/images/2019/06/30/thumbnail/duck.JPG" title="↑Duck" >}}
+{{< image classes="fancybox fig-100" src="/images/2019/06/30/tartar.jpg" thumbnail="/images/2019/06/30/thumbnail/tartar.jpg" title="↑Tartar" >}}
 
 # The excerpt
 

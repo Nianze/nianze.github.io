@@ -10,7 +10,7 @@ tags:
 slug: Basic Musicianship Review
 autoThumbnailImage: true
 thumbnailImagePosition: right
-thumbnailImage: /images/2019/06/15/img_musition5.png
+thumbnailImage: /images/2019/06/15/thumbnail/img_musition5.png
 ---
 
 A review of some basic music theory before the NYU Steinhardt music technology placement exam.

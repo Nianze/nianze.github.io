@@ -8,7 +8,7 @@ tags:
 - generative art
 slug: engineering-is-magic
 thumbnailImagePosition: right
-thumbnailImage: /images/2019/07/09/sicp.jpg
+thumbnailImage: /images/2019/07/09/thumbnail/sicp.jpg
 coverImage: /images/2019/07/09/sicp.jpg
 metaAlignment: center
 ---
