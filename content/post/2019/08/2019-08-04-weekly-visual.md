@@ -26,7 +26,7 @@ Weekly visual project - 2019/08/04
 # The street
 {{< image classes="fancybox fig-50" src="/images/2019/08/04/hold_hands.JPG" thumbnail="/images/2019/08/04/thumbnail/hold_hands.JPG" title="↑Hold hands" >}}
 {{< image classes="fancybox fig-50" src="/images/2019/08/04/shakes.sundaes.JPG" thumbnail="/images/2019/08/04/thumbnail/shakes.sundaes.JPG" title="↑Shakes Sundaes" >}}
-{{< image classes="fancybox fig-50" src="/images/2019/08/04/runner.JPG" thumbnail="/images/2019/08/04/thumbnail/shakes.sundaes.JPG" title="↑Runner" >}}
+{{< image classes="fancybox fig-50" src="/images/2019/08/04/runner.JPG" thumbnail="/images/2019/08/04/thumbnail/runner.JPG" title="↑Runner" >}}
 {{< image classes="fancybox fig-50" src="/images/2019/08/04/citi_bike.JPG" thumbnail="/images/2019/08/04/thumbnail/citi_bike.JPG" title="↑Citi bikes" >}}
 {{< image classes="fancybox fig-100" src="/images/2019/08/04/shadows.JPG" thumbnail="/images/2019/08/04/thumbnail/shadows.JPG" title="↑Shadows" >}}
 
