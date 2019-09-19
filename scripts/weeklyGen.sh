@@ -14,14 +14,14 @@ sips -Z 1200 thumbnail/*
 cd $HOMEDIR
 hugo new --kind weekly post/$(date +'%Y/%m')/$POSTNAME
 
-d1=$(date -d "May 4 2019" +%s)
+d1=$(date -jf "%Y-%m-%d %H:%M" "2019-05-04 00:00" +%s)
 d2=$(date +%s)
 WEEKCNT=$(( (d2 - d1) / 86400 / 7 + 1)) 
 
-sed -i "s|title:.*|title: \"[Weekly-$WEEKCNT] $(date +'%Y.%m.%d')\"|" $POST
-sed -i "s|thumbnailImage:.*|thumbnailImage: /$IMGPATH\/thumbnail\/thumbnail.JPG|" $POST
-sed -i "s|coverImage:.*|coverImage: /$IMGPATH\/cover.JPG|" $POST
-sed -i "s|<!--more-->|Weekly visual project - $(date +'%Y/%m/%d')\n&|" $POST
+sed -i '' "s|title:.*|title: \"[Weekly-$WEEKCNT] $(date +'%Y.%m.%d')\"|" $POST
+sed -i '' "s|thumbnailImage:.*|thumbnailImage: /$IMGPATH\/thumbnail\/thumbnail.JPG|" $POST
+sed -i '' "s|coverImage:.*|coverImage: /$IMGPATH\/cover.JPG|" $POST
+sed -i '' "s|<!--more-->|Weekly visual project - $(date +'%Y/%m/%d')\n&|" $POST
 
 echo '' >> $POST
 echo '# The street' >> $POST
