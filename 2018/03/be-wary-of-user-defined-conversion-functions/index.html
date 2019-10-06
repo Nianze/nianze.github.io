@@ -5,21 +5,28 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.55.6 with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
+<meta name="description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
 
 
-<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
+<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-5 Be Wary of User Defined Conversion Functions">
 <meta name="twitter:title" content="[MECpp]Item-5 Be Wary of User Defined Conversion Functions">
 <meta property="og:url" content="http://nianze.tk/2018/03/be-wary-of-user-defined-conversion-functions/">
 <meta property="twitter:url" content="http://nianze.tk/2018/03/be-wary-of-user-defined-conversion-functions/">
 <meta property="og:site_name" content="To be creative">
-<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
-<meta name="twitter:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
+<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
+<meta name="twitter:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
 <meta property="og:locale" content="en-us">
 
   
@@ -93,17 +100,14 @@
 
     
       
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
 </script>
 
     
@@ -386,7 +390,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.</p>
+              <p>Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -397,7 +401,7 @@ Suffering is optional.</p>
 <li><a href="#solution-2-proxy-classes">Solution 2: Proxy classes</a></li>
 </ul></li>
 </ul>
-</nav>
+</nav></p>
 
 <p>There are two kinds of functions allowing compilers to perform implicit type conversions:</p>
 
@@ -477,7 +481,8 @@ for (int i = 0; i &lt; 10; ++i) {  // oops! &quot;a&quot; should be &quot;a[i]&q
 <pre><code class="language-cpp">for (int i = 0; i &lt; 10; ++i) {
     if (a == static_cast&lt; Array&lt;int&gt; &gt;(b[i])) ...
 }
-</code></pre>
+</code></pre></li>
+</ul>
 
 <p>Each iteration through the loop compares the contents of <code>a</code> with the contents of a temporary array of size <code>b[i]</code> (whose contents are presumably undefined and will be created and destroyed in every loop, see MECpp item 19), which is both unwanted and tremendously inefficient behavior.</p>
 
@@ -488,12 +493,11 @@ for (int i = 0; i &lt; 10; ++i) {  // oops! &quot;a&quot; should be &quot;a[i]&q
 <pre><code class="language-cpp">template&lt;class T&gt;
 class Array {
 public:
-...
-explicit Array(int size);  // use &quot;explicit&quot; to prevent implicit type conversion    
-...    
+    ...
+    explicit Array(int size);  // use &quot;explicit&quot; to prevent implicit type conversion    
+    ...    
 };
-</code></pre></li>
-</ul>
+</code></pre>
 
 <h2 id="solution-2-proxy-classes">Solution 2: Proxy classes</h2>
 
@@ -806,7 +810,9 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -823,7 +829,9 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -840,7 +848,9 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -874,7 +884,9 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/07</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/07
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -891,7 +903,9 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/31</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/31
+
+<!-- toc --></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -908,7 +922,9 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/25</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/25
+
+<!-- toc --></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -925,7 +941,9 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/18</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/18
+
+<!-- toc --></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -942,7 +960,9 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/11</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/11
+
+<!-- toc --></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -959,7 +979,9 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/04</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/04
+
+<!-- toc --></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
