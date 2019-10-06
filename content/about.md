@@ -14,7 +14,7 @@ comments: false
     <div class="loader-section section-right"></div>
 </div>
 
-# [Work Experience](https://drive.google.com/file/d/1dbBs4DBS6iJGtPoB5LSkG0KAI8TO3xRp/view?usp=sharing)
+# [Work Experience](https://drive.google.com/file/d/1uNEZZE2rUJP2sUzg5x-zMvOvMyvzuAhY/view?usp=sharing)
 
 <div class='display-card experience-card'>
     <h3 class='company'>Bloomberg L.P. <small class='dates'>May 2017 - Today</small></h3>
@@ -120,7 +120,7 @@ I started playing the clarinet since my elementary school and joint school conce
 
 I received my first DSLR (a brand new Pentax K5 with 18-55 kit lens) as a gift from my mom in the summer vacation of my fresh year, and become interested in taking photos since then. I do street photography most of the time since I live in cities. My current gears:
 
-* iPhone X (cheapest and mostly used one actually)
+* iPhone X (mostly used one)
 * Leica M9
 * Leica Summicron-M 35mm f/2 ASPH
 * ZEISS C Sonnar T* 50mm f/1.5 ZM
