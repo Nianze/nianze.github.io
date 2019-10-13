@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.
-
-">
+<meta name="description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.">
 
 
-<meta property="og:description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.
-
-">
+<meta property="og:description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-14 Use Exception Specifications Judiciously">
 <meta name="twitter:title" content="[MECpp]Item-14 Use Exception Specifications Judiciously">
 <meta property="og:url" content="http://nianze.tk/2018/04/use-exception-specifications-judiciously/">
 <meta property="twitter:url" content="http://nianze.tk/2018/04/use-exception-specifications-judiciously/">
 <meta property="og:site_name" content="To be creative">
-<meta property="og:description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.
-
-">
-<meta name="twitter:description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.
-
-">
+<meta property="og:description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.">
+<meta name="twitter:description" content="Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.
+              <p>Exception specifications provide a documentation aid and an enforcement mechanism for constraints on exception usage, but they are only partly checked by compilers and they are easy to violate inadvertently.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -398,7 +393,7 @@ Suffering is optional.</p>
 <li><a href="#the-unwanted-points">The unwanted points</a></li>
 <li><a href="#the-solution">The solution</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <h1 id="the-good-points">The good points</h1>
 
@@ -420,13 +415,14 @@ void f2() throw (int)
     f1();  // legal even if f1 might throw sth other than an int
     ...
 }
-</code></pre></li>
-</ul>
+</code></pre>
 
 <h1 id="the-unwanted-points">The unwanted points</h1>
 
 <ul>
-<li><p>The default behavior for <code>unexpected</code> is to call <code>terminate</code>, which by default will call <code>abort</code>, preventing possible high-level exception handlers from dealing with unexpected exceptions.</p>
+<li>The default behavior for <code>unexpected</code> is to call <code>terminate</code>, which by default will call <code>abort</code>, preventing possible high-level exception handlers from dealing with unexpected exceptions.
+<br /></li>
+</ul>
 
 <p>Sometimes the default behavior of immediate program termination is not what we want. For example, like the example code below, when an unanticipated exception propagates from inside the <code>logDestruction</code> (which isn&rsquo;t supposed to happen due to the assertion <code>throw()</code> in exception specification after <code>logDestruction</code>, but it&rsquo;s possible due to a call to some other function that throws), by default, <code>unexpected</code> will be called, and that will result in termination of the program, without letting the high-level destructor to catch and deal with the exception.</p>
 
@@ -471,9 +467,11 @@ void convertUnexpected()       // function to call is an unexpected exception is
 }
 
 set_unexpected(convertUnexpected); // replace the default `unexpected` function with `convertUnexpected`
-</code></pre></li>
+</code></pre>
 
-<li><p>Another way is to translate unexpected exceptions into <code>bad_exception</code> by rethrowing the current exception in the customized <code>unexpected</code> function, and include <code>bad_exception</code> or its base class <code>exception</code> in the exception specifications.</p>
+<ul>
+<li>Another way is to translate unexpected exceptions into <code>bad_exception</code> by rethrowing the current exception in the customized <code>unexpected</code> function, and include <code>bad_exception</code> or its base class <code>exception</code> in the exception specifications.</li>
+</ul>
 
 <pre><code class="language-cpp">void convertUnexpected()       // function to call is an unexpected exception is thrown
 {
@@ -748,6 +746,23 @@ Suffering is optional.</p>
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
+                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
                 <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
               </a>
@@ -756,9 +771,7 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -775,9 +788,7 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -794,9 +805,7 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -830,9 +839,7 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/07
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/07</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -849,9 +856,7 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/31
-
-<!-- toc --></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/31</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -868,9 +873,7 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/25
-
-<!-- toc --></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/25</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -887,9 +890,7 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/18
-
-<!-- toc --></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/18</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -906,28 +907,7 @@ Suffering is optional.</p>
                   Aug 8, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/11
-
-<!-- toc --></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/08/2019-08-04-visual-project/">
-                <h3 class="media-heading">[Weekly-14] 2019.08.04</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Aug 8, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/04
-
-<!-- toc --></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/08/11</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -940,7 +920,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         191 posts found
+         192 posts found
       </p>
     </div>
   </div>
