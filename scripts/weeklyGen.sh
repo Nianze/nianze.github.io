@@ -21,7 +21,8 @@ WEEKCNT=$(( (d2 - d1) / 86400 / 7 + 1))
 sed -i '' "s|title:.*|title: \"[Weekly-$WEEKCNT] $(date +'%Y.%m.%d')\"|" $POST
 sed -i '' "s|thumbnailImage:.*|thumbnailImage: /$IMGPATH\/thumbnail\/thumbnail.JPG|" $POST
 sed -i '' "s|coverImage:.*|coverImage: /$IMGPATH\/cover.JPG|" $POST
-sed -i '' "s|<!--more-->|Weekly visual project - $(date +'%Y/%m/%d')\n&|" $POST
+lf=$'\n'
+sed -i '' "s|<!--more-->|Weekly visual project - $(date +'%Y/%m/%d')\\$lf&|" $POST
 
 echo '' >> $POST
 echo '# The street' >> $POST
