@@ -7,18 +7,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.">
+<meta name="description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.
+">
 
 
-<meta property="og:description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.">
+<meta property="og:description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.
+">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential">
 <meta name="twitter:title" content="[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential">
 <meta property="og:url" content="http://nianze.tk/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/">
 <meta property="twitter:url" content="http://nianze.tk/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.">
-<meta name="twitter:description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.">
+<meta property="og:description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.
+">
+<meta name="twitter:description" content="The flexibility that default policy for std::async permits both async and sync task execution leads to uncertainty when accessing thread_locals, implies that the task may never execute, and affects program logic for timeout-based wait calls.
+">
 <meta property="og:locale" content="en-us">
 
   
@@ -92,17 +96,14 @@
 
     
       
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
 </script>
 
     
@@ -385,7 +386,8 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>The flexibility that default policy for <code>std::async</code> permits both async and sync task execution leads to uncertainty when accessing <code>thread_locals</code>, implies that the task may never execute, and affects program logic for timeout-based <code>wait</code> calls.</p>
+              <p>The flexibility that default policy for <code>std::async</code> permits both async and sync task execution leads to uncertainty when accessing <code>thread_locals</code>, implies that the task may never execute, and affects program logic for timeout-based <code>wait</code> calls.
+</p>
 
 <p>When requesting a function <code>f</code> to be run in accord with a <code>std::async</code>, there are two standard <em>launch policies</em>, each represented by an enumerator in the <code>std::launch</code> scoped enum:</p>
 
@@ -427,7 +429,8 @@ while (fut.wait_for(100ms) !=      // f never yield read
 {
     ...
 }
-</code></pre>
+</code></pre></li>
+</ul>
 
 <h4 id="solution">Solution</h4>
 
@@ -435,19 +438,18 @@ while (fut.wait_for(100ms) !=      // f never yield read
 
 <pre><code class="language-cpp">...
 if (fut.wait_for(0s) == 
-std::future_status::deferred)
+    std::future_status::deferred)
 {
-... // use wait or get on fut to call f synchronously
+    ... // use wait or get on fut to call f synchronously
 } else {
-while (fut.wait_for(100ms) !=      // f never yield read 
-       std::future_status::ready)  // when deferred
-{ 
-    ... // do concurrent work until it's ready
+    while (fut.wait_for(100ms) !=      // f never yield read 
+           std::future_status::ready)  // when deferred
+    { 
+        ... // do concurrent work until it's ready
+    }
+    ...  // fut is ready
 }
-...  // fut is ready
-}
-</code></pre></li>
-</ul>
+</code></pre>
 
 <p>In summary, using <code>std::async</code> with the default launch policy for a task is fine as long as following conditions are fulfilled:</p>
 
@@ -763,7 +765,9 @@ Suffering is optional.</p>
                   Nov 11, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -780,7 +784,9 @@ Suffering is optional.</p>
                   Nov 11, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -814,7 +820,9 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -831,7 +839,9 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -848,7 +858,9 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -865,7 +877,9 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -882,7 +896,9 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -916,7 +932,9 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/07</p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/07
+
+<!--toc--></p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
