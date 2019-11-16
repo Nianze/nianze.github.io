@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.
-
-">
+<meta name="description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.">
 
 
-<meta property="og:description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.
-
-">
+<meta property="og:description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-6 Distinguish Between Prefix and Postfix Forms of Increment and Decrement Operators">
 <meta name="twitter:title" content="[MECpp]Item-6 Distinguish Between Prefix and Postfix Forms of Increment and Decrement Operators">
 <meta property="og:url" content="http://nianze.tk/2018/03/distinguish-between-prefix-and-postfix-forms-of-increment-and-decrement-operators/">
 <meta property="twitter:url" content="http://nianze.tk/2018/03/distinguish-between-prefix-and-postfix-forms-of-increment-and-decrement-operators/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.
-
-">
-<meta name="twitter:description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.
-
-">
+<meta property="og:description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.">
+<meta name="twitter:description" content="The prefix and postfix forms of increment and decrement operators return different types: prefix forms return a reference, while postfix forms return a const object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>The prefix and postfix forms of increment and decrement operators return <em>different types</em>: prefix forms return a reference, while postfix forms return a <em>const</em> object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.
+              <p>The prefix and postfix forms of increment and decrement operators return <em>different types</em>: prefix forms return a reference, while postfix forms return a <em>const</em> object. For efficiency, prefer prefix forms unless the behavior of postfix ones is necessary. To guarantee consistency, implement postfix operators in terms of the prefix operators.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -401,7 +396,7 @@ Suffering is optional.</p>
 <li><a href="#3-implement-postfix-operators-in-terms-of-the-prefix-ones">3. Implement postfix operators in terms of the prefix ones</a></li>
 </ul></li>
 </ul>
-</nav></p>
+</nav>
 
 <h1 id="case-study">Case Study</h1>
 
@@ -466,14 +461,16 @@ const UPInt UPInt::operator++(int)
 
 <pre><code class="language-cpp">int i;
 i++++;  // error!
-</code></pre></li>
+</code></pre>
 
-<li><p>if return value is not const, the behavior will be counterintuitive and confusing: after applying <code>i++++</code>, the second <code>operator++</code> changes the value of the object returned from the first invocation, instead of the value of the original object. Hence, <code>i</code> ends up being incremented only once.</p></li>
+<ul>
+<li>if return value is not const, the behavior will be counterintuitive and confusing: after applying <code>i++++</code>, the second <code>operator++</code> changes the value of the object returned from the first invocation, instead of the value of the original object. Hence, <code>i</code> ends up being incremented only once.</li>
 </ul>
 
 <h2 id="3-implement-postfix-operators-in-terms-of-the-prefix-ones">3. Implement postfix operators in terms of the prefix ones</h2>
 
-<p>Both the prefix and postfix increment operators do the same thing: incrementing a value. In order to guarantee implementation won&rsquo;t diverge over time, postfix increment and decrement should be implemented <em>in terms of</em> their prefix counterparts. Then we only need to maintain the prefix versions.</p>
+<p>Both the prefix and postfix increment operators do the same thing: incrementing a value. In order to guarantee implementation won&rsquo;t diverge over time, postfix increment and decrement should be implemented <em>in terms of</em> their prefix counterparts. Then we only need to maintain the prefix versions.</p></li>
+</ul>
               
             </div>
           </div>
@@ -739,6 +736,23 @@ Suffering is optional.</p>
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
+                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16</p></div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
                 <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
               </a>
@@ -747,9 +761,7 @@ Suffering is optional.</p>
                   Nov 11, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -766,9 +778,7 @@ Suffering is optional.</p>
                   Nov 11, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -802,9 +812,7 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -821,9 +829,7 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -840,9 +846,7 @@ Suffering is optional.</p>
                   Oct 10, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -859,9 +863,7 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -878,9 +880,7 @@ Suffering is optional.</p>
                   Sep 9, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21
-
-<!--toc--></p></div>
+              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/21</p></div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -903,25 +903,6 @@ Suffering is optional.</p>
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-07-visual-project/">
-                <h3 class="media-heading">[Weekly-19] 2019.09.07</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/07
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -929,7 +910,7 @@ Suffering is optional.</p>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         196 posts found
+         197 posts found
       </p>
     </div>
   </div>
