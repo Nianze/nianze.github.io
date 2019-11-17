@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>algorithm on Be creative</title>
+    <title>Algorithm on Be creative</title>
     <link>http://nianze.tk/tags/algorithm/</link>
-    <description>Recent content in algorithm on Be creative</description>
+    <description>Recent content in Algorithm on Be creative</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 29 Dec 2016 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://nianze.tk/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="http://nianze.tk/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -17,7 +17,240 @@
       <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/12/binary-search-review/</guid>
-      <description>&lt;p&gt;Detailed review on binary search.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Detailed review on binary search.
+
+&lt;!-- toc --&gt;&lt;/p&gt;
+
+&lt;p&gt;This post is based on an article on binary search from &lt;a href=&#34;http://www.topcoder.com/community/data-science/data-science-tutorials/binary-search/&#34;&gt;Topcoder&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;classic-finding-a-value-in-a-sorted-sequence&#34;&gt;Classic: Finding a value in a sorted sequence&lt;/h1&gt;
+
+&lt;p&gt;Consider the following sequence of integers sorted in ascending order and say we are looking for the number 55:&lt;/p&gt;
+
+&lt;p&gt;| 0 | 5 | 13 | 19 | 22 | 41 | 55 | 68 | 72 | 81 | 98 |&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;| 55 | 68 | 72 | 81 | 98 |&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash;&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;| 55 | 68 |&lt;/p&gt;
+
+&lt;p&gt;Depending on how we choose the median of an even number of elements we will either find 55 in the next step or chop off 68 to get a search space of only one element. Either way, we conclude that the index where the target value is located is 7.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;binary_search(A, target):
+   lo = 1, hi = size(A)
+   while lo &amp;lt;= hi:
+      mid = lo + (hi-lo)/2
+      if A[mid] == target:
+         return mid            
+      else if A[mid] &amp;lt; target: 
+         lo = mid+1
+      else:
+         hi = mid-1
+            
+   // target was not found
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;taking-it-further-the-main-theorem&#34;&gt;Taking it further: the main theorem&lt;/h1&gt;
+
+&lt;p&gt;Consider a predicate p defined over some ordered set S (the search space). The search space consists of candidate solutions to the problem. We use the predicate to verify if a candidate solution is legal (does not violate some constraint) according to the definition of the problem.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Main theorem&amp;rdquo;: &lt;strong&gt;binary search can be used if and only if for all x in S, p(x) implies p(y) for all y &amp;gt; x&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We can use binary search to find the smallest legal solution (i.e. the smallest x for which p(x) is true) by following two steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Designing a predicate. Note that we need to choose what the algorithm should find - either the first x for which p(x) is true or the last x for which p(x) is false.&lt;/li&gt;
+&lt;li&gt;Proving that binary search can be applied to the predicate. This is where we use the main theorem, verifying that the conditions laid out in the theorem are satisfied.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;These two parts are most often interleaved: when we think a problem can be solved by binary search, we aim to design the predicate so that it satisfies the condition in the main theorem.&lt;/p&gt;
+
+&lt;h1 id=&#34;implementation&#34;&gt;Implementation&lt;/h1&gt;
+
+&lt;p&gt;Given an array A (following array) and a target value (say 55), return the index of the first element in A equal to or greater than the target value.&lt;/p&gt;
+
+&lt;p&gt;Sample sequence:&lt;/p&gt;
+
+&lt;p&gt;| 0 | 5 | 13 | 19 | 22 | 41 | 55 | 68 | 72 | 81 | 98 |&lt;/p&gt;
+
+&lt;p&gt;Solution:&lt;/p&gt;
+
+&lt;p&gt;Predicate p(A[x]): &amp;ldquo;Is A[x] greater than or equal to the target value?&amp;ldquo;.&lt;/p&gt;
+
+&lt;p&gt;Search space &lt;strong&gt;S&lt;/strong&gt; (indices):&lt;/p&gt;
+
+&lt;p&gt;| 1 | 2 | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 |&lt;/p&gt;
+
+&lt;p&gt;Apply the predicate (with a target value of 55) to array A:&lt;/p&gt;
+
+&lt;p&gt;| no | no | no | no | no | no | yes | yes | yes | yes | yes |&lt;/p&gt;
+
+&lt;p&gt;Implementing the discrete algorithm:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;binary_search(lo, hi, p):
+   while lo &amp;lt; hi:
+      mid = lo + (hi-lo)/2
+      if p(mid) == true:
+         hi = mid
+      else:
+         lo = mid+1
+          
+   if p(lo) == false:
+      complain                // p(x) is false for all x in S!
+      
+   return lo         // lo is the least x for which p(x) is true
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Two crucial lines:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;hi = mid :
+When p(mid) is true, we can discard the second half of the search space, since the predicate is true for all elements in it (by the main theorem). However, we can not discard mid itself, since it may well be the first element for which p is true. This is why moving the upper bound to mid is as aggressive as we can do without introducing bugs.&lt;/li&gt;
+&lt;li&gt;lo = mid+1
+If p(mid) is false, we can discard the first half of the search space, but this time including mid. p(mid) is false so we don’t need it in our search space. This effectively means we can move the lower bound to mid+1.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If we wanted to find the last x for which p(x) is false:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;binary_search(lo, hi, p):
+   while lo &amp;lt; hi:
+      mid = lo + (hi-lo+1)/2    // note: rounds up instead of down
+      if p(mid) == true:
+         hi = mid-1
+      else:
+         lo = mid
+          
+   if p(lo) == true:
+      complain                // p(x) is true for all x in S!
+      
+   return lo         // lo is the greatest x for which p(x) is false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Explanation:
+If we use &lt;code&gt;mid = lo + (hi-lo)/2&lt;/code&gt;, which rounds down, consider what happens when running this code on some search space for which the predicate gives:&lt;/p&gt;
+
+&lt;p&gt;| no | yes |&lt;/p&gt;
+
+&lt;p&gt;The code will get stuck in a loop. It will always select the first element as mid, but then will not move the lower bound because it wants to keep the no in its search space. So &lt;code&gt;mid&lt;/code&gt; needs to round up instead of down.&lt;/p&gt;
+
+&lt;p&gt;Note:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Why using mid = lo + (hi-lo)/2 instead of the usual mid = (lo+hi)/2?&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;To avoid another potential rounding bug: in the first case, we want the division to always round down, towards the lower bound. But division truncates, so when lo+hi would be negative, it would start rounding towards the higher bound. Coding the calculation this way ensures that the number divided is always positive and hence always rounds as we want it to.&lt;/li&gt;
+&lt;li&gt;To avoid integer overflow.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Just remember to always test the code on a two-element set where the predicate is false for the first element and true for the second.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;example-fairworkload-http-community-topcoder-com-stat-c-problem-statement-pm-1901-rd-4650&#34;&gt;Example: &lt;a href=&#34;http://community.topcoder.com/stat?c=problem_statement&amp;amp;pm=1901&amp;amp;rd=4650&#34;&gt;&lt;em&gt;FairWorkload&lt;/em&gt;&lt;/a&gt;&lt;/h1&gt;
+
+&lt;p&gt;In the problem, a number of workers need to examine a number of filing cabinets. The cabinets are not all of the same size and we are told for each cabinet how many folders it contains. We are asked to find an assignment such that each worker gets a sequential series of cabinets to go through and that it minimizes the maximum amount of folders that a worker would have to look through.&lt;/p&gt;
+
+&lt;p&gt;Solution:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Imagine that we have an unlimited number of workers. For some number &lt;em&gt;MAX&lt;/em&gt;, we can calculate the minimum number of workers needed so that each worker has to examine no more than &lt;em&gt;MAX&lt;/em&gt; folders (if this is possible) by greedy algorithm:
+We assign first worker to the cabinet 1. Since the cabinets must be assigned in sequential order (a worker cannot examine cabinets 1 and 3 without examining 2 as well), it’s always optimal to assign him to the second cabinet as well, if this does not take him over the limit we introduced (&lt;em&gt;MAX&lt;/em&gt;). If it would take him over the limit, we conclude that his work is done and assign a new worker to the second cabinet. We proceed in a similar manner until all the cabinets have been assigned and assert that we’ve used the minimum number of workers possible, with the artificial limit (&lt;em&gt;MAX&lt;/em&gt;) we introduced. Note here that the number of workers is inversely proportional to MAX: the higher we set our limit, the fewer workers we will need.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;What we want is the smallest &lt;em&gt;MAX&lt;/em&gt; such that the number of workers required is less than or equal to the number of workers available. So the predicate is:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Can the workload be spread so that each worker has to examine no more than x folders, with the limited number of workers available?&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The code:&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;int getMostWork( vector  folders, int workers ) {
+   int n = folders.size();
+   int lo = *max_element( folders.begin(), folders.end() );
+   int hi = accumulate( folders.begin(), folders.end(), 0 );
+
+   while ( lo &amp;lt; hi ) {
+      int x = lo + (hi-lo)/2;
+
+      int required = 1, current_load = 0;
+      for ( int i=0; i&amp;lt;n; ++i ) {
+         if ( current_load + folders[i] &amp;lt;= x ) {
+            // the current worker can handle it
+            current_load += folders[i];
+         }
+         else {
+            // assign next worker
+            ++required;
+            current_load = folders[i];               
+         }
+      }
+
+      if ( required &amp;lt;= workers )
+         hi = x;
+      else
+         lo = x+1;
+   }
+
+   return lo;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To verify that the solution doesn’t lock up, we can use a small no/yes example with folders={1,1} and workers=1.&lt;/p&gt;
+
+&lt;p&gt;The overall complexity of the solution is O(n log SIZE), where SIZE is the size of the search space. This is very fast.&lt;/p&gt;
+
+&lt;p&gt;In this example, we used a greedy algorithm to evaluate the predicate. In other problems, evaluating the predicate can come down to anything from a simple math expression to finding a maximum cardinality matching in a bipartite graph.&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Design a predicate which can be efficiently evaluated and so that binary search can be applied&lt;/li&gt;
+&lt;li&gt;Decide on what you’re looking for and code so that the search space always contains that (if it exists)&lt;/li&gt;
+&lt;li&gt;If the search space consists only of integers, test your algorithm on a two-element set to be sure it doesn’t lock up&lt;/li&gt;
+&lt;li&gt;Verify that the lower and upper bounds are not overly constrained: it’s usually better to relax them as long as it doesn’t break the predicate. An all-around template looks like this according to my previous &lt;a href=&#34;https:nianze.tk/2016/08/binary-search&#34;&gt;post&lt;/a&gt; on binary search:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class Solution {
+    /**
+     * @return first occurrence position of the target
+     */
+    int findPosition(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }   
+        int start = 0, end = nums.length - 1;
+        while (start + 1 &amp;lt; end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                end = mid; // for case of &amp;quot;return first position&amp;quot;
+                //start = mid; for case of &amp;quot;return last position&amp;quot;
+                //return mid; for case of &amp;quot;return any position&amp;quot;
+            } else if (nums[mid] &amp;lt; target) {
+                start = mid;
+            } else if (nums[mid] &amp;gt; target) {
+                end = mid;
+            }
+        }   
+        // exchange the position of two [if statement] if want to return last postion
+        if (nums[start] == target) {
+            return start;
+        }
+        if (nums[end] == target) {
+            return end;
+        }
+        // target strictly between {A[start-1], A[start]}
+        // or strictly between {A[start], A[end]}
+        // or strictly between {A[end, A[end+1]}
+        return -1;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
     <item>
@@ -26,7 +259,151 @@
       <pubDate>Sat, 26 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/11/alien-dictionary/</guid>
-      <description>&lt;p&gt;Build a graph to solve alien dictionary problem via DFS/BFS.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Build a graph to solve alien dictionary problem via DFS/BFS.
+
+&lt;!-- toc --&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;alien-dictionary&#34;&gt;Alien Dictionary&lt;/h1&gt;
+
+&lt;p&gt;There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of words from the dictionary, where &lt;strong&gt;words are sorted lexicographically by the rules of this new language&lt;/strong&gt;. Derive the order of letters in this language.&lt;/p&gt;
+
+&lt;p&gt;For example,&lt;/p&gt;
+
+&lt;p&gt;Given the following words in dictionary,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[
+  &amp;quot;wrt&amp;quot;,
+  &amp;quot;wrf&amp;quot;,
+  &amp;quot;er&amp;quot;,
+  &amp;quot;ett&amp;quot;,
+  &amp;quot;rftt&amp;quot;
+]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The correct order is: &amp;ldquo;wertf&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Note:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;You may assume all letters are in lowercase.&lt;/li&gt;
+&lt;li&gt;If the order is invalid, return an empty string ([&amp;ldquo;abcd&amp;rdquo;,&amp;ldquo;ab&amp;rdquo;] is invalid).&lt;/li&gt;
+&lt;li&gt;There may be multiple valid order of letters, return any one of them is fine.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&#34;method-1-dfs&#34;&gt;Method 1: DFS&lt;/h1&gt;
+
+&lt;p&gt;Build the graph (post-adjacency list and visited list), then use &lt;code&gt;DFS&lt;/code&gt; to build the correct order, while checking the loop at the same time.&lt;/p&gt;
+
+&lt;p&gt;Note:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;visited[]: -1(not exist), 0(no pre-node), 1(visiting), 2(visited)&lt;/li&gt;
+&lt;li&gt;The order of adding char into stringbuilder is reversed: add post nodes to sb firstly in order to avoid missing pre-nodes for current nodes later. e.g.: for correct order &amp;ldquo;abc&amp;rdquo;, if meet &amp;lsquo;b&amp;rsquo; firstly, build the sb as &amp;ldquo;cb&amp;rdquo;, and then meet &amp;lsquo;a&amp;rsquo;, build it as &amp;ldquo;cba&amp;rdquo;; otherwise, when meet &amp;lsquo;b&amp;rsquo;, build sb as &amp;ldquo;bc&amp;rdquo;, and then meet &amp;lsquo;a&amp;rsquo;, resulting in &amp;ldquo;bca&amp;rdquo;, which is incorrect.)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    private static int N = 26;
+    public String alienOrder(String[] words) {
+        boolean[][] adj = new boolean[N][N];
+        int[] visited = new int[N];
+        if (!buildGraph(words, adj, visited)) return &amp;quot;&amp;quot;; // &amp;quot;abcd&amp;quot; -&amp;gt; &amp;quot;ab&amp;quot;
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i &amp;lt; N; i++) {
+            if (visited[i] == 0) {
+                if (!dfs(adj, visited, sb, i)) return &amp;quot;&amp;quot;;
+            }
+        }
+        return sb.reverse().toString();
+    }
+    private boolean dfs(boolean[][] adj, int[] visited, StringBuilder sb, int i) {
+        visited[i] = 1;  // visiting
+        for (int j = 0; j &amp;lt; N; j++) {
+            if (adj[i][j]) { // connected post nodes
+                if (visited[j] == 1) return false;  // loop case
+                if (visited[j] == 0) {
+                    if (!dfs(adj, visited, sb, j)) return false;
+                }
+            }
+        }
+        visited[i] = 2; // visited
+        sb.append((char)(&#39;a&#39; + i));
+        return true;
+    }        
+    private boolean buildGraph(String[] words, boolean[][] adj, int[] visited) {
+        Arrays.fill(visited, -1); // init to not existed
+        for (int i = 0; i &amp;lt; words.length; i++) {
+            for (char c : words[i].toCharArray()) visited[c - &#39;a&#39;] = 0;
+            if (i &amp;gt; 0) {
+                String w1 = words[i-1], w2 = words[i];
+                int len = Math.min(w1.length(), w2.length()), j = 0;
+                for (; j &amp;lt; len; j++) {
+                    char c1 = w1.charAt(j), c2 = w2.charAt(j);
+                    if (c1 != c2) {
+                        adj[c1 - &#39;a&#39;][c2 - &#39;a&#39;] = true;
+                        break;
+                    }
+                }
+                if (j == len &amp;amp;&amp;amp; w1.length() &amp;gt; w2.length()) return false; // &amp;quot;abcd&amp;quot; -&amp;gt; &amp;quot;ab&amp;quot;
+            }
+        }
+        return true;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;method-2-bfs&#34;&gt;Method 2: BFS&lt;/h1&gt;
+
+&lt;p&gt;Build the graph(post-adjacency list and visited list), then use Karn&amp;rsquo;s algorithm to do topological sort (essentially BFS).&lt;/p&gt;
+
+&lt;p&gt;Note:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;visited[]: -1(not exist), 0(no pre-node), 1,2,3&amp;hellip;(pre-nodes number)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public String alienOrder(String[] words) {
+        List&amp;lt;Set&amp;lt;Integer&amp;gt;&amp;gt; adj = new ArrayList&amp;lt;&amp;gt;();
+        for (int i = 0; i &amp;lt; 26; i++) adj.add(new HashSet&amp;lt;Integer&amp;gt;());
+        int[] degree = new int[26];
+        Arrays.fill(degree, -1);
+        // init the adj and degree list
+        for (int i = 0; i &amp;lt; words.length; i++) {
+            for (char c : words[i].toCharArray()) {
+                if (degree[c-&#39;a&#39;] &amp;lt; 0) degree[c-&#39;a&#39;] = 0;
+            }
+            if (i &amp;gt; 0) {
+                String w1 = words[i-1], w2 = words[i];
+                int len = Math.min(w1.length(), w2.length());
+                for (int j = 0; j &amp;lt; len; j++) {
+                    int c1 = w1.charAt(j) - &#39;a&#39;, c2 = w2.charAt(j) - &#39;a&#39;;
+                    if (c1 != c2) {
+                        if (!adj.get(c1).contains(c2)) {
+                            adj.get(c1).add(c2);
+                            degree[c2]++;
+                        }
+                        break;
+                    }
+                    if (j == len-1 &amp;amp;&amp;amp; w1.length() &amp;gt; w2.length()) return &amp;quot;&amp;quot;; // &amp;quot;abcd&amp;quot; -&amp;gt; &amp;quot;ab&amp;quot;   
+                }
+            }
+        }
+        // topological sort
+        Deque&amp;lt;Integer&amp;gt; q = new ArrayDeque&amp;lt;&amp;gt;();
+        for (int i = 0; i &amp;lt; degree.length; i++) {
+            if (degree[i] == 0) q.offer(i);
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!q.isEmpty()) {
+            int i = q.poll();
+            sb.append((char) (&#39;a&#39; + i));
+            for (int j : adj.get(i)) {
+                degree[j]--;
+                if (degree[j] == 0) q.offer(j);
+            }
+        }
+        for (int d : degree) if (d &amp;gt; 0) return &amp;quot;&amp;quot;; // has loop
+        return sb.toString();
+    }
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
     <item>
@@ -35,7 +412,157 @@
       <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/11/task-schedule/</guid>
-      <description>&lt;p&gt;Use greedy algorigthm to solve task scheduleing problem.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Use greedy algorigthm to solve task scheduleing problem.
+&lt;/p&gt;
+
+&lt;h3 id=&#34;starter&#34;&gt;Starter&lt;/h3&gt;
+
+&lt;p&gt;Given tasks with cooldown time between the same task. Calculate the minimum total time to finish all the tasks. The order of tasks cannot be changed.
+e.g.:
+    Given tasks：[12323], and cooldown time is 3
+    Return: 7, since length of [1 2 3 _ _ 2 3] is 7&lt;/p&gt;
+
+&lt;p&gt;Method: Use hashmap to store the most recent same tasks&amp;rsquo;s time&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public static int min_time(int[] tasks, int interval){
+    if(tasks == null || tasks.length == 0){
+        return 0;
+    }
+    Map&amp;lt;Integer, Integer&amp;gt; map = new HashMap&amp;lt;Integer, Integer&amp;gt;();
+    int time = 0;
+    for(int task : tasks){
+        Integer task_last_time = map.get(task);
+        if(task_last_time != null &amp;amp;&amp;amp; task_last_time + interval + 1 &amp;gt; time){
+            time = task_last_time + interval + 1;
+        }
+        map.put(task, time);
+        time++;
+    }
+    return time;
+}
+    // Improve: space complexity a little to no more than  O(n)
+    // use LinkedHashMap to remove the elder task that exceeds the cooldown time
+    Map&amp;lt;K,V&amp;gt; map = new LinkedHashMap&amp;lt;K,V&amp;gt;(int cooldown, 1.0f) {  // load factor 1.0
+        @Override
+        protected boolean removeEldestEntry(Map.Entry&amp;lt;K,V&amp;gt; eldest) {
+            return size() &amp;gt; cooldown;
+        }
+    };
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;follow-up-what-if-the-order-is-ok-to-change&#34;&gt;Follow up: What if the order is OK to change?&lt;/h3&gt;
+
+&lt;p&gt;Method: Greedy algorithm - always look for the task with highest remaining time at each time.&lt;/p&gt;
+
+&lt;p&gt;There are two version of implementation:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Use priorityQueue to sort the tasks with highest remaining times, time: O(nlog(n)), where n is the total number of tasks, space: O(n)&lt;/li&gt;
+&lt;li&gt;Use two array to store the remaining times and available time for each task, and each time scan these two arraies to find the appropriate task time: O(klog(n)), where k is the number of task kinds, space: O(n)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Using method One：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public int schedule(int[] tasks, int cooldown) {
+        HashMap&amp;lt;Integer, Integer&amp;gt; freqMap = new HashMap&amp;lt;&amp;gt;();
+        for (int t : tasks) {
+            freqMap.put(t, freqMap.getOrDefault(t, 0) + 1);
+        }
+        Queue&amp;lt;Map.Entry&amp;lt;Integer, Integer&amp;gt;&amp;gt; maxHeap =
+            new PriorityQueue&amp;lt;&amp;gt;(freqMap.size(), new Comparator&amp;lt;Map.Entry&amp;lt;Integer, Integer&amp;gt;&amp;gt;() {
+                    @Override
+                    public int compare(Map.Entry&amp;lt;Integer, Integer&amp;gt; e1, Map.Entry&amp;lt;Integer, Integer&amp;gt; e2) {
+                        return e2.getValue() - e1.getValue();
+                    }
+                });
+        Deque&amp;lt;Map.Entry&amp;lt;Integer, Integer&amp;gt;&amp;gt; waitQueue = new ArrayDeque&amp;lt;&amp;gt;();
+        HashMap&amp;lt;Integer, Integer&amp;gt; timeMap = new HashMap&amp;lt;&amp;gt;();
+        int time = 0;
+        maxHeap.addAll(freqMap.entrySet());        
+        while (!maxHeap.isEmpty() || !waitQueue.isEmpty()) {
+            if (!maxHeap.isEmpty()) {
+                Map.Entry&amp;lt;Integer, Integer&amp;gt; cur = maxHeap.poll();
+                time++;
+                timeMap.put(cur.getKey(), time);
+                cur.setValue(cur.getValue() - 1);
+                waitQueue.offer(cur);
+                if (waitQueue.size() &amp;lt; cooldown + 1) continue;
+                Map.Entry&amp;lt;Integer, Integer&amp;gt; front = waitQueue.poll();
+                if (front.getValue() &amp;gt; 0) maxHeap.offer(front);
+            } else {
+                Map.Entry&amp;lt;Integer, Integer&amp;gt; front = waitQueue.poll();
+                if (front.getValue() &amp;gt; 0) {
+                    maxHeap.offer(front);
+                    time = timeMap.get(front.getKey()) + cooldown;
+                }
+            }
+        }
+        return time;
+    }        
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Similar question: LC358 Rearrange String k Distance Apart&lt;/p&gt;
+
+&lt;p&gt;Method one:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public String rearrangeString(String str, int k) {
+        HashMap&amp;lt;Character, Integer&amp;gt; map = new HashMap&amp;lt;&amp;gt;();
+        for (char c : str.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        Queue&amp;lt;Map.Entry&amp;lt;Character, Integer&amp;gt;&amp;gt; maxHeap =
+            new PriorityQueue&amp;lt;&amp;gt;(map.size(), new Comparator&amp;lt;Map.Entry&amp;lt;Character, Integer&amp;gt;&amp;gt;() {
+                    @Override
+                    public int compare(Map.Entry&amp;lt;Character, Integer&amp;gt; e1, Map.Entry&amp;lt;Character, Integer&amp;gt; e2) {
+                        return e2.getValue() - e1.getValue();
+                    }
+                });
+        Deque&amp;lt;Map.Entry&amp;lt;Character, Integer&amp;gt;&amp;gt; waitQueue = new ArrayDeque&amp;lt;&amp;gt;();
+        maxHeap.addAll(map.entrySet());
+        StringBuilder sb = new StringBuilder();
+        while (!maxHeap.isEmpty()) {
+            Map.Entry&amp;lt;Character, Integer&amp;gt; cur = maxHeap.poll();
+            sb.append(cur.getKey());
+            cur.setValue(cur.getValue()-1);
+            waitQueue.offer(cur);
+            if (waitQueue.size() &amp;lt; k) continue;
+            Map.Entry&amp;lt;Character, Integer&amp;gt; front = waitQueue.poll();
+            if (front.getValue() &amp;gt; 0) maxHeap.offer(front);
+        }
+        return sb.length() == str.length() ? sb.toString() : &amp;quot;&amp;quot;;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Method two:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    public String rearrangeString(String str, int k) {
+        int[] count = new int[26];
+        int[] valid = new int[26];
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i &amp;lt; str.length(); i++) {
+            count[str.charAt(i) - &#39;a&#39;]++;
+        }
+        for (int i = 0; i &amp;lt; str.length(); i++) {
+            int c = findNext(count, valid, i);
+            if (c == -1) return &amp;quot;&amp;quot;;
+            sb.append((char)(&#39;a&#39;+c));
+            count[c] -= 1;
+            valid[c] = i + k;
+        }
+        return sb.toString();
+    }
+    private int findNext(int[] count, int[] valid, int index) {
+        int pos = -1, max = -1;
+        for (int i = 0; i &amp;lt; 26; i++) {
+            if (count[i] &amp;gt; 0 &amp;amp;&amp;amp; count[i] &amp;gt; max &amp;amp;&amp;amp; index &amp;gt;= valid[i]) {
+                pos = i;
+                max = count[i];
+            }
+        }
+        return pos;
+    }
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
     <item>
@@ -44,7 +571,99 @@
       <pubDate>Fri, 11 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/11/linkedlist-reversing/</guid>
-      <description>&lt;p&gt;Summary on LinkedList reversing.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Summary on LinkedList reversing.
+
+&lt;!-- toc --&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;starter&#34;&gt;Starter&lt;/h1&gt;
+
+&lt;h2 id=&#34;special-case-lc206-reverse-all-the-nodes-in-one-pass&#34;&gt;Special case: LC206 reverse all the nodes in one pass:&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public ListNode reverseList(ListNode head) {
+    ListNode newHead = null;
+    while (head != null) {
+        ListNode next = head.next;
+        head.next = newHead;
+        newHead = head;
+        head = next;
+    }
+    return newHead;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;general-case-lc92-reverse-nodes-from-position-m-to-n&#34;&gt;General case: LC92 reverse nodes from position m to n&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public ListNode reverseBetween(ListNode head, int m, int n) {
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    ListNode pre = dummy, end, cur;
+    for (int i = 0; i &amp;lt; m-1; i++) { pre = pre.next; }
+	end = pre.next;
+    cur = end.next;
+    for (int i = 0; i &amp;lt; n - m; i++) {
+        end.next = cur.next;
+        cur.next = pre.next;
+        pre.next = cur;
+        cur = end.next;
+    }
+    return dummy.next;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;main-dish-lc25-reverse-nodes-in-k-groups&#34;&gt;Main dish: LC25 Reverse Nodes in k-Groups&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;/**
+ * Reverse a link list between pre and next exclusively
+ * e.g.: 
+ * 0-&amp;gt;1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;5-&amp;gt;6
+ * |           |   
+ * pre        next
+ *
+ * after call pre = reverse(pre, next):
+ * 0-&amp;gt;3-&amp;gt;2-&amp;gt;1-&amp;gt;4-&amp;gt;5-&amp;gt;6
+ *          |  |
+ *          pre next
+ * @param pre 
+ * @param next
+ * @return the precedence of parameter next
+ */
+private static ListNode reverse(ListNode pre, ListNode next) {
+    ListNode end = pre.next, cur = end.next;
+    while (cur != next) {
+        end.next = cur.next;
+        cur.next = pre.next;
+        pre.next = cur;
+        cur = end.next;
+    }
+    return end;
+}
+public ListNode reverseKGroup(ListNode head, int k) {
+    if (head == null || k == 1) return head;
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
+    ListNode pre = dummy;
+    int i = 0;
+    while (head != null) {
+        head = head.next;            
+        if (++i % k == 0) pre = reverse(pre, head);
+    }
+    return dummy.next;
+}
+/**
+ * Note: the while loop is the same as following process, which is easier to understand:
+ * while(head != null){
+ *    i++;
+ *    if(i % k ==0){
+ *        pre = reverse(pre, head.next);
+ *        head = pre.next;
+ *    }else {
+ *        head = head.next;
+ *    }
+ * }
+ */
+
+}
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
     <item>
@@ -53,7 +672,67 @@
       <pubDate>Tue, 08 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/11/substring-template/</guid>
-      <description>&lt;p&gt;Two pointer template to solve substring problem.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Two pointer template to solve substring problem.
+
+&lt;!-- toc --&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;lc76-minimum-window-substring&#34;&gt;LC76 Minimum Window Substring&lt;/h1&gt;
+
+&lt;h2 id=&#34;method-two-pointer-with-map&#34;&gt;Method: Two Pointer with map&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Scanning from left to right, keep the head and length of minimum window substring so far.&lt;/li&gt;
+&lt;li&gt;Use an &lt;code&gt;int[256]&lt;/code&gt; array or a &lt;code&gt;HashMap&lt;/code&gt; to store target charater counts.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public String minWindow(String s, String t) {
+    int[] map = new int[256];
+    for (char c : t.toCharArray()) { map[c]++; }
+    int start = 0, end = 0, len = Integer.MAX_VALUE, head = 0, count = t.length();
+    while (end &amp;lt; s.length()) {
+        if (map[s.charAt(end++)]-- &amp;gt; 0) count--;
+        while (count == 0) {
+            if (end - start &amp;lt; len) len = end - (head = start);
+            if (map[s.charAt(start++)]++ == 0) count++;
+        }
+    }
+    return len == Integer.MAX_VALUE ? &amp;quot;&amp;quot; : s.substring(head, head + len);
+}    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;template-1&#34;&gt;Template&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/h1&gt;
+
+&lt;p&gt;For most substring problem, we are given a string and need to find a substring of it which satisfy some restrictions. A general way is to use a hashmap assisted with two pointers.&lt;/p&gt;
+
+&lt;p&gt;One thing needs to be mentioned is that when asked to find maximum substring, we should update maximum after the inner while loop to guarantee that the substring is valid. On the other hand, when asked to find minimum substring, we should update minimum inside the inner while loop.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;int findSubstring(string s){
+    int[] map = new int[256];
+    int counter; // check whether the substring is valid
+    int start = 0, end = 0; //two pointers, one point to tail and one head
+    int d; //the length of substring
+    for() { /* initialize the hash map here */ }
+    while(end &amp;lt; s.length()){
+        if(map[s.charAt(end++)]-- ?){  /* modify counter here */ }
+        while(/* counter condition */){              
+            /* update d here if finding minimum */
+            //increase start to make it invalid/valid again            
+            if(map[s[start++]]++ ?){ /*modify counter here*/ }
+        }  
+        /* update d here if finding maximum*/
+    }
+    return d;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;&lt;a href=&#34;https://discuss.leetcode.com/topic/30941/here-is-a-10-line-template-that-can-solve-most-substring-problems&#34;&gt;https://discuss.leetcode.com/topic/30941/here-is-a-10-line-template-that-can-solve-most-substring-problems&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
     </item>
     
     <item>
@@ -62,7 +741,111 @@
       <pubDate>Sun, 06 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/11/invalid-parentheses/</guid>
-      <description>&lt;p&gt;Several ways to remove invalid parentheses problem.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Several ways to remove invalid parentheses problem.
+
+&lt;!-- toc --&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;starter&#34;&gt;Starter&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Return only one possible result&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;method-two-pass-with-counter&#34;&gt;Method: Two pass with &lt;code&gt;counter&lt;/code&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Scanning from left to right, ending up removing extra &amp;lsquo;)&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;Scanning from right to left, ending up removing extra &amp;lsquo;(&amp;rsquo;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public String removeInvalidParantheses(String s) {
+    StringBuilder firstPass = new StringBuilder();
+    int counter = 0;
+    for (int i = 0; i &amp;lt; s.length(); i++) {
+        char c = s.charAt(i);
+        if (c == &#39;(&#39;) {
+            counter++;
+            firstPass.append(&#39;(&#39;);
+        } else if (c == &#39;)&#39; &amp;amp;&amp;amp; counter &amp;gt; 0) {
+            counter--;
+            firstPass.append(&#39;)&#39;);
+        } else if (c != &#39;)&#39; &amp;amp;&amp;amp; c != &#39;(&#39;) {
+            firstPass.append(c);
+        }
+    }
+    if (counter == 0) return firstPass.toString();
+    counter = 0;
+    StringBuilder sb = new StringBuilder();
+    for(int i = firstPass.length() - 1; i &amp;gt;= 0; i--) { 
+        char c = firstPass.charAt(i);
+        if (c == &#39;)&#39;) {
+            counter--;
+            sb.append(&#39;)&#39;);
+        } else if (c == &#39;(&#39; &amp;amp;&amp;amp; counter &amp;lt; 0) {
+            counter++;
+            sb.append(&#39;(&#39;);
+        } else if (c != &#39;)&#39; &amp;amp;&amp;amp; c != &#39;(&#39;) {
+            sb.append(c);
+        }
+    }
+    return sb.reverse().toString();
+}    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;main-dish-follow-up&#34;&gt;Main dish (follow up)&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Return all the possible results&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;method-1-two-pass-with-dfs-1&#34;&gt;Method 1: Two pass with &lt;a href=&#34;https://discuss.leetcode.com/topic/34875/easy-short-concise-and-fast-java-dfs-3-ms-solution&amp;gt;&#34;&gt;&lt;strong&gt;DFS&lt;/strong&gt;&lt;/a&gt;&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;same idea as starter question: using dfs searching for valid candidate without extra &amp;lsquo;)&amp;rsquo;, then reverse the string and search for the second pass to remove all the extra &amp;lsquo;(&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;for continuous &amp;lsquo;)&amp;rsquo;, say &amp;ldquo;())&amp;rdquo;, always remove the first &amp;lsquo;)&amp;rsquo; firstly, so &amp;ldquo;(&lt;code&gt;)&lt;/code&gt;)&amp;rdquo; -&amp;gt; &amp;ldquo;()&amp;rdquo;: for j:[prev_j ~ i], if (s[j] == par&lt;a href=&#34;https://discuss.leetcode.com/topic/34875/easy-short-concise-and-fast-java-dfs-3-ms-solution&amp;gt;&#34;&gt;1&lt;/a&gt; &amp;amp;&amp;amp; (j == prev_j || s[j-1] != par&lt;a href=&#34;https://discuss.leetcode.com/topic/34875/easy-short-concise-and-fast-java-dfs-3-ms-solution&amp;gt;&#34;&gt;1&lt;/a&gt;)), remove s.charAt(j)&lt;/li&gt;
+&lt;li&gt;each recursive call, store previous i to &lt;code&gt;prev_i&lt;/code&gt; to indicate that first half of string before i is valid, so no need to check again&lt;/li&gt;
+&lt;li&gt;each recursive call, store previous j to &lt;code&gt;prev_j&lt;/code&gt; in order to prevent duplicate answers. e.g.:&lt;br /&gt;
+if no prev_j stored, it&amp;rsquo;s hard to prevent the same result from two different ching branches:
+
+&lt;ul&gt;
+&lt;li&gt;&amp;rdquo;()a)a)&amp;rdquo; -&amp;gt; &amp;ldquo;(a)a)&amp;rdquo; -&amp;gt; &amp;ldquo;(aa)&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&amp;rdquo;()a)a)&amp;rdquo; -&amp;gt; &amp;ldquo;()aa)&amp;rdquo; -&amp;gt; &amp;ldquo;(aa)&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Time : every path generates one valid answer, if there&amp;rsquo;s k valid answer, the search  will have k leaves. Since each recursive call requires O(n) time from string atenatino. O(n*m) may be fair enough to describe the time complexity, where n is length of string and m is the total nodes (numver of all the rec calls) in the ch tree&lt;/li&gt;
+&lt;li&gt;Space: O(n*k) due to stringbuilder, k is the number of valid answer, n is the length of string&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public List&amp;lt;String&amp;gt; removeInvalidParentheses(String s) {
+    List&amp;lt;String&amp;gt; ans = new ArrayList&amp;lt;&amp;gt;();
+    remove(s, ans, 0, 0, new char[]{&#39;(&#39;, &#39;)&#39;});
+    return ans;
+}
+private void remove(String s, List&amp;lt;String&amp;gt; ans, int prev_i, int prev_j, char[] par) {
+    for (int count = 0, i = prev_i; i &amp;lt; s.length(); i++) {
+        if (s.charAt(i) == par[0]) count++;
+        if (s.charAt(i) == par[1]) count--;
+        if (count &amp;gt;= 0) continue;
+        for (int j = prev_j; j &amp;lt;= i; j++) { // count &amp;lt; 0, there&#39;s extra par[1] 
+            if (s.charAt(j) == par[1] &amp;amp;&amp;amp; (j == prev_j || s.charAt(j-1) != par[1])) {
+                remove(s.substring(0,j) + s.substring(j+1), ans, i, j, par);
+            }
+        }
+        return;
+    }
+    StringBuilder reversed = new StringBuilder();
+    for (int i = s.length() - 1; i &amp;gt;= 0; i--) { reversed.append(s.charAt(i)); }
+    if (par[0] == &#39;(&#39;) { remove(reversed.toString(), ans, 0, 0, new char[]{&#39;)&#39;, &#39;(&#39;}); }
+    else { ans.add(reversed.toString()); }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;method-2-bfs&#34;&gt;Method 2: BFS&lt;/h2&gt;
+
+&lt;p&gt;Naive way of thinking:&lt;/p&gt;
+
+&lt;p&gt;For a string with n length, each char have 2 states &amp;ldquo;keep/remove&amp;rdquo;, which is 2^n states, and each state requires checkValid, which runs in O(n). Together the BFS require O(n*2^n).&lt;/p&gt;
+
+&lt;p&gt;Ideally, it should be O(C(n,k) + n), where k is the number of chars needs removal. To avoid generating duplicate strings, refer to &lt;a href=&#34;https://discuss.leetcode.com/topic/28855/java-bfs-solution-16ms-avoid-generating-duplicate-strings&amp;gt;&#34;&gt;this post&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -71,7 +854,35 @@
       <pubDate>Wed, 02 Nov 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/11/char-to-string/</guid>
-      <description>&lt;p&gt;Convert Char to String.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Convert Char to String.
+&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Use &lt;code&gt;String.valueOf(char)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;Character.toString(char)&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Note: this method simply returns a call to &lt;code&gt;String.valueOf(char)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Use string concatenation &lt;code&gt;String s  = &amp;quot;&amp;quot; + &#39;c&#39;&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Note: this compiles down to
+&lt;code&gt;java
+String s = new StringBuilder().append(&amp;quot;&amp;quot;).append(&#39;c&#39;).toString();
+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;which is less efficient because &lt;code&gt;StringBuilder&lt;/code&gt; is backed by &lt;code&gt;char[]&lt;/code&gt; (over-allocated by StringBuilder() to 16) and this array will be copied to the resulting &lt;code&gt;String&lt;/code&gt;. On the other hand, &lt;code&gt;String.valueOf(char)&lt;/code&gt; wraps the &lt;code&gt;char&lt;/code&gt; in a single-element array and passes it to the package private constructor &lt;code&gt;String(char[], boolean)&lt;/code&gt;, which avoids the array copy.&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;&lt;a href=&#34;http://stackoverflow.com/questions/8172420/how-to-convert-a-char-to-a-string-in-java&#34;&gt;http://stackoverflow.com/questions/8172420/how-to-convert-a-char-to-a-string-in-java&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
     </item>
     
     <item>
@@ -80,7 +891,53 @@
       <pubDate>Sun, 30 Oct 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/10/dueque/</guid>
-      <description>&lt;p&gt;Deque vs. LinkedList vs. Stack&lt;/p&gt;</description>
+      <description>&lt;p&gt;Deque vs. LinkedList vs. Stack
+&lt;/p&gt;
+
+&lt;p&gt;Quote From javadoc:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;ArrayDeque is likely to be faster than Stack when used as a stack, and faster than LinkedList when used as a queue.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;use-arraydeque-or-linkedlist-as-queue-0&#34;&gt;Use ArrayDeque or LinkedList as queue&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:0&#34;&gt;&lt;a href=&#34;#fn:0&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/h2&gt;
+
+&lt;h3 id=&#34;cons-of-linked-list&#34;&gt;Cons of Linked List&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Linked structures are the worst structure to iterate with a cache miss on each element&lt;/li&gt;
+&lt;li&gt;Have to allocating a node for each item to insert, which essentially involves JVM/OS and expensive&lt;/li&gt;
+&lt;li&gt;For pop() operation, it mark internal nodes eligible for garbage collection and that&amp;rsquo;s more work behind the scene&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;pros-of-linked-list&#34;&gt;Pros of Linked List&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When &lt;strong&gt;removing the current element&lt;/strong&gt; during iteration, LinkedList has better performance&lt;/li&gt;
+&lt;li&gt;Worth to note: LinkedList supports null element&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;when-use-arraydeque-as-queue&#34;&gt;When use ArrayDeque as queue&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;if only need to add/remove of both ends, use ArrayDeque&lt;/li&gt;
+&lt;li&gt;e.g.: when using BFS, consider ArrayDeque first.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;use-arraydeque-or-stack-as-stack-1&#34;&gt;Use ArrayDeque or Stack as Stack&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;Deque&lt;/code&gt; exposes a set of operations which is all about being able to fetch/add/remove items from the start or end of a collection, iterate etc. There&amp;rsquo;s deliverately no way to access an element by position, which &lt;code&gt;Stack&lt;/code&gt; exposes because it&amp;rsquo;s a subclass of &lt;code&gt;Vector&lt;/code&gt;, making the &lt;code&gt;Stack&lt;/code&gt; &lt;strong&gt;inconsistent&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:0&#34;&gt;&lt;a href=&#34;http://stackoverflow.com/questions/6163166/why-is-arraydeque-better-than-linkedlist&#34;&gt;http://stackoverflow.com/questions/6163166/why-is-arraydeque-better-than-linkedlist&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:0&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:1&#34;&gt;&lt;a href=&#34;http://stackoverflow.com/questions/12524826/why-should-i-use-deque-over-stack&#34;&gt;http://stackoverflow.com/questions/12524826/why-should-i-use-deque-over-stack&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:1&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
     </item>
     
     <item>
@@ -89,7 +946,124 @@
       <pubDate>Sat, 29 Oct 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/10/valid-tree/</guid>
-      <description>&lt;p&gt;DFS, BFS and Union-find comparison.&lt;/p&gt;</description>
+      <description>&lt;p&gt;DFS, BFS and Union-find comparison.
+&lt;/p&gt;
+
+&lt;h3 id=&#34;judge-if-the-given-graph-is-a-tree&#34;&gt;Judge if the given graph is a tree&lt;/h3&gt;
+
+&lt;p&gt;Remember to check 2 things:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;whether the graph has cycle&lt;/li&gt;
+&lt;li&gt;whether number connected component(s) is more than 1&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&#34;dfs&#34;&gt;DFS:&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    // time: O(max(E,n)) space: O(n) for adjacency list
+    public boolean validTree(int n, int[][] edges) {
+        int[] visited = new int[n];
+        List&amp;lt;List&amp;lt;Integer&amp;gt;&amp;gt; adjList = new ArrayList&amp;lt;&amp;gt;();
+        for (int i = 0; i &amp;lt; n; i++) {
+            adjList.add(new ArrayList&amp;lt;Integer&amp;gt;());
+        }
+        for (int[] e : edges) {
+            adjList.get(e[0]).add(e[1]);
+            adjList.get(e[1]).add(e[0]);
+        }
+        if (hasCycle(-1, 0, visited, edges)) { return false; } // cycle case
+        for (int i : visited) { if (i == 0) { return false; } } // not single connected components
+        return true;
+    }
+    
+    private boolean hasCycle(int prev, int cur, int[] visited, List&amp;lt;List&amp;lt;Integer&amp;gt;&amp;gt; adjList) {
+        visited[cur] = 1; // 1 means current vertex is being visited
+        for (Integer succ : adjList.get(cur)) {
+            if (succ == prev) continue; // exclude curr&#39;s prev node
+            if (visited[succ] == 1) { return true; } // has cycle
+            if (visited[succ] == 0) {
+                if (hasCycle(cur, succ, visited, adjList)) { return true; }
+            } 
+        }
+        visited[cur] = 2; // complete visiting
+        return false;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;bfs&#34;&gt;BFS:&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    // O(max(E,n)), space: O(n) for adjacency list
+    public boolean validTree(int n, int[][] edges) {
+        int[] visited = new int[n];
+        List&amp;lt;List&amp;lt;Integer&amp;gt;&amp;gt; adjList = new ArrayList&amp;lt;&amp;gt;();
+        for (int i = 0; i &amp;lt; n; i++) {
+            adjList.add(new ArrayList&amp;lt;Integer&amp;gt;());
+        }
+        for (int[] e : edges) {
+            adjList.get(e[0]).add(e[1]);
+            adjList.get(e[1]).add(e[0]);
+        }
+        Deque&amp;lt;Integer&amp;gt; queue = new ArrayDeque&amp;lt;&amp;gt;();
+        queue.addLast(0);
+        visited[0] = 1; // mark curr node as being visited
+        while (!queue.isEmpty()) {
+            int cur = queue.removeFirst();
+            for (Integer succ : adjList.get(cur)) {
+                if (visited[succ] == 1) { return false; } // has cycle
+                if (visited[succ] == 0) {
+                    visited[succ] = 1;
+                    queue.addLast(succ);
+                }
+            }
+            visited[cur] = 2; // compete visiting
+        }
+        for (int i : visited) { if (i == 0) { return false; } } // not single connected components
+        return true;        
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;union-find&#34;&gt;Union-find:&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;    // time: O(E), space: O(n) for union-find set
+    class UnionFind {
+        int[] parent;
+        int[] rank;
+        int count;
+
+        UionFind(int n) {
+            parent = new int[n];
+            rank = new int[n];
+            count = n;
+            for (int i = 0; i &amp;lt; n; i++) { parent[i] = i; } // initially each node&#39;s paren is itself
+        }
+        int find(int x) {
+            if (x != parent[x]) {
+                x = find(parent[x]); // path compression
+            }
+            return parent[x];
+        }
+        boolean union(int x, int y) {
+            int X = find(x), Y = find(y);
+            if (X == Y) { return false; }
+            if (rank[Y] &amp;lt; rank[X]) { parent[Y] = X; } // Y is lower
+            else if (rank[X] &amp;lt; rank[Y]) { parent[X] = Y;} // X is lower
+            else {  // rank of X, Y is the same
+                parent[Y] = X;
+                rank[X]++;
+            }
+            count--;
+            return true;
+        }
+    }    
+    public boolean validTree(int n, int[][] edges) {
+        UnionFind uf = new UnionFind(n);
+        for (int[] edge : edges) {
+            int x = edge[0], y = edge[1];
+            if (!uf.union(x, y)) { return false; } // has cycle
+        }
+        return uf.count == 1;
+    }
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
     <item>
@@ -98,7 +1072,89 @@
       <pubDate>Fri, 05 Aug 2016 00:00:00 +0000</pubDate>
       
       <guid>http://nianze.tk/2016/08/binary-search/</guid>
-      <description>&lt;p&gt;What should be noted when doing binary search.&lt;/p&gt;</description>
+      <description>&lt;p&gt;What should be noted when doing binary search.
+&lt;/p&gt;
+
+&lt;h3 id=&#34;bs-search-search-for-first-or-last-target-s-position&#34;&gt;BS search - search for first or last target&amp;rsquo;s position&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Key points&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;start + 1 &amp;lt; end&lt;/code&gt; -&amp;gt; avoid never-end loop&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;start + (end - start) / 2&lt;/code&gt; -&amp;gt; avoid stack overflow&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;nums[mid]&lt;/code&gt; judgement depends on the purpose:
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;start = mid;&lt;/code&gt; for case of &amp;ldquo;return last position&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;end = mid;&lt;/code&gt;  for case of &amp;ldquo;return first position&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;return mid;&lt;/code&gt; for case of &amp;ldquo;return any position&amp;rdquo;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;After the while loop, start + 1 = end, there may are 5 possible scenarios:
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;target &amp;lt; nums[start]&lt;/code&gt;, now start == 0&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;target == nums[start]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;nums[start] &amp;lt; target &amp;lt; nums[end]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;`target == A[end]&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;nums[end] &amp;lt; target&lt;/code&gt;, now end = nums.length - 1;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;binary-search-template&#34;&gt;Binary search template:&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class Solution {
+    /**
+     * @return first occurrence position of the target
+     */
+    int findPosition(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }   
+        int start = 0, end = nums.length - 1;
+        while (start + 1 &amp;lt; end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                end = mid; // for case of &amp;quot;return first position&amp;quot;
+                //start = mid; for case of &amp;quot;return last position&amp;quot;
+                //return mid; for case of &amp;quot;return any position&amp;quot;
+            } else if (nums[mid] &amp;lt; target) {
+                start = mid;
+            } else if (nums[mid] &amp;gt; target) {
+                end = mid;
+            }
+        }   
+        // exchange the position of two [if statement] if want to return last postion
+        if (nums[start] == target) {
+            return start;
+        }
+        if (nums[end] == target) {
+            return end;
+        }
+        // target strictly between {A[start-1], A[start]}
+        // or strictly between {A[start], A[end]}
+        // or strictly between {A[end, A[end+1]}
+        return -1;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Note 1:&lt;/strong&gt; It&amp;rsquo;s a good habit to always to include trivial test case at first line:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;if (nums == null || nums.length == 0) { 
+	return -1; 
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Note 2:&lt;/strong&gt; Remember to consider all the corner case at the end:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;if (target &amp;lt;= start) { return ??; }
+if (target &amp;lt;= end) { return ??; }
+return ???; // corner case!
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
   </channel>
