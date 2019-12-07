@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.
-
-">
+<meta name="description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.">
 
 
-<meta property="og:description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.
-
-">
+<meta property="og:description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-14 Declare Functions Noexcept if They Won&#39;t Emit Exception">
 <meta name="twitter:title" content="[EMCpp]Item-14 Declare Functions Noexcept if They Won&#39;t Emit Exception">
 <meta property="og:url" content="http://nianze.tk/2018/07/declare-functions-noexcept-if-they-wont-emit-exception/">
 <meta property="twitter:url" content="http://nianze.tk/2018/07/declare-functions-noexcept-if-they-wont-emit-exception/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.
-
-">
-<meta name="twitter:description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.
-
-">
+<meta property="og:description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.">
+<meta name="twitter:description" content="Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, noexcept is particularly valuable.">
 <meta property="og:locale" content="en-us">
 
   
@@ -67,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-14 Declare Functions Noexcept if They Won&#39;t Emit Exception</title>
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -129,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -141,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -332,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, <code>noexcept</code> is particularly valuable.
+              <p>Most functions are exception-neutral, but for some, such as move operations, swap, memory deallocation functions, and destructors, <code>noexcept</code> is particularly valuable.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -399,16 +394,14 @@ Suffering is optional.</p>
 <li><a href="#wide-contracts-vs-narrow-contracts">Wide Contracts vs Narrow Contracts</a></li>
 <li><a href="#backward-compatibility">Backward compatibility</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <h1 id="more-optimizable">More optimizable</h1>
 
 <p>For functions that won&rsquo;t produce exceptions, we have C++98 style as well as C++11 style:</p>
-
-<pre><code class="language-cpp">int f(int x) throw();   // C++98 style
-int f(int x) noexcept;  // C++11 style
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">f</span>(<span style="color:#66d9ef">int</span> x) <span style="color:#66d9ef">throw</span>();   <span style="color:#75715e">// C++98 style
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">f</span>(<span style="color:#66d9ef">int</span> x) <span style="color:#66d9ef">noexcept</span>;  <span style="color:#75715e">// C++11 style
+</span></code></pre></div>
 <p>The difference:</p>
 
 <ol>
@@ -419,19 +412,17 @@ int f(int x) noexcept;  // C++11 style
 <p>The difference in <em>possibly</em> unwinding leads to large impact on code generation: optimizers need not keep the runtime stack in an unwindable state, and need not ensure that objects in a <code>noexcept</code> function are destroyed in the inverse order of construction, both of which optimization flexibility is lacked for <code>throw()</code>. In fact, <code>throw</code> has the same level of optimizability as functions with no exception specification.</p>
 
 <p>For some functions, <code>noexcept</code> is even more desired. For example, calls to copy operations in C++98 will be replaced with calls to move operations in C++11, only if the move operation is declared <code>noexcept</code>. Similarly, <code>swap</code>s in the Standard Library are <code>noexcpet</code> sometimes dependends on whether uesr-defined swaps are <code>noexcept</code>. Following is the declarations for the Standard Library&rsquo;s <code>swap</code>s for arrays and <code>std::pair</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>, size_t N<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> swap(T (<span style="color:#f92672">&amp;</span>a)[N], T (<span style="color:#f92672">&amp;</span>b)[N]) <span style="color:#66d9ef">noexcept</span>(<span style="color:#66d9ef">noexcept</span>(swap(<span style="color:#f92672">*</span>a, <span style="color:#f92672">*</span>b)));
 
-<pre><code class="language-cpp">template&lt;class T, size_t N&gt;
-void swap(T (&amp;a)[N], T (&amp;b)[N]) noexcept(noexcept(swap(*a, *b)));
-
-template&lt;class T1, class T2&gt;
-struct pair {
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T1</span>, <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T2</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">pair</span> {
     ...
-    void swap(pair&amp; p) noexcept(noexcept(swap(first, p.first)) &amp;&amp;
-                                noexcept(swap(second, p.second)));
+    <span style="color:#66d9ef">void</span> swap(pair<span style="color:#f92672">&amp;</span> p) <span style="color:#66d9ef">noexcept</span>(<span style="color:#66d9ef">noexcept</span>(swap(first, p.first)) <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
+                                <span style="color:#66d9ef">noexcept</span>(swap(second, p.second)));
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>These functions are <em>conditionally</em> <code>noexcept</code>: whether they are <code>noexcept</code> depends on whether the expression inside the <code>noexcept</code> clauses are <code>noexcept</code>. The fact that swapping higher-level data structures can generally be <code>noexcept</code> only if swapping their lower-level constituents is <code>noexcept</code> should be reasonable enough to offer <code>noexcept</code> <code>swap</code> functions whenever we can.</p>
 
 <h1 id="exception-neutral-functions">Exception Neutral Functions</h1>
@@ -455,17 +446,16 @@ struct pair {
 <h1 id="backward-compatibility">Backward compatibility</h1>
 
 <p>So much legacy code is not decalred with <code>noexcpet</code> even though they actually never emit exceptions. For the reason of backward compatibility, <code>noexcept</code> functions calling non-<code>noexcept</code> functions are permitted in C++, and compilers generally don&rsquo;t issue warnings about it:</p>
-
-<pre><code class="language-cpp">void setup();    // legacy code defined elsewhere
-void cleanup();  // without declaring noexcept
-
-void doWork() noexcept
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup</span>();    <span style="color:#75715e">// legacy code defined elsewhere
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">cleanup</span>();  <span style="color:#75715e">// without declaring noexcept
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doWork</span>() <span style="color:#66d9ef">noexcept</span>
 {
     setup();
     ...
     clean();
 }
-</code></pre>
+</code></pre></div>
               
             </div>
           </div>
@@ -681,7 +671,7 @@ void doWork() noexcept
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -709,229 +699,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

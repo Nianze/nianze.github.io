@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
+<meta name="description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
 
 
-<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
+<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-23 Prefer non-member non-friend function to member function">
 <meta name="twitter:title" content="Item-23 Prefer non-member non-friend function to member function">
 <meta property="og:url" content="http://nianze.tk/2018/02/prefer-non-member-non-friend-function-to-member-function/">
 <meta property="twitter:url" content="http://nianze.tk/2018/02/prefer-non-member-non-friend-function-to-member-function/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
-<meta name="twitter:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
+<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
+<meta name="twitter:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
 <meta property="og:locale" content="en-us">
 
   
@@ -63,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>Item-23 Prefer non-member non-friend function to member function</title>
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -125,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -137,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -328,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -386,46 +385,39 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-</p>
+              <p>Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.</p>
 
 <p>Suppose there&rsquo;s a class representing web browsers containing following three functions:</p>
-
-<pre><code class="language-cpp">class WebBrowser {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    void clearCache();
-    void clearHistory();
-    void removeCookies();
+    <span style="color:#66d9ef">void</span> clearCache();
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearHistory</span>();
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeCookies</span>();
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>Clients may want to perform these three actions together, so <code>WebBrowser</code> might offer two ways to achieve the goal:</p>
 
 <ul>
-<li>Add a member function</li>
-</ul>
-
-<pre><code class="language-cpp">class WebBrowser {
-public:
-    ...
-    void clearEverything(); // calls clearCache(), clearHistory(), and removeCookies()
-    ...
+<li><p>Add a member function</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+...
+<span style="color:#66d9ef">void</span> clearEverything(); <span style="color:#75715e">// calls clearCache(), clearHistory(), and removeCookies()
+</span><span style="color:#75715e"></span>...
 };
-</code></pre>
+</code></pre></div></li>
 
-<ul>
-<li>Add a non-member non-friend function</li>
-</ul>
-
-<pre><code class="language-cpp">void clearBrowser(WebBrowser&amp; wb) 
+<li><p>Add a non-member non-friend function</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearBrowser</span>(WebBrowser<span style="color:#f92672">&amp;</span> wb) 
 {
-    wb.clearCache();
-    wb.clearHistory();
-    wb.removeCookies();
+wb.clearCache();
+wb.clearHistory();
+wb.removeCookies();
 }
-</code></pre>
+</code></pre></div></li>
+</ul>
 
 <p>As the title suggests, the non-member approach is better, and below is the reasons:</p>
 
@@ -449,36 +441,28 @@ public:
 <h2 id="packaging-flexibility">Packaging flexibility</h2>
 
 <p>In C++, rather than declared in a class, a more natural approach would be to make <code>clearBrowser()</code> a non-member function in the same namespace as <code>WebBrowser</code>:</p>
-
-<pre><code class="language-cpp">namespace WebBrowserStuff {
-class WebBrowser {...};
-void clearBrowser {...};
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {...};
+<span style="color:#66d9ef">void</span> clearBrowser {...};
 ...
 }
-</code></pre>
-
+</code></pre></div>
 <p>Unlike classes, namespace can be spread across multiple source file. For convenience functions like &lsquo;clearBrowser&rsquo;, this is important, because clients will generally be interested in only some of the convenience functions, and there&rsquo;s no reason for them to compile all of the functions including those they don&rsquo;t need. A straight forward way to separate convenience functions by their functionalities is to declare them in different header files:</p>
-
-<pre><code class="language-cpp">// header &quot;webbrowser.h&quot; - header for class WebBrowser itself 
-// as well as &quot;core&quot; WebBrowser-related functionality
-namespace WebBrowserStuff {
-    class WebBrowser {...};
-    ...  // &quot;core&quot; related functionality, e.g.: non-member functions almost all clients need
-}
-</code></pre>
-
-<pre><code class="language-cpp">// header &quot;webbrowserbookmarks.h&quot;
-namespace WebBrowserStuff {
-    ...  // bookmark-related convenience functions
-}
-</code></pre>
-
-<pre><code class="language-cpp">// header &quot;webbrowsercookies.h&quot;
-namespace WebBrowserStuff {
-    ...  // cookie-related convenience functions
-}
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// header &#34;webbrowser.h&#34; - header for class WebBrowser itself 
+</span><span style="color:#75715e"></span><span style="color:#75715e">// as well as &#34;core&#34; WebBrowser-related functionality
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {...};
+    ...  <span style="color:#75715e">// &#34;core&#34; related functionality, e.g.: non-member functions almost all clients need
+</span><span style="color:#75715e"></span>}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// header &#34;webbrowserbookmarks.h&#34;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+    ...  <span style="color:#75715e">// bookmark-related convenience functions
+</span><span style="color:#75715e"></span>}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// header &#34;webbrowsercookies.h&#34;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+    ...  <span style="color:#75715e">// cookie-related convenience functions
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>This is exactly how the standard C++ library is organized: there are dozens of headers (e.g.: <code>&lt;vector&gt;</code>, <code>&lt;algorithm&gt;</code>, <code>&lt;memory&gt;</code>, etc.), each declaring some of the functionality in <code>std</code>. This allows clients to be compilation dependent only on the parts of the system they actually use (item 31 shows other ways to reduce compilation dependencies).</p>
 
 <p>On the other side, partitioning is not possible for member functions, because a class must be defined in its entirety.</p>
@@ -701,7 +685,7 @@ namespace WebBrowserStuff {
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -729,229 +713,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

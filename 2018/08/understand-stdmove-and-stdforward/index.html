@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.
-
-">
+<meta name="description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.">
 
 
-<meta property="og:description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.
-
-">
+<meta property="og:description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-23 Understand std::Move and std::Forward">
 <meta name="twitter:title" content="[EMCpp]Item-23 Understand std::Move and std::Forward">
 <meta property="og:url" content="http://nianze.tk/2018/08/understand-stdmove-and-stdforward/">
 <meta property="twitter:url" content="http://nianze.tk/2018/08/understand-stdmove-and-stdforward/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.
-
-">
-<meta name="twitter:description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.
-
-">
+<meta property="og:description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.">
+<meta name="twitter:description" content="std::move performs an unconditional cast to an rvalue, while std::forward casts its argument to an rvalue only if that argument is bound to an rvalue.">
 <meta property="og:locale" content="en-us">
 
   
@@ -67,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-23 Understand std::Move and std::Forward</title>
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -129,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -141,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -332,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p><code>std::move</code> performs an unconditional cast to an rvalue, while <code>std::forward</code> casts its argument to an rvalue only if that argument is bound to an rvalue.
+              <p><code>std::move</code> performs an unconditional cast to an rvalue, while <code>std::forward</code> casts its argument to an rvalue only if that argument is bound to an rvalue.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -398,7 +393,7 @@ Suffering is optional.</p>
 <li><a href="#std-forward">std::forward</a></li>
 <li><a href="#comparison">Comparison</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p>Some facts:</p>
 
@@ -410,26 +405,22 @@ Suffering is optional.</p>
 <h1 id="std-move">std::move</h1>
 
 <p>To make things concrete, a very basic implementation of <code>std::move</code> in C++11 looks like this:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-typename remove_reference&lt;T&gt;::type&amp;&amp;
-move(T&amp;&amp; param)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
+move(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param)
 {
-    using ReturnType = typename remove_reference&lt;T&gt;::type&amp;&amp;;
-    return static_cast&lt;ReturnType&gt;(param);
+    <span style="color:#66d9ef">using</span> ReturnType <span style="color:#f92672">=</span> <span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>ReturnType<span style="color:#f92672">&gt;</span>(param);
 }
-</code></pre>
-
+</code></pre></div>
 <p>Or, a more elegant implementation in C++14:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-decltype&lt;auto&gt; move(T&amp;&amp; param)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">decltype</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&gt;</span> move(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param)
 {
-    using ReturnType = remove_reference_t&lt;T&gt;&amp;&amp;;
-    return static_cast&lt;ReturnType&gt;(param);
+    <span style="color:#66d9ef">using</span> ReturnType <span style="color:#f92672">=</span> remove_reference_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>ReturnType<span style="color:#f92672">&gt;</span>(param);
 }
-</code></pre>
-
+</code></pre></div>
 <p>Basically, <code>std::move</code> does nothing but cast its argument to an rvalue, and we might think it as <code>rvalue_cast</code>. Usually we want <code>move</code> operation on rvalues, so every time we see a <code>move</code> over some parameter, we know we want to perform move operation over the resulting rvalue. However, not all rvalues are candidates for moving, especailly those annotated by <code>const</code> - <em>move requests on <code>const</code> objects are silentlly transformed into copy operation</em>.</p>
 
 <h1 id="std-forward">std::forward</h1>
@@ -437,24 +428,20 @@ decltype&lt;auto&gt; move(T&amp;&amp; param)
 <p><code>std::move</code> unconditionally casts its argument to an rvalue, while <code>std::forward</code> conditionally do so: it casts to an rvalue only if its argument was initialized with an rvalue.</p>
 
 <p>The most common scenario is a function template taking a universal reference parameter that is to be passed to another function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">process</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> lvalArg);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">process</span>(Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rvalArg);
 
-<pre><code class="language-cpp">void process(const Widget&amp; lvalArg);
-void process(Widget&amp;&amp; rvalArg);
-
-template&lt;typename T&gt;
-void logAndProcess(T&amp;&amp; param)  // universal reference
-{
-    auto now = std::chrono::system_clock::now();
-    makeLogEntry(&quot;Calling 'process'&quot;, now);
-    process(std::forward&lt;T&gt;(param));
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> logAndProcess(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param)  <span style="color:#75715e">// universal reference
+</span><span style="color:#75715e"></span>{
+    <span style="color:#66d9ef">auto</span> now <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>chrono<span style="color:#f92672">:</span><span style="color:#f92672">:</span>system_clock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>now();
+    makeLogEntry(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Calling &#39;process&#39;</span><span style="color:#e6db74">&#34;</span>, now);
+    process(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(param));
 }
-</code></pre>
-
-<pre><code class="language-cpp">Widget w;
-logAndProcess(w);             // call with lvalue
-logAndProcess(std::move(w));  // call with rvalue
-</code></pre>
-
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget w;
+logAndProcess(w);             <span style="color:#75715e">// call with lvalue
+</span><span style="color:#75715e"></span>logAndProcess(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(w));  <span style="color:#75715e">// call with rvalue
+</span></code></pre></div>
 <p>In the code above, <code>std::forward</code> is able to tell whether <code>param</code> is initialized with an lvalue or an rvalue because that information is encoded in <code>logAndProcess</code>&rsquo;s template parameter <code>T</code>, which is then passed to <code>std::forward</code>, which is able to recover the encoded information. For details, refer to EMCpp item 28.</p>
 
 <h1 id="comparison">Comparison</h1>
@@ -680,7 +667,7 @@ logAndProcess(std::move(w));  // call with rvalue
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -708,229 +695,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

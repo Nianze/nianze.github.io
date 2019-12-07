@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Two pointer template to solve substring problem.
-
-">
+<meta name="description" content="Two pointer template to solve substring problem.">
 
 
-<meta property="og:description" content="Two pointer template to solve substring problem.
-
-">
+<meta property="og:description" content="Two pointer template to solve substring problem.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Substring type problem&#39;s template">
 <meta name="twitter:title" content="Substring type problem&#39;s template">
 <meta property="og:url" content="http://nianze.tk/2016/11/substring-template/">
 <meta property="twitter:url" content="http://nianze.tk/2016/11/substring-template/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="Two pointer template to solve substring problem.
-
-">
-<meta name="twitter:description" content="Two pointer template to solve substring problem.
-
-">
+<meta property="og:description" content="Two pointer template to solve substring problem.">
+<meta name="twitter:description" content="Two pointer template to solve substring problem.">
 <meta property="og:locale" content="en-us">
 
   
@@ -65,8 +57,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>Substring type problem&#39;s template</title>
@@ -98,14 +90,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -127,7 +122,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -139,7 +134,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -330,7 +325,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -388,7 +383,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Two pointer template to solve substring problem.
+              <p>Two pointer template to solve substring problem.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -398,7 +393,7 @@ Suffering is optional.</p>
 </ul></li>
 <li><a href="#template-1">Template<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></a></li>
 </ul>
-</nav></p>
+</nav>
 
 <h1 id="lc76-minimum-window-substring">LC76 Minimum Window Substring</h1>
 
@@ -406,49 +401,45 @@ Suffering is optional.</p>
 
 <ol>
 <li>Scanning from left to right, keep the head and length of minimum window substring so far.</li>
-<li>Use an <code>int[256]</code> array or a <code>HashMap</code> to store target charater counts.</li>
-</ol>
 
-<pre><code class="language-java">public String minWindow(String s, String t) {
-    int[] map = new int[256];
-    for (char c : t.toCharArray()) { map[c]++; }
-    int start = 0, end = 0, len = Integer.MAX_VALUE, head = 0, count = t.length();
-    while (end &lt; s.length()) {
-        if (map[s.charAt(end++)]-- &gt; 0) count--;
-        while (count == 0) {
-            if (end - start &lt; len) len = end - (head = start);
-            if (map[s.charAt(start++)]++ == 0) count++;
-        }
-    }
-    return len == Integer.MAX_VALUE ? &quot;&quot; : s.substring(head, head + len);
-}    
-</code></pre>
+<li><p>Use an <code>int[256]</code> array or a <code>HashMap</code> to store target charater counts.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">minWindow</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> map<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+<span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> len <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> head <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>end<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">-</span> start <span style="color:#f92672">&lt;</span> len<span style="color:#f92672">)</span> len <span style="color:#f92672">=</span> end <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">=</span> start<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>start<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+<span style="color:#66d9ef">return</span> len <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>head<span style="color:#f92672">,</span> head <span style="color:#f92672">+</span> len<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>    </code></pre></div></li>
+</ol>
 
 <h1 id="template-1">Template<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></h1>
 
 <p>For most substring problem, we are given a string and need to find a substring of it which satisfy some restrictions. A general way is to use a hashmap assisted with two pointers.</p>
 
 <p>One thing needs to be mentioned is that when asked to find maximum substring, we should update maximum after the inner while loop to guarantee that the substring is valid. On the other hand, when asked to find minimum substring, we should update minimum inside the inner while loop.</p>
-
-<pre><code class="language-java">int findSubstring(string s){
-    int[] map = new int[256];
-    int counter; // check whether the substring is valid
-    int start = 0, end = 0; //two pointers, one point to tail and one head
-    int d; //the length of substring
-    for() { /* initialize the hash map here */ }
-    while(end &lt; s.length()){
-        if(map[s.charAt(end++)]-- ?){  /* modify counter here */ }
-        while(/* counter condition */){              
-            /* update d here if finding minimum */
-            //increase start to make it invalid/valid again            
-            if(map[s[start++]]++ ?){ /*modify counter here*/ }
-        }  
-        /* update d here if finding maximum*/
-    }
-    return d;
-}
-</code></pre>
-<div class="footnotes">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findSubstring</span><span style="color:#f92672">(</span>string s<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> counter<span style="color:#f92672">;</span> <span style="color:#75715e">// check whether the substring is valid
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#75715e">//two pointers, one point to tail and one head
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> d<span style="color:#f92672">;</span> <span style="color:#75715e">//the length of substring
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">/* initialize the hash map here */</span> <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>end <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>end<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span> <span style="color:#f92672">?</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>  <span style="color:#75715e">/* modify counter here */</span> <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span><span style="color:#75715e">/* counter condition */</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>              
+            <span style="color:#75715e">/* update d here if finding minimum */</span>
+            <span style="color:#75715e">//increase start to make it invalid/valid again            
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">[</span>start<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">]</span><span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span> <span style="color:#f92672">?</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span> <span style="color:#75715e">/*modify counter here*/</span> <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>  
+        <span style="color:#75715e">/* update d here if finding maximum*/</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> d<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span></code></pre></div><div class="footnotes">
 
 <hr />
 
@@ -670,7 +661,7 @@ Suffering is optional.</p>
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -698,229 +689,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

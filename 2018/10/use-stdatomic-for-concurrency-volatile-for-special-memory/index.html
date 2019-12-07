@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).
-">
+<meta name="description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).">
 
 
-<meta property="og:description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).
-">
+<meta property="og:description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory">
 <meta name="twitter:title" content="[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory">
 <meta property="og:url" content="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
 <meta property="twitter:url" content="http://nianze.tk/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).
-">
-<meta name="twitter:description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).
-">
+<meta property="og:description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).">
+<meta name="twitter:description" content="std::atomic is for data accessed from multiple threads without using mutexes (concurrent usage); volatile is for memory where reads and writes should not be optimised away (special memory).">
 <meta property="og:locale" content="en-us">
 
   
@@ -63,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</title>
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -125,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -137,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -328,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -386,20 +385,17 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).
-</p>
+              <p><code>std::atomic</code> is for data accessed from multiple threads without using mutexes (concurrent usage); <code>volatile</code> is for memory where reads and writes should not be optimised away (special memory).</p>
 
 <h1 id="std-atomic-template"><code>std::atomic</code> template</h1>
 
 <p>Instantiations of <code>std::atomic</code> template offer operations that are guaranteed to be seen as atomic by other threads, as if they were inside a mutex-protected critical section, generally with the support of special machine instructions that are more efficient than the case of mutex. For example:</p>
-
-<pre><code class="language-cpp">std::atomic&lt;int&gt; ai(0);  // init. ai to 0
-ai = 10;                 // atomically set ai to 10
-std::cout &lt;&lt; ai;         // atomically read ai's value
-++ai;                    // atomically increment ai to 11
---ai;                    // atomically decrement ai to 10
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ai(<span style="color:#ae81ff">0</span>);  <span style="color:#75715e">// init. ai to 0
+</span><span style="color:#75715e"></span>ai <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;                 <span style="color:#75715e">// atomically set ai to 10
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> ai;         <span style="color:#75715e">// atomically read ai&#39;s value
+</span><span style="color:#75715e"></span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>ai;                    <span style="color:#75715e">// atomically increment ai to 11
+</span><span style="color:#75715e"></span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>ai;                    <span style="color:#75715e">// atomically decrement ai to 10
+</span></code></pre></div>
 <p>During execution of these statements, other threads reading <code>ai</code> may see only values of 0, 10, or 11 (assuming, of course, this is the only thread modifying <code>ai</code>). Two things worth noting here:</p>
 
 <ol>
@@ -411,21 +407,17 @@ std::cout &lt;&lt; ai;         // atomically read ai's value
 <p>In contrast, <code>volatile</code> offers <em>no guarantee of operation atomicity</em> and suffer <em>insufficient restrictions on code reordering</em> - basically not useful in multithreaded context. Say if we have a counter defined as <code>volatile int vc(0)</code>, and there are two threads increment the <code>volatile</code> counter simultaneously, then the ending value of <code>vc</code> need not be <code>2</code> - the RMW operation in each of two threads may take place in any order, involving in a data race, which leading to undefined behavior according to Standard&rsquo;s decree.</p>
 
 <p>The place in which <code>volatile</code> shines is in the context where <em>redundant loads</em> and <em>dead stores</em> should not be optimized away, that is, we need special memory to perform such kinds of redundent reads and superfluous writes:</p>
-
-<pre><code class="language-cpp">auto y = x;  // read x
-y = x;       // read x again
-
-x = 10;      // write x
-x = 20;      // write x again
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> y <span style="color:#f92672">=</span> x;  <span style="color:#75715e">// read x
+</span><span style="color:#75715e"></span>y <span style="color:#f92672">=</span> x;       <span style="color:#75715e">// read x again
+</span><span style="color:#75715e"></span>
+x <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;      <span style="color:#75715e">// write x
+</span><span style="color:#75715e"></span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;      <span style="color:#75715e">// write x again
+</span></code></pre></div>
 <p>The most common kind of special memory is memory used for <em>memory-mapped I/O</em>, which is used for communication with peripherals, e.g., external sensors or displays, printers, network ports, etc. rather than reading or writing normal memory (i.e., RAM). <code>volatile</code> is the way to tell compilers that we&rsquo;re dealing with special memory.</p>
 
 <p>Because <code>std::atomic</code> and <code>volatile</code> serve different purposes, they can be used together:</p>
-
-<pre><code class="language-cpp">volatile std::atomic&lt;int&gt; vai;  // operations on vai are atomic and can't be optimized away
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">volatile</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> vai;  <span style="color:#75715e">// operations on vai are atomic and can&#39;t be optimized away
+</span></code></pre></div>
 <p>This could be useful if <code>vai</code> corresponded to a memory-mapped I/O location that was concurrently accessed by multiple threads.</p>
               
             </div>
@@ -642,7 +634,7 @@ x = 20;      // write x again
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -670,229 +662,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

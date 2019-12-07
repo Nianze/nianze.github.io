@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Any function may be deleted, including non-member functions and template instantiations.
-
-">
+<meta name="description" content="Any function may be deleted, including non-member functions and template instantiations.">
 
 
-<meta property="og:description" content="Any function may be deleted, including non-member functions and template instantiations.
-
-">
+<meta property="og:description" content="Any function may be deleted, including non-member functions and template instantiations.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-11 Prefer Deleted Functions to Private Undefined Ones">
 <meta name="twitter:title" content="[EMCpp]Item-11 Prefer Deleted Functions to Private Undefined Ones">
 <meta property="og:url" content="http://nianze.tk/2018/07/prefer-deleted-functions-to-private-undefined-ones/">
 <meta property="twitter:url" content="http://nianze.tk/2018/07/prefer-deleted-functions-to-private-undefined-ones/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="Any function may be deleted, including non-member functions and template instantiations.
-
-">
-<meta name="twitter:description" content="Any function may be deleted, including non-member functions and template instantiations.
-
-">
+<meta property="og:description" content="Any function may be deleted, including non-member functions and template instantiations.">
+<meta name="twitter:description" content="Any function may be deleted, including non-member functions and template instantiations.">
 <meta property="og:locale" content="en-us">
 
   
@@ -67,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-11 Prefer Deleted Functions to Private Undefined Ones</title>
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -129,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -141,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -332,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Any function may be deleted, including non-member functions and template instantiations.
+              <p>Any function may be deleted, including non-member functions and template instantiations.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -399,7 +394,7 @@ Suffering is optional.</p>
 <li><a href="#disable-special-template-instantiations">Disable special template instantiations</a></li>
 <li><a href="#disable-speacial-member-function-template-instanciation">Disable speacial member function template instanciation</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p>To prevent use of certain function from being called, there is a classic approach in C++98: declare that function <code>private</code> and not define them.</p>
 
@@ -408,73 +403,64 @@ Suffering is optional.</p>
 <h1 id="link-time-vs-compile-time-failure-diagnostic">Link-time vs compile-time failure diagnostic</h1>
 
 <p>In C++98 practice, declaring functions <code>private</code> prevents clients from calling them. Due absence of function definitions, linking will fail if member functions or <code>friend</code>s of the class try to call them. Take the copy constructor in uncopyable <code>basic_ios</code> class for example:</p>
-
-<pre><code class="language-cpp">template &lt;class charT, class traits = char_traits&lt;charT&gt; &gt;
-class basic_ios : public ios_base {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">charT</span>, <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">traits</span> <span style="color:#f92672">=</span> char_traits<span style="color:#f92672">&lt;</span>charT<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">basic_ios</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> ios_base {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-private:
-    basic_ios(const basic_ios&amp;);            // not defined
-    basic_ios&amp; operator=(const basic_ios&amp;); // not defined
-};
-</code></pre>
-
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    basic_ios(<span style="color:#66d9ef">const</span> basic_ios<span style="color:#f92672">&amp;</span>);            <span style="color:#75715e">// not defined
+</span><span style="color:#75715e"></span>    basic_ios<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> basic_ios<span style="color:#f92672">&amp;</span>); <span style="color:#75715e">// not defined
+</span><span style="color:#75715e"></span>};
+</code></pre></div>
 <p>As a comparason, deleted functions may not be used in any way, so even code that&rsquo;s in member and <code>friend</code> functions will fail to compile if it tries to copy <code>basic_ios</code> objects:</p>
-
-<pre><code class="language-cpp">template &lt;class charT, class traits = char_traits&lt;charT&gt; &gt;
-class basic_ios : public ios_base {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">charT</span>, <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">traits</span> <span style="color:#f92672">=</span> char_traits<span style="color:#f92672">&lt;</span>charT<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">basic_ios</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> ios_base {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    basic_ios(const basic_ios&amp;) = delete ;
-    basic_ios&amp; operator=(const basic_ios&amp;) = delete;
+    basic_ios(<span style="color:#66d9ef">const</span> basic_ios<span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span> ;
+    basic_ios<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> basic_ios<span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
  
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>Note that by convertion, deleted functions are declared <code>public</code> instead of <code>private</code>, because C++ checks accessibility before deleted status. When client code tries to use a deleted <code>private</code> function, some compilers complain only about the function being <code>private</code>. If declaring those functions in <code>public</code>, we will get better error messages.</p>
 
 <h1 id="disable-non-member-functions">Disable non-member functions</h1>
 
 <p>Functions may be deleted outside classes, while <code>private</code> functions are always member functions inside some class. For example, we may use <code>delete</code> to prevent implicit numerical conversion into <code>int</code> for a non-member function <code>isLucky</code>, which takes in i
 nteger and returns whether it&rsquo;s a lucky number:</p>
-
-<pre><code class="language-cpp">bool isLucky(int number);      // original function
-bool isLucky(char) = delete;   // reject chars
-bool isLucky(bool) = delete;   // reject bools
-bool isLucky(double) = delete; // reject doubles and floats
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isLucky</span>(<span style="color:#66d9ef">int</span> number);      <span style="color:#75715e">// original function
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isLucky</span>(<span style="color:#66d9ef">char</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;   <span style="color:#75715e">// reject chars
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isLucky</span>(<span style="color:#66d9ef">bool</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;   <span style="color:#75715e">// reject bools
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isLucky</span>(<span style="color:#66d9ef">double</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>; <span style="color:#75715e">// reject doubles and floats
+</span></code></pre></div>
 <h1 id="disable-special-template-instantiations">Disable special template instantiations</h1>
 
 <p>Suppose we want to handle specail cases of <code>void*</code> and <code>char*</code> in the <code>processProinter</code> template, we may simply delete those instantiations:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">t
+emplate<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> processProinter(T<span style="color:#f92672">*</span> ptr);
 
-<pre><code class="language-cpp">t
-emplate&lt;typename T&gt;
-void processProinter(T* ptr);
-
-template&lt;&gt;
-void processProinter&lt;void*&gt;(void*) = delete;
-template&lt;&gt;
-void processProinter&lt;char*&gt;(char*) = delete;
-</code></pre>
-
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> processProinter<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> processProinter<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
+</code></pre></div>
 <h1 id="disable-speacial-member-function-template-instanciation">Disable speacial member function template instanciation</h1>
 
 <p>Since template specializations must be written at namespace scope, not class scope, we can&rsquo;t adopt the C++98 convertion to disable specialization of a member function template from being called. Delete functions, however, won&rsquo;t be restricted by class scope, so we can simply delete the specialization outside the class:</p>
-
-<pre><code class="language-cpp">class Widget {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    template&lt;typename T&gt;
-    void processProinter(T* ptr)
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+    <span style="color:#66d9ef">void</span> processProinter(T<span style="color:#f92672">*</span> ptr)
     {...}
     ...
 };
 
-template&lt;&gt;
-void Widget::processProinter&lt;void&gt;(void*) = delete;
-</code></pre>
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span>processProinter<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">void</span><span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">delete</span>;
+</code></pre></div>
               
             </div>
           </div>
@@ -690,7 +676,7 @@ void Widget::processProinter&lt;void&gt;(void*) = delete;
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -718,229 +704,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.
-
-">
+<meta name="description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.">
 
 
-<meta property="og:description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.
-
-">
+<meta property="og:description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-25 Use std::move on Rvalue References, std::forward on Universal References">
 <meta name="twitter:title" content="[EMCpp]Item-25 Use std::move on Rvalue References, std::forward on Universal References">
 <meta property="og:url" content="http://nianze.tk/2018/08/use-stdmove-on-rvalue-references-stdforward-on-universal-references/">
 <meta property="twitter:url" content="http://nianze.tk/2018/08/use-stdmove-on-rvalue-references-stdforward-on-universal-references/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.
-
-">
-<meta name="twitter:description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.
-
-">
+<meta property="og:description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.">
+<meta name="twitter:description" content="But don&rsquo;t apply std::move or std::forward to local objects if they would otherwise be eligible for the return value optimization.">
 <meta property="og:locale" content="en-us">
 
   
@@ -67,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-25 Use std::move on Rvalue References, std::forward on Universal References</title>
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -129,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -141,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -332,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>But don&rsquo;t apply <code>std::move</code> or <code>std::forward</code> to local objects if they would otherwise be eligible for the return value optimization.
+              <p>But don&rsquo;t apply <code>std::move</code> or <code>std::forward</code> to local objects if they would otherwise be eligible for the return value optimization.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -399,114 +394,103 @@ Suffering is optional.</p>
 <li><a href="#other-usage">Other usage</a></li>
 <li><a href="#when-not-to">When not to</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <h1 id="normal-cases">Normal cases</h1>
 
 <p>When forwarding them to other functions, rvalue references, which is always bound to rvalues, should be <em>unconditionally</em> cast to rvalues (via <code>std::move</code>), while universal references, which is sometimes bound be rvalues, should be <em>conditionally</em> cast to rvalues (via <code>std::forward</code>):</p>
-
-<pre><code class="language-cpp">class Widget {
-public:
-    Widget(Widget&amp;&amp; rhs)          // rhs is rvalue reference
-    : name(std::move(rhs.name)),
-      p(std::move(rhs.p))
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    Widget(Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rhs)          <span style="color:#75715e">// rhs is rvalue reference
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> name(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(rhs.name)),
+      p(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(rhs.p))
       {...}
-    template&lt;typename T&gt;
-    void setName(T&amp;&amp; newName)     // newName is rvalue reference
-    { name = std::forward&lt;T&gt;(newName); }
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+    <span style="color:#66d9ef">void</span> setName(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> newName)     <span style="color:#75715e">// newName is rvalue reference
+</span><span style="color:#75715e"></span>    { name <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(newName); }
     ...
-private:
-    std::string name;
-    std::shared_ptr&lt;SomeDataStructure&gt; p;
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string name;
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>SomeDataStructure<span style="color:#f92672">&gt;</span> p;
 };
-</code></pre>
-
+</code></pre></div>
 <h1 id="what-if">What if</h1>
 
 <p>You may wonder, what will happen if we exchange <code>std::forward</code> ans <code>std::move</code>:</p>
 
 <ul>
 <li><p>applying <code>std::forward</code> on rvalue references can exhibit the proper behavior, but the source code is wordy, error-prone<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, and unidiomatic:</p>
-
-<pre><code class="language-cpp">Widget::Widget(Widget&amp;&amp; rhs) : 
-    name(std::forward&lt;std::string&gt;(rhs.name)), 
-    p(std::forward&lt;std::shared_ptr&lt;SomeDataStructure&gt;&gt;(rhs.p))
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Widget(Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rhs) <span style="color:#f92672">:</span> 
+    name(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&gt;</span>(rhs.name)), 
+    p(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>SomeDataStructure<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>(rhs.p))
 {...}
-</code></pre></li>
+</code></pre></div></li>
 
 <li><p>using <code>std::move</code> on universal refenreces can have the effect of unexpectedly modifying lvalues (e.g., local variables):</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-void Widget::setName(T&amp;&amp; newName)
-{ name = std::move(newName); } // compiles, but is bad!
-
-std::string getWidgetName();   // factory function
-Widget w;
-auto n = getWidgetName();      // n is local variable
-w.setName(n);                  // moves n into w
-...                            // n's value now unkown!
-</code></pre></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span>setName(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> newName)
+{ name <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(newName); } <span style="color:#75715e">// compiles, but is bad!
+</span><span style="color:#75715e"></span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string getWidgetName();   <span style="color:#75715e">// factory function
+</span><span style="color:#75715e"></span>Widget w;
+<span style="color:#66d9ef">auto</span> n <span style="color:#f92672">=</span> getWidgetName();      <span style="color:#75715e">// n is local variable
+</span><span style="color:#75715e"></span>w.setName(n);                  <span style="color:#75715e">// moves n into w
+</span><span style="color:#75715e"></span>...                            <span style="color:#75715e">// n&#39;s value now unkown!
+</span></code></pre></div></li>
 </ul>
 
 <p>Another alternative is to replace the template taking a universal reference with a pair of functions overloaded on lvalue references and rvalue references:</p>
-
-<pre><code class="language-cpp">class Widget {
-public:
-    void setName(const std::string&amp; newName)  // set from const lvalue
-    { name = newName; }
-    void setName(std::string&amp;&amp; newName)      // set from rvalue
-    { name = std::move(newName); }
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">void</span> setName(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> newName)  <span style="color:#75715e">// set from const lvalue
+</span><span style="color:#75715e"></span>    { name <span style="color:#f92672">=</span> newName; }
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setName</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> newName)      <span style="color:#75715e">// set from rvalue
+</span><span style="color:#75715e"></span>    { name <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(newName); }
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>The cost we pay for this replacement is:</p>
 
 <ol>
 <li>More source code to write and maintain (two functions instead of a single template)</li>
-<li>Less efficient in some cases such as this<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>:<br />
-<code>cpp
-w.setName(&quot;John Smith&quot;);
-</code></li>
+
+<li><p>Less efficient in some cases such as this<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">w.setName(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">John Smith</span><span style="color:#e6db74">&#34;</span>);
+</code></pre></div></li>
 
 <li><p>Poor scalability of the design if more parameters come (each of which can be an lvalue or rvalue):</p>
-
-<pre><code class="language-cpp">tempalte&lt;class T, class... Args&gt; 
-shared_ptr&lt;T&gt; make_shared(Args&amp;&amp;... args);  // can't overload on lvalues and rvalues on args. universal reference is used and std::forward is applyied
-</code></pre></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">tempalte<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>, <span style="color:#66d9ef">class</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#a6e22e">Args</span><span style="color:#f92672">&gt;</span> 
+shared_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> make_shared(Args<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... args);  <span style="color:#75715e">// can&#39;t overload on lvalues and rvalues on args. universal reference is used and std::forward is applyied
+</span></code></pre></div></li>
 </ol>
 
 <h1 id="other-usage">Other usage</h1>
 
 <p>Moreove, sometimes we want to apply <code>std::move</code> or <code>std::forward</code> to only the final use of the reference when an rvalue reference or a universal reference will be used more than once in a single function:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-void setSignText(T&amp;&amp; text)  // text is a universal reference
-{
-    sign.setText(text);  // use text, but do not modify it
-    auto now = std::chrono::system_clock::now();
-    signHistory.add(now, std::forward&lt;T&gt;(text)); // conditionally cast to rvalue
-}
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> setSignText(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> text)  <span style="color:#75715e">// text is a universal reference
+</span><span style="color:#75715e"></span>{
+    sign.setText(text);  <span style="color:#75715e">// use text, but do not modify it
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">auto</span> now <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>chrono<span style="color:#f92672">:</span><span style="color:#f92672">:</span>system_clock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>now();
+    signHistory.add(now, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(text)); <span style="color:#75715e">// conditionally cast to rvalue
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>The same logic applies to <code>std::move</code>, except that in rare cases, we want to call <code>std::move_if_noexcept</code> instead of <code>std::move</code> (refer to EMCpp item 14).</p>
 
 <p>If a function <em>returns be value</em>, and the returning object is bound to an rvalue refernece or a universal reference, we also want to apply <code>std::move</code> or <code>std::forward</code> to support potential move construction and get more efficient:</p>
-
-<pre><code class="language-cpp">Matric operator+(Matric&amp;&amp; lhs, const Matrix&amp; rhs)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Matric <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(Matric<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Matrix<span style="color:#f92672">&amp;</span> rhs)
 {
-    lhs += rhs;
-    return std::move(lhs);  // move lhs into return value
-}
+    lhs <span style="color:#f92672">+</span><span style="color:#f92672">=</span> rhs;
+    <span style="color:#66d9ef">return</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(lhs);  <span style="color:#75715e">// move lhs into return value
+</span><span style="color:#75715e"></span>}
 
-template&lt;typename T&gt;
-Fraction reduceAndCopy(T&amp;&amp; frac)
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+Fraction reduceAndCopy(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> frac)
 {
     frac.reduce();
-    return std::forward&lt;T&gt;(frac);  // move rvalue into return value; copy lvalue
-}
-</code></pre>
-
+    <span style="color:#66d9ef">return</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(frac);  <span style="color:#75715e">// move rvalue into return value; copy lvalue
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <h1 id="when-not-to">When not to</h1>
 
 <p>According to Standardization Committee, there&rsquo;s a kind of optimizatoin called <em>return value optimization (RVO)</em>:</p>
@@ -742,7 +726,7 @@ Fraction reduceAndCopy(T&amp;&amp; frac)
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -770,229 +754,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

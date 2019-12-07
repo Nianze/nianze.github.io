@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.
-">
+<meta name="description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.">
 
 
-<meta property="og:description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.
-">
+<meta property="og:description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management">
 <meta name="twitter:title" content="[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management">
 <meta property="og:url" content="http://nianze.tk/2018/07/use-unique_ptr-for-exclusive-ownership-resource-management/">
 <meta property="twitter:url" content="http://nianze.tk/2018/07/use-unique_ptr-for-exclusive-ownership-resource-management/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.
-">
-<meta name="twitter:description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.
-">
+<meta property="og:description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.">
+<meta name="twitter:description" content="std::unique_ptr is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.">
 <meta property="og:locale" content="en-us">
 
   
@@ -63,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management</title>
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -125,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -137,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -328,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p><code>std::unique_ptr</code> is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.
-</p>
+              <p><code>std::unique_ptr</code> is a small, fast, move-only smart pointer for managing resources with exclusive-ownership semantics.</p>
 
 <p>Some facts:</p>
 
@@ -400,84 +398,74 @@ Suffering is optional.</p>
 </ul>
 
 <p>Factory functions and Pimpl Idiom are two common use case for <code>std::ptr</code>s. For example, supporse we have a hierarchy for types of investments (e.g., stocks, bonds, real estate, etc.) with a factory function alllocating an object on the heap and returning a pointer to it:</p>
-
-<pre><code class="language-cpp">class Investment {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Investment</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    virtual ~Investment();
-    ```
+    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>Investment();
+    <span style="color:#960050;background-color:#1e0010">`</span><span style="color:#960050;background-color:#1e0010">`</span><span style="color:#960050;background-color:#1e0010">`</span>
 };
 
-class Stock: public Investment {...};
-class Bond: public Investment {...};
-class RealEstate: public Invesetment {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stock</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Investment {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bond</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Investment {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RealEstate</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Invesetment {...};
 
-template&lt;typename... Ts&gt;
-std::unique_ptr&lt;Investment, decltype(delInvmt)&gt;  // return std::unique_ptr to an object 
-makeInvestment(Ts&amp;&amp;... params);  // created from the given args with cutomized deleter
-</code></pre>
-
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// return std::unique_ptr to an object 
+</span><span style="color:#75715e"></span>makeInvestment(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params);  <span style="color:#75715e">// created from the given args with cutomized deleter
+</span></code></pre></div>
 <p>By the help of <code>std::unique_ptr</code>, clients will no longer worry about deleting it:</p>
-
-<pre><code class="language-cpp">{
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">{
     ...
-    auto pInvestment = makeInvestment( arguments );
+    <span style="color:#66d9ef">auto</span> pInvestment <span style="color:#f92672">=</span> makeInvestment( arguments );
     ...
-}  // destroy *pInvestment
-</code></pre>
-
+}  <span style="color:#75715e">// destroy *pInvestment
+</span></code></pre></div>
 <p>Callers can also take use of <code>std::unique_ptr</code>&rsquo;s feature to adapt it to its more flexible sibling <code>std::shared_ptr</code>:</p>
-
-<pre><code class="language-cpp">std::shared_ptr&lt;Investment&gt; sp = makeInvestment( arguments );
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> sp <span style="color:#f92672">=</span> makeInvestment( arguments );
+</code></pre></div>
 <h4 id="implementation">Implementation</h4>
 
 <p>For C++11, we can implement the factory function this way:</p>
-
-<pre><code class="language-cpp">auto delInvmt = [](Investment* pInvestment)       // custom deleter
-                {                                 // (a lambda expression)
-                    makeLogEntry(pInvestment);   
-                    delete pInvestment;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> delInvmt <span style="color:#f92672">=</span> [](Investment<span style="color:#f92672">*</span> pInvestment)       <span style="color:#75715e">// custom deleter
+</span><span style="color:#75715e"></span>                {                                 <span style="color:#75715e">// (a lambda expression)
+</span><span style="color:#75715e"></span>                    makeLogEntry(pInvestment);   
+                    <span style="color:#66d9ef">delete</span> pInvestment;
                 };
 
-template&lt;typename... Ts&gt;
-std::unique_ptr&lt;Investment, decltype(delInvmt)&gt;
-makeInvestment(Ts&amp;&amp;... params)
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span>
+makeInvestment(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params)
 {
-    std::unique_ptr&lt;Investment, decltype(delInvmt)&gt;
-        pInv(nullptr, delInvmt);
-    if ( /* a Stock should be created */ )
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span>
+        pInv(<span style="color:#66d9ef">nullptr</span>, delInvmt);
+    <span style="color:#66d9ef">if</span> ( <span style="color:#75715e">/* a Stock should be created */</span> )
     {
-        pInv.reset(new Stock(std::forward&lt;Ts&gt;(params)...));
+        pInv.reset(<span style="color:#66d9ef">new</span> Stock(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>Ts<span style="color:#f92672">&gt;</span>(params)...));
     }
-    else if ( /* a Bond should be created */ )
+    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> ( <span style="color:#75715e">/* a Bond should be created */</span> )
     {
-        pInv.reset(new Bond(std::forward&lt;Ts&gt;(params)...));
+        pInv.reset(<span style="color:#66d9ef">new</span> Bond(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>Ts<span style="color:#f92672">&gt;</span>(params)...));
     }
-    else if ( /* a RealEstate should be created */ )
+    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> ( <span style="color:#75715e">/* a RealEstate should be created */</span> )
     {
-        pInv.reset(new RealEstate(std::forward&lt;Ts&gt;(params)...));
+        pInv.reset(<span style="color:#66d9ef">new</span> RealEstate(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>Ts<span style="color:#f92672">&gt;</span>(params)...));
     }
-    return pInv;
+    <span style="color:#66d9ef">return</span> pInv;
 }
-</code></pre>
-
+</code></pre></div>
 <p>In C++14, we could use function return type deduction to make it simpler and more encapsulated:</p>
-
-<pre><code class="language-cpp">template&lt;typename... Ts&gt;
-auto makeInvestment(Ts&amp;&amp;... params) // C++14
-{
-    auto delInvmt = [](Investment* pInvestment)     // now inside makeInvestment
-                    {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">auto</span> makeInvestment(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params) <span style="color:#75715e">// C++14
+</span><span style="color:#75715e"></span>{
+    <span style="color:#66d9ef">auto</span> delInvmt <span style="color:#f92672">=</span> [](Investment<span style="color:#f92672">*</span> pInvestment)     <span style="color:#75715e">// now inside makeInvestment
+</span><span style="color:#75715e"></span>                    {
                         makeLogEntry(pInvestment);
-                        delete pInvestment;
+                        <span style="color:#66d9ef">delete</span> pInvestment;
                     };
-    std::unique_ptr&lt;Investment, decltype(delInvmt)&gt; pInv(nullptr, delInvmt);
-    ... // as before
-}
-</code></pre>
-
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span> pInv(<span style="color:#66d9ef">nullptr</span>, delInvmt);
+    ... <span style="color:#75715e">// as before
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>It is worth thinking about the size impact on a <code>std::unique_ptr</code> after introducing a custome deleter:</p>
 
 <ul>
@@ -715,7 +703,7 @@ auto makeInvestment(Ts&amp;&amp;... params) // C++14
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -743,229 +731,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

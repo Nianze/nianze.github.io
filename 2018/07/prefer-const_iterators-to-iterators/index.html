@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.
-">
+<meta name="description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.">
 
 
-<meta property="og:description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.
-">
+<meta property="og:description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-13 Prefer Const_iterators to Iterators">
 <meta name="twitter:title" content="[EMCpp]Item-13 Prefer Const_iterators to Iterators">
 <meta property="og:url" content="http://nianze.tk/2018/07/prefer-const_iterators-to-iterators/">
 <meta property="twitter:url" content="http://nianze.tk/2018/07/prefer-const_iterators-to-iterators/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.
-">
-<meta name="twitter:description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.
-">
+<meta property="og:description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.">
+<meta name="twitter:description" content="In maximally generic code, prefer non-member versions of begin, end, rbegin, etc., over their member function counterparts.">
 <meta property="og:locale" content="en-us">
 
   
@@ -63,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-13 Prefer Const_iterators to Iterators</title>
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -125,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -137,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -328,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -386,74 +385,63 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>In maximally generic code, prefer non-member versions of <code>begin</code>, <code>end</code>, <code>rbegin</code>, etc., over their member function counterparts.
-</p>
+              <p>In maximally generic code, prefer non-member versions of <code>begin</code>, <code>end</code>, <code>rbegin</code>, etc., over their member function counterparts.</p>
 
 <p>In C++98, using <code>const</code> whenever it&rsquo;s meaningful wasn&rsquo;t practical: it wasn&rsquo;t that easy to create them, and once we had one, the ways we could use it were limited. For example:</p>
-
-<pre><code class="language-cpp">std::vector&lt;int&gt; values;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> values;
 ...
-std::vector&lt;int&gt;::iterator it = 
-    std::find(values.begin(), values.end(), 1983);
-values.insert(it, 1998);
-</code></pre>
-
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it <span style="color:#f92672">=</span> 
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>find(values.begin(), values.end(), <span style="color:#ae81ff">1983</span>);
+values.insert(it, <span style="color:#ae81ff">1998</span>);
+</code></pre></div>
 <p>The code above search for the first occurrence of 1983 (the year &ldquo;C++&rdquo; replaced &ldquo;C with Classes&rdquo;), then insert the value 1998 (first ISO C++ Standard was adopted) at that location. If no 1983 found, insert at the end of the vector. Since the code never modifies what an <code>iterator</code> points to, so acoording to the convention to use <code>const</code> whenever possible, we should use the const-iterator.</p>
 
 <p>However, in C++98, there was no simple way to get a <code>const_iterator</code> from a non-<code>const</code> container. To work it out, we might concider using the cast like the following code, which conceptually works but probably won&rsquo;t compile:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator IterT;
+<span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>const_iterator ConstIterT;
 
-<pre><code class="language-cpp">typedef std::vector&lt;int&gt;::iterator IterT;
-typedef std::vector&lt;int&gt;::const_iterator ConstIterT;
-
-std::vector&lt;int&gt; values;
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> values;
 ...
-ConstIterT ci = 
-    std::find(static_cast&lt;ConstIterT&gt;(values.begin()),
-              static_cast&lt;ConstIterT&gt;(values.end()),
-              1983);
-values.insert(static_cast&lt;IterT&gt;(ci), 1998); // may not compile
-</code></pre>
-
+ConstIterT ci <span style="color:#f92672">=</span> 
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>find(<span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>ConstIterT<span style="color:#f92672">&gt;</span>(values.begin()),
+              <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>ConstIterT<span style="color:#f92672">&gt;</span>(values.end()),
+              <span style="color:#ae81ff">1983</span>);
+values.insert(<span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>IterT<span style="color:#f92672">&gt;</span>(ci), <span style="color:#ae81ff">1998</span>); <span style="color:#75715e">// may not compile
+</span></code></pre></div>
 <p>The problem here is that in C++98, <code>const_iterator</code>s weren&rsquo;t acceptable for insertions and erasures, so we cast <code>ci</code> into its non-const version. However, in C++98, there&rsquo;s no portable conversion from a <code>const_iterator</code> to an <code>iterator</code><sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>, so the last statement probably won&rsquo;t compile. The conclusion: <code>const_iterator</code>s were so much trouble in C++98.</p>
 
 <p>Now that we in the new world of C++11, <code>const_iterator</code>s are both easy to get and easy to use. Even for non-const containers, we get <code>cbegin</code> and <code>cend</code> to produce <code>const_iterator</code>s:</p>
-
-<pre><code class="language-cpp">std::vector&lt;int&gt; values;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> values;
 ...
-auto it = std::find(values.cbegin(), values.cend(), 1983);
-values.insert(it, 1998);
-</code></pre>
-
+<span style="color:#66d9ef">auto</span> it <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>find(values.cbegin(), values.cend(), <span style="color:#ae81ff">1983</span>);
+values.insert(it, <span style="color:#ae81ff">1998</span>);
+</code></pre></div>
 <h4 id="maximally-generic-support">Maximally Generic Support</h4>
 
 <p>Taking into account that some containers and container-like data structures offer <code>begin</code> and <code>end</code> as <em>non-member</em> functions, C++11 added the non-member functions <code>begin</code> and <code>end</code> to make sure some generic library code using non-member functions is possible.</p>
 
 <p>C++14 rectified the oversight in C++11, adding the support for <code>cbegin</code>, <code>cend</code>, <code>rbegin</code>, <code>rend</code>, <code>crbegin</code>, and <code>crend</code>. Now we could generalize the code above into a <code>findAndInsert</code> template as follow:</p>
-
-<pre><code class="language-cpp">template&lt;typename C, typename V&gt;
-void findAndInsert(C&amp; container,       // find first occurrence of targetVal in container
-                   const V&amp; targetVal, // then insert insertVal there
-                   const V&amp; insertVal)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> C, <span style="color:#66d9ef">typename</span> V<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> findAndInsert(C<span style="color:#f92672">&amp;</span> container,       <span style="color:#75715e">// find first occurrence of targetVal in container
+</span><span style="color:#75715e"></span>                   <span style="color:#66d9ef">const</span> V<span style="color:#f92672">&amp;</span> targetVal, <span style="color:#75715e">// then insert insertVal there
+</span><span style="color:#75715e"></span>                   <span style="color:#66d9ef">const</span> V<span style="color:#f92672">&amp;</span> insertVal)
 {
-    using std::cbegin;
-    using std::cend;
+    <span style="color:#66d9ef">using</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cbegin;
+    <span style="color:#66d9ef">using</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cend;
 
-    auto it = std::find(cbegin(container),  // non-member cbegin
-                        cend(container),    // non-member cend
-                        targetVal);
+    <span style="color:#66d9ef">auto</span> it <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>find(cbegin(container),  <span style="color:#75715e">// non-member cbegin
+</span><span style="color:#75715e"></span>                        cend(container),    <span style="color:#75715e">// non-member cend
+</span><span style="color:#75715e"></span>                        targetVal);
     container.insert(it, insertVal);
 }
-</code></pre>
-
+</code></pre></div>
 <p>If we&rsquo;re using C++11 and want to write maximally generic code, we may build our own implementation for non-member <code>cbegin</code>:</p>
-
-<pre><code class="language-cpp">template&lt;class C&gt;
-auto cbegin(const C&amp; container) -&gt; decltype(std::begin(container))
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">C</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">auto</span> cbegin(<span style="color:#66d9ef">const</span> C<span style="color:#f92672">&amp;</span> container) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">decltype</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>begin(container))
 {
-    return std::begin(container);
+    <span style="color:#66d9ef">return</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>begin(container);
 }
-</code></pre>
-
+</code></pre></div>
 <p>Point here is: through its reference-to-<code>const</code> parameter, <code>container</code>, we are invoking the non-member <code>begin</code> function (provided by C++11) on a <code>const</code> container, and this process yields a <code>const_iterator</code>. In fact, this template works even if <code>C</code> is a built-in array type<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
 <div class="footnotes">
 
@@ -681,7 +669,7 @@ auto cbegin(const C&amp; container) -&gt; decltype(std::begin(container))
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -709,229 +697,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

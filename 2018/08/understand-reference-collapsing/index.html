@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.
-">
+<meta name="description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.">
 
 
-<meta property="og:description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.
-">
+<meta property="og:description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-28 Understand Reference Collapsing">
 <meta name="twitter:title" content="[EMCpp]Item-28 Understand Reference Collapsing">
 <meta property="og:url" content="http://nianze.tk/2018/08/understand-reference-collapsing/">
 <meta property="twitter:url" content="http://nianze.tk/2018/08/understand-reference-collapsing/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.
-">
-<meta name="twitter:description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.
-">
+<meta property="og:description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.">
+<meta name="twitter:description" content="Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.">
 <meta property="og:locale" content="en-us">
 
   
@@ -63,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-28 Understand Reference Collapsing</title>
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -125,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -137,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -328,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.
-</p>
+              <p>Reference collapsing occurs in four contexts: template instantiation, auto type generation, creation and use of typedefs and alias declarations, and decltype.</p>
 
 <p>The core concept in this item: A universal reference isn&rsquo;t a new kind of reference, it&rsquo;s actually an rvalue reference in a context where two conditions are satisfied:</p>
 
@@ -406,77 +404,63 @@ Suffering is optional.</p>
 <h4 id="template-instantiation">Template instantiation</h4>
 
 <p>Reference collapsing is a key part to make <code>std::forward</code> work. For example, given an possible implementation of <code>std::forward</code> and a function <code>f</code>:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-T&amp;&amp; forward(typename remove_reference&lt;T&gt;::type&amp; param)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> forward(<span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&amp;</span> param)
 {
-    return static_cast&lt;T&amp;&amp;&gt;(param);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);
 }
 
-template&lt;typename T&gt;
-void f(T&amp;&amp; Param)
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> f(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> Param)
 {
     ...
-    someFunc(std::forward&lt;T&gt;(fParam));
+    someFunc(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(fParam));
 }
-</code></pre>
-
+</code></pre></div>
 <p>If we pass an lvalue of type <code>Widget</code> to function <code>f</code>, <code>T</code> will then be deduced as <code>Widget&amp;</code>, and we get:</p>
-
-<pre><code class="language-cpp">Widget&amp; &amp;&amp; forward(typename remove_reference&lt;Widget&amp;&gt;::type&amp; param)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> forward(<span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&amp;</span> param)
 {
-    return static_cast&lt;Widget&amp; &amp;&amp;&gt;(param);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&amp;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);
 }
-</code></pre>
-
+</code></pre></div>
 <p>According to reference collapsing rule, we get:</p>
-
-<pre><code class="language-cpp">Widget&amp; forward(Widget&amp; param)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span> forward(Widget<span style="color:#f92672">&amp;</span> param)
 {
-    return static_cast&lt;Widget&amp;&gt;(param);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);
 }
-</code></pre>
-
+</code></pre></div>
 <p>If we pass to <code>f</code> an rvalue of type <code>Widget</code>, <code>T</code> will then be <code>Widget</code>, and we get:</p>
-
-<pre><code class="language-cpp">Widget &amp;&amp; forward(typename remove_reference&lt;Widget&gt;::type&amp; param)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> forward(<span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&amp;</span> param)
 {
-    return static_cast&lt;Widget &amp;&amp;&gt;(param);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Widget <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);
 }
-</code></pre>
-
+</code></pre></div>
 <p>According to reference collapsing rule, we get:</p>
-
-<pre><code class="language-cpp">Widget&amp;&amp; forward(Widget&amp; param)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> forward(Widget<span style="color:#f92672">&amp;</span> param)
 {
-    return static_cast&lt;Widget&amp;&amp;&gt;(param);
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);
 }
-</code></pre>
-
+</code></pre></div>
 <p>Overall, an rvalue arguement <code>Widget</code> passed to <code>f</code> will be bound to the lvalue parameter <code>fParam</code> firstly, be casted into an rvalue, and then be <code>forward</code>ed to <code>someFunc</code>.</p>
 
 <h4 id="auto-type-generation">auto type generation</h4>
 
 <p>Type deduction for <code>auto</code> variables is essentially the same as deduction for templates.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget <span style="color:#a6e22e">widgetFactory</span>();
 
-<pre><code class="language-cpp">Widget widgetFactory();
-
-Widget w; // w is lvalue
-
-auto&amp;&amp; w1 = w; // type deduces as Widget&amp;, so Widget&amp; &amp;&amp; w1 = w -collapsing-&gt; Wiget&amp; w1 = w
-auto&amp;&amp; w2 = widgetFactory(); // type deduces as Widget, so Widget&amp;&amp; w2 = widgetFactory();
-</code></pre>
-
+Widget w; <span style="color:#75715e">// w is lvalue
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> w1 <span style="color:#f92672">=</span> w; <span style="color:#75715e">// type deduces as Widget&amp;, so Widget&amp; &amp;&amp; w1 = w -collapsing-&gt; Wiget&amp; w1 = w
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> w2 <span style="color:#f92672">=</span> widgetFactory(); <span style="color:#75715e">// type deduces as Widget, so Widget&amp;&amp; w2 = widgetFactory();
+</span></code></pre></div>
 <h4 id="typedefs-and-alias-declarations">typedefs and alias declarations</h4>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-class Widget {
-public:
-    typedefs T&amp;&amp; RvalueRefToT;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    typedefs T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> RvalueRefToT;
     ...
 }
-</code></pre>
-
+</code></pre></div>
 <p>Given <code>Widget&lt;int&amp;&gt; w;</code>, we get <code>typedef int&amp; &amp;&amp; RvalueRefToT;</code>, which then collapses into <code>typedef int&amp; RvalueRefToT;</code>. Interestingly, the name turns out to be misleading: the <code>typedef</code> actually refers to an lvalue reference to <code>int</code> now if instantiated with an lvalue reference type <code>int&amp;</code>.</p>
 
 <h4 id="decltype">decltype</h4>
@@ -697,7 +681,7 @@ public:
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -725,229 +709,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 

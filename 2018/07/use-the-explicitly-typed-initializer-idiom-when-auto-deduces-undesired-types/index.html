@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
+<meta name="description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
 
 
-<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
+<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-6 Use the Explicitly Typed Initializer Idiom when auto deduces undesired types">
 <meta name="twitter:title" content="[EMCpp]Item-6 Use the Explicitly Typed Initializer Idiom when auto deduces undesired types">
 <meta property="og:url" content="http://nianze.tk/2018/07/use-the-explicitly-typed-initializer-idiom-when-auto-deduces-undesired-types/">
 <meta property="twitter:url" content="http://nianze.tk/2018/07/use-the-explicitly-typed-initializer-idiom-when-auto-deduces-undesired-types/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
-<meta name="twitter:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
+<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
+<meta name="twitter:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
 <meta property="og:locale" content="en-us">
 
   
@@ -63,8 +59,8 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/cut.PNG">
-  <meta property="twitter:image" content="http://nianze.tk/images/cut.PNG">
+  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
 
 
     <title>[EMCpp]Item-6 Use the Explicitly Typed Initializer Idiom when auto deduces undesired types</title>
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -125,7 +124,7 @@ ga('send', 'pageview');
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -137,7 +136,7 @@ ga('send', 'pageview');
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -328,7 +327,7 @@ Suffering is optional.</p>
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="http://nianze.tk/index.xml">
+      <a class="sidebar-button-link " href="http://nianze.tk/post/index.xml">
     
       <i class="sidebar-button-icon fas fa-rss-square", title='RSS'></i>
       
@@ -386,31 +385,24 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>“Invisible” proxy types can cause <code>auto</code> to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force <code>auto</code> to deduce what we want.
-</p>
+              <p>“Invisible” proxy types can cause <code>auto</code> to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force <code>auto</code> to deduce what we want.</p>
 
 <p>Some proxy classe are designed to be apparent to clients, such as <code>std::shared_ptr</code>, and <code>std::unique_ptr</code>. Other proxy classes are designed to at more or less invisibly, such as <code>std::vector&lt;bool&gt;::reference</code>, and <code>std::bitset::reference</code>.</p>
 
 <p>For example, suppose we have a function that takes a <code>Widget</code> and returns a <code>std::vector&lt;bool&gt;</code>, where each bool indicates whether the <code>Widget</code> offers a particular feature:</p>
-
-<pre><code class="language-cpp">std::vector&lt;bool&gt; features(const Widget&amp; w);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span> features(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> w);
+</code></pre></div>
 <p>Now we want to check the value of bit 5, which indicates whether the <code>Widget</code> has high priority:</p>
-
-<pre><code class="language-cpp">Widget w;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget w;
 ...
-bool highPriority = features(w)[5];  // is w high priority ?
-...
-processWidget(w, highPriority);  // process w in accord with its priority
-</code></pre>
-
+<span style="color:#66d9ef">bool</span> highPriority <span style="color:#f92672">=</span> features(w)[<span style="color:#ae81ff">5</span>];  <span style="color:#75715e">// is w high priority ?
+</span><span style="color:#75715e"></span>...
+processWidget(w, highPriority);  <span style="color:#75715e">// process w in accord with its priority
+</span></code></pre></div>
 <p>However, if we change the explicit type for <code>highPriority</code> with <code>auto</code>:</p>
-
-<pre><code class="language-cpp">auto highPriority = features(w)[5];
-processWidget(w, highPriority);  // undefined behavior! 
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> highPriority <span style="color:#f92672">=</span> features(w)[<span style="color:#ae81ff">5</span>];
+processWidget(w, highPriority);  <span style="color:#75715e">// undefined behavior! 
+</span></code></pre></div>
 <p>The undefined behavior is caused by the fact that <code>highPriority</code> contains dangling pointer. And here is what happened:</p>
 
 <ul>
@@ -421,10 +413,8 @@ processWidget(w, highPriority);  // undefined behavior!
 </ul>
 
 <p>Now is the time we adopt the explicitly typed initializer idiom: we declare a variable with <code>auto</code>, but casting the initialization expression to the type we want <code>auto</code> to deduce:</p>
-
-<pre><code class="language-cpp">auto highPriority = static_cast&lt;bool&gt;(features(w)[5]);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> highPriority <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span>(features(w)[<span style="color:#ae81ff">5</span>]);
+</code></pre></div>
 <p>At this time, the <code>std::vector&lt;bool&gt;::reference</code> object returned from <code>std::vector&lt;bool&gt;::operator[]</code> executes the conversion to <code>bool</code> it supports, and as part of that conversion, the still-valid pointer to <em>temp</em> (the <code>std::vector&lt;bool&gt;</code> object returned from <code>features</code>) is dereferenced, and the index 5 is then applied to the bits pointed to by the ponter, and the <code>bool</code> value that emerges is used to initialize <code>highPriority</code> - therefore, undefined behavior is avoided.</p>
 <div class="footnotes">
 
@@ -461,7 +451,7 @@ processWidget(w, highPriority);  // undefined behavior!
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/07/distinguish-betwenn--and--when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/07/distinguish-betwenn-and-when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -554,7 +544,7 @@ processWidget(w, highPriority);  // undefined behavior!
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/07/distinguish-betwenn--and--when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/07/distinguish-betwenn-and-when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -650,7 +640,7 @@ processWidget(w, highPriority);  // undefined behavior!
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/cut.PNG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -678,229 +668,14 @@ Suffering is optional.</p>
   </div>
 </div>
 
-    <div id="algolia-search-modal" class="modal-container">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="close-button"><i class="fas fa-times"></i></span>
-      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
-        <span class="searchby-algolia-text text-color-light text-small">by</span>
-        <img class="searchby-algolia-logo" src="https://www.beabrand.co.ke/images/algolia-mark-blue.png">
-      </a>
-      <i class="search-icon fas fa-search"></i>
-      <form id="algolia-search-form">
-        <input type="text" id="algolia-search-input" name="search"
-          class="form-control input--large search-input" placeholder="Search" />
-      </form>
-    </div>
-    <div class="modal-body">
-      <div class="no-result text-color-light text-center">no post found</div>
-      <div class="results">
-        
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/12/2019-12-01-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-31] 2019.12.01</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Dec 12, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/12/01
+    
 
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-24-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-30] 2019.11.24</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/24
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-16-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-29] 2019.11.16</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/16
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-09-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-28] 2019.11.09</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/09
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/11/2019-11-02-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-27] 2019.11.02</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/11/02
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-26-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-26] 2019.10.26</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/26</p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-19-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-25] 2019.10.19</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/19
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-13-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-24] 2019.10.13</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/13
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/10/2019-10-06-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-23] 2019.10.06</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/10/06
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="http://nianze.tk/2019/09/2019-09-28-weekly-visual-project/">
-                <h3 class="media-heading">[Weekly-22] 2019.09.28</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Sep 9, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather"><p>Weekly visual project - 2019/09/28
-
-<!--toc--></p></div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-      </div>
-    </div>
-    <div class="modal-footer">
-      <p class="results-count text-medium"
-         data-message-zero="no post found"
-         data-message-one="1 post found"
-         data-message-other="{n} posts found">
-         199 posts found
-      </p>
-    </div>
-  </div>
-</div>
     
   
     
-    <div id="cover" style="background-image:url('http://nianze.tk/images/city_silhouette.jpg');"></div>
+      
+      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.JPG');"></div>
+    
   
 
 
