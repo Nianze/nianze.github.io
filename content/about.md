@@ -18,7 +18,6 @@ comments: false
 
 <div class='display-card experience-card'>
     <h3 class='company'>Bloomberg L.P. <small class='dates'>May 2017 - Today</small></h3>
-
     <h6 class='description'>
         Full stack software developer
         <br/>
