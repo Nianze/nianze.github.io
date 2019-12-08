@@ -7,25 +7,25 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
+<meta name="description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 
 
-<meta property="og:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
+<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Item-6 Disallow unwanted compiler-generated functions">
-<meta name="twitter:title" content="Item-6 Disallow unwanted compiler-generated functions">
+<meta property="og:title" content="Item-5 What functions C&#43;&#43; silently generates">
+<meta name="twitter:title" content="Item-5 What functions C&#43;&#43; silently generates">
 <meta property="og:url" content="http://nianze.tk/2018/01/functions-silently-created/">
 <meta property="twitter:url" content="http://nianze.tk/2018/01/functions-silently-created/">
 <meta property="og:site_name" content="Be creative">
-<meta property="og:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
-<meta name="twitter:description" content="Declare unwanted member functions private without implementations to disallow functionality automatically provided by compilers.">
+<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
+<meta name="twitter:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2018-01-24T16:18:59">
+    <meta property="article:published_time" content="2018-01-23T18:42:07">
   
   
-    <meta property="article:modified_time" content="2018-01-24T16:18:59">
+    <meta property="article:modified_time" content="2018-01-23T18:42:07">
   
   
   
@@ -52,18 +52,18 @@
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/2018/2018-01/2018-01-24.jpg">
-  <meta property="twitter:image" content="http://nianze.tk/images/2018/2018-01/2018-01-24.jpg">
+  <meta property="og:image" content="http://nianze.tk/images/2018/2018-01/2018-01-23.jpg">
+  <meta property="twitter:image" content="http://nianze.tk/images/2018/2018-01/2018-01-23.jpg">
 
 
 
 
 
-  <meta property="og:image" content="http://nianze.tk/images/bw.JPG">
-  <meta property="twitter:image" content="http://nianze.tk/images/bw.JPG">
+  <meta property="og:image" content="http://nianze.tk/images/profile/bw.JPG">
+  <meta property="twitter:image" content="http://nianze.tk/images/profile/bw.JPG">
 
 
-    <title>Item-6 Disallow unwanted compiler-generated functions</title>
+    <title>Item-5 What functions C&#43;&#43; silently generates</title>
 
     <link rel="icon" href="http://nianze.tk/favicon.png">
     
@@ -124,7 +124,7 @@ if (!doNotTrack) {
     
     
       
-        <img class="header-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
+        <img class="header-picture" src="http://nianze.tk/images/profile/bw.JPG" alt="Author&#39;s picture" />
       
     
     </a>
@@ -136,7 +136,7 @@ if (!doNotTrack) {
     
       <div class="sidebar-profile">
         <a href="http://nianze.tk/#about">
-          <img class="sidebar-profile-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="http://nianze.tk/images/profile/bw.JPG" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刀心の水</h4>
         
@@ -356,15 +356,15 @@ Suffering is optional.</p>
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Item-6 Disallow unwanted compiler-generated functions
+      Item-5 What functions C&#43;&#43; silently generates
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-01-24T16:18:59-05:00">
+      <time itemprop="datePublished" datetime="2018-01-23T18:42:07-05:00">
         
-  January 24, 2018
+  January 23, 2018
 
       </time>
     
@@ -385,45 +385,66 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Declare unwanted member functions <em>private</em> without implementations to disallow functionality automatically provided by compilers.</p>
+              <p>Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.</p>
 
-<p>If we want to prevent functions such as copy constructor being generated in order to maintain the object uniqueness, explicitly declare the copy constructor and the copy assignment operator <em>private</em>, so that the client of the class will not be able to copy the object.</p>
-
-<p>To make it foolproof, declare member functions <em>private</em> and deliberately not implemente them so that member and friend functions will not be able to copy the object, either.</p>
-
-<p>Another possible solution to prevent copying is to inherit from a well-designed base class such as this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Uncopyable</span> {
-<span style="color:#66d9ef">protected</span><span style="color:#f92672">:</span>
-    Uncopyable() {}    <span style="color:#75715e">// allow construction of derived objects
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">~</span>Uncopyable() {}   <span style="color:#75715e">// allow destruction of derived objects
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    Uncopyable(<span style="color:#66d9ef">const</span> Uncopyable<span style="color:#f92672">&amp;</span>);            <span style="color:#75715e">// prevent copying
-</span><span style="color:#75715e"></span>    Uncopyable<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Uncopyable<span style="color:#f92672">&amp;</span>); <span style="color:#75715e">// prevent copying
-</span><span style="color:#75715e"></span>};
+<p>All the compiler generated functions will be both <code>public</code> and <code>inline</code> (item 30). An empty class declared like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Empty</span>{};
 </code></pre></div>
-<p>To inherit from the base class, simply:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HomeForSale</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> Uncopyable {
-... <span style="color:#75715e">// no copy ctor or copy assign. operator declaration
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
-<p>This will be the same effect as the following design:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HomeForSale</span>{
+<p>is essentially equivalent to:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Empty</span> {
 <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-...
-HomeForSale(<span style="color:#66d9ef">const</span> HomeForSale<span style="color:#f92672">&amp;</span>);
-HomeForSale<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> HomeForSale<span style="color:#f92672">&amp;</span>);
-};
+    Empty() { ... } <span style="color:#75715e">// default constructor
+</span><span style="color:#75715e"></span>    Empty(<span style="color:#66d9ef">const</span> Empty<span style="color:#f92672">&amp;</span> rhs) { ... } <span style="color:#75715e">// copy constructor
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">~</span>Empty() { ... }  <span style="color:#75715e">// destructor
+</span><span style="color:#75715e"></span>                      <span style="color:#75715e">// will be _virtual_ only if inheriting 
+</span><span style="color:#75715e"></span>                      <span style="color:#75715e">// from a base class with virtual destructor
+</span><span style="color:#75715e"></span>    Empty<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Empty<span style="color:#f92672">&amp;</span> rhs) { ... } <span style="color:#75715e">// copy assignment operator
+</span><span style="color:#75715e"></span>};
 </code></pre></div>
-<p>There are some subtleties about the implementation and use of <code>Uncopyable</code>:</p>
+<p>These functions are generated only if they are needed:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Empty e1;     <span style="color:#75715e">// default constructor and destructor generated
+</span><span style="color:#75715e"></span>Empty <span style="color:#a6e22e">e2</span>(e1); <span style="color:#75715e">// copy constructor generated
+</span><span style="color:#75715e"></span>e2 <span style="color:#f92672">=</span> e1;      <span style="color:#75715e">// copy assignment operator generated
+</span></code></pre></div>
+<p>Basically, the generated default <code>constructor</code> and the <code>destructor</code> will invocate constructors and destructors of base classes and non-static data members, while the <code>copy constructor</code> will simply copy each non-static data member of the source object to the target object.</p>
+
+<blockquote>
+<p>specifically,<br />
+1. for data member of user-defined type, call the data member&rsquo;s copy constructor with source object&rsquo;s corresponding member&rsquo;s value as argument<br />
+2. for data member of built-in type, directly copy the corresponding source data member&rsquo;s bits</p>
+</blockquote>
+
+<p>Copy assignment operator behaves generally the same as copy constructor, but the code is only generated when the resulting code is both legal and has a reasonable chance of making sense. For example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NamedObject</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    NamedObject(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> name, <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> value);
+    ...
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> nameValue;  <span style="color:#75715e">// a reference
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> T objectValue;     <span style="color:#75715e">// a const
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
+<p>In below situation, implicitly generated copy assignment operator will make no sense for nameValue and illegal for objectValue:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string youngMan(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">child</span><span style="color:#e6db74">&#34;</span>);
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string oldMan(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">adult</span><span style="color:#e6db74">&#34;</span>);
+
+NamedObject<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> p(youngMan, <span style="color:#ae81ff">10</span>);
+NamedObject<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> s(oldMan, <span style="color:#ae81ff">50</span>);
+
+p <span style="color:#f92672">=</span> s; <span style="color:#75715e">// nameValue assignment will make no sense!
+</span><span style="color:#75715e"></span>       <span style="color:#75715e">// objectValue assignment will be illegal due to its constness
+</span></code></pre></div>
+<p>Since p.nameValue and s.nameValue refer to different string object, the assignment will be in a conundrum:</p>
 
 <ol>
-<li>inheritance from <code>Uncopyable</code> needn&rsquo;t be public (item 32 and 39)</li>
-<li><code>Uncopyable</code> destructor needn&rsquo;t be <em>virtual</em> (item 7: the base class is not designed to be used polymorphically)</li>
-<li>it&rsquo;s eligible for the empty bass class optimization described in item 39, but use of this technique could lead to multiple inheritance (item 40), which will sometimes in turn disable the empty base class optimization (item 39)</li>
-<li>Boost (item 55) provides a similar class named <code>noncopyable</code></li>
+<li>should compiler choose to let p.nameValue refer to new string object? (actually C++ does not allow reference referring to different one)?</li>
+<li>should compiler choose to change the string content &ldquo;child&rdquo; to &ldquo;adult&rdquo;? (this will affect other objects that hold pointers or references to original string &ldquo;child&rdquo;)</li>
 </ol>
+
+<p>Neither will be sensible, so C++ refuses to compile the code. In this situation, a copy assignment operator must be defined manually.</p>
+
+<p>Finally, derived classes will not be able to have generated implicit copy assignment operators if base classes declare the copy assignment operator <em>private</em>, for derived copy assignment operators are supposed to handle base class parts, but they don&rsquo;t have the right to invoke the base member functions in this situation.</p>
               
             </div>
           </div>
@@ -450,7 +471,7 @@ HomeForSale<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -458,7 +479,7 @@ HomeForSale<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-5 What functions C&#43;&#43; silently generates">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fas fa-angle-right"></i>
@@ -543,7 +564,7 @@ HomeForSale<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/virtual-dtor-in-polymorphic-base-class/" data-tooltip="Item-7 Declare destructor virtual in polymorphic base classes">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-6 Disallow unwanted compiler-generated functions">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -551,7 +572,7 @@ HomeForSale<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/functions-silently-created/" data-tooltip="Item-5 What functions C&#43;&#43; silently generates">
+                <a class="post-action-btn btn btn--default tooltip--top" href="http://nianze.tk/2018/01/initialize-before-use/" data-tooltip="Item-4 Initialize objects before they&#39;re used">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fas fa-angle-right"></i>
@@ -639,7 +660,7 @@ HomeForSale<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">
       <i class="fas fa-times"></i>
     </div>
     
-      <img id="about-card-picture" src="http://nianze.tk/images/bw.JPG" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="http://nianze.tk/images/profile/bw.JPG" alt="Author&#39;s picture" />
     
     <h4 id="about-card-name">刀心の水</h4>
     
@@ -672,8 +693,7 @@ Suffering is optional.</p>
     
   
     
-      
-      <div id="cover" style="background-image:url('http://nianze.tk/images/reservoir.jpg');"></div>
+      <div id="cover" style="background-image:url('http://nianze.tk/images/profile/road.JPG');"></div>
     
   
 
