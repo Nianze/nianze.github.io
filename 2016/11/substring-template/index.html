@@ -63,7 +63,7 @@
 
     <title>Substring type problem&#39;s template</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -401,45 +401,49 @@ Suffering is optional.</p>
 
 <ol>
 <li>Scanning from left to right, keep the head and length of minimum window substring so far.</li>
-
-<li><p>Use an <code>int[256]</code> array or a <code>HashMap</code> to store target charater counts.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">minWindow</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-<span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> map<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
-<span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> len <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> head <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>end<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">-</span> start <span style="color:#f92672">&lt;</span> len<span style="color:#f92672">)</span> len <span style="color:#f92672">=</span> end <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">=</span> start<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>start<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-<span style="color:#66d9ef">return</span> len <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">:</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>head<span style="color:#f92672">,</span> head <span style="color:#f92672">+</span> len<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>    </code></pre></div></li>
+<li>Use an <code>int[256]</code> array or a <code>HashMap</code> to store target charater counts.</li>
 </ol>
+
+<pre><code class="language-java">public String minWindow(String s, String t) {
+    int[] map = new int[256];
+    for (char c : t.toCharArray()) { map[c]++; }
+    int start = 0, end = 0, len = Integer.MAX_VALUE, head = 0, count = t.length();
+    while (end &lt; s.length()) {
+        if (map[s.charAt(end++)]-- &gt; 0) count--;
+        while (count == 0) {
+            if (end - start &lt; len) len = end - (head = start);
+            if (map[s.charAt(start++)]++ == 0) count++;
+        }
+    }
+    return len == Integer.MAX_VALUE ? &quot;&quot; : s.substring(head, head + len);
+}    
+</code></pre>
 
 <h1 id="template-1">Template<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></h1>
 
 <p>For most substring problem, we are given a string and need to find a substring of it which satisfy some restrictions. A general way is to use a hashmap assisted with two pointers.</p>
 
 <p>One thing needs to be mentioned is that when asked to find maximum substring, we should update maximum after the inner while loop to guarantee that the substring is valid. On the other hand, when asked to find minimum substring, we should update minimum inside the inner while loop.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findSubstring</span><span style="color:#f92672">(</span>string s<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>256<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> counter<span style="color:#f92672">;</span> <span style="color:#75715e">// check whether the substring is valid
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#75715e">//two pointers, one point to tail and one head
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> d<span style="color:#f92672">;</span> <span style="color:#75715e">//the length of substring
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">/* initialize the hash map here */</span> <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span>end <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>end<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span> <span style="color:#f92672">?</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>  <span style="color:#75715e">/* modify counter here */</span> <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span><span style="color:#75715e">/* counter condition */</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>              
-            <span style="color:#75715e">/* update d here if finding minimum */</span>
-            <span style="color:#75715e">//increase start to make it invalid/valid again            
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>map<span style="color:#f92672">[</span>s<span style="color:#f92672">[</span>start<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">]</span><span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span> <span style="color:#f92672">?</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span> <span style="color:#75715e">/*modify counter here*/</span> <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>  
-        <span style="color:#75715e">/* update d here if finding maximum*/</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> d<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span></code></pre></div><div class="footnotes">
+
+<pre><code class="language-java">int findSubstring(string s){
+    int[] map = new int[256];
+    int counter; // check whether the substring is valid
+    int start = 0, end = 0; //two pointers, one point to tail and one head
+    int d; //the length of substring
+    for() { /* initialize the hash map here */ }
+    while(end &lt; s.length()){
+        if(map[s.charAt(end++)]-- ?){  /* modify counter here */ }
+        while(/* counter condition */){              
+            /* update d here if finding minimum */
+            //increase start to make it invalid/valid again            
+            if(map[s[start++]]++ ?){ /*modify counter here*/ }
+        }  
+        /* update d here if finding maximum*/
+    }
+    return d;
+}
+</code></pre>
+<div class="footnotes">
 
 <hr />
 

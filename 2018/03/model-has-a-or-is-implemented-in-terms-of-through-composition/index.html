@@ -65,7 +65,7 @@
 
     <title>Item-38 Model &#39;has-a&#39; or &#39;is-implemented-in-terms-of&#39; through composition</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -397,48 +397,54 @@ Suffering is optional.</p>
 <p>While the has-a relationship is easy enough to understand, the distinction between is-a and is-implemented-in-terms-of is sometimes troublesome. For example, suppose we&rsquo;d like to (re)use the <code>list</code> template in the standard C++ library to represent fairly small sets of objeccts, i.e., collections without duplicates.</p>
 
 <p>In the first glimpse, we may consider the following implementation:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>   <span style="color:#75715e">// the wrong way to use list for Set
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Set</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>list<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> {...};
-</code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;   // the wrong way to use list for Set
+class Set: public std::list&lt;T&gt; {...};
+</code></pre>
+
 <p>As item 32 explains, if D is-a B, everything true of B is also true of D. However, a list object may contains duplicates, but a Set may not contain duplicates. It is thus untrue that a Set is-a list, and public inheritance is the wrong way to model this relationship.</p>
 
 <p>The right relationship between the Set and the list should be <strong>is-implemented-in-terms-of</strong>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Set</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">bool</span> member(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> item) <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> item);
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">remove</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> item);
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>list<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> rep;  <span style="color:#f92672">/</span> representation <span style="color:#66d9ef">for</span> Set data
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+class Set {
+public:
+    bool member(const T&amp; item) const;
+    void insert(const T&amp; item);
+    void remove(const T&amp; item);
+    std::size_t size() const;
+private:
+    std::list&lt;T&gt; rep;  / representation for Set data
 };
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">bool</span> Set<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>member(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> item) <span style="color:#66d9ef">const</span>
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+bool Set&lt;T&gt;::member(const T&amp; item) const
 {
-    <span style="color:#66d9ef">return</span> std:find(rep.begin(), rep.end(), item) <span style="color:#f92672">!</span><span style="color:#f92672">=</span> rep.end();
+    return std:find(rep.begin(), rep.end(), item) != rep.end();
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> Set<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>insert(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> item)
+template&lt;typename T&gt;
+void Set&lt;T&gt;::insert(const T&amp; item)
 {
-    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>member(item)) rep.push_back(item);
+    if (!member(item)) rep.push_back(item);
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> Set<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> item)
+template&lt;typename T&gt;
+void Set&lt;T&gt;::remove(const T&amp; item)
 {
-    <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>list<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it <span style="color:#f92672">=</span>   <span style="color:#75715e">// see item 42 for info on typename
-</span><span style="color:#75715e"></span>        std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>find(rep.begin(), rep.end(), item);
-    <span style="color:#66d9ef">if</span> (it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> rep.end()) rep.erase(it);
+    typename std::list&lt;T&gt;::iterator it =   // see item 42 for info on typename
+        std::find(rep.begin(), rep.end(), item);
+    if (it != rep.end()) rep.erase(it);
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t Set<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>size() <span style="color:#66d9ef">const</span>
+template&lt;typename T&gt;
+std::size_t Set&lt;T&gt;::size() const
 {
-    <span style="color:#66d9ef">return</span> rep.size();
+    return rep.size();
 }
-</code></pre></div>
+</code></pre>
+
 <p>As above shows, Set&rsquo;s member functions can lean heavily on functionality already offered by <code>list</code> and other parts of the standard library. Since they are so simple, they make reasonable candidates for inlining (refer to item 30 before confirming doing so).</p>
               
             </div>

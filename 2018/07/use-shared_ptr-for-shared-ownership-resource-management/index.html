@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-19 Use std::Shared_ptr for Shared-ownership Resource Management</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -425,9 +425,10 @@ Suffering is optional.</p>
 </ul>
 
 <p>Basically, this is how a <code>std::shared_ptr&lt;T&gt;</code> object looks like in the memory:</p>
-<pre><code> std::shared_ptr<T>
+
+<pre><code> std::shared_ptr&lt;T&gt;
 ┌──────────────────────┐   ┌──────────┐
-│      Ptr to T        ├──>│ T Object │
+│      Ptr to T        ├──&gt;│ T Object │
 ├──────────────────────┤   └──────────┘
 │ Ptr to Control Block ├───┐
 └──────────────────────┘   ↓     Control Block
@@ -439,18 +440,23 @@ Suffering is optional.</p>
                            │      Other Data       │
                            │ (e.g., custom deleter,│
                            │   allocator, etc.)    │
-                           └───────────────────────┘</code></pre>
+                           └───────────────────────┘
+
+</code></pre>
+
 <p>It is worth noting that <code>std::shared_ptr</code> design is more flexible than <code>std::unique_ptr</code> in the aspect of specifying custom deleters, because, unlike <code>std::unique_ptr</code>, the type of the deleter is not part of the type of the <code>std::shared_ptr</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> customDeleter1 <span style="color:#f92672">=</span> [](Widget <span style="color:#f92672">*</span>pw) {...};
-<span style="color:#66d9ef">auto</span> customDeleter2 <span style="color:#f92672">=</span> [](Widget <span style="color:#f92672">*</span>pw) {...};
 
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget, <span style="color:#66d9ef">decltype</span>(customDeleter1)<span style="color:#f92672">&gt;</span> upw1(<span style="color:#66d9ef">new</span> Widget, customDeleter1);
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget, <span style="color:#66d9ef">decltype</span>(customDeleter2)<span style="color:#f92672">&gt;</span> upw2(<span style="color:#66d9ef">new</span> Widget, customDeleter1);
+<pre><code class="language-cpp">auto customDeleter1 = [](Widget *pw) {...};
+auto customDeleter2 = [](Widget *pw) {...};
 
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> spw1 (<span style="color:#66d9ef">new</span> widget, customDeleter1);
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> spw2 (<span style="color:#66d9ef">new</span> widget, customDeleter2);
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> vpw { spw1, spw2 };
-</code></pre></div>
+std::unique_ptr&lt;Widget, decltype(customDeleter1)&gt; upw1(new Widget, customDeleter1);
+std::unique_ptr&lt;Widget, decltype(customDeleter2)&gt; upw2(new Widget, customDeleter1);
+
+std::shared_ptr&lt;Widget&gt; spw1 (new widget, customDeleter1);
+std::shared_ptr&lt;Widget&gt; spw2 (new widget, customDeleter2);
+std::vector&lt;std::shared_ptr&lt;Widget&gt;&gt; vpw { spw1, spw2 };
+</code></pre>
+
 <p>Apart from placing <code>spw1</code> and <code>spw2</code> in the same container, we could also assign one to another, or pass them into a function taking a parameter of type <code>std::shared_ptr&lt;Widget&gt;</code>. None of these things can be done with <code>std::unique_ptr</code>s, since their types differ due to different custom deleters.</p>
 
 <h1 id="avoid-multiple-control-blocks-from-this-pointer">Avoid multiple control blocks from <code>this</code> pointer</h1>
@@ -470,37 +476,41 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vecto
 </ul>
 
 <p>Even though we remember the rule to restrict the creation of <code>std::shared_ptr</code> from raw pointers, we might surprisingly create multiple control blocks through the <code>this</code> pointer, which is also a raw pointer. For example, <code>Widget</code> has a member function <code>void processing();</code>, and we use a vector to keep track of <code>Widget</code>s that have been processed. A reasonable-looking approach looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> processedWidgets;
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">std::vector&lt;std::shared_ptr&lt;Widget&gt;&gt; processedWidgets;
+class Widget {
+public:
     ...
-    <span style="color:#66d9ef">void</span> process();
+    void process();
     ...
 };
 
-<span style="color:#66d9ef">void</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span>process(){
+void Widget::process(){
     ...
-    processedWidgets.emplace_back(<span style="color:#66d9ef">this</span>);  <span style="color:#75715e">// add current Widget to list of processed Widgets
-</span><span style="color:#75715e"></span>    ...
+    processedWidgets.emplace_back(this);  // add current Widget to list of processed Widgets
+    ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>This code will compiler, but it has potential danger: <code>process()</code> passes raw pointer <code>this</code> to a container of <code>std::shared_ptr</code>, resulting to a new control block for pointed-to <code>Widget</code>(<code>*this</code>); as long as there are <code>std::shared_ptr</code>s outside the <code>process()</code> that already point to that <code>Widget</code>, undefined behavior shows up.</p>
 
 <p>Here, we want a class managed by <code>std::shared_ptr</code>s to be able to safely create a <code>std::shared_ptr</code> from a <code>this</code> pointer without creating multiple control blocks. The solution is to inherit from a base class template  <code>std::enable_shared_from_this</code>, which contains a member function <code>shared_from_this()</code>, which points to the same object as the <code>this</code> pointer. We can use this function to create a <code>std::shared_ptr</code> worring about creating a new control block.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>enable_shared_from_this<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Widget: public std::enable_shared_from_this&lt;Widget&gt; {
+public:
     ...
-    <span style="color:#66d9ef">void</span> process();
+    void process();
     ...
 };
 
-<span style="color:#66d9ef">void</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span>process()
+void Widget::process()
 {
     ...
     processedWidgets.emplace_back(shared_from_this());
     ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>Two points worth noting:</p>
 
 <ol>
@@ -509,17 +519,18 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vecto
 </ol>
 
 <p>To prevent invoking <code>shared_from_this()</code> before a <code>std::shared_ptr</code> points to the object, classes inheriting from <code>std::enable_shared_from_this</code> often declare their constructors <code>private</code> and provide factory functions returning  <code>std::shared_ptr</code>s to clients:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>enable_shared_from_this<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span>;
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> create(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params);
+
+<pre><code class="language-cpp">class Widget: public std::enable_shared_from_this&lt;Widget&gt; {
+public;
+    template&lt;typename... Ts&gt;
+    static std::shared_ptr&lt;Widget&gt; create(Ts&amp;&amp;... params);
     ...
-    <span style="color:#66d9ef">void</span> process(); <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    ... <span style="color:#75715e">// ctors
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+    void process(); // as before
+    ...
+private:
+    ... // ctors
+};
+</code></pre>
               
             </div>
           </div>

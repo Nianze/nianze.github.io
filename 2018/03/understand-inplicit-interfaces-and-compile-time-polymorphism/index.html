@@ -65,7 +65,7 @@
 
     <title>Item-41 Understand inplicit interfaces and compile time polymorphism</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -397,25 +397,29 @@ Suffering is optional.</p>
 <h1 id="interface-and-polymorphism-in-oop">Interface and Polymorphism in OOP</h1>
 
 <p>The world of object-oriented programming revolves around <em>explicit</em> interfaces and <em>runtime</em> polymorphism. For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Widget();
-    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>Widget();
 
-    <span style="color:#66d9ef">virtual</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">normalize</span>();
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(Widget<span style="color:#f92672">&amp;</span> other);  <span style="color:#75715e">// see item 25
-</span><span style="color:#75715e"></span>    ...
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget();
+    virtual ~Widget();
+
+    virtual std::size_t size() const;
+    virtual void normalize();
+    void swap(Widget&amp; other);  // see item 25
+    ...
 };
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doProcessing</span>(Widget<span style="color:#f92672">&amp;</span> w)
+</code></pre>
+
+<pre><code class="language-cpp">void doProcessing(Widget&amp; w)
 {
-    <span style="color:#66d9ef">if</span> (w.size() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> w <span style="color:#f92672">!</span><span style="color:#f92672">=</span> someNastyWidget){
+    if (w.size() &gt; 10 &amp;&amp; w != someNastyWidget){
         Widget temp(w);
         temp.normalize();
         temp.swap(w);
     }
 }
-</code></pre></div>
+</code></pre>
+
 <p>Regarding the <code>w</code> in <code>doProcessing</code>, we could conclude:</p>
 
 <ul>
@@ -428,16 +432,18 @@ Suffering is optional.</p>
 <h1 id="interface-and-polymorphism-in-templates-and-generic-programming">Interface and Polymorphism in templates and generic programming</h1>
 
 <p>In the world of templates and generic programming, the explicit interfaces and runtime polymorphism continue to exist, but we also have to consider <em>implicit interfaces</em> and <em>compile-time polymorphism</em>. As a comparison, let&rsquo;s take a look at the template version of <code>doProcessing</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> doProcessing(T<span style="color:#f92672">&amp;</span> w)
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void doProcessing(T&amp; w)
 {
-    <span style="color:#66d9ef">if</span> (w.size() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> w <span style="color:#f92672">!</span><span style="color:#f92672">=</span> someNasyWidget) {
-        T <span style="color:#a6e22e">temp</span>(w);
+    if (w.size() &gt; 10 &amp;&amp; w != someNasyWidget) {
+        T temp(w);
         temp.normalize();
         temp.swap(w);
     }
 }
-</code></pre></div>
+</code></pre>
+
 <p>For <code>w</code> in the template <code>doProcessing</code>:</p>
 
 <ul>

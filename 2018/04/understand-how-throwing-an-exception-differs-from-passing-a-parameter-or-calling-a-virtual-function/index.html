@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-12 Understand How Throwing an Exception Differs From Passing a Parameter or Calling a Virtual Function</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -407,20 +407,22 @@ Suffering is optional.</p>
 <h1 id="similarity">Similarity</h1>
 
 <p>There is similarity between passing an argument from a function call site to the function&rsquo;s parameter and passing an exception from a <code>throw</code> site to a <code>catch</code> clause:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {...}
 
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f1</span>(Widget w);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f2</span>(Widget<span style="color:#f92672">&amp;</span> w);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f3</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> w);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f4</span>(Widget <span style="color:#f92672">*</span>pw);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f5</span>(<span style="color:#66d9ef">const</span> Widget <span style="color:#f92672">*</span>pw);
+<pre><code class="language-cpp">class Widget {...}
 
-<span style="color:#66d9ef">catch</span> (Widget w) ...
-<span style="color:#66d9ef">catch</span> (Widget<span style="color:#f92672">&amp;</span> w) ...
-<span style="color:#66d9ef">catch</span> (<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> w) ...
-<span style="color:#66d9ef">catch</span> (Widget <span style="color:#f92672">*</span>pw) ...
-<span style="color:#66d9ef">catch</span> (<span style="color:#66d9ef">const</span> Widget <span style="color:#f92672">*</span>pw) ...
-</code></pre></div>
+void f1(Widget w);
+void f2(Widget&amp; w);
+void f3(const Widget&amp; w);
+void f4(Widget *pw);
+void f5(const Widget *pw);
+
+catch (Widget w) ...
+catch (Widget&amp; w) ...
+catch (const Widget&amp; w) ...
+catch (Widget *pw) ...
+catch (const Widget *pw) ...
+</code></pre>
+
 <h1 id="differences">Differences</h1>
 
 <p>However, there are still three difference:</p>
@@ -434,12 +436,14 @@ Suffering is optional.</p>
 <h2 id="difference-in-augument-passing">Difference in augument passing</h2>
 
 <p>The first difference essentially grows out of the fact that when we call a function, control eventually returns to the call site, but when we throw an exception, constrol does <em>not</em> return to the <code>throw</code> site. For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">throwWidget</span>()
+
+<pre><code class="language-cpp">void throwWidget()
 {
     Widget localWidget;
-    <span style="color:#66d9ef">throw</span> localWidget; <span style="color:#75715e">// throw localWidget as an exception
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    throw localWidget; // throw localWidget as an exception
+}
+</code></pre>
+
 <p>In this typical case where <code>localWidget</code> will go out of scope once control leaves <code>throwWidget</code>, its destructor will be called, so C++ specifies that an object thrown as an exception is copied (even if the object being thrown is not in danger of being destroyed). This mandatory copying of exception objects leads to two implication:</p>
 
 <ul>
@@ -450,45 +454,53 @@ Suffering is optional.</p>
 <h3 id="copying-based-on-static-type">Copying based on static type</h3>
 
 <p>It is worth noting that in C++ copying is always based on an object&rsquo;s static type (MECpp item 25 shows a technique to copy based on dynamic type). Thus,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpecialWidget</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Widget {...};
 
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">throwWidget</span>()
+<pre><code class="language-cpp">class Widget {...};
+class SpecialWidget: public Widget {...};
+
+void throwWidget()
 {
     SpecialWidget localSpecialWidget;
-    Widget<span style="color:#f92672">&amp;</span> rw <span style="color:#f92672">=</span> localSpecialWidget <span style="color:#75715e">// rw refers to a SpecialWidget
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">throw</span> rw;  <span style="color:#75715e">// this throws an exception of type Widget
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    Widget&amp; rw = localSpecialWidget // rw refers to a SpecialWidget
+    throw rw;  // this throws an exception of type Widget
+}
+</code></pre>
+
 <h3 id="rethrow">Rethrow</h3>
 
 <p>Another impact caused from copying exceptions objects is that there&rsquo;s difference between different rethrow statements:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">catch</span> (Widget<span style="color:#f92672">&amp;</span> w)  <span style="color:#75715e">// catch Widget exceptions
-</span><span style="color:#75715e"></span>{
-    ...
-    <span style="color:#66d9ef">throw</span>;  <span style="color:#75715e">// rethrow the exception so it continues to propagate
-</span><span style="color:#75715e"></span>}
 
-<span style="color:#66d9ef">catch</span> (Widget<span style="color:#f92672">&amp;</span> w)  <span style="color:#75715e">// catch Widget exceptions
-</span><span style="color:#75715e"></span>{
+<pre><code class="language-cpp">catch (Widget&amp; w)  // catch Widget exceptions
+{
     ...
-    <span style="color:#66d9ef">throw</span> w;  <span style="color:#75715e">// propagate a copy of the caught exception
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    throw;  // rethrow the exception so it continues to propagate
+}
+
+catch (Widget&amp; w)  // catch Widget exceptions
+{
+    ...
+    throw w;  // propagate a copy of the caught exception
+}
+</code></pre>
+
 <p>Here, the first block rethrows the current exception, while the second one throws a new copy of the current exception. Apart from performance cost of the additional copy operation in the second block, there&rsquo;s another suble difference: if the exception originally thrown was of type <code>SpecialWidget</code>, the first block would propagate a <code>SpecialWidget</code> exception (even though <code>w</code>&rsquo;s static type is <code>Widget</code>) and no copy is made during <code>throw;</code>, while the second <code>catch</code> block throws a <em>new</em> exception being the type of <code>Widget</code>.</p>
 
 <p>In general, we&rsquo;ll want to use the</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">throw</span>;
-</code></pre></div>
+
+<pre><code class="language-cpp">throw;
+</code></pre>
+
 <p>syntax to rethrow the current exception for its consistency and efficiency.</p>
 
 <h3 id="different-catch-syntax">Different <code>catch</code> syntax</h3>
 
 <p>There are three kinds of <code>catch</code> clauses for exception of type <code>Widget</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">catch</span> (Widget w) ...  <span style="color:#75715e">// catch by value
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">catch</span> (Widget<span style="color:#f92672">&amp;</span> w) ... <span style="color:#75715e">// catch by reference
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">catch</span> (<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> w) ... <span style="color:#75715e">// catch by reference-to-const
-</span></code></pre></div>
+
+<pre><code class="language-cpp">catch (Widget w) ...  // catch by value
+catch (Widget&amp; w) ... // catch by reference
+catch (const Widget&amp; w) ... // catch by reference-to-const
+</code></pre>
+
 <p>A few points to note:</p>
 
 <ul>
@@ -501,20 +513,22 @@ Suffering is optional.</p>
 <h2 id="difference-in-type-matching">Difference in type matching</h2>
 
 <p>Implicit conversions (such from <code>int</code> to <code>double</code>) are not applied when matching exceptions to <code>catch</code> clauses:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f</span>(<span style="color:#66d9ef">int</span> value)
+
+<pre><code class="language-cpp">void f(int value)
 {
-    <span style="color:#66d9ef">try</span> {
-        <span style="color:#66d9ef">if</span> (someFunction()) {
-            <span style="color:#66d9ef">throw</span> value;
+    try {
+        if (someFunction()) {
+            throw value;
         }
         ...
     }
-    <span style="color:#66d9ef">catch</span> (<span style="color:#66d9ef">double</span> d) { <span style="color:#75715e">// handle double type exceptions
-</span><span style="color:#75715e"></span>        ...
+    catch (double d) { // handle double type exceptions
+        ...
     }
     ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>In this case, the <code>int</code> exception thrown in <code>try</code> block will never be caught by the <code>catch</code> clause taking a <code>double</code>.</p>
 
 <p>Basically, two kinds of conversions are applied during <code>catch</code> matching:</p>
@@ -522,32 +536,39 @@ Suffering is optional.</p>
 <ol>
 <li><p>inheritance-based conversions
 For example, <code>range_error</code>, <code>underflow_error</code>, and <code>overflow_error</code> are derived types from <code>runtime_error</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">catch</span> (runtime_error) ...         <span style="color:#75715e">// can catch errors of type
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">catch</span> (runtime_error<span style="color:#f92672">&amp;</span>) ...        <span style="color:#75715e">// runtime_error,
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">catch</span> (<span style="color:#66d9ef">const</span> runtime_error<span style="color:#f92672">&amp;</span>) ...  <span style="color:#75715e">// range_error, or overflow_error
-</span><span style="color:#75715e"></span>    
-<span style="color:#66d9ef">catch</span> (runtime_error<span style="color:#f92672">*</span>) ...        <span style="color:#75715e">// can catch errors of type runtime_error*
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">catch</span> (<span style="color:#66d9ef">const</span> runtime_error<span style="color:#f92672">*</span>) ...  <span style="color:#75715e">// range_error*, or overflow_error*
-</span></code></pre></div></li>
 
-<li><p>from a typed to an untyped pointer</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">catch</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>) ...   <span style="color:#75715e">// catches any exception that&#39;s a pointer
-</span></code></pre></div></li>
+<pre><code class="language-cpp">catch (runtime_error) ...         // can catch errors of type
+catch (runtime_error&amp;) ...        // runtime_error,
+catch (const runtime_error&amp;) ...  // range_error, or overflow_error
+    
+catch (runtime_error*) ...        // can catch errors of type runtime_error*
+catch (const runtime_error*) ...  // range_error*, or overflow_error*
+</code></pre>
+
+<ol>
+<li>from a typed to an untyped pointer
+<br /></li>
+</ol>
+
+<pre><code class="language-cpp">catch (const void*) ...   // catches any exception that's a pointer
+</code></pre></li>
 </ol>
 
 <h2 id="difference-in-fitting-strategy">Difference in fitting strategy</h2>
 
 <p>Catch clauses are always tried in the order of their appearance (employing a &ldquo;first fit&rdquo; strategy). For exampel:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">try</span> {
+
+<pre><code class="language-cpp">try {
     ...
 }
-<span style="color:#66d9ef">catch</span> (logic_error<span style="color:#f92672">&amp;</span> ex) {  <span style="color:#75715e">// this block will catch all logic_error exceptions
-</span><span style="color:#75715e"></span>    ...                    <span style="color:#75715e">// including invalid_argument exception, which is derived type
-</span><span style="color:#75715e"></span>}
-<span style="color:#66d9ef">catch</span> (invalid_argument<span style="color:#f92672">&amp;</span> ed) {
+catch (logic_error&amp; ex) {  // this block will catch all logic_error exceptions
+    ...                    // including invalid_argument exception, which is derived type
+}
+catch (invalid_argument&amp; ed) {
     ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>on the contrary, when we call a virtual function, the function invoked is the one in the class <code>closest</code> to the dynamica type of the object invoking the function (employing a &ldquo;best fit&rdquo; algorithm).</p>
               
             </div>

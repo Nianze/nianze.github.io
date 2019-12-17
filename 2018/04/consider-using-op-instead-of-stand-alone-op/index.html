@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-22 Consider Using op= Instead of Stand Alone op</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -403,20 +403,22 @@ Suffering is optional.</p>
 <li>stand-alone versions must typically return a new object, and that costs us the construction and destruction of a temporary (MECpp item 19 and 20)</li>
 <li>assignment versions of operators write to their left-hand argument, so there is no need to generate a temporary to hold the operator&rsquo;s return value</li>
 </ol></li>
-
-<li><p>By offering assignment versions of operators as well as stand-alone versions, we allow clients of our classes to make the different trade-off between efficiency and convenience:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Rational a, b, c, d, result;
-...
-result <span style="color:#f92672">=</span> a <span style="color:#f92672">+</span> b <span style="color:#f92672">+</span> c <span style="color:#f92672">+</span> d;  <span style="color:#75715e">// 3 potential temporary objects, one for each call to operator+
-</span></code></pre></div></li>
+<li>By offering assignment versions of operators as well as stand-alone versions, we allow clients of our classes to make the different trade-off between efficiency and convenience:</li>
 </ul>
 
+<pre><code class="language-cpp">Rational a, b, c, d, result;
+...
+result = a + b + c + d;  // 3 potential temporary objects, one for each call to operator+
+</code></pre>
+
 <p>This version is easy to write, debug, and maintain, and it offers acceptable performance about 80% of the time (MECpp item 16).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">result <span style="color:#f92672">=</span> a;    <span style="color:#75715e">// no temporary
-</span><span style="color:#75715e"></span>result <span style="color:#f92672">+</span><span style="color:#f92672">=</span> b;   <span style="color:#75715e">// no temporary
-</span><span style="color:#75715e"></span>result <span style="color:#f92672">+</span><span style="color:#f92672">=</span> c;   <span style="color:#75715e">// no temporary
-</span><span style="color:#75715e"></span>result <span style="color:#f92672">+</span><span style="color:#f92672">=</span> d;   <span style="color:#75715e">// no temporary
-</span></code></pre></div>
+
+<pre><code class="language-cpp">result = a;    // no temporary
+result += b;   // no temporary
+result += c;   // no temporary
+result += d;   // no temporary
+</code></pre>
+
 <p>This version is more efficient.</p>
 
 <p>In summary, as a library designer, we should offer both, and as an application developer, we should consider using assignment versions of operators instead of stand-alone versions when trying to deal with the critical 20% code.</p>
@@ -424,24 +426,28 @@ result <span style="color:#f92672">=</span> a <span style="color:#f92672">+</spa
 <h1 id="relationship-between-op-and-stand-alone-op">Relationship between <code>op=</code> and stand-alone <code>op</code></h1>
 
 <p>To ensure the natural relationship between the assignment version of an operator (e.g., <code>operator+=</code>) and the stand-alone version (e.g., <code>operator+</code>) exists, we can implement the latter in terms of the former (MECpp item 6):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Rational {
+public:
     ...
-    Rational<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs);
+    Rational&amp; operator+=(const Rational&amp; rhs);
 };
 
-<span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
+const Rational operator+(const Rational&amp; lhs, const Rational&amp; rhs)
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Rational</span>(lhs) <span style="color:#f92672">+</span><span style="color:#f92672">=</span> rhs;
+    return Rational(lhs) += rhs;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Further more, if we don&rsquo;t mind putting all stand-alone operators at global scope, we can use templates to eliminate the need to write the stand-alone functions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">const</span> T <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+const T operator+(const T&amp; lhs, const T&amp; rhs)
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">T</span>(lhs) <span style="color:#f92672">+</span><span style="color:#f92672">=</span> rhs;
+    return T(lhs) += rhs;
 }
-</code></pre></div>
+</code></pre>
+
 <p>A few points worth noting in this implementation of <code>operator+</code>:</p>
 
 <ul>

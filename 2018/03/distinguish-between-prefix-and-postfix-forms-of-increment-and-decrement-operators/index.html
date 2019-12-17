@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-6 Distinguish Between Prefix and Postfix Forms of Increment and Decrement Operators</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -401,48 +401,50 @@ Suffering is optional.</p>
 <h1 id="case-study">Case Study</h1>
 
 <p>Overloaded functions are differentiated on the basis of the parameter types they take, but neither prefix nor postfix increment or decrement takes an argument. To surmount this linguistic pothole, it was decreed that postfix forms take in <code>int</code> argument, and compilers silently pass 0 as that <code>int</code> when those functions are called:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UPInt</span> {  <span style="color:#75715e">// customized &#34;unlimited precisioin int&#34;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    UPInt<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>();           <span style="color:#75715e">// prefiex ++
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> UPInt <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">int</span>);   <span style="color:#75715e">// postfix ++
-</span><span style="color:#75715e"></span>
-    UPInt<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>();           <span style="color:#75715e">// prefiex --
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> UPInt <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>(<span style="color:#66d9ef">int</span>);   <span style="color:#75715e">// postfix --
-</span><span style="color:#75715e"></span>    
-    UPInt<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">int</span>);        <span style="color:#75715e">// += operator for UPInts and ints
-</span><span style="color:#75715e"></span>    ...    
+
+<pre><code class="language-cpp">class UPInt {  // customized &quot;unlimited precisioin int&quot;
+public:
+    UPInt&amp; operator++();           // prefiex ++
+    const UPInt operator++(int);   // postfix ++
+
+    UPInt&amp; operator--();           // prefiex --
+    const UPInt operator--(int);   // postfix --
+    
+    UPInt&amp; operator+=(int);        // += operator for UPInts and ints
+    ...    
 };
 
 UPInt i;
 
-<span style="color:#f92672">+</span><span style="color:#f92672">+</span>i;  <span style="color:#75715e">// calls i.operator++();
-</span><span style="color:#75715e"></span>i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>;  <span style="color:#75715e">// calls i.operator++(0);
-</span><span style="color:#75715e"></span>
-<span style="color:#f92672">-</span><span style="color:#f92672">-</span>i;  <span style="color:#75715e">// calls i.operator--();
-</span><span style="color:#75715e"></span>i<span style="color:#f92672">-</span><span style="color:#f92672">-</span>;  <span style="color:#75715e">// calls i.operator--(0);
-</span></code></pre></div>
+++i;  // calls i.operator++();
+i++;  // calls i.operator++(0);
+
+--i;  // calls i.operator--();
+i--;  // calls i.operator--(0);
+</code></pre>
+
 <p>The return types difference is caused by the different behavior between prefix forms and postfix forms. For <code>++operator</code>:</p>
 
 <ul>
 <li>Prefix form is &ldquo;increment and fetch&rdquo;</li>
-
-<li><p>Postfix form is &ldquo;fetch and increment&rdquo;</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// prefix form: increment and fetch
-</span><span style="color:#75715e"></span>UPInt<span style="color:#f92672">&amp;</span> UPInt<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>()
-{
-<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span> <span style="color:#f92672">+</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;    <span style="color:#75715e">// increment
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;  <span style="color:#75715e">// fetch
-</span><span style="color:#75715e"></span>}
-
-<span style="color:#75715e">// postfix form: fetch and increment
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> UPInt UPInt<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">int</span>)
-{
-<span style="color:#66d9ef">const</span> UPInt oldVal <span style="color:#f92672">=</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;  <span style="color:#75715e">// fetch
-</span><span style="color:#75715e"></span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>(<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>);                   <span style="color:#75715e">// increment
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">return</span> oldVal;               <span style="color:#75715e">// return what was fetched
-</span><span style="color:#75715e"></span>}
-</code></pre></div></li>
+<li>Postfix form is &ldquo;fetch and increment&rdquo;</li>
 </ul>
+
+<pre><code class="language-cpp">// prefix form: increment and fetch
+UPInt&amp; UPInt::operator++()
+{
+    *this += 1;    // increment
+    return *this;  // fetch
+}
+
+// postfix form: fetch and increment
+const UPInt UPInt::operator++(int)
+{
+    const UPInt oldVal = *this;  // fetch
+    ++(*this);                   // increment
+    return oldVal;               // return what was fetched
+}
+</code></pre>
 
 <p>Apart from the obvious inefficiency resulting from the fact that postfix increment function creates a temporary object for its return value (MECpp item 19), as well as the explicit temporary object <code>oldVal</code> that has to be constructed and destructed, leading to the conclusion that prefix increment should be used whenever possible for its inherently higher efficiency, there are three points worth noting for the implementation of postfix form of <code>operator++</code>:</p>
 
@@ -456,16 +458,19 @@ UPInt i;
 
 <ul>
 <li><p>it&rsquo;s consistent with the behavior of the built-in types, since <code>int</code>s most certainly do not allow double application of postfix increment:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> i;
-i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>;  <span style="color:#75715e">// error!
-</span></code></pre></div></li>
 
-<li><p>if return value is not const, the behavior will be counterintuitive and confusing: after applying <code>i++++</code>, the second <code>operator++</code> changes the value of the object returned from the first invocation, instead of the value of the original object. Hence, <code>i</code> ends up being incremented only once.</p></li>
+<pre><code class="language-cpp">int i;
+i++++;  // error!
+</code></pre>
+
+<ul>
+<li>if return value is not const, the behavior will be counterintuitive and confusing: after applying <code>i++++</code>, the second <code>operator++</code> changes the value of the object returned from the first invocation, instead of the value of the original object. Hence, <code>i</code> ends up being incremented only once.</li>
 </ul>
 
 <h2 id="3-implement-postfix-operators-in-terms-of-the-prefix-ones">3. Implement postfix operators in terms of the prefix ones</h2>
 
-<p>Both the prefix and postfix increment operators do the same thing: incrementing a value. In order to guarantee implementation won&rsquo;t diverge over time, postfix increment and decrement should be implemented <em>in terms of</em> their prefix counterparts. Then we only need to maintain the prefix versions.</p>
+<p>Both the prefix and postfix increment operators do the same thing: incrementing a value. In order to guarantee implementation won&rsquo;t diverge over time, postfix increment and decrement should be implemented <em>in terms of</em> their prefix counterparts. Then we only need to maintain the prefix versions.</p></li>
+</ul>
               
             </div>
           </div>

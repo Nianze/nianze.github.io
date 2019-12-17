@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-13 Catch Exceptions by Reference</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -398,22 +398,26 @@ Suffering is optional.</p>
 <h1 id="catch-by-pointer">Catch by pointer</h1>
 
 <p>In order to catch by pointer, programmers need to define exception objects in a way that <strong>guarantees the objects exist</strong> after control leaves the <code>throw</code> site. Global and static objects work fine, but it&rsquo;s easy for programmers to forget the constraint:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">someFunction</span>()
+
+<pre><code class="language-cpp">void someFunction()
 {
     exception ex;
     ...
-    <span style="color:#66d9ef">throw</span> <span style="color:#f92672">&amp;</span>ex;   <span style="color:#75715e">// throw a pointer to an object 
-</span><span style="color:#75715e"></span>    ...          <span style="color:#75715e">// that&#39;s about to be destroyed
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    throw &amp;ex;   // throw a pointer to an object 
+    ...          // that's about to be destroyed
+}
+</code></pre>
+
 <p>An alternative is to throw a pointer to a new heap object:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">someFunction</span>()
+
+<pre><code class="language-cpp">void someFunction()
 {
     ...
-    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> exception; <span style="color:#75715e">// throw a pointer to a new heap-based object 
-</span><span style="color:#75715e"></span>    ...  <span style="color:#75715e">// hopefully the objerator new will not itself throw any exception
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    throw new exception; // throw a pointer to a new heap-based object 
+    ...  // hopefully the objerator new will not itself throw any exception
+}
+</code></pre>
+
 <p>This design will make a hard time for authors of <code>catch</code> clauses: <strong>to delete or not to delete</strong> the pointer they receive? In the <code>catch</code> site, we can&rsquo;t tell if an exception object is allocated on the heap or defined as a global (or static) object.</p>
 
 <p>Furthermore, catch-by-pointer runs <strong>contrary to the convention</strong> of the language: the four standard exception<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> - <code>bad_alloc</code>, <code>bad_cast</code>, <code>bad_typeid</code>, and <code>bad_exception</code> are all objects, rather than pointers to objefts, so we have to catch them by value or by reference.</p>

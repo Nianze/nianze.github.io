@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-27 Alternatives to Overloading on Universal References</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -408,47 +408,51 @@ Suffering is optional.</p>
 <h1 id="pass-by-value">Pass by value</h1>
 
 <p>According to the advice in Item 41, we may consider passing objects by value when we know we&rsquo;ll copy them. Thus, the <code>Person</code> example may get revised like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">explicit</span> Person(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string n)
-    <span style="color:#f92672">:</span> name(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(n)) {}
-    <span style="color:#66d9ef">explicit</span> <span style="color:#a6e22e">Person</span>(<span style="color:#66d9ef">int</span> idx)
-    <span style="color:#f92672">:</span> name(nameFromIdx(idx)) {}
+
+<pre><code class="language-cpp">class Person {
+public:
+    explicit Person(std::string n)
+    : name(std::move(n)) {}
+    explicit Person(int idx)
+    : name(nameFromIdx(idx)) {}
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string name;
+private:
+    std::string name;
 };
-</code></pre></div>
+</code></pre>
+
 <p>With this design, <code>int</code>-like arguments get passed to <code>int</code> overload, and arguments of type <code>std::string</code> (and anything from which <code>std::string</code> could be created, e.g., literals) get passed to the <code>std::string</code> overload.</p>
 
 <h1 id="use-tag-dispatch">Use Tag dispatch</h1>
 
 <p>Add another &ldquo;tag&rdquo; parameter to help compiler differentiate the overloading cases as we want:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> logAndAdd(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> name)
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void logAndAdd(T&amp;&amp; name)
 {
     logAndAddImpl(
-        std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(name),
-        std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_integral<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&gt;</span>()
+        std::forward&lt;T&gt;(name),
+        std::is_integral&lt;typename std::remove_reference&lt;T&gt;::type&gt;()
     );
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> logAndAddImpl(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> name, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>false_type)
+template&lt;typename T&gt;
+void logAndAddImpl(T&amp;&amp; name, std::false_type)
 {
-    <span style="color:#66d9ef">auto</span> now <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>chrono<span style="color:#f92672">:</span><span style="color:#f92672">:</span>system_clock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>now();
-    log(now, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">logAndAdd</span><span style="color:#e6db74">&#34;</span>);
-    names.emplace(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(name));
+    auto now = std::chrono::system_clock::now();
+    log(now, &quot;logAndAdd&quot;);
+    names.emplace(std::forward&lt;T&gt;(name));
 }
 
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string nameFromIdx(<span style="color:#66d9ef">int</span> idx);
+std::string nameFromIdx(int idx);
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> logAndAddImpl(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> name, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>true_type)
+template&lt;typename T&gt;
+void logAndAddImpl(T&amp;&amp; name, std::true_type)
 {
     logAndAdd(nameFromIdx(idx));
 }
-</code></pre></div>
+</code></pre>
+
 <p>Conceptually, <code>true</code> and <code>false</code> are <em>runtime</em> values, and what we need here for the tag parameter should be <em>compil-time</em> types that corresponds to <code>true</code> and <code>false</code>, which in the Standard Library are called <code>std::true_type</code> and <code>std::false_type</code>. This compile-time variables serve no purpose at runtime, so some compilers who&rsquo;s smart enough may recognize these tag parameters and optimize them out of the program&rsquo;s execution image.</p>
 
 <p>Tag dispatch is a standard building block of template metaprogramming to let the tag determine which overload gets called, so that overloading on universal references may work as expect.</p>
@@ -460,95 +464,104 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>strin
 <p>Thus, we want to constrain on when the function template is permitted to be employed. By default, all templates are <em>enabled</em>, but a template using <code>std::enable_if</code> is enabled only if the condition specified by <code>std::enable_if</code> is satisfied.</p>
 
 <p>In the case of <code>Person</code>&rsquo;s perfect forwarding constructor, we want to enable its instantiation only if the type being passed isn&rsquo;t <code>Person</code>, so that the class&rsquo;s copy or move constructor my handle the calls where a <code>Person</code> object gets passed in. Specifically, when checking the type of the argument being passed, we want to ignore its referenceness, constness, and volatileness using <code>std::decay&lt;T&gt;</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-        <span style="color:#66d9ef">typename</span> T,
-        <span style="color:#66d9ef">typename</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>enable_if<span style="color:#f92672">&lt;</span>
-                        <span style="color:#f92672">!</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_same<span style="color:#f92672">&lt;</span>Person,
-                                      <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>decay<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type
-                                     <span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value
-                   <span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type
-    <span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">explicit</span> Person(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n);
+
+<pre><code class="language-cpp">class Person {
+public:
+    template&lt;
+        typename T,
+        typename = typename std::enable_if&lt;
+                        !std::is_same&lt;Person,
+                                      typename std::decay&lt;T&gt;::type
+                                     &gt;::value
+                   &gt;::type
+    &gt;
+    explicit Person(T&amp;&amp; n);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Moreover, if we want to make sure the derived class work properly, the conditions for <code>std::enble_if</code> get more restricted: we want to enable it for any argument type other than <em><code>Person</code> or a type derived from <code>Person</code></em>. To determian whether one type is derived from another, we can use <code>std::is_base_of&lt;T1, T2&gt;</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-        <span style="color:#66d9ef">typename</span> T,
-        <span style="color:#66d9ef">typename</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>enable_if<span style="color:#f92672">&lt;</span>
-                        <span style="color:#f92672">!</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_base_of<span style="color:#f92672">&lt;</span>Person,
-                                         <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>decay<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type
-                                        <span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value
-                   <span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type
-    <span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">explicit</span> Person(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n);
+
+<pre><code class="language-cpp">class Person {
+public:
+    template&lt;
+        typename T,
+        typename = typename std::enable_if&lt;
+                        !std::is_base_of&lt;Person,
+                                         typename std::decay&lt;T&gt;::type
+                                        &gt;::value
+                   &gt;::type
+    &gt;
+    explicit Person(T&amp;&amp; n);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>In C++14, by employing alias templates, we can save some typing for <code>typename</code> and <code>::type</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span>;
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-        <span style="color:#66d9ef">typename</span> T,
-        <span style="color:#66d9ef">typename</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>enbale_if_t<span style="color:#f92672">&lt;</span>
-            <span style="color:#f92672">!</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_base_of<span style="color:#f92672">&lt;</span>Person, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>decay_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value
-        <span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">explicit</span> Person(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n);
+
+<pre><code class="language-cpp">class Person {
+public;
+    template&lt;
+        typename T,
+        typename = std::enbale_if_t&lt;
+            !std::is_base_of&lt;Person, std::decay_t&lt;T&gt;&gt;::value
+        &gt;
+    &gt;
+    explicit Person(T&amp;&amp; n);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Finally, to get our perfect forwarding constructor to work with the <code>int</code> overload, we have to add another constrain in <code>std::enbale_if</code> to check the integral arguments type:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span>;
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-        <span style="color:#66d9ef">typename</span> T,
-        <span style="color:#66d9ef">typename</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>enbale_if_t<span style="color:#f92672">&lt;</span>
-            <span style="color:#f92672">!</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_base_of<span style="color:#f92672">&lt;</span>Person, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>decay_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value
-            <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-            <span style="color:#f92672">!</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_integral<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove_reference_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value
-        <span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&gt;</span>    
-    <span style="color:#66d9ef">explicit</span> Person(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n)   <span style="color:#75715e">// ctor for std::strings and args convertible to std::strings
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> name(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(n))
+
+<pre><code class="language-cpp">class Person {
+public;
+    template&lt;
+        typename T,
+        typename = std::enbale_if_t&lt;
+            !std::is_base_of&lt;Person, std::decay_t&lt;T&gt;&gt;::value
+            &amp;&amp;
+            !std::is_integral&lt;std::remove_reference_t&lt;T&gt;&gt;::value
+        &gt;
+    &gt;    
+    explicit Person(T&amp;&amp; n)   // ctor for std::strings and args convertible to std::strings
+    : name(std::forward&lt;T&gt;(n))
     { ... }
 
-    <span style="color:#66d9ef">explicit</span> <span style="color:#a6e22e">Person</span>(<span style="color:#66d9ef">int</span> idx) <span style="color:#75715e">// ctor for integral args
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> name(nameFromIdx(idx))
+    explicit Person(int idx) // ctor for integral args
+    : name(nameFromIdx(idx))
     { ... }
 
-    ...                      <span style="color:#75715e">// copy and move ctors, etc.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string name;
+    ...                      // copy and move ctors, etc.
+private:
+    std::string name;
 };
-</code></pre></div>
+</code></pre>
+
 <p>To make even more effective code, considering some kinds of arguments can&rsquo;t be perfect-forwarded, as well as the fact that forwarding functions tend to create lengthy error messages, which is debug-unfriendly, we can use <code>static_assert</code>, accompanied with <code>std::is_constructible</code>, to perform a compile-time test to determine whether an object of one type can be constructed from an object (or a set of objects) of a different type (or set of types):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span>;
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>
-        <span style="color:#66d9ef">typename</span> T,
-        <span style="color:#66d9ef">typename</span> <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>enbale_if_t<span style="color:#f92672">&lt;</span>
-            <span style="color:#f92672">!</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_base_of<span style="color:#f92672">&lt;</span>Person, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>decay_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value
-            <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-            <span style="color:#f92672">!</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_integral<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove_reference_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value
-        <span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&gt;</span>    
-    <span style="color:#66d9ef">explicit</span> Person(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n)   <span style="color:#75715e">// ctor for std::strings and args convertible to std::strings
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> name(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(n))
+
+<pre><code class="language-cpp">class Person {
+public;
+    template&lt;
+        typename T,
+        typename = std::enbale_if_t&lt;
+            !std::is_base_of&lt;Person, std::decay_t&lt;T&gt;&gt;::value
+            &amp;&amp;
+            !std::is_integral&lt;std::remove_reference_t&lt;T&gt;&gt;::value
+        &gt;
+    &gt;    
+    explicit Person(T&amp;&amp; n)   // ctor for std::strings and args convertible to std::strings
+    : name(std::forward&lt;T&gt;(n))
     { 
-        <span style="color:#66d9ef">static_assert</span>(
-            std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>is_constructible<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string, T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value,
-            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Parameter n can&#39;t be used to construct a std::string</span><span style="color:#e6db74">&#34;</span>
+        static_assert(
+            std::is_constructible&lt;std::string, T&gt;::value,
+            &quot;Parameter n can't be used to construct a std::string&quot;
         );
-        ...  <span style="color:#75715e">// the usual ctor work goes here
-</span><span style="color:#75715e"></span>    }
+        ...  // the usual ctor work goes here
+    }
     ...
 };
-</code></pre></div>
+</code></pre>
               
             </div>
           </div>

@@ -65,7 +65,7 @@
 
     <title>Item-17 Store newed objects in smart pointers in standalone statements</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -388,17 +388,23 @@ Suffering is optional.</p>
               <p>Failure to do this can lead to subtle resource leaks when exceptions are thrown.</p>
 
 <p>Suppose there&rsquo;re two functions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">priority</span>(); <span style="color:#75715e">// reveal processing priority
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processWidget</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> pw, <span style="color:#66d9ef">int</span> priority); <span style="color:#75715e">// do some processing on a dynamically allocated `Widget` in accord with the priority above
-</span></code></pre></div>
+
+<pre><code class="language-cpp">int priority(); // reveal processing priority
+void processWidget(std::tr1::shared&lt;Widget&gt; pw, int priority); // do some processing on a dynamically allocated `Widget` in accord with the priority above
+</code></pre>
+
 <p>Apparently, following code won&rsquo;t compile:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">processWidget(<span style="color:#66d9ef">new</span> Widget, priority());
-</code></pre></div>
+
+<pre><code class="language-cpp">processWidget(new Widget, priority());
+</code></pre>
+
 <p>This is because <code>tr1::shared_ptr</code>&rsquo;s constructor taking a raw is <code>explicit</code>, there&rsquo;s no implicit conversion from the raw pointer (returned by <code>new Widget</code>) to the <code>tr1::shared_ptr</code> (required by <code>processWidget</code>).</p>
 
 <p>However, even though the code below does compile, seems correct, and carefully uses <code>shared_ptr</code> to manage resource, it may still leak resources:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">processWidget(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> Widget), priority());
-</code></pre></div>
+
+<pre><code class="language-cpp">processWidget(std::tr1::shared_ptr&lt;Widget&gt;(new Widget), priority());
+</code></pre>
+
 <p>The two arguments as function parameters must be evaluated before a call to <code>processWidget</code> is generated, and the first argument actually consists of two parts:</p>
 
 <ul>
@@ -425,9 +431,11 @@ Suffering is optional.</p>
 <p>The problem here is that, once the call to <code>priority</code> yields an exception, the pointer returned from <code>new Widget</code> has not turned over to the resource-managing object, and resource leaks.</p>
 
 <p>Luckily, it is very simple to avoid this problem: use a separate statement to create <code>Widget</code> and store it in a smart pointer, then pass the smart pointer to <code>processWidget</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> pw(<span style="color:#66d9ef">new</span> Widget); <span style="color:#75715e">// standalone statement
-</span><span style="color:#75715e"></span>processWidget(pw, priority());  <span style="color:#75715e">// won&#39;t leak
-</span></code></pre></div>
+
+<pre><code class="language-cpp">std::tr1::shared_ptr&lt;Widget&gt; pw(new Widget); // standalone statement
+processWidget(pw, priority());  // won't leak
+</code></pre>
+
 <p>Now the <code>new Widget</code> expression and the call to <code>tr1::shared_ptr</code> constructor are in a different statement from the call to <code>priority</code>, compilers are not allowed to move the call to <code>priority</code> between them.</p>
               
             </div>

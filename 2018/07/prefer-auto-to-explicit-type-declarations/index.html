@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-5 Prefer Auto to Explicit Type Declarations</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -400,55 +400,67 @@ Suffering is optional.</p>
 <h1 id="avoidance-of-uninitialized-variables">Avoidance of Uninitialized variables</h1>
 
 <p><code>auto</code> variavbles have their type deduced from their initializer, so they must be initialized.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> x1;  <span style="color:#75715e">// potentially unintialized
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> x2;  <span style="color:#75715e">// error! initializer required
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> x3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// fine, x3&#39;s value is well-defined
-</span></code></pre></div>
+
+<pre><code class="language-cpp">int x1;  // potentially unintialized
+auto x2;  // error! initializer required
+auto x3 = 0; // fine, x3's value is well-defined
+</code></pre>
+
 <h1 id="avoidance-of-syntactic-verbosity">Avoidance of Syntactic Verbosity</h1>
 
 <p>In order to express the type of the value pointed to by an iterator, without <code>auto</code>, we may write like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> It<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> dwim(It b, It e) <span style="color:#75715e">// &#34;do what I mean&#34;. for all elements in range from b to e
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">for</span> (; b <span style="color:#f92672">!</span><span style="color:#f92672">=</span> e; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>b) {
-        <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator_traits<span style="color:#f92672">&lt;</span>It<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value_type currValue <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>b;
-        ...
-    }
-}
-</code></pre></div>
-<p>Thanks to <code>auto</code>, now we can declare a local variable whose value is that of a dereferenced iterator with ease:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> It<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> dwim(It b, It e)
+
+<pre><code class="language-cpp">template&lt;typename It&gt;
+void dwim(It b, It e) // &quot;do what I mean&quot;. for all elements in range from b to e
 {
-    <span style="color:#66d9ef">for</span> (; b <span style="color:#f92672">!</span><span style="color:#f92672">=</span> e; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>b) {
-        <span style="color:#66d9ef">auto</span> currValue <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>b;
+    for (; b != e; ++b) {
+        typename std::iterator_traits&lt;It&gt;::value_type currValue = *b;
         ...
     }
 }
-</code></pre></div>
+</code></pre>
+
+<p>Thanks to <code>auto</code>, now we can declare a local variable whose value is that of a dereferenced iterator with ease:</p>
+
+<pre><code class="language-cpp">template&lt;typename It&gt;
+void dwim(It b, It e)
+{
+    for (; b != e; ++b) {
+        auto currValue = *b;
+        ...
+    }
+}
+</code></pre>
+
 <h1 id="ability-to-hold-closure">Ability to Hold Closure</h1>
 
 <p>Because <code>auto</code> uses type deduction, it can represent types known only to compilers, such as lambda expressions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// C++14
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> derefLess <span style="color:#f92672">=</span>           <span style="color:#75715e">// comparison func. for values pointed
-</span><span style="color:#75715e"></span>    [](<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> p1,     <span style="color:#75715e">// to by anything pointer-like
-</span><span style="color:#75715e"></span>       <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> p2) 
-    { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>p1 <span style="color:#f92672">&lt;</span> <span style="color:#f92672">*</span>p2; };  
-</code></pre></div>
+
+<pre><code class="language-cpp">// C++14
+auto derefLess =           // comparison func. for values pointed
+    [](const auto&amp; p1,     // to by anything pointer-like
+       const auto&amp; p2) 
+    { return *p1 &lt; *p2; };  
+</code></pre>
+
 <p>or in C++11, a little more verbose:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// C++11 doesn&#39;t support auto for parameters to lambda, so more verbose.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> derefUPLess <span style="color:#f92672">=</span>  <span style="color:#75715e">// comparison func. for Wdigets pointed
-</span><span style="color:#75715e"></span>    [](<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> p1,  <span style="color:#75715e">// to by std::unique_ptr
-</span><span style="color:#75715e"></span>       <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> p2)  
-    { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>p1 <span style="color:#f92672">&lt;</span> <span style="color:#f92672">*</span>p2; }; 
-</code></pre></div>
+
+<pre><code class="language-cpp">// C++11 doesn't support auto for parameters to lambda, so more verbose.
+auto derefUPLess =  // comparison func. for Wdigets pointed
+    [](const std::unique_ptr&lt;Widget&gt;&amp; p1,  // to by std::unique_ptr
+       const std::unique_ptr&lt;Widget&gt;&amp; p2)  
+    { return *p1 &lt; *p2; }; 
+</code></pre>
+
 <p>Without using <code>auto</code>, since lambda expressions yield closures, which are callable objects, we can store them in <code>std::function</code> objects:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>function<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span>, 
-              <span style="color:#66d9ef">bool</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span>)<span style="color:#f92672">&gt;</span>
-    derefUPLess <span style="color:#f92672">=</span> [](<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> p1, <span style="color:#75715e">// comparison func. for Wdigets pointed
-</span><span style="color:#75715e"></span>                     <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> p2) <span style="color:#75715e">// to by std::unique_ptr
-</span><span style="color:#75715e"></span>                    { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>p1 <span style="color:#f92672">&lt;</span> <span style="color:#f92672">*</span>p2; };
-</code></pre></div>
+
+<pre><code class="language-cpp">std::function&lt;bool(const std::unique_ptr&lt;Widget&gt;&amp;, 
+              bool(const std::unique_ptr&lt;Widget&gt;&amp;)&gt;
+    derefUPLess = [](const std::unique_ptr&lt;Widget&gt;&amp; p1, // comparison func. for Wdigets pointed
+                     const std::unique_ptr&lt;Widget&gt;&amp; p2) // to by std::unique_ptr
+                    { return *p1 &lt; *p2; };
+</code></pre>
+
 <p>As we can see, syntactic verbosity makes <code>auto</code> a preferred choice. Besides that, there are two more reasons to choose <code>auto</code>:</p>
 
 <ol>
@@ -461,21 +473,25 @@ Suffering is optional.</p>
 <h1 id="avoidance-of-unexpected-implicit-conversions">Avoidance of Unexpected Implicit Conversions</h1>
 
 <p>Consider this code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unordered_map<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> m;
+
+<pre><code class="language-cpp">std::unordered_map&lt;std::string, int&gt; m;
 ...
-<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>pair<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> p : m)
+for (const std::pair&lt;std::string, int&gt;&amp; p : m)
 {
     ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>This looks perfectly reasonable, but there&rsquo;s a problem: the key part of a <code>std::unorderd_map</code> is <code>const</code>, so the type of <code>std::pair</code> in the hash table isn&rsquo;t <code>std::pair&lt;std::string, int&gt;</code>, but <code>std::pair&lt;const std::string, int&gt;</code>. Since the constness hasn&rsquo;t been declared for the variable <code>p</code> in the loop, compilers will create a temporary object of the type that <code>p</code> wants to bind to by coping each object in <code>m</code>, then binding the reference <code>p</code> to that temporary object, and finally destroy the temporary at the end of each loop iteration. This is almost certain to be an unwanted behavior - we probably intend to simply bind the reference <code>p</code> to each element in <code>m</code> directly.</p>
 
 <p>Such unintentional type mismatches can be <code>auto</code>ed away:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> p : m)
+
+<pre><code class="language-cpp">for (auto&amp; p : m)
 {
     ...
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="avoidance-of-explicit-type-revising-during-refactoring">Avoidance of Explicit Type Revising during Refactoring</h1>
 
 <p><code>auto</code> types automatically change if the type of their initializing expression changes, and that means that some refactoring (e.g., change the return type of a function from <code>int</code> to <code>long</code>) are facilitated by the use of <code>auto</code>:</p>

@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-30 Proxy Classes</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -403,32 +403,38 @@ Suffering is optional.</p>
 <h1 id="implementing-two-dimensional-arrays">Implementing Two-Dimensional Arrays</h1>
 
 <p>Consider this statement:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> data[<span style="color:#ae81ff">10</span>][<span style="color:#ae81ff">20</span>];
+
+<pre><code class="language-cpp">int data[10][20];
 ...
-cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> data[<span style="color:#ae81ff">3</span>][<span style="color:#ae81ff">6</span>]; <span style="color:#75715e">// fine
-</span></code></pre></div>
+cout &lt;&lt; data[3][6]; // fine
+</code></pre>
+
 <p>We want to create a general 2D array supporting operations such as <code>data[3][6]</code>. However, there&rsquo;s no such thing as a <code>operator[][]</code> in C++. The reason it is legal to write code above that appears to use <code>operator[][]</code> is because the variable <code>data</code> is not really a two-dimensinal array at all, but a 10-element one-dimensional array, each element of which is itself a 20-element array. So the expression <code>data[3][6]</code> really means <code>(data[3])[6]</code> - the seventh element of the array that is the fourth element of <code>data</code>.</p>
 
 <p>Playing the same trick as above, we can define our <code>Array2D</code> class by overloading <code>operator[]</code> to return an object of a new class, <code>Array1D</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Array2D</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Array1D</span> {
-    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-        T<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index);
-        <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>;
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class Array2D {
+public:
+    class Array1D {
+    public:
+        T&amp; operator[](int index);
+        const T&amp; operator[](int index) const;
     };
 
-    Array1D <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index);
-    <span style="color:#66d9ef">const</span> Array1D <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>;
+    Array1D operator[](int index);
+    const Array1D operator[](int index) const;
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Then it is legal to write code like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Array2D<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> data(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>);
+
+<pre><code class="language-cpp">Array2D&lt;float&gt; data(10, 20);
 ...
-cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> data[<span style="color:#ae81ff">3</span>][<span style="color:#ae81ff">6</span>];
-</code></pre></div>
+cout &lt;&lt; data[3][6];
+</code></pre>
+
 <p>Conceptually intances of <code>Array1D</code> class (which is a <em>proxy class</em>) do not exist for clients of <code>Array2D</code>. Such clients program as if they were using real, live two-dimensional arrays.</p>
 
 <h1 id="distinguishing-reads-from-writes-via-operator">Distinguishing Reads from Writes via operator[]</h1>
@@ -445,28 +451,30 @@ cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</sp
 <p>From MECpp item 29 reference counting, we can see reads can be much less expensive than writes - writes of reference-counted object may involve copying an entire data structure, while reads never require more than the simple returning of a value - so it will save a lot to differentiate lvalue usage from rvalue usage. However, it is impossible to tell whether <code>operator[]</code> is beeing invoked in an lvalue or an rvalue context from within <code>operator[]</code> - <code>operator[]</code> alone does not have the ability to determine the calling context.</p>
 
 <p>The solution: we <em>delay</em> our lvalue-vs-rvalue actions until we see how the result of <code>operator[]</code> is used - by using proxy class to postpone our decision until <em>after</em> <code>operator[]</code> has returned (lazy evaluation, see MECpp item 7):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {   <span style="color:#75715e">// reference-counted strings
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
 
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CharProxy</span> {   <span style="color:#75715e">// proxy fro string chars
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-        CharProxy(String<span style="color:#f92672">&amp;</span> str, <span style="color:#66d9ef">int</span> index);  <span style="color:#75715e">// creation
-</span><span style="color:#75715e"></span>        CharProxy<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> CharProxy<span style="color:#f92672">&amp;</span> rhs); <span style="color:#75715e">// lvalue uses
-</span><span style="color:#75715e"></span>        CharProxy<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">char</span> c);  <span style="color:#75715e">// lvalue uses
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">char</span>() <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// rvalue uses
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-        String<span style="color:#f92672">&amp;</span> theString;  <span style="color:#75715e">// string this proxy pertains to        
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> charIndex;  <span style="color:#75715e">// char within that string this proxy stands for
-</span><span style="color:#75715e"></span>    };
+<pre><code class="language-cpp">class String {   // reference-counted strings
+public:
 
-    <span style="color:#66d9ef">const</span> CharProxy <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// for const Strings
-</span><span style="color:#75715e"></span>    CharProxy <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index);  <span style="color:#75715e">// for non-const Strings
-</span><span style="color:#75715e"></span>    ...
-    <span style="color:#66d9ef">friend</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CharProxy</span>; <span style="color:#75715e">// CharProxy need access to private data member: value
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    RCPtr<span style="color:#f92672">&lt;</span>StringValue<span style="color:#f92672">&gt;</span> value;
+    class CharProxy {   // proxy fro string chars
+    public:
+        CharProxy(String&amp; str, int index);  // creation
+        CharProxy&amp; operator=(const CharProxy&amp; rhs); // lvalue uses
+        CharProxy&amp; operator=(char c);  // lvalue uses
+        operator char() const; // rvalue uses
+    private:
+        String&amp; theString;  // string this proxy pertains to        
+        int charIndex;  // char within that string this proxy stands for
+    };
+
+    const CharProxy operator[](int index) const; // for const Strings
+    CharProxy operator[](int index);  // for non-const Strings
+    ...
+    friend class CharProxy; // CharProxy need access to private data member: value
+private:
+    RCPtr&lt;StringValue&gt; value;
 };
-</code></pre></div>
+</code></pre>
+
 <p>Now let&rsquo;s see how it works. Given reference-counted stirngs using proxies above <code>String s1, s2;</code>,</p>
 
 <h2 id="for-rvalue-usage">For rvalue usage</h2>
@@ -482,47 +490,51 @@ cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</sp
 <p>Similarly, the statement <code>s1[3] = s2[7];</code> calls the assignment operator for two <code>CharProxy</code> objects, and inside the operator, we know the object on the left is being used as an lvalue and the object on the right as an rvalue.</p>
 
 <p>Now that we know exactly the context in which caller invokes the <code>operator[]</code>, it is easy to implement them:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>
+
+<pre><code class="language-cpp">const String::CharProxy String::operator[](int index) const
 {
-    <span style="color:#75715e">// return a const proxy
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// Because CharProxy::operator= isn&#39;t a const member function,
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// the returned proxies can&#39;t be used as the target of assignment, and this behavior is exactly what we want for const version of operator[]
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">CharProxy</span>(<span style="color:#66d9ef">const_cast</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>), index);
+    // return a const proxy
+    // Because CharProxy::operator= isn't a const member function,
+    // the returned proxies can't be used as the target of assignment, and this behavior is exactly what we want for const version of operator[]
+    return CharProxy(const_cast&lt;String&amp;&gt;(*this), index);
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index)
+String::CharProxy String::operator[](int index)
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">CharProxy</span>(<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>, index);
+    return CharProxy(*this, index);
 }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy(String<span style="color:#f92672">&amp;</span> str, <span style="color:#66d9ef">int</span> index)
-<span style="color:#f92672">:</span> theString(str), charIndex(index) {}
+</code></pre>
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">char</span>() <span style="color:#66d9ef">const</span>
+<pre><code class="language-cpp">String::CharProxy::CharProxy(String&amp; str, int index)
+: theString(str), charIndex(index) {}
+
+String::CharProxy::operator char() const
 {
-    <span style="color:#66d9ef">return</span> theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[charIndex];
+    return theString.value-&gt;data[charIndex];
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> CharProxy<span style="color:#f92672">&amp;</span> rhs)
+String::CharProxy&amp; String::CharProxy::operator=(const CharProxy&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isShared())
+    if (theString.value-&gt;isShared())
     {
-        theString.value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringValue(theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data);
+        theString.value = new StringValue(theString.value-&gt;data);
     }
-    theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[charIndex] <span style="color:#f92672">=</span> 
-        rhs.theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[charIndex];
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    theString.value-&gt;data[charIndex] = 
+        rhs.theString.value-&gt;data[charIndex];
+    return *this;
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">char</span> c)
+String::CharProxy&amp; String::CharProxy::operator=(char c)
 {
-    <span style="color:#66d9ef">if</span> (theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isShared())
+    if (theString.value-&gt;isShared())
     {
-        theString.value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringValue(theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data);
+        theString.value = new StringValue(theString.value-&gt;data);
     }
-    theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[charIndex] <span style="color:#f92672">=</span> c;
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    theString.value-&gt;data[charIndex] = c;
+    return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="preventing-implicit-conversions-in-single-argument-constructor">Preventing implicit conversions in single-argument constructor</h1>
 
 <p>Refer to MECpp item 5.</p>
@@ -533,65 +545,76 @@ String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Ch
 <li><p>Taking the address</p>
 
 <p>In general, taking the address of a proxy yields a different type of pointer than does taking the address of a real object. Thus, the statement <code>char *p = &amp;s1[1];</code> will cause error. To eliminate the problem, we&rsquo;ll have to overload the address-of operators for <code>CharProxy</code> class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class String {
+public:
     ...
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CharProxy</span> {
-        <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">&amp;</span>();
-        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">&amp;</span>() <span style="color:#66d9ef">const</span>;
+    class CharProxy {
+        char * operator&amp;();
+        const char * operator&amp;() const;
         ...
     };
     ...
 };
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&amp;</span>()
+</code></pre>
+
+<pre><code class="language-cpp">const char * String::CharProxy::operator&amp;()
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span>(theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[charIndex]);
+    return &amp;(theString.value-&gt;data[charIndex]);
 }
-<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>CharProxy<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">&amp;</span>()
+char * String::CharProxy::operator&amp;()
 {
-    <span style="color:#66d9ef">if</span> (theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isShared())
+    if (theString.value-&gt;isShared())
     {
-        theString.value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringValue(theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data);
+        theString.value = new StringValue(theString.value-&gt;data);
     }
-    theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>markUnshareable(); 
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span>(theString.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[charIndex]);
+    theString.value-&gt;markUnshareable(); 
+    return &amp;(theString.value-&gt;data[charIndex]);
 }
-</code></pre></div></li>
+</code></pre></li>
 
 <li><p>Integrating with templates</p>
 
 <p>If we have a template for reference-counted arrays that use proxy classes to distringuish lvalue and rvalue invocations of operator[]:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Array</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Proxy</span> {
-    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-        Proxy(Array<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> array, <span style="color:#66d9ef">int</span> index);
-        Proxy<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> rhs);
-        <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">T</span>() <span style="color:#66d9ef">const</span>;
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class Array {
+public:
+    class Proxy {
+    public:
+        Proxy(Array&lt;T&gt;&amp; array, int index);
+        Proxy&amp; operator=(const T&amp; rhs);
+        operator T() const;
         ...
     };
-    <span style="color:#66d9ef">const</span> Proxy <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>;
-    Proxy <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index);
+    const Proxy operator[](int index) const;
+    Proxy operator[](int index);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Then for <code>Array&lt;int&gt; intArray;</code>, we can&rsquo;t make statement such as <code>intArray[5] += 5;</code> or <code>++intArray[5];</code>, since <code>operator+=</code> and <code>operator++</code> is not defined for proxy objects. To solve this problem, we have to define each of these functions for the <code>Array&lt;T&gt;::Proxy</code>, which, unfortunately, is a lot of work.</p>
 
 <p>Similarly, we can&rsquo;t invoke member functions on real objects through  proxies. For an array taking <code>Rational</code> as elements (<code>Array&lt;Rational&gt; array;</code>), there is no way to invoke <code>Rational</code>&rsquo;s member function like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> array[<span style="color:#ae81ff">4</span>].numerator();  <span style="color:#75715e">// error!
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> denom <span style="color:#f92672">=</span> array[<span style="color:#ae81ff">22</span>].denominator();  <span style="color:#75715e">// error!
-</span></code></pre></div>
+
+<pre><code class="language-cpp">cout &lt;&lt; array[4].numerator();  // error!
+int denom = array[22].denominator();  // error!
+</code></pre>
+
 <p>The solution is similar: we need to overload these functions so that they also apply to proxies.</p></li>
 
 <li><p>Passed to functions taking references to non-const objects</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> a, <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> b);
-String s <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">+C+</span><span style="color:#e6db74">&#34;</span>;
-swap(s[<span style="color:#ae81ff">0</span>], s[<span style="color:#ae81ff">1</span>]);  <span style="color:#75715e">// won&#39;t compile
-</span></code></pre></div>
-<p>A <code>CharProxy</code> may be implicitly converted into a <code>char</code>, but there is no conversion function to a <code>char&amp;</code>. Further more, the <code>char</code> to which it may be converted can&rsquo;t be bound to swap&rsquo;s <code>char&amp;</code> parameters, because that <code>char</code> is a temporary object (<code>operator char</code> returns by value,) and, as MECpp item 19 explains, temporary objects are refused to be bound to non-const reference parameters.</p></li>
 
-<li><p>Implicit type conversions</p>
+<pre><code class="language-cpp">void swap(char&amp; a, char&amp; b);
+String s = &quot;+C+&quot;;
+swap(s[0], s[1]);  // won't compile
+</code></pre>
+
+<p>A <code>CharProxy</code> may be implicitly converted into a <code>char</code>, but there is no conversion function to a <code>char&amp;</code>. Further more, the <code>char</code> to which it may be converted can&rsquo;t be bound to swap&rsquo;s <code>char&amp;</code> parameters, because that <code>char</code> is a temporary object (<code>operator char</code> returns by value,) and, as MECpp item 19 explains, temporary objects are refused to be bound to non-const reference parameters.</p>
+
+<ol>
+<li>Implicit type conversions</li>
+</ol>
 
 <p>The process where a proxy object implicitly converted into the real object it stands for, a user-defined conversion function is invoked. As MECpp item 5 explains, only one user-defined conversion function is used by compiler when implicitly converting a parameter at a call site into the type needed by the corresponding function parameter.</p></li>
 </ol>

@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-23 Understand std::Move and std::Forward</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -405,22 +405,26 @@ Suffering is optional.</p>
 <h1 id="std-move">std::move</h1>
 
 <p>To make things concrete, a very basic implementation of <code>std::move</code> in C++11 looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-move(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param)
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+typename remove_reference&lt;T&gt;::type&amp;&amp;
+move(T&amp;&amp; param)
 {
-    <span style="color:#66d9ef">using</span> ReturnType <span style="color:#f92672">=</span> <span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>;
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>ReturnType<span style="color:#f92672">&gt;</span>(param);
+    using ReturnType = typename remove_reference&lt;T&gt;::type&amp;&amp;;
+    return static_cast&lt;ReturnType&gt;(param);
 }
-</code></pre></div>
+</code></pre>
+
 <p>Or, a more elegant implementation in C++14:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">decltype</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&gt;</span> move(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param)
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+decltype&lt;auto&gt; move(T&amp;&amp; param)
 {
-    <span style="color:#66d9ef">using</span> ReturnType <span style="color:#f92672">=</span> remove_reference_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>;
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>ReturnType<span style="color:#f92672">&gt;</span>(param);
+    using ReturnType = remove_reference_t&lt;T&gt;&amp;&amp;;
+    return static_cast&lt;ReturnType&gt;(param);
 }
-</code></pre></div>
+</code></pre>
+
 <p>Basically, <code>std::move</code> does nothing but cast its argument to an rvalue, and we might think it as <code>rvalue_cast</code>. Usually we want <code>move</code> operation on rvalues, so every time we see a <code>move</code> over some parameter, we know we want to perform move operation over the resulting rvalue. However, not all rvalues are candidates for moving, especailly those annotated by <code>const</code> - <em>move requests on <code>const</code> objects are silentlly transformed into copy operation</em>.</p>
 
 <h1 id="std-forward">std::forward</h1>
@@ -428,20 +432,24 @@ move(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;<
 <p><code>std::move</code> unconditionally casts its argument to an rvalue, while <code>std::forward</code> conditionally do so: it casts to an rvalue only if its argument was initialized with an rvalue.</p>
 
 <p>The most common scenario is a function template taking a universal reference parameter that is to be passed to another function:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">process</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> lvalArg);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">process</span>(Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rvalArg);
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> logAndProcess(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param)  <span style="color:#75715e">// universal reference
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">auto</span> now <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>chrono<span style="color:#f92672">:</span><span style="color:#f92672">:</span>system_clock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>now();
-    makeLogEntry(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Calling &#39;process&#39;</span><span style="color:#e6db74">&#34;</span>, now);
-    process(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(param));
+<pre><code class="language-cpp">void process(const Widget&amp; lvalArg);
+void process(Widget&amp;&amp; rvalArg);
+
+template&lt;typename T&gt;
+void logAndProcess(T&amp;&amp; param)  // universal reference
+{
+    auto now = std::chrono::system_clock::now();
+    makeLogEntry(&quot;Calling 'process'&quot;, now);
+    process(std::forward&lt;T&gt;(param));
 }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget w;
-logAndProcess(w);             <span style="color:#75715e">// call with lvalue
-</span><span style="color:#75715e"></span>logAndProcess(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(w));  <span style="color:#75715e">// call with rvalue
-</span></code></pre></div>
+</code></pre>
+
+<pre><code class="language-cpp">Widget w;
+logAndProcess(w);             // call with lvalue
+logAndProcess(std::move(w));  // call with rvalue
+</code></pre>
+
 <p>In the code above, <code>std::forward</code> is able to tell whether <code>param</code> is initialized with an lvalue or an rvalue because that information is encoded in <code>logAndProcess</code>&rsquo;s template parameter <code>T</code>, which is then passed to <code>std::forward</code>, which is able to recover the encoded information. For details, refer to EMCpp item 28.</p>
 
 <h1 id="comparison">Comparison</h1>

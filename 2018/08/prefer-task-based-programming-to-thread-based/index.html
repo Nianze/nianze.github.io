@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -396,9 +396,11 @@ Suffering is optional.</p>
 </ol>
 
 <p>Since software threads are a limited resource, a <code>std::system_error</code> exception may be thrown if we try to create more of them than the system can provide, even if the function we want to run can&rsquo;t throw:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">doAsyncWork</span>() <span style="color:#66d9ef">noexcept</span>;
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">thread</span> t(doAsyncWork);  <span style="color:#75715e">// throws if no more threads are available
-</span></code></pre></div>
+
+<pre><code class="language-cpp">int doAsyncWork() noexcept;
+std::thread t(doAsyncWork);  // throws if no more threads are available
+</code></pre>
+
 <p>This limitation leads to follow-up problems we need to deal with:</p>
 
 <ol>
@@ -407,8 +409,10 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span
 </ol>
 
 <p>Using <code>std::async</code> free us from all these problems by dumping them on somebody else who is responsible to implement the C++ Standard Library:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> fut <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>async(doAsyncWork);
-</code></pre></div>
+
+<pre><code class="language-cpp">auto fut = std::async(doAsyncWork);
+</code></pre>
+
 <p>The implementer of C++ Statndard Library solves the &ldquo;out-of-threads&rdquo; problem by providing no guarantee that there will be a new software thread: it permits the OS scheduler to arrange for the specified function (<code>doAsyncWork</code>) to be run on the thread requesting <code>doAsyncWork</code>&rsquo;s result (i.e., on the thread calling <code>get</code> or <code>wait</code> on <code>fut</code>), and reasonable schedulers take advantage of that freedom if the system is oversubscribed or is out of threads. Since runtime scheduler manages the threads from all processes, it is likely to comprehend the whole picture better and be more capable to solve the load-balancing issues than we do<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.</p>
 
 <h4 id="edge-cases">Edge Cases</h4>

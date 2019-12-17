@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -408,50 +408,56 @@ Suffering is optional.</p>
 <h2 id="syntacticly-widest-usage">Syntacticly widest usage</h2>
 
 <p>Syntax choices for object initialization in C++11 are confusing to support 3 forms: parentheses, equal signs, and braces.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">x</span>(<span style="color:#ae81ff">0</span>);   <span style="color:#75715e">// initializer with parentheses
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">// initializer with &#34;=&#34;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> z{ <span style="color:#ae81ff">0</span> }; <span style="color:#75715e">// initializer with braces
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> zz <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>}; <span style="color:#75715e">// initializer with &#34;=&#34; and braces, treated the same as braces-only version.
-</span><span style="color:#75715e"></span>
-Widget w1;  <span style="color:#75715e">// default ctor.
-</span><span style="color:#75715e"></span>Widget w2 <span style="color:#f92672">=</span> w1; <span style="color:#75715e">// copy ctor
-</span><span style="color:#75715e"></span>w1 <span style="color:#f92672">=</span> w2;  <span style="color:#75715e">// assignment, calls copy operator=
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">// easy to specify the init. content of a container
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> v{ <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span> };  <span style="color:#75715e">// v&#39;s init. content is 1, 3, 5
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">// specify default init. value for non-static data members, where parentheses not allowed
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> x{ <span style="color:#ae81ff">0</span> }; <span style="color:#75715e">// fine
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">// fine
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">z</span>(<span style="color:#ae81ff">0</span>);   <span style="color:#75715e">// error
-</span><span style="color:#75715e"></span>};
 
-<span style="color:#75715e">// specify init. value for uncopyable objects (EMCpp item 40), where &#34;=&#34; not allowed
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ai1{ <span style="color:#ae81ff">0</span> }; <span style="color:#75715e">// fine
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ai2(<span style="color:#ae81ff">0</span>);   <span style="color:#75715e">// fine
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ai3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">// error
-</span></code></pre></div>
+<pre><code class="language-cpp">int x(0);   // initializer with parentheses
+int y = 0;  // initializer with &quot;=&quot;
+int z{ 0 }; // initializer with braces
+int zz = {0}; // initializer with &quot;=&quot; and braces, treated the same as braces-only version.
+
+Widget w1;  // default ctor.
+Widget w2 = w1; // copy ctor
+w1 = w2;  // assignment, calls copy operator=
+
+// easy to specify the init. content of a container
+std::vector&lt;int&gt; v{ 1, 3, 5 };  // v's init. content is 1, 3, 5
+
+// specify default init. value for non-static data members, where parentheses not allowed
+class Widget {
+    ...
+private:
+    int x{ 0 }; // fine
+    int y = 0;  // fine
+    int z(0);   // error
+};
+
+// specify init. value for uncopyable objects (EMCpp item 40), where &quot;=&quot; not allowed
+std::atomic&lt;int&gt; ai1{ 0 }; // fine
+std::atomic&lt;int&gt; ai2(0);   // fine
+std::atomic&lt;int&gt; ai3 = 0;  // error
+</code></pre>
+
 <p>From the example above, it&rsquo;s easy to see why braced initialization is called &ldquo;uniform&rdquo; - a single initialization syntax that aims to be used anywhere and express everything.</p>
 
 <h2 id="preventing-narrowing-conversion">Preventing narrowing conversion</h2>
 
 <p>Braced initialization prohibits implicit <em>narrowing conversions</em> among built-in types:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">double</span> x, y, z;
+
+<pre><code class="language-cpp">double x, y, z;
 ...
-<span style="color:#66d9ef">int</span> sum1{ x <span style="color:#f92672">+</span> y <span style="color:#f92672">+</span> z }; <span style="color:#75715e">// error
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sum2</span>(x <span style="color:#f92672">+</span> y <span style="color:#f92672">+</span> z);  <span style="color:#75715e">// okay to truncate value of expression to an int
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> sum3 <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> y <span style="color:#f92672">+</span> z; <span style="color:#75715e">// ditto
-</span></code></pre></div>
+int sum1{ x + y + z }; // error
+int sum2(x + y + z);  // okay to truncate value of expression to an int
+int sum3 = x + y + z; // ditto
+</code></pre>
+
 <h2 id="immune-to-most-vexing-parse">Immune to most vexing parse</h2>
 
 <p><em>Most vexing parse</em>: anything that can be parsed as a declaration must be interpreted as one. This may be annoying when developers want to default-construct an object, but inadvertently end up declaring a function instead. Using braces, we don&rsquo;t have such an issue:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget <span style="color:#a6e22e">w1</span>(<span style="color:#ae81ff">10</span>); <span style="color:#75715e">// call Widget ctor with arg. 10
-</span><span style="color:#75715e"></span>Widget <span style="color:#a6e22e">w2</span>();  <span style="color:#75715e">// intend to call a Widget const. with zero arg., end up declaring a func. named w2 that returns a Widget
-</span><span style="color:#75715e"></span>Widget w3{}; <span style="color:#75715e">// calls Widget ctor with no args.
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Widget w1(10); // call Widget ctor with arg. 10
+Widget w2();  // intend to call a Widget const. with zero arg., end up declaring a func. named w2 that returns a Widget
+Widget w3{}; // calls Widget ctor with no args.
+</code></pre>
+
 <h1 id="the-not-so-good-part">The not-so-good part</h1>
 
 <h2 id="unintuitive-behavior-with-auto">Unintuitive behavior with <code>auto</code></h2>
@@ -461,62 +467,69 @@ Widget w1;  <span style="color:#75715e">// default ctor.
 <h2 id="too-high-overloading-priority">(Too) high overloading priority</h2>
 
 <p>Calls using braced initialization syntax strongly prefer the overloads taking <code>std::initializer_list</code>s: if there&rsquo;s any way for compilers to construe a call using a braced initializer to be to a constructor taking a <code>std::initializer_list</code>, compilers will employ that interpretation:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Widget(<span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">bool</span> b);
-    Widget(<span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">double</span> d);
-    Widget(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>initializer_list<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">long</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span> il);
-    <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">float</span>() <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// convert to float
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget(int i, bool b);
+    Widget(int i, double d);
+    Widget(std::initializer_list&lt;long double&gt; il);
+    operator float() const; // convert to float
+    ...
 };
 
-Widget <span style="color:#a6e22e">w1</span>(<span style="color:#ae81ff">10</span>, true); <span style="color:#75715e">// calls first ctor.
-</span><span style="color:#75715e"></span>Widget w2{<span style="color:#ae81ff">10</span>, true}; <span style="color:#75715e">// calls std::initializer_list ctor, 10 and true convert to long double
-</span><span style="color:#75715e"></span>Widget <span style="color:#a6e22e">w3</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">5.6</span>); <span style="color:#75715e">// calls second ctor
-</span><span style="color:#75715e"></span>Widget w4{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">5.6</span>}; <span style="color:#75715e">// calls std::initializer_list ctor, 10 and 5.6 convert to long double
-</span><span style="color:#75715e"></span>Widget <span style="color:#a6e22e">w5</span>(w4); <span style="color:#75715e">// calls copy ctor
-</span><span style="color:#75715e"></span>Widget w6{w4}; <span style="color:#75715e">// calls std::initializer_list ctor, w4 converts to float, and float converts to long double
-</span><span style="color:#75715e"></span>Widget <span style="color:#a6e22e">w7</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(w4)); <span style="color:#75715e">// calls move ctor
-</span><span style="color:#75715e"></span>Widget w8{std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(w4)}; <span style="color:#75715e">// calls std::initializer_list ctor, same conversion as w6
-</span></code></pre></div>
+Widget w1(10, true); // calls first ctor.
+Widget w2{10, true}; // calls std::initializer_list ctor, 10 and true convert to long double
+Widget w3(10, 5.6); // calls second ctor
+Widget w4{10, 5.6}; // calls std::initializer_list ctor, 10 and 5.6 convert to long double
+Widget w5(w4); // calls copy ctor
+Widget w6{w4}; // calls std::initializer_list ctor, w4 converts to float, and float converts to long double
+Widget w7(std::move(w4)); // calls move ctor
+Widget w8{std::move(w4)}; // calls std::initializer_list ctor, same conversion as w6
+</code></pre>
+
 <p>The priority is so high that it prevails even if the best-match <code>std-initializer_list</code> constructor can&rsquo;t be called:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Widget(<span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">bool</span> b);
-    Widget(<span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">double</span> d);
-    Widget(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>initializer_list<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span> il); <span style="color:#75715e">// no implicit conversion funcs
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget(int i, bool b);
+    Widget(int i, double d);
+    Widget(std::initializer_list&lt;bool&gt; il); // no implicit conversion funcs
+    ...
 };
 
-Widget w{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">5.0</span>}; <span style="color:#75715e">// error: requires narrowing conversions. The other callable ctors is shadowed
-</span></code></pre></div>
+Widget w{10, 5.0}; // error: requires narrowing conversions. The other callable ctors is shadowed
+</code></pre>
+
 <p>Only if there&rsquo;s no way to convert the types of the arguments in a braced initializer to the type in a <code>std::initializer_list</code> do compilers fall back on normal overload resolution:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Widget(<span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">bool</span> b);
-    Widget(<span style="color:#66d9ef">int</span> i, <span style="color:#66d9ef">double</span> d);
-    Widget(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>initializer_list<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&gt;</span> il); <span style="color:#75715e">// no implicit conversion funcs
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget(int i, bool b);
+    Widget(int i, double d);
+    Widget(std::initializer_list&lt;std::string&gt; il); // no implicit conversion funcs
+    ...
 };
 
-Widget <span style="color:#a6e22e">w1</span>(<span style="color:#ae81ff">10</span>, true);  <span style="color:#75715e">// calls first ctor
-</span><span style="color:#75715e"></span>Widget w2{<span style="color:#ae81ff">10</span>, true};  <span style="color:#75715e">// calls first ctor
-</span><span style="color:#75715e"></span>Widget <span style="color:#a6e22e">w3</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">5.0</span>);  <span style="color:#75715e">// calls second ctor
-</span><span style="color:#75715e"></span>Widget w3{<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">5.0</span>};  <span style="color:#75715e">// calls second ctor
-</span></code></pre></div>
+Widget w1(10, true);  // calls first ctor
+Widget w2{10, true};  // calls first ctor
+Widget w3(10, 5.0);  // calls second ctor
+Widget w3{10, 5.0};  // calls second ctor
+</code></pre>
+
 <p><strong>Edge case</strong>: Empty braces mean no arguments, not an empty <code>std::initializer_list</code>. For example</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Widget {
+public:
     Widget();
-    Widget(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>initializer_list<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> il); <span style="color:#75715e">// no implicit conversion funcs
-</span><span style="color:#75715e"></span>    ...
+    Widget(std::initializer_list&lt;int&gt; il); // no implicit conversion funcs
+    ...
 };
 
-Widget w1; <span style="color:#75715e">// calls default ctor
-</span><span style="color:#75715e"></span>Widget <span style="color:#a6e22e">w2</span>(); <span style="color:#75715e">// calls default ctor
-</span><span style="color:#75715e"></span>Widget w3{}; <span style="color:#75715e">// calls default ctor
-</span><span style="color:#75715e"></span>Widget <span style="color:#a6e22e">w4</span>({}); <span style="color:#75715e">// calls std::initializer_list ctor with empty list
-</span></code></pre></div>
+Widget w1; // calls default ctor
+Widget w2(); // calls default ctor
+Widget w3{}; // calls default ctor
+Widget w4({}); // calls std::initializer_list ctor with empty list
+</code></pre>
               
             </div>
           </div>

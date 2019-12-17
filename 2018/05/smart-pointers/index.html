@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-28 Smart Pointers</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -405,7 +405,6 @@ Suffering is optional.</p>
 <li><a href="#operator-1"><code>operator-&gt;</code></a></li>
 </ul></li>
 <li><a href="#testing-smart-pointers-for-nullness">Testing smart pointers for nullness</a></li>
-<li><a href="#converting-smart-pointers-to-dumb-pointers">Converting smart pointers to dumb pointers</a></li>
 <li><a href="#smart-pointers-and-inheritance-based-type-conversions">Smart pointers and inheritance-based type conversions</a>
 <ul>
 <li><a href="#manually-adding-implicit-conversion-operator">Manually adding implicit conversion operator</a></li>
@@ -428,38 +427,40 @@ Suffering is optional.</p>
 <h2 id="using-smart-pointer-in-client-perspective">Using smart pointer in client perspective</h2>
 
 <p>Consider a distributed system in which some objects are local and some are remote. We can use smart pointer to manage the local and remote objects handling in order to offer such an illusion that all objects appear to be located in the same place.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>            <span style="color:#75715e">// template for smart ptrs
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DBPtr</span> {                <span style="color:#75715e">// to obj. in a distributed DB
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	DBPtr(T <span style="color:#f92672">*</span>realPtr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);   <span style="color:#75715e">// create a smart ptr to a DB obj given a local dumb pointer
-</span><span style="color:#75715e"></span>	DBPtr(DataBaseID id);    <span style="color:#75715e">// create a smart ptr to a DB obj given its unique DB identifier
-</span><span style="color:#75715e"></span>	...                      <span style="color:#75715e">// other smart ptr functions
-</span><span style="color:#75715e"></span>};
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Tuple</span> { <span style="color:#75715e">// class for database tuples
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	...
-	<span style="color:#66d9ef">void</span> displayEditDialog();  <span style="color:#75715e">// present a graphical dialog box allowing a user to edit the typle
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isValid</span>() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// return whether *this passes validity check
-</span><span style="color:#75715e"></span>};
-
-<span style="color:#75715e">// class template for making log entries whenever a T object is modified
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LogEntry</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	LogEntry(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> objectToBeModified);
-	<span style="color:#f92672">~</span>LogEntry();
+<pre><code class="language-cpp">template&lt;class T&gt;            // template for smart ptrs
+class DBPtr {                // to obj. in a distributed DB
+public:
+	DBPtr(T *realPtr = 0);   // create a smart ptr to a DB obj given a local dumb pointer
+	DBPtr(DataBaseID id);    // create a smart ptr to a DB obj given its unique DB identifier
+	...                      // other smart ptr functions
 };
 
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">editTuple</span>(DBPtr<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pt)
+class Tuple { // class for database tuples
+public:
+	...
+	void displayEditDialog();  // present a graphical dialog box allowing a user to edit the typle
+	bool isValid() const;  // return whether *this passes validity check
+};
+
+// class template for making log entries whenever a T object is modified
+template&lt;class T&gt;
+class LogEntry {
+public:
+	LogEntry(const T&amp; objectToBeModified);
+	~LogEntry();
+};
+
+void editTuple(DBPtr&lt;Tuple&gt;&amp; pt)
 {
-	LogEnty<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> entry(<span style="color:#f92672">*</span>pt); <span style="color:#75715e">// make log entry for this editing operation
-</span><span style="color:#75715e"></span>	<span style="color:#75715e">// repeatedly display edit dialog until valid values are provided
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">do</span> {
-		pt<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>displayEditDialog();
-	} <span style="color:#66d9ef">while</span> (pt<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isValid() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> false)
+	LogEnty&lt;Tuple&gt; entry(*pt); // make log entry for this editing operation
+	// repeatedly display edit dialog until valid values are provided
+	do {
+		pt-&gt;displayEditDialog();
+	} while (pt-&gt;isValid() == false)
 }
-</code></pre></div>
+</code></pre>
+
 <p>The tuple to ber edited inside <code>editTuple</code> may be physically located on a remote machine, but the programmer writing <code>editTuple</code> need not be converned with such matters. Wrapped by objects, all kinds of tuples are accessed through smart pointers, which act just like built-in pointers (except for how they&rsquo;re declared).</p>
 
 <p>Notice the use of <code>LogEntry</code> object here is to take the advantage of <code>LogEntry</code>&rsquo;s constructor and destructor to begin and end the log entry, which is more robust in the face of exceptions than explicitly calling functions (MECpp item 9).</p>
@@ -479,59 +480,65 @@ Suffering is optional.</p>
 </ul>
 
 <p>The problem would vanish if we prohibit copying and assignment, but a more flexible solution was adopted by the <code>auto_ptr</code> template from the standard C++ library: object ownership is <em>transferred</em> when an <code>auto_ptr</code> is copied or assigned:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">auto_ptr</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	auto_ptr(T <span style="color:#f92672">*</span>ptr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>)<span style="color:#f92672">:</span> pointee(ptr) {}
-	auto_ptr(auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs);  <span style="color:#75715e">// copy constructor
-</span><span style="color:#75715e"></span>	auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs); <span style="color:#75715e">// assignment operator
-</span><span style="color:#75715e"></span>	<span style="color:#f92672">~</span>auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>() { <span style="color:#66d9ef">delete</span> pointee; }
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-	T <span style="color:#f92672">*</span>pointee;
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class auto_ptr {
+public:
+	auto_ptr(T *ptr = 0): pointee(ptr) {}
+	auto_ptr(auto_ptr&lt;T&gt;&amp; rhs);  // copy constructor
+	auto_ptr&lt;T&gt;&amp; operator=(auto_ptr&lt;T&gt;&amp; rhs); // assignment operator
+	~auto_ptr&lt;T&gt;() { delete pointee; }
+private:
+	T *pointee;
 };
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>auto_ptr(auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs)
+template&lt;class T&gt;
+auto_ptr&lt;T&gt;::auto_ptr(auto_ptr&lt;T&gt;&amp; rhs)
 {
-	pointee <span style="color:#f92672">=</span> rhs.pointee;
-	rhs.pointee <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	pointee = rhs.pointee;
+	rhs.pointee = 0;
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs)
+template&lt;class T&gt;
+auto_ptr&lt;T&gt;&amp; auto_ptr&lt;T&gt;::operator=(auto_ptr&lt;T&gt;&amp; rhs)
 {
-	<span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>rhs)
-		<span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
-	<span style="color:#66d9ef">delete</span> pointee;
+	if (this == &amp;rhs)
+		return *this;
+	delete pointee;
 
-	pointee <span style="color:#f92672">=</span> rhs.pointee;
-	rhs.pointee <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	pointee = rhs.pointee;
+	rhs.pointee = 0;
 
-	<span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+	return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <p>For this design, there are three points woth noting:</p>
 
 <h2 id="1-pass-by-reference-to-const">1. Pass by reference to const</h2>
 
 <p>Because object ownership is transferred when <code>auto_ptr</code>&rsquo;s copy constructor is called, passing <code>auto_ptr</code>s by value is often a very bad idea:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printTreeNode</span>(ostream<span style="color:#f92672">&amp;</span> s, auto_ptr<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> p)
-{ s <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#f92672">*</span>p; }
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+<pre><code class="language-cpp">void printTreeNode(ostream&amp; s, auto_ptr&lt;TreeNode&gt; p)
+{ s &lt;&lt; *p; }
+
+int main()
 {
-	auto_ptr<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> ptn(<span style="color:#66d9ef">new</span> TreeNode);
+	auto_ptr&lt;TreeNode&gt; ptn(new TreeNode);
 	...
-	printTreeNode(cout, ptn);  <span style="color:#75715e">// pass auto_ptr by value
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+	printTreeNode(cout, ptn);  // pass auto_ptr by value
+}
+</code></pre>
+
 <p>When <code>printTreeNode</code>&rsquo;s parameter <code>p</code> is initialized by calling <code>auto_ptr</code>&rsquo;s copy constructor, ownership of the object pointed to by <code>ptn</code> is transferred to <code>p</code>. After <code>printTreeNode</code> finishes execution, <code>p</code> goes out of scope and its destructor deletes what it points to, so <code>ptn</code> no longer points to anything (its underlying dumb pointer is null). This is rarely what we want to do.</p>
 
 <p>Instead, pass-by-reference-to-const:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// this function behaves much more intuitively
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printTreeNode</span>(ostream<span style="color:#f92672">&amp;</span> s, <span style="color:#66d9ef">const</span> auto_ptr<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> p)
-{ s <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#f92672">*</span>p; }
-</code></pre></div>
+
+<pre><code class="language-cpp">// this function behaves much more intuitively
+void printTreeNode(ostream&amp; s, const auto_ptr&lt;TreeNode&gt;&amp; p)
+{ s &lt;&lt; *p; }
+</code></pre>
+
 <p>Since this is pass by reference, no constructor is called to initialize <code>p</code>, and <code>ptn</code> retains ownership of the object it points after function execution.</p>
 
 <h2 id="2-unconventional-copy-constructor-and-assignment-operator">2. Unconventional copy constructor and assignment operator</h2>
@@ -541,24 +548,28 @@ auto_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;
 <h2 id="3-no-ownership-testing-in-desturctor">3. No ownership testing in desturctor</h2>
 
 <p>An <code>auto_ptr</code> always owns what it points to, so there is no need for the ownership test in destructor. However, a smart pointers that employs reference counting (MECpp item 29) must adjust a reference count before detrmining whether it has the right to delete what it points to, so their destructor often looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">tempalte<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-SmartPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>SmartPtr()
+
+<pre><code class="language-cpp">tempalte&lt;class T&gt;
+SmartPtr&lt;T&gt;::~SmartPtr()
 {
-	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span> owns <span style="color:#f92672">*</span>pointee) {
-		<span style="color:#66d9ef">delete</span> pointee;
+	if (*this owns *pointee) {
+		delete pointee;
 	}
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="implementing-the-dereferencing-operators">Implementing the dereferencing operators</h1>
 
 <h2 id="operator"><code>operator*</code></h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">&amp;</span> SmartPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+T&amp; SmartPtr&lt;T&gt;::operator*() const
 {
-	perform <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">smart pointer</span><span style="color:#e6db74">&#34;</span> processing;
-	<span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>pointee;	
+	perform &quot;smart pointer&quot; processing;
+	return *pointee;	
 }
-</code></pre></div>
+</code></pre>
+
 <p>A few things woth noting:</p>
 
 <ol>
@@ -575,8 +586,10 @@ T<span style="color:#f92672">&amp;</span> SmartPtr<span style="color:#f92672">&l
 <h2 id="operator-1"><code>operator-&gt;</code></h2>
 
 <p>When we call <code>operator-&gt;</code> in the statement <code>pt-&gt;displayEditDialog();</code>, the compilers treat it as:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">(pt.<span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>())<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>displayEditDialog();
-</code></pre></div>
+
+<pre><code class="language-cpp">(pt.operator-&gt;())-&gt;displayEditDialog();
+</code></pre>
+
 <p>This means it must be legal to apply the member-selection operator(-&gt;) to whatever <code>operator-&gt;</code> returns, leading to only two options:</p>
 
 <ul>
@@ -585,154 +598,183 @@ T<span style="color:#f92672">&amp;</span> SmartPtr<span style="color:#f92672">&l
 </ul>
 
 <p>Most of the time we want to return an ordinary dumb pointer, so the implementation for <code>operator-&gt;</code> is:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">*</span> SmartPtr<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+T* SmartPtr::operator-&gt;() const
 {
-	perform <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">smart pointer</span><span style="color:#e6db74">&#34;</span> processing
-	<span style="color:#66d9ef">return</span> pointee;
+	perform &quot;smart pointer&quot; processing
+	return pointee;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Note that since this function returns a pointer, virtual function calls via <code>operator-&gt;</code> will behave the way they&rsquo;re supposed to.</p>
 
 <h1 id="testing-smart-pointers-for-nullness">Testing smart pointers for nullness</h1>
 
 <p>So far we can not do the following operation to find out if a smart pointer is null:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">SmartPtr<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> ptn;
+
+<pre><code class="language-cpp">SmartPtr&lt;TreeNode&gt; ptn;
 ...
-<span style="color:#66d9ef">if</span> (ptn <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) ... <span style="color:#75715e">// error!
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (ptn) ...      <span style="color:#75715e">// error!
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>ptn) ...     <span style="color:#75715e">// error!
-</span></code></pre></div>
+if (ptn == 0) ... // error!
+if (ptn) ...      // error!
+if (!ptn) ...     // error!
+</code></pre>
+
 <p>If we want to make smart pointer act like dumb pointers when testing for nullness, an additional <code>isNull</code> member function will not be ideal solution. We may be attempted to provide an implicit conversion operator: <code>operator void*()</code>, but this will also introduce the draback of letting function calls succeed that most programmers would expect to fail (see MECpp item 5). In particular, it allows comparisons of smart pointers of completely different types:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">SmartPtr<span style="color:#f92672">&lt;</span>Apple<span style="color:#f92672">&gt;</span> pa;
-SmartPtr<span style="color:#f92672">&lt;</span>Orange<span style="color:#f92672">&gt;</span> po;
+
+<pre><code class="language-cpp">SmartPtr&lt;Apple&gt; pa;
+SmartPtr&lt;Orange&gt; po;
 ...
-<span style="color:#66d9ef">if</span> (pa <span style="color:#f92672">=</span><span style="color:#f92672">=</span> po) ... <span style="color:#75715e">// this compiles!
-</span></code></pre></div>
+if (pa == po) ... // this compiles!
+</code></pre>
+
 <p>This compiles because both smart pointers can be implicitly converted into <code>void*</code> pointers, and there is a built-in comparison function for built-in pointers. Similarly, even if we advocate conversion to <code>const void*</code> or <code>bool</code>, neither of these variations eliminates the problem of allowing mixed-type comparisons. There is simply too much conversion freedom in this wild solution.</p>
 
 <p>There is a middle middle ground that allows us to offer a reasonable syntactic form for testing for nullness while minimizing the chances of accidentally comparing smart pointers of of different types. That is to overload <code>operator!</code> to return true if and only if the smart pointer on which it&rsquo;s invoked is null:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SmartPtr</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class SmartPtr {
+public:
 	...
-	<span style="color:#66d9ef">bool</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">!</span>() <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// returns true if and only if the smart ptr is null
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+	bool operator!() const; // returns true if and only if the smart ptr is null
+};
+</code></pre>
+
 <p>This will lead to:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>ptn) ...  <span style="color:#75715e">// fine
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (ptn <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>)  ...  <span style="color:#75715e">// still an error
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (ptn) ...  <span style="color:#75715e">// still an error
-</span></code></pre></div>
+
+<pre><code class="language-cpp">if (!ptn) ...  // fine
+if (ptn == 0)  ...  // still an error
+if (ptn) ...  // still an error
+</code></pre>
+
 <p>And the only risk for mixed-type comparisons is statements such as this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">...
-<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>pa <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">!</span>po) ...  <span style="color:#75715e">// this still compiles
-</span></code></pre></div>
-<p>Fortunately, programmers usually don&rsquo;t write code like this.</p>
 
-<h1 id="converting-smart-pointers-to-dumb-pointers">Converting smart pointers to dumb pointers</h1>
+<pre><code class="language-cpp">...
+if (!pa == !po) ...  // this still compiles
+```	
 
-<p>When a dump pointer is expected for some lagacy libraries (say <code>normalize(Tuple *pt);</code>), we can not simply call the library function with a smart pointer-to-<code>Tuple</code>, because there is no way to convert a <code>DBPtr&lt;Tuple&gt;</code> to a <code>Tuple*</code>. We can make it work by doing this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">normalize(<span style="color:#f92672">&amp;</span><span style="color:#f92672">*</span>pt);  <span style="color:#75715e">// gross, but legal
-</span></code></pre></div>
+Fortunately, programmers usually don't write code like this.
+
+# Converting smart pointers to dumb pointers
+
+When a dump pointer is expected for some lagacy libraries (say `normalize(Tuple *pt);`), we can not simply call the library function with a smart pointer-to-`Tuple`, because there is no way to convert a `DBPtr&lt;Tuple&gt;` to a `Tuple*`. We can make it work by doing this:
+
+```cpp
+normalize(&amp;*pt);  // gross, but legal
+</code></pre>
+
 <p>but apparently this is not elegant.</p>
 
 <p>A dangerous solution will be to add to the smart pointer-to-T template an implicit conversion operator to a dumb pointer-to-T:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DBPtr</span>{
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>	
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class DBPtr{
+public:	
 	...
-	<span style="color:#66d9ef">operator</span> T<span style="color:#f92672">*</span>() { <span style="color:#66d9ef">return</span> pointee; }
+	operator T*() { return pointee; }
 	...
 };
 
-DBPtr<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> pt;
+DBPtr&lt;Tuple&gt; pt;
 ...
-normalize(pt);  <span style="color:#75715e">// this now works
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (pt <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) ...  <span style="color:#75715e">// fine, too
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (pt) ... <span style="color:#75715e">// fine, too
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>pt) ...  <span style="color:#75715e">// fine, too
-</span></code></pre></div>
+normalize(pt);  // this now works
+if (pt == 0) ...  // fine, too
+if (pt) ... // fine, too
+if (!pt) ...  // fine, too
+</code></pre>
+
 <p>However, as stated in MECpp item 5, there&rsquo;s dark side to such conversion function: it&rsquo;s so easy for clients to get access to dumb pointers that they bypass all the smart behavior (such as reference-counting ability) our pointer-like objects designed to provide, which will almost certainly lead to disaster (such as bookkeeping errors that corrupt the reference-counting data structures):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processTuple</span>(DBPtr<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pt)
+
+<pre><code class="language-cpp">void processTuple(DBPtr&lt;Tuple&gt;&amp; pt)
 {
-	Tuple <span style="color:#f92672">*</span>rawTuplePtr <span style="color:#f92672">=</span> pt;  <span style="color:#75715e">// convert DBPtr&lt;Tuple&gt; to Tuple*
-</span><span style="color:#75715e"></span>	use rawTuplePtr to modify the tuple;
+	Tuple *rawTuplePtr = pt;  // convert DBPtr&lt;Tuple&gt; to Tuple*
+	use rawTuplePtr to modify the tuple;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Besides, even we provide such implicit conversion operator, our smart pointer will never be truly interchangeable with the dumb pointer: the conversion from a smart pointer to a dumb pointer is a user-defined conversion, and compilers are forbidden from applying more than one user-defined conversion at a time. Following example shows this difference, where conversion from <code>DBPtr&lt;Tuple&gt;</code> to <code>TupleAccessors</code> calls for two user-defined conversions (1. <code>DBTpr&lt;Tuple&gt;</code> -&gt; <code>Tuple*</code>; 2. <code>Tuple*</code> -&gt; <code>TupleAccessors</code>), which are prohibited by the language:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TupleAccessors</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	TupleAccessors(<span style="color:#66d9ef">const</span> Tuple <span style="color:#f92672">*</span>pt); <span style="color:#75715e">// this ctor also acts as a type-conversion operator
-</span><span style="color:#75715e"></span>	...
+
+<pre><code class="language-cpp">class TupleAccessors {
+public:
+	TupleAccessors(const Tuple *pt); // this ctor also acts as a type-conversion operator
+	...
 };
-TupleAccessors <span style="color:#a6e22e">merge</span>(<span style="color:#66d9ef">const</span> TupleAccessors<span style="color:#f92672">&amp;</span> ta1, <span style="color:#66d9ef">const</span> TupleAccessors<span style="color:#f92672">&amp;</span> ta2);
+TupleAccessors merge(const TupleAccessors&amp; ta1, const TupleAccessors&amp; ta2);
 ...
-Tuple <span style="color:#f92672">*</span>pt1, <span style="color:#f92672">*</span>pt2;
-merge(pt1, pt2);  <span style="color:#75715e">// fine, both pointers are converted to TupleAccessors objects
-</span><span style="color:#75715e"></span>...
-DBPtr<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> smart_pt1, smart_pt2;
-merge(smart_pt1, smart_pt2);  <span style="color:#75715e">// error! no way to convert smart_pt1 and smart_pt2 to TupleAccessors implicitly
-</span></code></pre></div>
+Tuple *pt1, *pt2;
+merge(pt1, pt2);  // fine, both pointers are converted to TupleAccessors objects
+...
+DBPtr&lt;Tuple&gt; smart_pt1, smart_pt2;
+merge(smart_pt1, smart_pt2);  // error! no way to convert smart_pt1 and smart_pt2 to TupleAccessors implicitly
+</code></pre>
+
 <p>Moreover, implicit conversion functino makes it possible to let evil statement compile, which will almost certainly break our program later<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">DBPtr<span style="color:#f92672">&lt;</span>Tuple<span style="color:#f92672">&gt;</span> pt <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Tuple;
+
+<pre><code class="language-cpp">DBPtr&lt;Tuple&gt; pt = new Tuple;
 ...
-<span style="color:#66d9ef">delete</span> pt;  <span style="color:#75715e">// this compiles
-</span></code></pre></div>
+delete pt;  // this compiles
+</code></pre>
+
 <p>All in all, keep in mind the bottom line: don&rsquo;t provide implicit conversion operators to dumb pointers unless there is a compelling reason to do so.</p>
 
 <h1 id="smart-pointers-and-inheritance-based-type-conversions">Smart pointers and inheritance-based type conversions</h1>
 
 <p>Given the following public inheritance hierarchy:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MusicProduct</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	MusicProduct(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> title);
-	<span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">play</span>() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-	<span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">displayTitle</span>() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+
+<pre><code class="language-cpp">class MusicProduct {
+public:
+	MusicProduct(const string&amp; title);
+	virtual void play() const = 0;
+	virtual void displayTitle() const = 0;
 };
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Cassette</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> MusicProduct {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	Cassette(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> title);
-	<span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">play</span>() <span style="color:#66d9ef">const</span>;
-	vitual <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">displayTitle</span>() <span style="color:#66d9ef">const</span>;
+class Cassette: public MusicProduct {
+public:
+	Cassette(const string&amp; title);
+	virtual void play() const;
+	vitual void displayTitle() const;
 	...
 };
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CD</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> MusicProduct {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	CD(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> title);
-	<span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">play</span>() <span style="color:#66d9ef">const</span>;
-	<span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">displayTitle</span>() <span style="color:#66d9ef">const</span>;
+class CD: public MusicProduct {
+public:
+	CD(const string&amp; title);
+	virtual void play() const;
+	virtual void displayTitle() const;
 	...
 };
-</code></pre></div>
+</code></pre>
+
 <p>It is expected that the virtual function will work properly with dumb pointers:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">displayAndPlay</span>(<span style="color:#66d9ef">const</span> MusicProduct<span style="color:#f92672">*</span> pmp, <span style="color:#66d9ef">int</span> numTimes)
+
+<pre><code class="language-cpp">void displayAndPlay(const MusicProduct* pmp, int numTimes)
 {
-	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> numTimes; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i)
+	for (int i = 1; i &lt;= numTimes; ++i)
 	{
-		pmp<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>displayTitle();
-		pmp<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>play();
+		pmp-&gt;displayTitle();
+		pmp-&gt;play();
 	}
 }
 
-Cassette <span style="color:#f92672">*</span>funMusic <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Cassette(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Alapalooza</span><span style="color:#e6db74">&#34;</span>);
-CD <span style="color:#f92672">*</span>nightmareMusic <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> CD(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Disco Hits of the 70s</span><span style="color:#e6db74">&#34;</span>);
+Cassette *funMusic = new Cassette(&quot;Alapalooza&quot;);
+CD *nightmareMusic = new CD(&quot;Disco Hits of the 70s&quot;);
 
-displayAndPlay(funMusic, <span style="color:#ae81ff">10</span>);
-displayAndPlay(nightmareMusic, <span style="color:#ae81ff">0</span>);
-</code></pre></div>
+displayAndPlay(funMusic, 10);
+displayAndPlay(nightmareMusic, 0);
+</code></pre>
+
 <p>However, as far as compilers are converned, <code>SmartPtr&lt;CD&gt;</code>, <code>SmartPtr&lt;Cassette&gt;</code>, and <code>SmartPtr&lt;MusicProduct&gt;</code> are three seperate classes without any relationship to one another, so if we pass an object of type <code>SmartPtr&lt;CD&gt;</code> into a function with signature <code>void displayAndPlay(const SmartPtr&lt;MusicProduct&gt;, int)</code>, there will be error.</p>
 
 <h2 id="manually-adding-implicit-conversion-operator">Manually adding implicit conversion operator</h2>
 
 <p>A naive solution: adding into each smart pointer class an implicit type conversion operator. Take <code>SmartPtr&lt;Cassette&gt;</code> for example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SmartPtr</span><span style="color:#f92672">&lt;</span>Cassette<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	<span style="color:#66d9ef">operator</span> SmartPtr<span style="color:#f92672">&lt;</span>MusicProduct<span style="color:#f92672">&gt;</span>()
-	{ <span style="color:#66d9ef">return</span> SmartPtr<span style="color:#f92672">&lt;</span>MusicProduct<span style="color:#f92672">&gt;</span>(pointee); }
+
+<pre><code class="language-cpp">class SmartPtr&lt;Cassette&gt; {
+public:
+	operator SmartPtr&lt;MusicProduct&gt;()
+	{ return SmartPtr&lt;MusicProduct&gt;(pointee); }
 	...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Yet there are two drawbacks in this design:</p>
 
 <ol>
@@ -743,20 +785,22 @@ displayAndPlay(nightmareMusic, <span style="color:#ae81ff">0</span>);
 <h2 id="generating-conversion-operators-via-member-templates">Generating conversion operators via member templates</h2>
 
 <p>The right way to take is to take advantage of <em>member function templates</em> (or just <em>member templates</em>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SmartPtr</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-	SmartPtr(T<span style="color:#f92672">*</span> realPtr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);
-	T<span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span>;
-	T<span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span>;
 
-	<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">newType</span><span style="color:#f92672">&gt;</span>      <span style="color:#75715e">// template function for
-</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">operator</span> SmartPtr<span style="color:#f92672">&lt;</span>newType<span style="color:#f92672">&gt;</span>() <span style="color:#75715e">// implicit conversion ops.
-</span><span style="color:#75715e"></span>	{
-		<span style="color:#66d9ef">return</span> SmartPtr<span style="color:#f92672">&lt;</span>newType<span style="color:#f92672">&gt;</span>(pointee);
+<pre><code class="language-cpp">template&lt;class T&gt;
+class SmartPtr {
+public:
+	SmartPtr(T* realPtr = 0);
+	T* operator-&gt;() const;
+	T* operator*() const;
+
+	template&lt;class newType&gt;      // template function for
+	operator SmartPtr&lt;newType&gt;() // implicit conversion ops.
+	{
+		return SmartPtr&lt;newType&gt;(pointee);
 	}
 };
-</code></pre></div>
+</code></pre>
+
 <p>Here&rsquo;s what happens:</p>
 
 <ul>
@@ -771,6 +815,7 @@ displayAndPlay(nightmareMusic, <span style="color:#ae81ff">0</span>);
 <p>Note that this implicit conversion will succeed for <em>any</em> legal implicit conversion between pointer types: if (and only if) a dumb pointer type <code>T1*</code> can be implicitly converted to another pointer type <code>T2*</code>, we can implicitly convert a smart pointer-to-<code>T1</code> to a smart pointer-to-<code>T2</code>.</p>
 
 <p>However, there&rsquo;s still a drawback: suppose following augmented <code>MusicProduct</code> hierarchy:</p>
+
 <pre><code>                  ┌──────────────┐
  				  │ MusicProduct │
                   └──────────────┘
@@ -781,26 +826,32 @@ displayAndPlay(nightmareMusic, <span style="color:#ae81ff">0</span>);
                    ↑
              ┌───────────┐
              │ CasSingle │
-             └───────────┘</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>      <span style="color:#75715e">// as above, including member tempate
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SmartPtr</span> {...};
+             └───────────┘
+</code></pre>
 
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">displayAndPlay</span>(<span style="color:#66d9ef">const</span> SmartPtr<span style="color:#f92672">&lt;</span>MusicProduct<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pmp, <span style="color:#66d9ef">int</span> howMany);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">displayAndPaly</span>(<span style="color:#66d9ef">const</span> SmartPtr<span style="color:#f92672">&lt;</span>Cassette<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pc, <span style="color:#66d9ef">int</span> howMany);
+<pre><code class="language-cpp">template&lt;class T&gt;      // as above, including member tempate
+class SmartPtr {...};
 
-SamrtPtr<span style="color:#f92672">&lt;</span>CasSingle<span style="color:#f92672">&gt;</span> dumbMusic(<span style="color:#66d9ef">new</span> CasSingle(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Achy Breaky Heart</span><span style="color:#e6db74">&#34;</span>));
-displayAndPlay(dumbMusic, <span style="color:#ae81ff">1</span>);  <span style="color:#75715e">// error!
-</span></code></pre></div>
+void displayAndPlay(const SmartPtr&lt;MusicProduct&gt;&amp; pmp, int howMany);
+void displayAndPaly(const SmartPtr&lt;Cassette&gt;&amp; pc, int howMany);
+
+SamrtPtr&lt;CasSingle&gt; dumbMusic(new CasSingle(&quot;Achy Breaky Heart&quot;));
+displayAndPlay(dumbMusic, 1);  // error!
+</code></pre>
+
 <p>When invoking <code>displayAndPlay</code> with a <code>SmartPtr&lt;CasSingle&gt;</code>, according to the inheritance hierarchy, we may expect the <code>SmartPtr&lt;Cassette&gt;</code> function to be chosen, because <code>CasSingle</code> inherits directly from <code>Casssette</code> and only indirectly from <code>MusicProduct</code>. However, it will only work in the case of dumb pointers. For our smart pointers, as far as C++ compilers are concerned, both calls to conversion functions here are equally good (the conversion from <code>SmartPtr&lt;CasSingle&gt;</code> to <code>SmartPtr&lt;Cassette&gt;</code> is no better than the conversion to <code>SmartPtr&lt;MusicProduct&gt;</code>), leading to an error of ambiguous call to <code>displayAndPlay</code>. The best we can do, then, is to use casts (MECpp item 2) in this ambiguous case.</p>
 
 <h1 id="smart-pointers-and-const">Smart pointers and const</h1>
 
 <p>To mimic the flexibility of constness in terms of smart pointers, we use follwoing ways to create four combinations of <code>const</code> and non-<code>const</code> objects and pointers:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">CD <span style="color:#a6e22e">goodCD</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Flood</span><span style="color:#e6db74">&#34;</span>);
-SmartPtr<span style="color:#f92672">&lt;</span>CD<span style="color:#f92672">&gt;</span> p;  <span style="color:#75715e">// non-const object, non-const pointer
-</span><span style="color:#75715e"></span>SmartPtr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> CD<span style="color:#f92672">&gt;</span> p;  <span style="color:#75715e">// const object, non-const pointer
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> SmartPtr<span style="color:#f92672">&lt;</span>CD<span style="color:#f92672">&gt;</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>goodCD;  <span style="color:#75715e">// non-const object, const pointer
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> SmartPtr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> CD<span style="color:#f92672">&gt;</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>goodCD;  <span style="color:#75715e">// const object, const pointer
-</span></code></pre></div>
+
+<pre><code class="language-cpp">CD goodCD(&quot;Flood&quot;);
+SmartPtr&lt;CD&gt; p;  // non-const object, non-const pointer
+SmartPtr&lt;const CD&gt; p;  // const object, non-const pointer
+const SmartPtr&lt;CD&gt; p = &amp;goodCD;  // non-const object, const pointer
+const SmartPtr&lt;const CD&gt; p = &amp;goodCD;  // const object, const pointer
+</code></pre>
+
 <p>Moreover, we can use the member templates technique shown above for automatically generating the implicit type conversion operators from <code>SmartPtr&lt;CD&gt;</code> to <code>SmartPtr&lt;const CD&gt;</code> - this technique works anytime the corresponding conversion for dumb pointers would work， and conversions involving <code>const</code> are no exception.</p>
 <div class="footnotes">
 

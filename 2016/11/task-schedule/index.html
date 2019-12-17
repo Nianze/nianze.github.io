@@ -63,7 +63,7 @@
 
     <title>Task schedule - greedy algorithm</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -393,30 +393,34 @@ e.g.:
     Return: 7, since length of [1 2 3 _ _ 2 3] is 7</p>
 
 <p>Method: Use hashmap to store the most recent same tasks&rsquo;s time</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">min_time</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> tasks<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> interval<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>tasks <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> tasks<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    Map<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> time <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> task <span style="color:#f92672">:</span> tasks<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-        Integer task_last_time <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>task<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>task_last_time <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> task_last_time <span style="color:#f92672">+</span> interval <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&gt;</span> time<span style="color:#f92672">)</span><span style="color:#f92672">{</span>
-            time <span style="color:#f92672">=</span> task_last_time <span style="color:#f92672">+</span> interval <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>task<span style="color:#f92672">,</span> time<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        time<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> time<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-    <span style="color:#75715e">// Improve: space complexity a little to no more than  O(n)
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// use LinkedHashMap to remove the elder task that exceeds the cooldown time
-</span><span style="color:#75715e"></span>    Map<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedHashMap<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> cooldown<span style="color:#f92672">,</span> 1<span style="color:#f92672">.</span><span style="color:#a6e22e">0f</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// load factor 1.0
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">@Override</span>
-        <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">removeEldestEntry</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> eldest<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> size<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> cooldown<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span><span style="color:#f92672">;</span></code></pre></div>
+
+<pre><code class="language-java">public static int min_time(int[] tasks, int interval){
+    if(tasks == null || tasks.length == 0){
+        return 0;
+    }
+    Map&lt;Integer, Integer&gt; map = new HashMap&lt;Integer, Integer&gt;();
+    int time = 0;
+    for(int task : tasks){
+        Integer task_last_time = map.get(task);
+        if(task_last_time != null &amp;&amp; task_last_time + interval + 1 &gt; time){
+            time = task_last_time + interval + 1;
+        }
+        map.put(task, time);
+        time++;
+    }
+    return time;
+}
+    // Improve: space complexity a little to no more than  O(n)
+    // use LinkedHashMap to remove the elder task that exceeds the cooldown time
+    Map&lt;K,V&gt; map = new LinkedHashMap&lt;K,V&gt;(int cooldown, 1.0f) {  // load factor 1.0
+        @Override
+        protected boolean removeEldestEntry(Map.Entry&lt;K,V&gt; eldest) {
+            return size() &gt; cooldown;
+        }
+    };
+
+</code></pre>
+
 <h3 id="follow-up-what-if-the-order-is-ok-to-change">Follow up: What if the order is OK to change?</h3>
 
 <p>Method: Greedy algorithm - always look for the task with highest remaining time at each time.</p>
@@ -429,98 +433,106 @@ e.g.:
 </ol>
 
 <p>Using method One：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">schedule</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> tasks<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> cooldown<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> freqMap <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> t <span style="color:#f92672">:</span> tasks<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            freqMap<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> freqMap<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        Queue<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> maxHeap <span style="color:#f92672">=</span>
-            <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>freqMap<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#a6e22e">@Override</span>
-                    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> e1<span style="color:#f92672">,</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> e2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">return</span> e2<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> e1<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        Deque<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> waitQueue <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayDeque<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> timeMap <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> time <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>freqMap<span style="color:#f92672">.</span><span style="color:#a6e22e">entrySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">!</span>waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> cur <span style="color:#f92672">=</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                time<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-                timeMap<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> time<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                cur<span style="color:#f92672">.</span><span style="color:#a6e22e">setValue</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> cooldown <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-                Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> front <span style="color:#f92672">=</span> waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>front<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>front<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> front <span style="color:#f92672">=</span> waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>front<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>front<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    time <span style="color:#f92672">=</span> timeMap<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>front<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> cooldown<span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> time<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>        </code></pre></div>
+
+<pre><code class="language-java">    public int schedule(int[] tasks, int cooldown) {
+        HashMap&lt;Integer, Integer&gt; freqMap = new HashMap&lt;&gt;();
+        for (int t : tasks) {
+            freqMap.put(t, freqMap.getOrDefault(t, 0) + 1);
+        }
+        Queue&lt;Map.Entry&lt;Integer, Integer&gt;&gt; maxHeap =
+            new PriorityQueue&lt;&gt;(freqMap.size(), new Comparator&lt;Map.Entry&lt;Integer, Integer&gt;&gt;() {
+                    @Override
+                    public int compare(Map.Entry&lt;Integer, Integer&gt; e1, Map.Entry&lt;Integer, Integer&gt; e2) {
+                        return e2.getValue() - e1.getValue();
+                    }
+                });
+        Deque&lt;Map.Entry&lt;Integer, Integer&gt;&gt; waitQueue = new ArrayDeque&lt;&gt;();
+        HashMap&lt;Integer, Integer&gt; timeMap = new HashMap&lt;&gt;();
+        int time = 0;
+        maxHeap.addAll(freqMap.entrySet());        
+        while (!maxHeap.isEmpty() || !waitQueue.isEmpty()) {
+            if (!maxHeap.isEmpty()) {
+                Map.Entry&lt;Integer, Integer&gt; cur = maxHeap.poll();
+                time++;
+                timeMap.put(cur.getKey(), time);
+                cur.setValue(cur.getValue() - 1);
+                waitQueue.offer(cur);
+                if (waitQueue.size() &lt; cooldown + 1) continue;
+                Map.Entry&lt;Integer, Integer&gt; front = waitQueue.poll();
+                if (front.getValue() &gt; 0) maxHeap.offer(front);
+            } else {
+                Map.Entry&lt;Integer, Integer&gt; front = waitQueue.poll();
+                if (front.getValue() &gt; 0) {
+                    maxHeap.offer(front);
+                    time = timeMap.get(front.getKey()) + cooldown;
+                }
+            }
+        }
+        return time;
+    }        
+</code></pre>
+
 <p>Similar question: LC358 Rearrange String k Distance Apart</p>
 
 <p>Method one:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">rearrangeString</span><span style="color:#f92672">(</span>String str<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> str<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        Queue<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> maxHeap <span style="color:#f92672">=</span>
-            <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#a6e22e">@Override</span>
-                    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> e1<span style="color:#f92672">,</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> e2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">return</span> e2<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> e1<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        Deque<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> waitQueue <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayDeque<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">entrySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> cur <span style="color:#f92672">=</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            cur<span style="color:#f92672">.</span><span style="color:#a6e22e">setValue</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-            Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> front <span style="color:#f92672">=</span> waitQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>front<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>front<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> str<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span></code></pre></div>
+
+<pre><code class="language-java">    public String rearrangeString(String str, int k) {
+        HashMap&lt;Character, Integer&gt; map = new HashMap&lt;&gt;();
+        for (char c : str.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        Queue&lt;Map.Entry&lt;Character, Integer&gt;&gt; maxHeap =
+            new PriorityQueue&lt;&gt;(map.size(), new Comparator&lt;Map.Entry&lt;Character, Integer&gt;&gt;() {
+                    @Override
+                    public int compare(Map.Entry&lt;Character, Integer&gt; e1, Map.Entry&lt;Character, Integer&gt; e2) {
+                        return e2.getValue() - e1.getValue();
+                    }
+                });
+        Deque&lt;Map.Entry&lt;Character, Integer&gt;&gt; waitQueue = new ArrayDeque&lt;&gt;();
+        maxHeap.addAll(map.entrySet());
+        StringBuilder sb = new StringBuilder();
+        while (!maxHeap.isEmpty()) {
+            Map.Entry&lt;Character, Integer&gt; cur = maxHeap.poll();
+            sb.append(cur.getKey());
+            cur.setValue(cur.getValue()-1);
+            waitQueue.offer(cur);
+            if (waitQueue.size() &lt; k) continue;
+            Map.Entry&lt;Character, Integer&gt; front = waitQueue.poll();
+            if (front.getValue() &gt; 0) maxHeap.offer(front);
+        }
+        return sb.length() == str.length() ? sb.toString() : &quot;&quot;;
+    }
+</code></pre>
+
 <p>Method two:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">rearrangeString</span><span style="color:#f92672">(</span>String str<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> valid <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-        StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> str<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            count<span style="color:#f92672">[</span>str<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> str<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> findNext<span style="color:#f92672">(</span>count<span style="color:#f92672">,</span> valid<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
-            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">)</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">+</span>c<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            count<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">-</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-            valid<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> k<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findNext</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> count<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> valid<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> max <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> index <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> valid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                pos <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
-                max <span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> pos<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span></code></pre></div>
+
+<pre><code class="language-java">    public String rearrangeString(String str, int k) {
+        int[] count = new int[26];
+        int[] valid = new int[26];
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i &lt; str.length(); i++) {
+            count[str.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i &lt; str.length(); i++) {
+            int c = findNext(count, valid, i);
+            if (c == -1) return &quot;&quot;;
+            sb.append((char)('a'+c));
+            count[c] -= 1;
+            valid[c] = i + k;
+        }
+        return sb.toString();
+    }
+    private int findNext(int[] count, int[] valid, int index) {
+        int pos = -1, max = -1;
+        for (int i = 0; i &lt; 26; i++) {
+            if (count[i] &gt; 0 &amp;&amp; count[i] &gt; max &amp;&amp; index &gt;= valid[i]) {
+                pos = i;
+                max = count[i];
+            }
+        }
+        return pos;
+    }
+</code></pre>
               
             </div>
           </div>

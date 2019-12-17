@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-6 Use the Explicitly Typed Initializer Idiom when auto deduces undesired types</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -390,19 +390,25 @@ Suffering is optional.</p>
 <p>Some proxy classe are designed to be apparent to clients, such as <code>std::shared_ptr</code>, and <code>std::unique_ptr</code>. Other proxy classes are designed to at more or less invisibly, such as <code>std::vector&lt;bool&gt;::reference</code>, and <code>std::bitset::reference</code>.</p>
 
 <p>For example, suppose we have a function that takes a <code>Widget</code> and returns a <code>std::vector&lt;bool&gt;</code>, where each bool indicates whether the <code>Widget</code> offers a particular feature:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span> features(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> w);
-</code></pre></div>
+
+<pre><code class="language-cpp">std::vector&lt;bool&gt; features(const Widget&amp; w);
+</code></pre>
+
 <p>Now we want to check the value of bit 5, which indicates whether the <code>Widget</code> has high priority:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget w;
+
+<pre><code class="language-cpp">Widget w;
 ...
-<span style="color:#66d9ef">bool</span> highPriority <span style="color:#f92672">=</span> features(w)[<span style="color:#ae81ff">5</span>];  <span style="color:#75715e">// is w high priority ?
-</span><span style="color:#75715e"></span>...
-processWidget(w, highPriority);  <span style="color:#75715e">// process w in accord with its priority
-</span></code></pre></div>
+bool highPriority = features(w)[5];  // is w high priority ?
+...
+processWidget(w, highPriority);  // process w in accord with its priority
+</code></pre>
+
 <p>However, if we change the explicit type for <code>highPriority</code> with <code>auto</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> highPriority <span style="color:#f92672">=</span> features(w)[<span style="color:#ae81ff">5</span>];
-processWidget(w, highPriority);  <span style="color:#75715e">// undefined behavior! 
-</span></code></pre></div>
+
+<pre><code class="language-cpp">auto highPriority = features(w)[5];
+processWidget(w, highPriority);  // undefined behavior! 
+</code></pre>
+
 <p>The undefined behavior is caused by the fact that <code>highPriority</code> contains dangling pointer. And here is what happened:</p>
 
 <ul>
@@ -413,8 +419,10 @@ processWidget(w, highPriority);  <span style="color:#75715e">// undefined behavi
 </ul>
 
 <p>Now is the time we adopt the explicitly typed initializer idiom: we declare a variable with <code>auto</code>, but casting the initialization expression to the type we want <code>auto</code> to deduce:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> highPriority <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span>(features(w)[<span style="color:#ae81ff">5</span>]);
-</code></pre></div>
+
+<pre><code class="language-cpp">auto highPriority = static_cast&lt;bool&gt;(features(w)[5]);
+</code></pre>
+
 <p>At this time, the <code>std::vector&lt;bool&gt;::reference</code> object returned from <code>std::vector&lt;bool&gt;::operator[]</code> executes the conversion to <code>bool</code> it supports, and as part of that conversion, the still-valid pointer to <em>temp</em> (the <code>std::vector&lt;bool&gt;</code> object returned from <code>features</code>) is dereferenced, and the index 5 is then applied to the bits pointed to by the ponter, and the <code>bool</code> value that emerges is used to initialize <code>highPriority</code> - therefore, undefined behavior is avoided.</p>
 <div class="footnotes">
 

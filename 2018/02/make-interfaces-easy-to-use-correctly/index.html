@@ -65,7 +65,7 @@
 
     <title>Item-18 Make interfaces easy to use correctly and hard to use incorrectly</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -410,70 +410,82 @@ Suffering is optional.</p>
 <h1 id="creating-new-types">Creating new types</h1>
 
 <p>Say we&rsquo;re designing the constructor for a class representing dates in time:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Date</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Date(<span style="color:#66d9ef">int</span> month, <span style="color:#66d9ef">int</span> day, <span style="color:#66d9ef">int</span> year);
+
+<pre><code class="language-cpp">class Date {
+public:
+    Date(int month, int day, int year);
 };
-</code></pre></div>
+</code></pre>
+
 <p>There at least two possible errors that clients might easily make:</p>
 
 <ol>
 <li><p>the parameters might be passed in the wrong order:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Date <span style="color:#a6e22e">d</span>(<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">1995</span>);  <span style="color:#75715e">// Should be &#34;3, 30&#34;
-</span></code></pre></div></li>
 
-<li><p>the parameters might be invalid <month, day> pair:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Date <span style="color:#a6e22e">d</span>(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">1995</span>);  <span style="color:#75715e">// In the keyboard, `2` is next to &#39;3&#39;, so this kind of silly error is not uncommon
-</span></code></pre></div></li>
+<pre><code class="language-cpp">Date d(30, 3, 1995);  // Should be &quot;3, 30&quot;
+</code></pre>
+
+<ol>
+<li>the parameters might be invalid <month, day> pair:
+<code>cpp
+Date d(2, 30, 1995);  // In the keyboard, `2` is next to '3', so this kind of silly error is not uncommon
+</code></li>
+</ol></li>
 </ol>
 
 <p>To prevent such kind of client errors, we could introduce new types:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Day</span> {
-    <span style="color:#66d9ef">explicit</span> <span style="color:#a6e22e">Day</span>(<span style="color:#66d9ef">int</span> d)
-    <span style="color:#f92672">:</span>val(d){}
+
+<pre><code class="language-cpp">struct Day {
+    explicit Day(int d)
+    :val(d){}
     
-    <span style="color:#66d9ef">int</span> val;
+    int val;
 };
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Month</span> {
-    <span style="color:#66d9ef">explicit</span> <span style="color:#a6e22e">Month</span>(<span style="color:#66d9ef">int</span> m)
-    <span style="color:#f92672">:</span>val(m){}
+struct Month {
+    explicit Month(int m)
+    :val(m){}
     
-    <span style="color:#66d9ef">int</span> val;
+    int val;
 };
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Year</span> {
-    <span style="color:#66d9ef">explicit</span> <span style="color:#a6e22e">Year</span>(<span style="color:#66d9ef">int</span> y)
-    <span style="color:#f92672">:</span>val(y){}
+struct Year {
+    explicit Year(int y)
+    :val(y){}
     
-    <span style="color:#66d9ef">int</span> val;
+    int val;
 };
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Date</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Date(<span style="color:#66d9ef">const</span> Month<span style="color:#f92672">&amp;</span> m, <span style="color:#66d9ef">const</span> Day<span style="color:#f92672">&amp;</span> d, <span style="color:#66d9ef">const</span> Year<span style="color:#f92672">&amp;</span> y);
+class Date {
+public:
+    Date(const Month&amp; m, const Day&amp; d, const Year&amp; y);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>This will prevent some silly interface usage errors effectively:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Date <span style="color:#a6e22e">d</span>(<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">1995</span>); <span style="color:#75715e">// error: wrong type!
-</span><span style="color:#75715e"></span>Date <span style="color:#a6e22e">d</span>(Day(<span style="color:#ae81ff">30</span>), Month(<span style="color:#ae81ff">3</span>), Year(<span style="color:#ae81ff">1995</span>));  <span style="color:#75715e">// error: wrong type!
-</span><span style="color:#75715e"></span>Date <span style="color:#a6e22e">d</span>(Month(<span style="color:#ae81ff">3</span>), Day(<span style="color:#ae81ff">30</span>), Year(<span style="color:#ae81ff">1995</span>));  <span style="color:#75715e">// fine
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Date d(30, 3, 1995); // error: wrong type!
+Date d(Day(30), Month(3), Year(1995));  // error: wrong type!
+Date d(Month(3), Day(30), Year(1995));  // fine
+</code></pre>
+
 <h1 id="constraining-object-values">Constraining object values</h1>
 
 <p>Once the type is right, we may consider adding some restriction on the values of those types. The <code>Month</code> in example above only has 12 valid values, so the <code>Month</code> type should reflect this restriction. One way is to use an enum to represent the month, but considering enums can be used like <code>ints</code> (item 2), it is not as type-safe as we might like. A safer solution is to predefine the set of all valid <code>Month</code>s:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Month</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> Month Jan() {<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Month</span>(<span style="color:#ae81ff">1</span>);}  <span style="color:#75715e">// functions returning all
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> Month <span style="color:#a6e22e">Feb</span>() {<span style="color:#66d9ef">return</span> Month(<span style="color:#ae81ff">2</span>);}  <span style="color:#75715e">// valid Month values
-</span><span style="color:#75715e"></span>    ...
-    <span style="color:#66d9ef">static</span> Month Dec() {<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Month</span>(<span style="color:#ae81ff">12</span>);}
-...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">explicit</span> Month(<span style="color:#66d9ef">int</span> m);  <span style="color:#75715e">// prevent creation of new Month values
-</span><span style="color:#75715e"></span>    ...  <span style="color:#75715e">// month-specific data
-</span><span style="color:#75715e"></span>};
 
-Date <span style="color:#a6e22e">d</span>(Month<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Mar(), Day(<span style="color:#ae81ff">30</span>), Year(<span style="color:#ae81ff">1995</span>));
-</code></pre></div>
+<pre><code class="language-cpp">class Month {
+public:
+    static Month Jan() {return Month(1);}  // functions returning all
+    static Month Feb() {return Month(2);}  // valid Month values
+    ...
+    static Month Dec() {return Month(12);}
+...
+private:
+    explicit Month(int m);  // prevent creation of new Month values
+    ...  // month-specific data
+};
+
+Date d(Month::Mar(), Day(30), Year(1995));
+</code></pre>
+
 <p>The reason to use functions (returning local static objects) instead of (non-local static) objects to represent specific months is explained in item 4:</p>
 
 <blockquote>
@@ -483,42 +495,52 @@ Date <span style="color:#a6e22e">d</span>(Month<span style="color:#f92672">:</sp
 <h1 id="restricting-operations-on-types">Restricting operations on types</h1>
 
 <p>A good example for restricting operations on types is in item 3 explaining how <code>const</code> qualifying the return type from <code>operator*</code> can prevent clients from making following errors for user-defined types:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">if</span> (a <span style="color:#f92672">*</span> b <span style="color:#f92672">=</span> c)... <span style="color:#75715e">// meant to do a comparison
-</span></code></pre></div>
+
+<pre><code class="language-cpp">if (a * b = c)... // meant to do a comparison
+</code></pre>
+
 <p>Again, it is always good to have our types behave consistently with the built-in types. Such kind of operation is illegal for <code>int</code> type, so unless there&rsquo;s a good reason, it should be illegal for our types, too.</p>
 
 <h1 id="eliminating-client-resource-management-responsibilities">Eliminating client resource management responsibilities</h1>
 
 <p>Any interface that requires that client remember to do something is prone to incorrect use. A bad example is function <code>createInvestment</code> in item 13, which returns pointers to dynamically allocated objeects in an <code>Investment</code> hierarchy.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Investment<span style="color:#f92672">*</span> <span style="color:#a6e22e">createInvestment</span>();  <span style="color:#75715e">// parameters omitted for simplicity
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Investment* createInvestment();  // parameters omitted for simplicity
+</code></pre>
+
 <p>Needless to say, this is prone to resource leak, for chances are that clients either forget to manually <code>delete</code> the pointer, or delete the same pointer more than once</p>
 
 <p>Item 13 shows that we could preempt this problem by using smart pointers. But a better solution is to let the function <code>createInvestment</code> return a smart pointer in the first place:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> createInvestment();
-</code></pre></div>
+
+<pre><code class="language-cpp">std::tr1::shared_ptr&lt;Investment&gt; createInvestment();
+</code></pre>
+
 <p>Moreover, returning a <code>tr1::shared_ptr</code> makes it possible to prevent a host of other client errors regarding resource release, for  <code>tr1::shared_ptr</code> allows a resource-release function (called a &ldquo;deleter&rdquo;) to be bound to the smart pointer when the smart pointer is created (item 14, <code>auto_ptr</code> does not support this functionality).</p>
 
 <p>For example, instead of using <code>delete</code> to release an <code>Investment</code> object resource, clients may expect to use a function called <code>getRidOfInvestment</code>. By binding <code>getRidOfInvestment</code> to <code>tr1::shraed_ptr</code> as its deleter, and return this smart pointer, clients will not make mistakes such as using the wrong resource-destruction mechanism (using <code>delete</code> instead of <code>getRidOfInvestment</code>).</p>
 
 <p>Thus, in order to bind the deleter, we could define a null <code>tr1::shared_ptr</code> with <code>getRidofInvestment</code> as its second argument (the first argument is null because we may not be sure the resource to be managed during initialization), and implement <code>createInvestment</code> like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> createInvestment()
+
+<pre><code class="language-cpp">std::tr1::shared_ptr&lt;Investment&gt; createInvestment()
 {
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span>      <span style="color:#75715e">// return a null shared_ptr
-</span><span style="color:#75715e"></span>    retVal(<span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">0</span>),   <span style="color:#75715e">// see item 27 for static_cast
-</span><span style="color:#75715e"></span>            getRidOfInvestment);          <span style="color:#75715e">// bind a custom deleter
-</span><span style="color:#75715e"></span>    ...                                   <span style="color:#75715e">// make retVal point to the correct object
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> retVal;
+    std::tr1::shared_ptr&lt;Investment&gt;      // return a null shared_ptr
+    retVal(static_cast&lt;Investment*&gt;(0),   // see item 27 for static_cast
+            getRidOfInvestment);          // bind a custom deleter
+    ...                                   // make retVal point to the correct object
+    return retVal;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Since <code>tr1::shared_ptr</code> insists on an actual pointer, we use a cast to solve the problem. Of course, it would be better to pass the raw pointer to the smart pointer&rsquo;s constructor if the raw pointer to be managed by <code>retVal</code> could be determined prior to creating <code>retVal</code>, rather than to initialize <code>retVal</code> to null and then making an assignment to it (item 26).</p>
 
 <p>What&rsquo;s more, another nice feature of <code>tr1::shared_ptr</code> is that it automatically uses its per-pointer deleter to release resource, which eliminates the &ldquo;cross-DLL problem&rdquo; that shows up when an object its created using <code>new</code> in one dynamically linked library (DLL) but is <code>deleted</code> in a different DLL, leading to runtime errors. For example, if <code>Stock</code> is a class derived from <code>Investment</code> and <code>createInvestment</code> is implemented like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> createInvestment()
+
+<pre><code class="language-cpp">std::tr1::shared_ptr&lt;Investment&gt; createInvestment()
 {
-    <span style="color:#66d9ef">return</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> Stock);
+    return std::tr1::shared_ptr&lt;Investment&gt;(new Stock);
 }
-</code></pre></div>
+</code></pre>
+
 <p>the returned <code>tr1::shared_ptr</code> pointing to the <code>Stock</code> keeps track of which DLL&rsquo;s <code>delete</code> should be used when the reference count for the <code>Stock</code> becomes zero, so there&rsquo;s no more concern for the cross-DLL problem.</p>
 
 <p>The most common implementation of <code>tr1::shared_ptr</code> comes from Boost (item 55). Since it is such an easy way to eliminate some client errors, it&rsquo;s worth an overview of the cost of using it: Boost&rsquo;s <code>shared_ptr</code> is twice the size of a raw pointer, uses dynamically allocated memory for bookkeeping and deleter_specific data, uses a virtual function call when invoking its deleter, and incurs thread synchronization overhead when modifying the reference count in an application it believes is multithreaded.</p>

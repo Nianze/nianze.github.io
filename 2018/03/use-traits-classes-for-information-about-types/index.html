@@ -65,7 +65,7 @@
 
     <title>Item-47 Use traits classes for information about types</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -406,9 +406,11 @@ Suffering is optional.</p>
 </nav>
 
 <p>In this item, let&rsquo;s look at how STL supports the utility template <code>advance</code>, which moves a specified iterator a specified distance:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT, <span style="color:#66d9ef">typename</span> DistT<span style="color:#f92672">&gt;</span>  
-<span style="color:#66d9ef">void</span> advance(IterT<span style="color:#f92672">&amp;</span> iter, DistT d); <span style="color:#75715e">// move iter d units forward; if d &lt; 0, move iter backward
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;  
+void advance(IterT&amp; iter, DistT d); // move iter d units forward; if d &lt; 0, move iter backward
+</code></pre>
+
 <p>Before we step into the field of <code>advance</code> implementation, we should be familiar about STL iterator categoryies, because different iterators support different operations.</p>
 
 <h1 id="five-iterator-categories">Five iterator categories</h1>
@@ -424,27 +426,31 @@ Suffering is optional.</p>
 </ul>
 
 <p>For each of the five iterator categories, C++ has a &ldquo;tag struct&rdquo; in the standard library that serves to identify it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">input_iterator_tag</span> {};
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">output_iterator_tag</span> {};
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">forward_iterator_tag</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> input_iterator_tag {};
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">bidirectional_iterator_tag</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> forward_iterator_tag {};
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">random_access_iterator_tag</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> bidirectional_iterator_tag {};
-</code></pre></div>
+
+<pre><code class="language-cpp">struct input_iterator_tag {};
+struct output_iterator_tag {};
+struct forward_iterator_tag: public input_iterator_tag {};
+struct bidirectional_iterator_tag: public forward_iterator_tag {};
+struct random_access_iterator_tag: public bidirectional_iterator_tag {};
+</code></pre>
+
 <h1 id="pseudocode-for-advance">Pseudocode for <code>advance</code></h1>
 
 <p>Knowing that different categories support different operations, <code>advance</code> will essentially be implemented like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT, <span style="color:#66d9ef">typename</span> DistT<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> advance(IterT<span style="color:#f92672">&amp;</span> iter, DistT d)
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
 {
-    <span style="color:#66d9ef">if</span> (iter is a random access iterator) {
-        iter <span style="color:#f92672">+</span><span style="color:#f92672">=</span> d; <span style="color:#75715e">// use iterator arithmetic for random access iters
-</span><span style="color:#75715e"></span>    }
-    <span style="color:#66d9ef">else</span> {
-        <span style="color:#66d9ef">if</span> (d <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) { <span style="color:#66d9ef">while</span> (d<span style="color:#f92672">-</span><span style="color:#f92672">-</span>) <span style="color:#f92672">+</span><span style="color:#f92672">+</span>iter; } <span style="color:#75715e">// use iterative calls 
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> { <span style="color:#66d9ef">while</span> (d<span style="color:#f92672">+</span><span style="color:#f92672">+</span>) <span style="color:#f92672">-</span><span style="color:#f92672">-</span>iter; }        <span style="color:#75715e">// to ++ or -- for other iterator categories
-</span><span style="color:#75715e"></span>    }
+    if (iter is a random access iterator) {
+        iter += d; // use iterator arithmetic for random access iters
+    }
+    else {
+        if (d &gt;= 0) { while (d--) ++iter; } // use iterative calls 
+        else { while (d++) --iter; }        // to ++ or -- for other iterator categories
+    }
 }
-</code></pre></div>
+</code></pre>
+
 <p>How to determine whether <code>iter</code> is a random access iterator? Here comes the technique of <em>traits</em>, which allow us to get type information during compilation.</p>
 
 <h1 id="traits">Traits</h1>
@@ -454,46 +460,54 @@ Suffering is optional.</p>
 <h2 id="for-user-defined-types">For user-defined types</h2>
 
 <p>The standard technique is to put the information into a template and one or more specializations of that template. For iterators, the template in the standard library is named <code>iterator_traits</code><sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// the iterator_category for type IterT is whatever IterT says it is
-</span><span style="color:#75715e"></span><span style="color:#75715e">// see item 42 for info on the use of &#34;typedef typename&#34;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">iterator_traits</span> {
-    <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">typename</span> IterT<span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator_category iterator_category;
+
+<pre><code class="language-cpp">// the iterator_category for type IterT is whatever IterT says it is
+// see item 42 for info on the use of &quot;typedef typename&quot;
+template&lt;typename IterT&gt;
+struct iterator_traits {
+    typedef typename IterT::iterator_category iterator_category;
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>How does <code>iterator_traits</code> work? Since <code>iterator_traits</code> just parrots back a typedef called <code>iterator_category</code> inside the iterator class, it requires that any user-defined iterator type must contain this nested typedef named <code>iterator_category</code>, which identifies the appropriate tag struct. For example, <code>deque</code> iterators belong to random access category, and <code>list</code>&rsquo;s iterators are bidirectional:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>...<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">deque</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">iterator</span> {
-    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-        <span style="color:#66d9ef">typedef</span> random_access_iterator_tag iterator_category;
+
+<pre><code class="language-cpp">template&lt;...&gt;
+class deque {
+public:
+    class iterator {
+    public:
+        typedef random_access_iterator_tag iterator_category;
         ...
     };
     ...
 };
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span>...<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">list</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">iterator</span> {
-    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-        <span style="color:#66d9ef">typedef</span> bidirectional_iterator_tag iterator_category;
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;...&gt;
+class list {
+public:
+    class iterator {
+    public:
+        typedef bidirectional_iterator_tag iterator_category;
         ...
     };
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <h2 id="for-pointer-types">For pointer types</h2>
 
 <p>The code above works well for user-defined types, but it doasn&rsquo;t work for iterators that are pointers, since there&rsquo;s no such thing as a nested typedef inside a built-in pointer. To make it work, <code>iterator_traits</code> need to offer a <em>partial template specialization</em> for pointer types:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// partial template specialization
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">iterator_traits</span><span style="color:#f92672">&lt;</span>IterT<span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span> <span style="color:#75715e">// for built-in pointer types
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">typedef</span> random_access_iterator_tag iterator_category; <span style="color:#75715e">// pointers act as random access iterators
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">template&lt;typename IterT&gt;  // partial template specialization
+struct iterator_traits&lt;IterT*&gt; // for built-in pointer types
+{
+    typedef random_access_iterator_tag iterator_category; // pointers act as random access iterators
+    ...
 }
-</code></pre></div>
+</code></pre>
+
 <h2 id="workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</h2>
 
 <ul>
@@ -505,48 +519,52 @@ Suffering is optional.</p>
 <h1 id="implementing-advance">Implementing <code>advance</code></h1>
 
 <p>Given <code>std::iterator_traits</code>, we can refine our pseudocode for <code>advance</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT, <span style="color:#66d9ef">typename</span> DistT<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> advance(IterT<span style="color:#f92672">&amp;</span> iter, DistT d)
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
 {
-    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">typeid</span>(<span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator_traits<span style="color:#f92672">&lt;</span>IterT<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator_category) <span style="color:#f92672">=</span><span style="color:#f92672">=</span>
-        <span style="color:#66d9ef">typeid</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>random_access_iterator_tag))
+    if (typeid(typename std::iterator_traits&lt;IterT&gt;::iterator_category) ==
+        typeid(std::random_access_iterator_tag))
         ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>Sadly, this is not what we want: for one thing, it will lead to compilation problems (refer to item 48); anther issue, which is more fundamental, is that <code>if</code> statement is evaluated at runtime but <code>iterator_traits&lt;IterT&gt;::iterator_category</code> can be determined during compilation already. There&rsquo;s no point to move the evaluation from compile-time to runtime to waste time and bloat the executable.</p>
 
 <h2 id="template-metaprogramming">Template metaprogramming</h2>
 
 <p>What we want is a conditional construct for types that is evaluated during compilation. Actually this demand brings us to the realm of template metaprogramming (item 48), but the technique we&rsquo;ll use turns out to be quit familiar: <em>overloading</em>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT, <span style="color:#66d9ef">typename</span> DistT<span style="color:#f92672">&gt;</span> <span style="color:#75715e">// use this impl for random access iterators
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> doAdvance(IterT<span style="color:#f92672">&amp;</span> iter, DistT d, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>random_access_iterator_tag)
+
+<pre><code class="language-cpp">template&lt;typename IterT, typename DistT&gt; // use this impl for random access iterators
+void doAdvance(IterT&amp; iter, DistT d, std::random_access_iterator_tag)
 {
-    iter <span style="color:#f92672">+</span><span style="color:#f92672">=</span> d;
+    iter += d;
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT, <span style="color:#66d9ef">typename</span> DistT<span style="color:#f92672">&gt;</span> <span style="color:#75715e">// use this impl for bidirectional iterators
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> doAdvance(IterT<span style="color:#f92672">&amp;</span> iter, DistT d, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bidirectional_iterator_tag)
+template&lt;typename IterT, typename DistT&gt; // use this impl for bidirectional iterators
+void doAdvance(IterT&amp; iter, DistT d, std::bidirectional_iterator_tag)
 {
-    <span style="color:#66d9ef">if</span> (d <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) { <span style="color:#66d9ef">while</span>(d<span style="color:#f92672">-</span><span style="color:#f92672">-</span>) <span style="color:#f92672">+</span><span style="color:#f92672">+</span>iter; }
-    <span style="color:#66d9ef">else</span> { <span style="color:#66d9ef">while</span>(d<span style="color:#f92672">+</span><span style="color:#f92672">+</span>) <span style="color:#f92672">-</span><span style="color:#f92672">-</span>iter; }
+    if (d &gt;= 0) { while(d--) ++iter; }
+    else { while(d++) --iter; }
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT, <span style="color:#66d9ef">typename</span> DistT<span style="color:#f92672">&gt;</span> <span style="color:#75715e">// use this impl for input iterators, also applies to inherited forward_iterator_tag
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> doAdvance(IterT<span style="color:#f92672">&amp;</span> iter, DistT d, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>input_iterator_tag)
+template&lt;typename IterT, typename DistT&gt; // use this impl for input iterators, also applies to inherited forward_iterator_tag
+void doAdvance(IterT&amp; iter, DistT d, std::input_iterator_tag)
 {
-    <span style="color:#66d9ef">if</span> (d <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) {
-        <span style="color:#66d9ef">throw</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>out_of_range(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Negative distance</span><span style="color:#e6db74">&#34;</span>); 
+    if (d &lt; 0) {
+        throw std::out_of_range(&quot;Negative distance&quot;); 
     }
-    <span style="color:#66d9ef">while</span>(d<span style="color:#f92672">-</span><span style="color:#f92672">-</span>) <span style="color:#f92672">+</span><span style="color:#f92672">+</span>iter;
+    while(d--) ++iter;
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> IterT, <span style="color:#66d9ef">typename</span> DistT<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> advance(IterT<span style="color:#f92672">&amp;</span> iter, DistT d)
+template&lt;typename IterT, typename DistT&gt;
+void advance(IterT&amp; iter, DistT d)
 {
     doAdvance(iter, d, 
-        <span style="color:#66d9ef">typename</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator_traits<span style="color:#f92672">&lt;</span>IterT<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator_category());
+        typename std::iterator_traits&lt;IterT&gt;::iterator_category());
 };
-</code></pre></div>
+</code></pre>
+
 <h2 id="summary">Summary</h2>
 
 <p>How to use a traits class:</p>

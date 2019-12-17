@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-20 Use Weak_ptr for Shared_ptr Like Pointers That Can Dangle</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -390,37 +390,45 @@ Suffering is optional.</p>
 <p>From an efficiency perspective, the <code>std::weak_ptr</code> is essentially the same as <code>std::shared_ptr</code>, except that they don&rsquo;t participate in the <em>shared ownership</em> of objects and hence don&rsquo;t affect the <em>pointed-to object&rsquo;s reference count</em>. However, they do manipulate a second reference count in the control block (<em>weak count</em>), so they actually do all the same operations such as construction, destruction, and assignment involve atomic reference count manipulations.</p>
 
 <p>As a fact, <code>std::weak_ptr</code> isn&rsquo;t a standalone smart pointer, but an augmentation of <code>std::shared_ptr</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> spw <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_shared<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>(); <span style="color:#75715e">// reference count (RC) is 1 after spw is constructed
-</span><span style="color:#75715e"></span>...
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>weak_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> wpw(spw);   <span style="color:#75715e">// RC remains 1 
-</span><span style="color:#75715e"></span>...
-spw <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>; <span style="color:#75715e">// RC becomes 0, Widget gets destroyed, wpw dangles
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (wpw.exipred()) ...  <span style="color:#75715e">// true
-</span></code></pre></div>
+
+<pre><code class="language-cpp">auto spw = std::make_shared&lt;Widget&gt;(); // reference count (RC) is 1 after spw is constructed
+...
+std::weak_ptr&lt;Widget&gt; wpw(spw);   // RC remains 1 
+...
+spw = nullptr; // RC becomes 0, Widget gets destroyed, wpw dangles
+if (wpw.exipred()) ...  // true
+</code></pre>
+
 <p>Usually, the purpose of creating a <code>std::weak_ptr</code> is to check the dangling <code>std::weak_ptr</code> (when the related control block has zero-value reference count), and if it hasn&rsquo;t expired, we may access the object it points to. Separating the check and the dereference would introduce a race condition, so we need an atomic operation to check and access the object at the same time. There are two ways to do this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> spw1 <span style="color:#f92672">=</span> wpw.lock();  <span style="color:#75715e">// spw1 type is shared_ptr&lt;Widget&gt;; if wpw&#39;s expired, spw1 is null
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> spw2(wpw);  <span style="color:#75715e">// if wpw&#39;s expired, throw std::bad_weak_ptr
-</span></code></pre></div>
+
+<pre><code class="language-cpp">auto spw1 = wpw.lock();  // spw1 type is shared_ptr&lt;Widget&gt;; if wpw's expired, spw1 is null
+std::shared_ptr&lt;Widget&gt; spw2(wpw);  // if wpw's expired, throw std::bad_weak_ptr
+</code></pre>
+
 <p>There are at least three use cases for <code>std::weak_ptr</code>.</p>
 
 <h4 id="caching">Caching</h4>
 
 <p>Given a factory function returning <code>std::unique_ptr</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&gt;</span> loadWidget(WidgetID id);
-</code></pre></div>
+
+<pre><code class="language-cpp">std::unique_ptr&lt;const Widget&gt; loadWidget(WidgetID id);
+</code></pre>
+
 <p>We might consider wrap a cache layer on top of <code>loadWidget</code> due to considerations such as expensive database I/O cost or frequent queries from clients. A quick-and-dirty implementation using <code>std::weak_ptr</code> may fit the requirement<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&gt;</span> fastLoadWidget(WidgetID id)
+
+<pre><code class="language-cpp">std::shared_ptr&lt;const Widget&gt; fastLoadWidget(WidgetID id)
 {
-    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unordered_map<span style="color:#f92672">&lt;</span>WidgetID, 
-                              std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>weak_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> cache;
-    <span style="color:#66d9ef">auto</span> objPtr <span style="color:#f92672">=</span> cache[id].lock();
-    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>objPtr) {
-        objPtr <span style="color:#f92672">=</span> loadWidget(id);
-        cache[id] <span style="color:#f92672">=</span> objPtr;
+    static std::unordered_map&lt;WidgetID, 
+                              std::weak_ptr&lt;const Widget&gt;&gt; cache;
+    auto objPtr = cache[id].lock();
+    if (!objPtr) {
+        objPtr = loadWidget(id);
+        cache[id] = objPtr;
     }
-    <span style="color:#66d9ef">return</span> objPtr;
+    return objPtr;
 }
-</code></pre></div>
+</code></pre>
+
 <h4 id="observer-list">Observer list</h4>
 
 <p>In the Observer design pattern, there are two components:</p>

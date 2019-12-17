@@ -65,7 +65,7 @@
 
     <title>Item-40 Use multiple inheritance judiciously</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -399,44 +399,55 @@ Suffering is optional.</p>
 <h1 id="ambiguity">Ambiguity</h1>
 
 <p>In the realm of MI, one thing worth noting is that it becomes possible to inherit the same name (e.g., function, typedef, etc.) from more than one base class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BorrowableItem</span> {  <span style="color:#75715e">// something a library lets you borrow
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">void</span> checkOut();  <span style="color:#75715e">// check the item out from the library
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class BorrowableItem {  // something a library lets you borrow
+public:
+    void checkOut();  // check the item out from the library
+    ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ElectronicGadget</span> {
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">bool</span> checkOut() <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// perfom self-test, return whether test succeeds
-</span><span style="color:#75715e"></span>    ...
+class ElectronicGadget {
+private:
+    bool checkOut() const; // perfom self-test, return whether test succeeds
+    ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MP3Player</span><span style="color:#f92672">:</span>  <span style="color:#75715e">// Multiple inheritance
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> BorrowableItem,
-    <span style="color:#66d9ef">public</span> ElectronicGadget
+class MP3Player:  // Multiple inheritance
+    public BorrowableItem,
+    public ElectronicGadget
 {...};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">MP3Player mp;
-mp.checkOut();  <span style="color:#75715e">// ambiguous!
-</span></code></pre></div>
+</code></pre>
+
+<pre><code class="language-cpp">MP3Player mp;
+mp.checkOut();  // ambiguous!
+</code></pre>
+
 <p>In the example above, even though only the public one in <code>BorrowableItem</code> of the two <code>checkOut</code> functions is accessible, the call to <code>checkOut</code> is ambiguous, because before seeing whether a function is accessible, C++ first identifies the function that&rsquo;s the best match for the call, and in this case both <code>checkOut</code>s are equally good matches, so there&rsquo;s no best match. The accessibility of <code>ElectronicGadget::checkOut</code> is never examined.</p>
 
 <p>To resolve the ambiguity, specify which base class&rsquo;s function to call:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">mp.BorrowableItem<span style="color:#f92672">:</span><span style="color:#f92672">:</span>checkOut();
-</code></pre></div>
+
+<pre><code class="language-cpp">mp.BorrowableItem::checkOut();
+</code></pre>
+
 <h1 id="virtual-inheritance">Virtual inheritance</h1>
 
 <p>It is not uncommon in the world of MI to encounter the classical case of &ldquo;deadly MI diamond&rdquo;, where there are more than one path between a base class and a derived class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">File</span> {...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">InputFile</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> File{...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OutputFile</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> File{...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IOFile</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> InputFile,
-              <span style="color:#66d9ef">public</span> OutputFile
+
+<pre><code class="language-cpp">class File {...};
+class InputFile: public File{...};
+class OutputFile: public File{...};
+class IOFile: public InputFile,
+              public OutputFile
 {...};
-</code></pre></div><pre><code>          File
+</code></pre>
+
+<pre><code>          File
         ↗      ↖
 InputFile       OutputFile
         ↖      ↗
-         IOFile</code></pre>
+         IOFile
+</code></pre>
+
 <p>Here, between <code>File</code> and <code>IOFile</code>, we&rsquo;ve found two paths either through <code>InputFile</code> or <code>OutputFile</code>, and we come to the following question:</p>
 
 <blockquote>
@@ -446,17 +457,22 @@ InputFile       OutputFile
 <p>By default, C++ performs the replication, so if there&rsquo;s a data member named <code>fileName</code> in the <code>File</code>, <code>IOFile</code> will inherits a copy from each of its base classes <code>InputFile</code> and <code>OutputFile</code>, resulting in two <code>fielName</code> data members in <code>IOFile</code>.</p>
 
 <p>If this is not what we want, we must make the <code>File</code> a <em>virtual base class</em>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">File</span> {...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">InputFile</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">public</span> File{...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OutputFile</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">public</span> File{...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IOFile</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> InputFile,
-              <span style="color:#66d9ef">public</span> OutputFile
+
+<pre><code class="language-cpp">class File {...};
+class InputFile: virtual public File{...};
+class OutputFile: virtual public File{...};
+class IOFile: public InputFile,
+              public OutputFile
 {...};
-</code></pre></div><pre><code>           File
+</code></pre>
+
+<pre><code>           File
 (virtual)↗      ↖(virtual)
 InputFile       OutputFile
          ↖      ↗
-         IOFile</code></pre>
+         IOFile
+</code></pre>
+
 <p>From the viewpoint of correct behavior, public inheritance should always be virtual. However, inheritance costs both in terms of memory and runtime: compared to their counterparts without virtual inheritance, objects created from clases using virtual inheritance are generally larger, and access to data members in virtual base classes is also slower.</p>
 
 <p>To make things more complicated, it is required that the responsibility for initializing a virtual base is borne by the <em>most derived class</em> in the hierarchy, which implies:</p>
@@ -478,83 +494,92 @@ InputFile       OutputFile
 <p>Multiple inheritance does have legitimate uses. One scenario involves combining public inheritance from an Interface class with private inheritance from a class that provides help of implementation.</p>
 
 <p>For example, we want to implement the following C++ Interface class (from item 31) to model persons:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IPerson</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span><span style="color:#f92672">:</span> <span style="color:#f92672">~</span>IPerson();
 
-    <span style="color:#66d9ef">virtual</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string name() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">virtual</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string birthDate() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<pre><code class="language-cpp">class IPerson {
+public:
+    virtual: ~IPerson();
+
+    virtual std::string name() const = 0;
+    virtual std::string birthDate() const = 0;
 };
-</code></pre></div>
+</code></pre>
+
 <p>We want to create a concrete class <code>CPerson</code>, and luckily, we find following old database-specific class <code>PersonInfo</code> offering the essense of what <code>CPerson</code> needs:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PersonInfo</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">explicit</span> PersonInfo(DatabaseID pid);
-    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>PersonInfo();
 
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">theName</span>() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">theBirthDate</span>() <span style="color:#66d9ef">const</span>;
+<pre><code class="language-cpp">class PersonInfo {
+public:
+    explicit PersonInfo(DatabaseID pid);
+    virtual ~PersonInfo();
+
+    virtual const char * theName() const;
+    virtual const char * theBirthDate() const;
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> valueDelimOpen() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">valueDelimClose</span>() <span style="color:#66d9ef">const</span>;
+private:
+    virtual const char * valueDelimOpen() const;
+    virtual const char * valueDelimClose() const;
     ...
 };
 
-<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> PersonInfo<span style="color:#f92672">:</span><span style="color:#f92672">:</span>valueDilimOpen() <span style="color:#66d9ef">const</span>
+const char * PersonInfo::valueDilimOpen() const
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[</span><span style="color:#e6db74">&#34;</span>;  <span style="color:#75715e">// default opening delimiter
-</span><span style="color:#75715e"></span>}
-
-<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> PersonInfo<span style="color:#f92672">:</span><span style="color:#f92672">:</span>valueDilimClose() <span style="color:#66d9ef">const</span>
-{
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">]</span><span style="color:#e6db74">&#34;</span>;  <span style="color:#75715e">// default closing delimiter
-</span><span style="color:#75715e"></span>}
-
-<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> PersonInfo<span style="color:#f92672">:</span><span style="color:#f92672">:</span>theName() <span style="color:#66d9ef">const</span>
-{
-    <span style="color:#75715e">// reserve buffer for return value, 
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// it&#39;s automatically init. to all zeros due to static
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">char</span> value[Max_Formatted_Field_Value_Length];
-
-    <span style="color:#75715e">// write opening delimiter
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>strcpy(value, valueDelimOpen());
-
-    append <span style="color:#66d9ef">this</span> obj.<span style="color:#960050;background-color:#1e0010">&#39;</span>s name fields to the string in value
-
-    <span style="color:#75715e">// write closing delimiter
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>strcat(value, valueDelimClose());
-
-    <span style="color:#66d9ef">return</span> value;
+    return &quot;[&quot;;  // default opening delimiter
 }
-</code></pre></div>
+
+const char * PersonInfo::valueDilimClose() const
+{
+    return &quot;]&quot;;  // default closing delimiter
+}
+
+const char * PersonInfo::theName() const
+{
+    // reserve buffer for return value, 
+    // it's automatically init. to all zeros due to static
+    static char value[Max_Formatted_Field_Value_Length];
+
+    // write opening delimiter
+    std::strcpy(value, valueDelimOpen());
+
+    append this obj.'s name fields to the string in value
+
+    // write closing delimiter
+    std::strcat(value, valueDelimClose());
+
+    return value;
+}
+</code></pre>
+
 <p>This design of <code>PersonInfo::theName</code> is antiquated indeed: it use a fix-size static buffer, which is rife for both overrun and threading problems (item 21). Let&rsquo;s set such imperfection aside, and focus on <code>theName</code>, which calls virtual function <code>valueDelimOpen</code> and <code>valueDelimClose</code>, so the result returnd by <code>theName</code> is dependent not only on <code>PersonInfo</code> but also on the classes derived from <code>PersonInfo</code>.</p>
 
 <p>Apparently, the relationship between <code>CPerson</code> and <code>PersonInfo</code> is <code>is-implemented-in-terms-of</code> (we just want to re-use some of the code. That&rsquo;s all). Also, suppose that we want our target class <code>CPerson</code> to return unadorned values (return &ldquo;Name&rdquo; instead of &ldquo;[Name]&ldquo;), which requires redefining of the virtual functions in <code>PersonInfo</code>. Thus between the composition (item 38) and private inheritance (item 39) we prefer private inheritance, because simple composition will not let us redefine the virtual functions in <code>PersonInfo</code><sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
 
 <p>Thus, we could make following reasonable multiple inheritance:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IPerson</span> {...}; <span style="color:#75715e">// the interface. same as above
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DatabaseID</span> {...}; <span style="color:#75715e">// used below
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PersonInfo</span> {...};  <span style="color:#75715e">// used for implementing the IPerson interface
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CPerson</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> IPerson, <span style="color:#66d9ef">private</span> PersonInfo {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">explicit</span> CPerson(DatabaseID pid())<span style="color:#f92672">:</span> PersonInfo(pid) {}
-    <span style="color:#66d9ef">virtual</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string name() <span style="color:#66d9ef">const</span>
-    { <span style="color:#66d9ef">return</span> PersonInfo<span style="color:#f92672">:</span><span style="color:#f92672">:</span>theName(); }  <span style="color:#75715e">// implementing the IPerson member function
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">virtual</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string birthDate() <span style="color:#66d9ef">const</span>
-    { <span style="color:#66d9ef">return</span> PersonInfo<span style="color:#f92672">:</span><span style="color:#f92672">:</span>theBirthDate(); } <span style="color:#75715e">// implementing the IPerson member function
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> valueDelimOpen() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span>; } <span style="color:#75715e">// inherited virtual delimiter functions
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">valueDelimClose</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span>; } <span style="color:#75715e">// inherited virtual delimiter functions
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+
+<pre><code class="language-cpp">class IPerson {...}; // the interface. same as above
+
+class DatabaseID {...}; // used below
+
+class PersonInfo {...};  // used for implementing the IPerson interface
+
+class CPerson: public IPerson, private PersonInfo {
+public:
+    explicit CPerson(DatabaseID pid()): PersonInfo(pid) {}
+    virtual std::string name() const
+    { return PersonInfo::theName(); }  // implementing the IPerson member function
+    virtual std::string birthDate() const
+    { return PersonInfo::theBirthDate(); } // implementing the IPerson member function
+private:
+    const char * valueDelimOpen() const { return &quot;&quot;; } // inherited virtual delimiter functions
+    const char * valueDelimClose() const { return &quot;&quot;; } // inherited virtual delimiter functions
+};
+</code></pre>
+
 <p>In UML, the design looks like this:</p>
+
 <pre><code>     IPerson   PersonInfo
         ↖      ↗(private)
-         IOFile</code></pre>
+         IOFile
+</code></pre>
+
 <h1 id="summary">Summary</h1>
 
 <p>Compared to single inheritance (SI), multiple inheritance (MI) is typically more complicated to use and more complicated to understand, so if SI design is more or less equivalent to an MI design, we prefer the SI design. Sometimes, though, MI is the clearest, most maintainable, most reasonable way to get the job done. When that&rsquo;s the case, just use it, with judiciousness.</p>

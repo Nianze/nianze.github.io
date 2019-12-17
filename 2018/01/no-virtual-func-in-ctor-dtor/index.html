@@ -65,7 +65,7 @@
 
     <title>Item-9 不要在构造函数和析构函数中触发虚函数</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -388,34 +388,40 @@ Suffering is optional.</p>
               <p>不同于Java或者C#,在C++中构造函数和析构函数里的虚函数不会实现多态的效果。</p>
 
 <p>假设我们想要构造一个类来记录股票交易的数据，每次有新交易都应把交易信息记录到文档里。由于交易种类多种多样，我们希望用一个统一的抽象基类<code>Transaction</code>里相同的接口<code>logTransaction()</code>来记录不同的派生类信息：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Transaction</span> {   <span style="color:#75715e">// 所有交易记录的基类，含纯虚函数所以是抽象类
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Transaction {   // 所有交易记录的基类，含纯虚函数所以是抽象类
+public:
     Transaction();
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">logTransaction</span>() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;  <span style="color:#75715e">// 根据不同交易派生类的类型重载对应函数，此处定义为纯虚函数
-</span><span style="color:#75715e"></span>    ...
+    virtual void logTransaction() const = 0;  // 根据不同交易派生类的类型重载对应函数，此处定义为纯虚函数
+    ...
 };
 
-Transaction<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Transaction()
+Transaction::Transaction()
 {
     ...
-    logTransaction();   <span style="color:#75715e">// 在构造函数中触发虚函数，记录派生类的交易信息
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    logTransaction();   // 在构造函数中触发虚函数，记录派生类的交易信息
+}
+</code></pre>
+
 <p>对应不同交易的派生类定义如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BuyTransaction</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Transaction {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> logTransaction() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// 记录买方交易信息
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class BuyTransaction: public Transaction {
+public:
+    virtual void logTransaction() const;  // 记录买方交易信息
+    ...
 }
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SellTransaction</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Transaction {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> logTransaction() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// 记录卖方交易信息
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+class SellTransaction: public Transaction {
+public:
+    virtual void logTransaction() const;  // 记录卖方交易信息
+}
+</code></pre>
+
 <p>按照上述函数申明和定义，如果我们构造一个买方派生类的实例：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BuyTransaction buy;
-</code></pre></div>
+
+<pre><code class="language-cpp">BuyTransaction buy;
+</code></pre>
+
 <p>此时<code>BuyTransaction</code>派生类的构造函数会被触发，但是在执行派生类构造函数之前，基类的构造函数会先被触发以构造新实例基类那部分的成员变量。当执行到基类构造函数最后一行的<code>logTransaction()</code>时，即使此时创建的实例属于派生类<code>BuyTransaction</code>，执行的虚函数依然是基类<code>Transaction</code>里面定义的版本。原因有二：</p>
 
 <ol>
@@ -426,18 +432,20 @@ Transaction<span style="color:#f92672">:</span><span style="color:#f92672">:</sp
 <p>基于相同的道理，执行析构函数的时候，一旦最开始触发的派生类析构函数开始运行，派生类部分的成员变量就被标记为未定义（<code>undefined</code>）；而第二阶段进入基类的析构函数，<code>buy</code>实例的类型就被标记为基类，此时在虚函数和<code>dynamic_cast</code>等运行时相关的操作看来这就是一个<code>Transaction</code>类型的实例。</p>
 
 <p>接着讲上述的例子：如果按照上述定义编译，部分编译器会提出警告(某些则不会，见Item 53)；即使没有警告，由于<code>logTransaction()</code>是纯虚函数，没有定义函数体，所以即使通过了编译器这关，在下个阶段由于链接器找不到函数的定义所以也不会生成最终的可执行文件。但如果有人鸡贼的这样定义：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Transaction</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Transaction {
+public:
     Transaction()
-    { init(); }   <span style="color:#75715e">// 构造函数里“没有”直接触发虚函数
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">void</span> init()
+    { init(); }   // 构造函数里“没有”直接触发虚函数
+private:
+    void init()
     {
         ...
-        logTransaction();  <span style="color:#75715e">// 但虚函数在第三方函数init()中被调用
-</span><span style="color:#75715e"></span>    }
+        logTransaction();  // 但虚函数在第三方函数init()中被调用
+    }
 };
-</code></pre></div>
+</code></pre>
+
 <p>虽然本质上跟之前的程序没有区别，但这样写很可能可以蒙混过链接器这关。一旦程序开始运行，执行到纯虚函数<code>logTransaction()</code>的时候程序就会崩溃并停止运行（<code>abort</code>）；而如果<code>logTransaction()</code>是添加了函数实体定义的普通虚函数，虽然程序可以运行，但无论之后怎样花式捉虫（<code>debug</code>），最后在创建实例<code>buy</code>时log记录文档里留下的也都是基类<code>Transaction</code>版本的交易记录。</p>
 
 <hr />
@@ -449,28 +457,30 @@ Transaction<span style="color:#f92672">:</span><span style="color:#f92672">:</sp
 </blockquote>
 
 <p>方法有很多。讲一个常见的：既然不可以在基类构造函数中使用派生类版本的虚函数，那就让派生类在构造实例的时候把自己的交易信息传回基类的(非虚)构造函数中：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Transaction</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">explicit</span> Transaction(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> logInfo); <span style="color:#75715e">// “explicit”关键词防止隐式转换
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">logTransaction</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> logInfo) <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// 不再是虚函数了
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class Transaction {
+public:
+    explicit Transaction(const std::string&amp; logInfo); // “explicit”关键词防止隐式转换
+    void logTransaction(const std::string&amp; logInfo) const; // 不再是虚函数了
+    ...
 };
 
-Transaction<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Transaction(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> logInfo)
+Transaction::Transaction(const std::string&amp; logInfo)
 {
     ...
-    logTransaction(logInfo);  <span style="color:#75715e">// 不是虚函数，放心call
-</span><span style="color:#75715e"></span>}
+    logTransaction(logInfo);  // 不是虚函数，放心call
+}
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BuyTransaction</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Transaction {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+class BuyTransaction: public Transaction {
+public:
     BuyTransaction( parameters )
-    <span style="color:#f92672">:</span> Transaction(createLogString( parameters )) <span style="color:#75715e">// 将交易信息以传参方式传给基类构造函数
-</span><span style="color:#75715e"></span>    {...}
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string createLogString( parameters ); <span style="color:#75715e">// 静态函数，杜绝使用派生类中新定义的成员变量的可能性
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+    : Transaction(createLogString( parameters )) // 将交易信息以传参方式传给基类构造函数
+    {...}
+private:
+    static std::string createLogString( parameters ); // 静态函数，杜绝使用派生类中新定义的成员变量的可能性
+};
+</code></pre>
+
 <p>注意上述<code>createLogString()</code>函数定义为<code>static</code>可以防止出现在构造函数第一阶段（触发基类构造函数的阶段）中使用处于<code>undefine</code>状态的派生类成员变量的情形（这也正是上述第一点C++不让在基类构造函数中使用派生类虚函数的原因）。</p>
 
 <blockquote>

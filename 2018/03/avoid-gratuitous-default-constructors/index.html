@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-4 Avoid Gratuitous Default Constructors</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -400,23 +400,27 @@ Suffering is optional.</p>
 </nav>
 
 <p>For many objects, there is no reasonable way to perform a complete initialization in the absence of outside information. Consider a class for company equipment in which the corporate ID number of the quipment is a mandatory constructor argument:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EquipmentPiece</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    EquipmentPiece(<span style="color:#66d9ef">int</span> IDNumber);
+
+<pre><code class="language-cpp">class EquipmentPiece {
+public:
+    EquipmentPiece(int IDNumber);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <h1 id="with-default-constructor">With default constructor</h1>
 
 <p>Some people believe <em>all</em> classes should include a default constructors, even if a default constructor doesn&rsquo;t have enough information to fully initialize objects of the class. Adherents to this philosophy will modify <code>EquipmentPiece</code> as follows:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EquipmentPiece</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    EquipmentPiece(<span style="color:#66d9ef">int</span> IDNumber <span style="color:#f92672">=</span> UNSPECIFIED);
+
+<pre><code class="language-cpp">class EquipmentPiece {
+public:
+    EquipmentPiece(int IDNumber = UNSPECIFIED);
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> UNSPECIFIED; <span style="color:#75715e">// magic ID num. value meaning no ID was specified
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+private:
+    static const int UNSPECIFIED; // magic ID num. value meaning no ID was specified
+};
+</code></pre>
+
 <p>There are two downsides after including a default constructor in a class where none was warranted:</p>
 
 <ol>
@@ -437,34 +441,41 @@ Suffering is optional.</p>
 <h2 id="1-creation-of-arrays">1. Creation of arrays</h2>
 
 <p>There is, in general, no way to specify constructor arguments for objects in arrays:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">EquipmentPiece bestPieces[<span style="color:#ae81ff">10</span>];  <span style="color:#75715e">// error! No way to call EquipmentPiece ctors.
-</span><span style="color:#75715e"></span>EquipmentPiece <span style="color:#f92672">*</span>bestPieces <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> EquipmentPiece[<span style="color:#ae81ff">10</span>];  <span style="color:#75715e">// error! same problem
-</span></code></pre></div>
+
+<pre><code class="language-cpp">EquipmentPiece bestPieces[10];  // error! No way to call EquipmentPiece ctors.
+EquipmentPiece *bestPieces = new EquipmentPiece[10];  // error! same problem
+</code></pre>
+
 <p>There are three ways to get around the restriction:</p>
 
 <ol>
 <li><p>Provide the necessary arguments when array is defined</p>
 
 <p>This solution works only for non-heap arrays:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> ID1, ID2, ID3, ..., ID10;  <span style="color:#75715e">// variables to hold equipment ID numbers
-</span><span style="color:#75715e"></span>...
-EquipmentPiece bestPieces[] <span style="color:#f92672">=</span> {  <span style="color:#75715e">// fine, ctor arguments are provided
-</span><span style="color:#75715e"></span>    EquipmentPiece(ID1);
+
+<pre><code class="language-cpp">int ID1, ID2, ID3, ..., ID10;  // variables to hold equipment ID numbers
+...
+EquipmentPiece bestPieces[] = {  // fine, ctor arguments are provided
+    EquipmentPiece(ID1);
     EquipmentPiece(ID2);
     ...
     EquipmentPiece(ID10);
 }
-</code></pre></div></li>
+</code></pre>
 
-<li><p>Use an array of <em>pointers</em> instead of an array of objects</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">typedef</span> EquipmentPiece<span style="color:#f92672">*</span> PEP;     <span style="color:#75715e">// a PEP is a pointer to an EuipmentPiece
-</span><span style="color:#75715e"></span>PEP bestPieces[<span style="color:#ae81ff">10</span>];              <span style="color:#75715e">// fine, no ctor called
-</span><span style="color:#75715e"></span>PEP <span style="color:#f92672">*</span>bestPieces <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PEP[<span style="color:#ae81ff">10</span>];   <span style="color:#75715e">// fine, no ctor called
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i) {
-    bestPieces[i] <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> EquipmentPiece( ID Number );
+<ol>
+<li>Use an array of <em>pointers</em> instead of an array of objects</li>
+</ol>
+
+<pre><code class="language-cpp">typedef EquipmentPiece* PEP;     // a PEP is a pointer to an EuipmentPiece
+PEP bestPieces[10];              // fine, no ctor called
+PEP *bestPieces = new PEP[10];   // fine, no ctor called
+
+for (int i = 0; i &lt; 10; ++i) {
+    bestPieces[i] = new EquipmentPiece( ID Number );
 }
-</code></pre></div>
+</code></pre>
+
 <p>The disadvantages to this approach is:</p>
 
 <ul>
@@ -473,46 +484,51 @@ EquipmentPiece bestPieces[] <span style="color:#f92672">=</span> {  <span style=
 </ul></li>
 
 <li><p>Use &ldquo;placement <code>new</code>&rdquo; (item 8)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// allocate enough memory for an array of 10 EuipmentPiece obj.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>rawMemory <span style="color:#f92672">=</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>[](<span style="color:#ae81ff">10</span><span style="color:#f92672">*</span><span style="color:#66d9ef">sizeof</span>(EquipmentPiece));
 
-<span style="color:#75715e">// make bestPieces point to the memory so it can be treated as an EquipmentPiece array
-</span><span style="color:#75715e"></span>EquipmentPiece <span style="color:#f92672">*</span>bestPieces <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>EquipmentPiece<span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span> (rawMemory);
+<pre><code class="language-cpp">// allocate enough memory for an array of 10 EuipmentPiece obj.
+void *rawMemory = operator new[](10*sizeof(EquipmentPiece));
 
-<span style="color:#75715e">// construct the EquipmentPiece objects in the memory using placement new
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i) {
-    <span style="color:#66d9ef">new</span> (bestPieces<span style="color:#f92672">+</span>i) EquipmentPiece( ID Number );
+// make bestPieces point to the memory so it can be treated as an EquipmentPiece array
+EquipmentPiece *bestPieces = static_cast&lt;EquipmentPiece*&gt; (rawMemory);
+
+// construct the EquipmentPiece objects in the memory using placement new
+for (int i = 0; i &lt; 10; ++i) {
+    new (bestPieces+i) EquipmentPiece( ID Number );
 }
-</code></pre></div>
+</code></pre>
+
 <p>This design avoids the spece penalty of extra pointers, but the downside is that we must manually call destructors on the objects in the array, then manually deallocate the raw memory by calling <code>operator delete[]</code> (item 8), which is unfamiliar by most programmers<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// destruct the objects in bestPieces in the inverse order
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">9</span>; i <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#f92672">-</span><span style="color:#f92672">-</span>i) {
-    bestPieces[i].<span style="color:#f92672">~</span>EquipmentPiece();    
+
+<pre><code class="language-cpp">// destruct the objects in bestPieces in the inverse order
+for (int i = 9; i &gt;= 0; --i) {
+    bestPieces[i].~EquipmentPiece();    
 }
-<span style="color:#75715e">// deallocate the raw memory
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>[](rawMemory);
-</code></pre></div></li>
+// deallocate the raw memory
+operator delete[](rawMemory);
+</code></pre></li>
 </ol>
 
 <h2 id="2-ineligible-for-some-template-based-container-classes">2. Ineligible for some template-based container classes</h2>
 
 <p>Some templates requires that the type used to instantiate the template proved a default constructor for purpose such as createing an array of the template parameter type inside the template:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Array</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Array(<span style="color:#66d9ef">int</span> size);
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class Array {
+public:
+    Array(int size);
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    T <span style="color:#f92672">*</span>data;
+private:
+    T *data;
 };
 
-Template<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-Array<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Array(<span style="color:#66d9ef">int</span> size)
+Template&lt;class T&gt;
+Array&lt;T&gt;::Array(int size)
 {
-    data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> T[size];  <span style="color:#75715e">// calls T::T() for each elem. of the array
-</span><span style="color:#75715e"></span>    ...
+    data = new T[size];  // calls T::T() for each elem. of the array
+    ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>Although careful template design can eliminate the need for a default constructor (such as <code>vector</code> template), there are templates designed with that requirement. That being the case, classes without default constructors will be incompatible with such templates.</p>
 
 <h2 id="3-virtual-base-classes">3. Virtual base classes</h2>

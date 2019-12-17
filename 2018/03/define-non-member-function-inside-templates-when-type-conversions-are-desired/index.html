@@ -65,7 +65,7 @@
 
     <title>Item-46 Define non-member function inside templates when type conversions are desired</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -396,42 +396,50 @@ Suffering is optional.</p>
 </nav>
 
 <p>If we want  to do implicit type conversion on all arguments, we should use non-member functions (item 24). Now we want a templatized version of <code>Rational</code> class to support the same mixed-mode arithmetic as shown in item 24, and the code could start like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Rational(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> numerator <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, <span style="color:#75715e">// see item 20 for why params are passed by ref
-</span><span style="color:#75715e"></span>             <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> denominator <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>);
-    <span style="color:#66d9ef">const</span> T <span style="color:#a6e22e">numerator</span>() <span style="color:#66d9ef">const</span>;    <span style="color:#75715e">// see item 28 for why return values are passed by value
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> T <span style="color:#a6e22e">denominator</span>() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// see item 3 for why return values are const
-</span><span style="color:#75715e"></span>};
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> lhs,
-                            <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs)
+<pre><code class="language-cpp">template&lt;typename T&gt;
+class Rational {
+public:
+    Rational(const T&amp; numerator = 0, // see item 20 for why params are passed by ref
+             const T&amp; denominator = 1);
+    const T numerator() const;    // see item 28 for why return values are passed by value
+    const T denominator() const;  // see item 3 for why return values are const
+};
+
+template&lt;typename T&gt;
+const Rational&lt;T&gt; operator*(const Rational&lt;T&gt;&amp; lhs,
+                            const Rational&lt;T&gt;&amp; rhs)
 {...}
-</code></pre></div>
+</code></pre>
+
 <p>However, this simple update to templatized version will not compile for following code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Rational<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> oneHalf(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);
-Rational<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> oneHalf <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>;  <span style="color:#75715e">// error! won&#39;t compile
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Rational&lt;int&gt; oneHalf(1, 2);
+Rational&lt;int&gt; result = oneHalf * 2;  // error! won't compile
+</code></pre>
+
 <p>The problem here is that <strong>implicit type conversion functions are <em>never</em> considered during template argument deduction</strong>. This means it is impossible for the compilers to convert the second parameter <code>2</code> into a <code>Rational&lt;int&gt;</code> using non-explicit constructor, so compilers can&rsquo;t figure out what <code>T</code> is for this function template named <code>operator*</code> taking two parameters of type <code>Rational&lt;T&gt;</code>, can&rsquo;t deduce parameter types for this function templates, and thus can&rsquo;t instantiate the appropriate functions. In the end, the function we want to call fails to be declared, before we could apply implicit type conversions during a later function call.</p>
 
 <h1 id="solve-the-compiling-issue">Solve the compiling issue</h1>
 
 <p>How to declare the <code>operator*</code> properly? Notice that class templates don&rsquo;t depend on template argument deduction (this process only applies to function templates), so <code>T</code> is always known at the time the class <code>Rational&lt;T&gt;</code> is instantiated. Combine this knowledge with another fact that a <code>friend</code> declaration in a template class refers to a specific <em>function</em> (not a function <em>template</em>), so as part of the class instantiation process, the friend function will be automatically declared. Taking advantage of these 2 points, we could update the code to a new version<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+class Rational {
+public:
     ...
-    <span style="color:#66d9ef">friend</span>  <span style="color:#75715e">// declare operator* function
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, 
-                             <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs);
+    friend  // declare operator* function
+    const Rational operator*(const Rational&amp; lhs, 
+                             const Rational&amp; rhs);
 };
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// define operator* function
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> lhs,  
-                            <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs)
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;  // define operator* function
+const Rational&lt;T&gt; operator*(const Rational&lt;T&gt;&amp; lhs,  
+                            const Rational&lt;T&gt;&amp; rhs)
 {...}
-</code></pre></div>
+</code></pre>
+
 <p>When the <code>oneHalf</code> is declared to be of type <code>Rational&lt;int&gt;</code>, the class <code>Rational&lt;int&gt;</code> is instantiated, and the friend function <code>operator*</code> that takes <code>Rational&lt;int&gt;</code> parameters is then declared automatically. As a declared function, compilers can use implicit conversion functions (such as <code>Rational</code>&rsquo;s non-explicit constructor) when calling it, making the mixed-mode call compile.</p>
 
 <h1 id="solve-the-linking-issue">Solve the linking issue</h1>
@@ -441,20 +449,22 @@ Rational<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</
 <p>This time, the problem is that the target function <code>operator*</code> is only <em>declared</em> inside <code>Rational</code>, not <em>defined</em> there. Indeed, the <code>operator*</code> template outside the class is intended to provide that definition, but things don&rsquo;t work this way, and linkers can&rsquo;t find the definition.</p>
 
 <p>To solve it, the simplest thing is to put the function body into its declaration:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+class Rational {
+public:
     ...
-    <span style="color:#66d9ef">friend</span> 
-    <span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, 
-                             <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
+    friend 
+    const Rational operator*(const Rational&amp; lhs, 
+                             const Rational&amp; rhs)
     {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Rational</span>(lhs.numerator() <span style="color:#f92672">*</span> rhs.numerator(),
-                        lhs.denominator() <span style="color:#f92672">*</span> rhs.denominator()); <span style="color:#75715e">// same impl as item 24
-</span><span style="color:#75715e"></span>    }
+        return Rational(lhs.numerator() * rhs.numerator(),
+                        lhs.denominator() * rhs.denominator()); // same impl as item 24
+    }
 
 };
-</code></pre></div>
+</code></pre>
+
 <p>This works as intended: mixed-mode calls to <code>operator*</code> now compiles, link, and run.</p>
 
 <p>This design is, in some sense, kind of unconventional, because the use of friendship has nothing to do with a need to access non-public parts of the class. We declared it as <code>friend</code> because it is the only choise we have:</p>
@@ -468,31 +478,35 @@ Rational<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</
 <h1 id="have-the-friend-call-a-helper">Have the friend call a helper</h1>
 
 <p>Such functions as <code>operator*</code> defined inside a class are implicitly declared <code>inline</code> (item 30), so we may minimize the impact of such <code>inline</code> declarations by having <code>operator*</code> do nothing but call a helper function defined outside of the class, especially when the function body is complex.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Raional</span>;  <span style="color:#75715e">// declare Rational template
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// helper template
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> doMultiply(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> lhs,
-                             <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs); 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">template&lt;typename T&gt; class Raional;  // declare Rational template
+
+template&lt;typename T&gt;  // helper template
+const Rational&lt;T&gt; doMultiply(const Rational&lt;T&gt;&amp; lhs,
+                             const Rational&lt;T&gt;&amp; rhs); 
+template&lt;typename T&gt;
+class Rational {
+public:
     ...
-    <span style="color:#66d9ef">friend</span> <span style="color:#75715e">// have friend call helper
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, 
-                             <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
-    { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">doMultiply</span>(lhs, rhs); }
+    friend // have friend call helper
+    const Rational operator*(const Rational&amp; lhs, 
+                             const Rational&amp; rhs)
+    { return doMultiply(lhs, rhs); }
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Many compilers force us to put all template definitions in header files, so we may need to define <code>doMultiply</code> in the header as well:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span> 
-<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> doMultiply(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> lhs,
-                             <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">template&lt;typename T&gt; 
+const Rational&lt;T&gt; doMultiply(const Rational&lt;T&gt;&amp; lhs,
+                             const Rational&lt;T&gt;&amp; rhs)
 {
-    <span style="color:#66d9ef">return</span> Rational<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(lhs.numerator() <span style="color:#f92672">*</span> rhs.numerator(),
-                       lhs.denominator() <span style="color:#f92672">*</span> rhs.denominator());
+    return Rational&lt;T&gt;(lhs.numerator() * rhs.numerator(),
+                       lhs.denominator() * rhs.denominator());
 }
-</code></pre></div>
+</code></pre>
+
 <p>Here, <code>doMultiply</code> is a template, so it won&rsquo;t support mixed-mode multiplication. The workflow is like this:</p>
 
 <ul>

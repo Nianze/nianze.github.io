@@ -65,7 +65,7 @@
 
     <title>Item-43 Know how to access names in templatized base classes</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -402,49 +402,51 @@ Suffering is optional.</p>
 <h1 id="case-study">Case Study</h1>
 
 <p>Sometimes when we cross from Object-oriented C++ to Template C++ (item 1), inheritance seem to stop working. For example, we&rsquo;d like to log some information for the <code>sendMsg</code> function in base class <code>MsgSender</code>, so we make following derived class <code>LoggingMsgSender</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CompanyA</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class CompanyA {
+public:
     ...
-    <span style="color:#66d9ef">void</span> sendClearText(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> msg);
+    void sendClearText(const std::string&amp; msg);
     ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CompanyB</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+class CompanyB {
+public:
     ...
-    <span style="color:#66d9ef">void</span> sendClearText(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> msg);
+    void sendClearText(const std::string&amp; msg);
     ...
 }
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MsgInfo</span> {...};  <span style="color:#75715e">// class for holding information used to create msg
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> Company<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MsgSender</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ...  <span style="color:#75715e">// ctor, dtor, etc.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> sendClear(<span style="color:#66d9ef">const</span> MsgInfo<span style="color:#f92672">&amp;</span> info)
+class MsgInfo {...};  // class for holding information used to create msg
+
+template&lt;typename Company&gt;
+class MsgSender {
+public:
+    ...  // ctor, dtor, etc.
+    void sendClear(const MsgInfo&amp; info)
     {
-        std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string msg;
-        <span style="color:#75715e">// create msg from info;
-</span><span style="color:#75715e"></span>        Company c;
+        std::string msg;
+        // create msg from info;
+        Company c;
         c.sendClearText(msg);
     }
     ...
 };
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> Company<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LoggingMsgSender</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> MsgSender<span style="color:#f92672">&lt;</span>Company<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ... <span style="color:#75715e">// ctor, dtor, etc.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> sendClearMsg(<span style="color:#66d9ef">const</span> MsgInfo<span style="color:#f92672">&amp;</span> info)
+template&lt;typename Company&gt;
+class LoggingMsgSender: public MsgSender&lt;Company&gt; {
+public:
+    ... // ctor, dtor, etc.
+    void sendClearMsg(const MsgInfo&amp; info)
     {
-        <span style="color:#75715e">// write &#34;before sending&#34; info to the log
-</span><span style="color:#75715e"></span>        sendClear(info);  <span style="color:#75715e">// call base class function -&gt; not compile
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// write &#34;after sending&#34; info to the log
-</span><span style="color:#75715e"></span>    }
+        // write &quot;before sending&quot; info to the log
+        sendClear(info);  // call base class function -&gt; not compile
+        // write &quot;after sending&quot; info to the log
+    }
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Note that the message-sending function in the derived class has a different name <code>sendClearMsg</code> from its counterpart <code>sendClear</code> in the base class: this is good design for two reasongs:</p>
 
 <ol>
@@ -453,20 +455,24 @@ Suffering is optional.</p>
 </ol>
 
 <p>However, the code above will not compile, because, by default, compilers will not look for the function <code>sendClear</code> in the base class. The behavior seems to break our expected inheritance concept from Object-oriented world, but compilers do this for a good reason: they will not know what the base class <code>MsgSender&lt;Company&gt;</code> really looks like until when <code>LoggingMsgSender</code> is instantiated, so it is possible that there&rsquo;s a special template parameter class <code>CompanyC</code> that, instead of providing function <code>sendClearText</code>, only supports <code>sendEncrypted</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CompanyZ</span> {  <span style="color:#75715e">// this class offers no sendClearText Fucntion
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class CompanyZ {  // this class offers no sendClearText Fucntion
+public:
     ...
-    <span style="color:#66d9ef">void</span> sendEncrypted(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> msg);
+    void sendEncrypted(const std::string&amp; msg);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>In this case, <code>sendClear</code> function in <code>MsgSender</code> base class will make no sense. To rectify the problem, we can create a specialized version of <code>MsgSender</code> for <code>CompanyZ</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// signifies this is neither a template nor a standalone class
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MsgSender</span><span style="color:#f92672">&lt;</span>CompanyZ<span style="color:#f92672">&gt;</span> { <span style="color:#75715e">// but a total specialization of MsgSender
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ... <span style="color:#75715e">// the same as the general template, except sendCleartext is omitted
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+
+<pre><code class="language-cpp">template&lt;&gt;  // signifies this is neither a template nor a standalone class
+class MsgSender&lt;CompanyZ&gt; { // but a total specialization of MsgSender
+public:
+    ... // the same as the general template, except sendCleartext is omitted
+};
+</code></pre>
+
 <p>This syntax is known as a <em>total template specialization</em>: the template <code>MsgSender</code> is specialized for the type <code>CompanyZ</code>, and the specialization is <em>total</em> - once the type parameter has been defined to be <code>CompanyZ</code>, no other aspect of the template&rsquo;s parameters can vary.</p>
 
 <p>Since base class templates may be specialized and that such specializations may not offer the same interface as the general template, C++ generally  refuses to look in templatized base classes for inherited names. That&rsquo;s why we say inheritance stops working in Template C++ wolrd.</p>
@@ -474,62 +480,70 @@ Suffering is optional.</p>
 <p>To force C++ to look in templatized base classes, there are three ways:</p>
 
 <h2 id="1-call-with-this">1. Call with &ldquo;this-&gt;&rdquo;</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> Company<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LoggingMsgSender</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> MsgSender<span style="color:#f92672">&lt;</span>Company<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ... <span style="color:#75715e">// ctor, dtor, etc.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> sendClearMsg(<span style="color:#66d9ef">const</span> MsgInfo<span style="color:#f92672">&amp;</span> info)
+
+<pre><code class="language-cpp">template&lt;typename Company&gt;
+class LoggingMsgSender: public MsgSender&lt;Company&gt; {
+public:
+    ... // ctor, dtor, etc.
+    void sendClearMsg(const MsgInfo&amp; info)
     {
-        <span style="color:#75715e">// write &#34;before sending&#34; info to the log
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>sendClear(info);  <span style="color:#75715e">// assumes that sendClear will be inherited
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// write &#34;after sending&#34; info to the log
-</span><span style="color:#75715e"></span>    }
+        // write &quot;before sending&quot; info to the log
+        this-&gt;sendClear(info);  // assumes that sendClear will be inherited
+        // write &quot;after sending&quot; info to the log
+    }
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <h2 id="2-employ-a-using-declaration">2. Employ a &ldquo;using&rdquo; declaration</h2>
 
 <p>This is the same trick we use in item 33, which explains how <code>using</code> declaration brings hidden base class names into a derived class&rsquo;s scope<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> Company<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LoggingMsgSender</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> MsgSender<span style="color:#f92672">&lt;</span>Company<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">using</span> MsgSender<span style="color:#f92672">&lt;</span>Company<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>sendClear;  <span style="color:#75715e">// tell compilers to assume that sendClear is in the base class
-</span><span style="color:#75715e"></span>    ... <span style="color:#75715e">// ctor, dtor, etc.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> sendClearMsg(<span style="color:#66d9ef">const</span> MsgInfo<span style="color:#f92672">&amp;</span> info)
+
+<pre><code class="language-cpp">template&lt;typename Company&gt;
+class LoggingMsgSender: public MsgSender&lt;Company&gt; {
+public:
+    using MsgSender&lt;Company&gt;::sendClear;  // tell compilers to assume that sendClear is in the base class
+    ... // ctor, dtor, etc.
+    void sendClearMsg(const MsgInfo&amp; info)
     {
-        <span style="color:#75715e">// write &#34;before sending&#34; info to the log
-</span><span style="color:#75715e"></span>        sendClear(info);  <span style="color:#75715e">// assumes that sendClear will be inherited
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// write &#34;after sending&#34; info to the log
-</span><span style="color:#75715e"></span>    }
+        // write &quot;before sending&quot; info to the log
+        sendClear(info);  // assumes that sendClear will be inherited
+        // write &quot;after sending&quot; info to the log
+    }
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <h2 id="3-explicitly-specify-the-base-class-qualification">3. Explicitly specify the base class qualification</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> Company<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LoggingMsgSender</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> MsgSender<span style="color:#f92672">&lt;</span>Company<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ... <span style="color:#75715e">// ctor, dtor, etc.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> sendClearMsg(<span style="color:#66d9ef">const</span> MsgInfo<span style="color:#f92672">&amp;</span> info)
+
+<pre><code class="language-cpp">template&lt;typename Company&gt;
+class LoggingMsgSender: public MsgSender&lt;Company&gt; {
+public:
+    ... // ctor, dtor, etc.
+    void sendClearMsg(const MsgInfo&amp; info)
     {
-        <span style="color:#75715e">// write &#34;before sending&#34; info to the log
-</span><span style="color:#75715e"></span>        MsgSender<span style="color:#f92672">&lt;</span>Company<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>sendClear(info);  <span style="color:#75715e">// assumes that sendClear will be inherited
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// write &#34;after sending&#34; info to the log
-</span><span style="color:#75715e"></span>    }
+        // write &quot;before sending&quot; info to the log
+        MsgSender&lt;Company&gt;::sendClear(info);  // assumes that sendClear will be inherited
+        // write &quot;after sending&quot; info to the log
+    }
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>This approach is less desirable, because if the function being called is virtual, explicit qualification turns off the virtual binding behavior.</p>
 
 <h1 id="summary">Summary</h1>
 
 <p>From a name visibility point of view, each of these approaches does the same thing: it promises  compilers that any subsequent specializations of the base class template will support the interface  offered by the general template. However, if the promise turns out to be unfounded, the subsequent compilation will still diagnose invalid references to base class members and reveal the truth:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">LoggingMsgSender<span style="color:#f92672">&lt;</span>CompanyZ<span style="color:#f92672">&gt;</span> zMsgSender;
+
+<pre><code class="language-cpp">LoggingMsgSender&lt;CompanyZ&gt; zMsgSender;
 
 MsgInfo msgData;
-... <span style="color:#75715e">// put info in msgData
-</span><span style="color:#75715e"></span>zMsgSender.sendClearMsg(msgData);  <span style="color:#75715e">// error! won&#39;t compile. Compilers know the base class MsgSender&lt;CompanyZ&gt; 
-</span><span style="color:#75715e"></span>                                   <span style="color:#75715e">// doesn&#39;t offer the sendClear function for this template specilization
-</span></code></pre></div>
+... // put info in msgData
+zMsgSender.sendClearMsg(msgData);  // error! won't compile. Compilers know the base class MsgSender&lt;CompanyZ&gt; 
+                                   // doesn't offer the sendClear function for this template specilization
+</code></pre>
+
 <blockquote>
 <p>Fundamentally, compilers will diagnose invalid references to base class members sooner (when derived class template definitions are parsed) or later (when templates are instantiated with specific template arguments). C++&rsquo;s policy is to prefer early diagnoses, and that&rsquo;s why it assumes it knows nothing about the contents of base classes when those classes are instantiated from templates.</p>
 </blockquote>

@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-19 Understand the Origin of Temporary Objects</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -411,18 +411,20 @@ Suffering is optional.</p>
 <p>When the type of object passed to a function is not the same as the type of the parameter to which it is being bound, temporary objects are created during the implicit conversion to make function calls succeed.</p>
 
 <p>For example,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">size_t <span style="color:#a6e22e">countChar</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> str, <span style="color:#66d9ef">char</span> ch);
 
-<span style="color:#66d9ef">char</span> buffer[MAX_STRING_LEN];
-<span style="color:#66d9ef">char</span> c;
+<pre><code class="language-cpp">size_t countChar(const string&amp; str, char ch);
 
-<span style="color:#75715e">// read in a char and a string; use setw to avoid 
-</span><span style="color:#75715e"></span><span style="color:#75715e">// overflowing buffer when reading the string
-</span><span style="color:#75715e"></span>cin <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> c <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> setw(MAX_STRING_LEN) <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> buffer;
-cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">There are </span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> countChar(buffer, c)
-     <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74"> occurrences of the character </span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> c
-     <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74"> in </span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> buffer <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> endl;
-</code></pre></div>
+char buffer[MAX_STRING_LEN];
+char c;
+
+// read in a char and a string; use setw to avoid 
+// overflowing buffer when reading the string
+cin &gt;&gt; c &gt;&gt; setw(MAX_STRING_LEN) &gt;&gt; buffer;
+cout &lt;&lt; &quot;There are &quot; &lt;&lt; countChar(buffer, c)
+     &lt;&lt; &quot; occurrences of the character &quot; &lt;&lt; c
+     &lt;&lt; &quot; in &quot; &lt;&lt; buffer &lt;&lt; endl;
+</code></pre>
+
 <p>Here is what will happen:</p>
 
 <ol>
@@ -441,15 +443,19 @@ cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</sp
 <h2 id="restrictions-on-implicit-conversion">Restrictions on implicit conversion</h2>
 
 <p>These conversions occur only when passing objects by value or when passing to a reference-to-<code>const</code> parameter, so when passing an object to a reference-to-non-<code>const</code> parameter, there is no implicit conversion. For example,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">uppercasify</span>(string<span style="color:#f92672">&amp;</span> str);
-<span style="color:#66d9ef">char</span> bookTitle[] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Effective C++</span><span style="color:#e6db74">&#34;</span>;
-uppercasify(bootTitle);  <span style="color:#75715e">// error!
-</span></code></pre></div>
+
+<pre><code class="language-cpp">void uppercasify(string&amp; str);
+char bookTitle[] = &quot;Effective C++&quot;;
+uppercasify(bootTitle);  // error!
+</code></pre>
+
 <p>Here, temporary would not be created for parameter <code>str</code>, which is declared to be of type &ldquo;non-<code>const</code> reference&rdquo;, because it is the <code>bookTitle</code> that is supposed to be updated, instead of a newly created temporary.</p>
 
 <h1 id="function-return-value">Function return value</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> Number <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">const</span> Number<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Number<span style="color:#f92672">&amp;</span> rhs);
-</code></pre></div>
+
+<pre><code class="language-cpp">const Number operator+(const Number&amp; lhs, const Number&amp; rhs);
+</code></pre>
+
 <p>The return value of <code>operator+</code> is a temporary, because it is just the function&rsquo;s return value and has no name, and we must pay to construct and destruct this object each time we call the function. (<code>const</code> is added for the same reason in MECpp item 6);</p>
 
 <p>To avoid such costs,</p>

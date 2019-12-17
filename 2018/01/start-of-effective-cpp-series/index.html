@@ -65,7 +65,7 @@
 
     <title>Item-1 Prefer consts, enums and inlines to #defines</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -405,40 +405,51 @@ Suffering is optional.</p>
 <h1 id="prefer-const-to-define">Prefer <code>const</code> to <code>#define</code></h1>
 
 <p>There are two ways we may consider, when we want to define a constant:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// method one
-</span><span style="color:#75715e"></span><span style="color:#75715e">#</span><span style="color:#75715e">define PI_1 3.1415926</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span><span style="color:#75715e">// method two
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> PI_2 <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.1415926</span>;
-</code></pre></div>
+
+<pre><code class="language-cpp">// method one
+#define PI_1 3.1415926
+// method two
+const double PI_2 = 3.1415926;
+</code></pre>
+
 <p>However, since <code>PI_1</code> may be removed by preprocessor and never be seen by compilers, making it absent in the symbol table, this can be confusing during debugging if we get an error refering to 3.1415926 rather than <code>PI_1</code> (especially when <code>PI_1</code> is defined in a header file written by somebody else). Thus, instead of using a preprocessor macro, we&rsquo;d better go with <code>const</code>. Below is some tricks with <code>const</code>.</p>
 
 <h2 id="tricks-on-const-definition">Tricks on <code>const</code> definition</h2>
 
 <ol>
 <li><p>When defining constant pointers, use two <code>const</code> to make sure both the pointer as well as the content pointed by the pointer are immutable:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> blogger <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Nzo</span><span style="color:#e6db74">&#34;</span>;
-</code></pre></div></li>
 
-<li><p>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, since there&rsquo;s no way we may create a class-scope-specific or class-encapsulated(i.e., private) constant using a <code>#define</code> (once a macro is defined, it&rsquo;s in force for the rest of the compilation unless it&rsquo;s <code>#undefed</code> somewhere along the line). Pay attention to the difference between constant declaration and constant definition:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// game.h
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GamePlayer</span> {
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> NUM_TURNS <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;  <span style="color:#75715e">// constant declaration with initial value
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> PI;          <span style="color:#75715e">// constant declaration without initial value
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> scores[NUM_TURNS];           <span style="color:#75715e">// use of constant
-</span><span style="color:#75715e"></span>};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// game.cpp
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> GamePlayer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>NUM_TURNS;     <span style="color:#75715e">// constant definition in impl. file
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> GamePlayer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>PI <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.14</span>;  <span style="color:#75715e">// provide initial value at definition
-</span></code></pre></div>
+<pre><code class="language-cpp">const char * const blogger = &quot;Nzo&quot;;
+</code></pre>
+
+<ol>
+<li>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, since there&rsquo;s no way we may create a class-scope-specific or class-encapsulated(i.e., private) constant using a <code>#define</code> (once a macro is defined, it&rsquo;s in force for the rest of the compilation unless it&rsquo;s <code>#undefed</code> somewhere along the line). Pay attention to the difference between constant declaration and constant definition:</li>
+</ol>
+
+<pre><code class="language-cpp">// game.h
+class GamePlayer {
+private:
+    static const int NUM_TURNS = 5;  // constant declaration with initial value
+    static const double PI;          // constant declaration without initial value
+    int scores[NUM_TURNS];           // use of constant
+};
+</code></pre>
+
+<pre><code class="language-cpp">// game.cpp
+const int GamePlayer::NUM_TURNS;     // constant definition in impl. file
+const double GamePlayer::PI = 3.14;  // provide initial value at definition
+</code></pre>
+
 <p>It&rsquo;s worth noting that older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of <em>declaration</em>. Most of time we may solve the problem by putting the initial value at <em>definition</em> time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// Game.h
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GamePlayer</span> {
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">enum</span> { NUM_TURNS <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span> };          <span style="color:#75715e">// NUM_TURNS is a symbolic name for 5        
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> scores[NUM_TURNS];           <span style="color:#75715e">// fine with old compilers
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+
+<pre><code class="language-cpp">// Game.h
+class GamePlayer {
+private:
+    enum { NUM_TURNS = 5 };          // NUM_TURNS is a symbolic name for 5        
+    int scores[NUM_TURNS];           // fine with old compilers
+};
+</code></pre>
+
 <p>There are mainly 2 reasons we may still see the enum hack today:</p>
 
 <ol>
@@ -452,22 +463,30 @@ Suffering is optional.</p>
 <h1 id="prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></h1>
 
 <p>Another common (mis)use of the <code>#define</code> is using it to implement macros that look like functions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#</span><span style="color:#75715e">define max(a,b) ((a) &gt; (b) ? (a) : (b))</span><span style="color:#75715e">
-</span></code></pre></div>
+
+<pre><code class="language-cpp">#define max(a,b) ((a) &gt; (b) ? (a) : (b))
+</code></pre>
+
 <p>This macro will lead to following weird things:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>, b <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-max(<span style="color:#f92672">+</span><span style="color:#f92672">+</span>a, b);     <span style="color:#75715e">// a increments twice
-</span><span style="color:#75715e"></span>max(<span style="color:#f92672">+</span><span style="color:#f92672">+</span>a, b<span style="color:#f92672">+</span><span style="color:#ae81ff">10</span>);  <span style="color:#75715e">// a increments once
-</span></code></pre></div>
+
+<pre><code class="language-cpp">int a = 5, b = 0;
+max(++a, b);     // a increments twice
+max(++a, b+10);  // a increments once
+</code></pre>
+
 <p>Thus, we may prefer using a regular inline function that provides both predictable behavior and type-safety:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">max</span>(<span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b) { <span style="color:#66d9ef">return</span> a <span style="color:#f92672">&gt;</span> b <span style="color:#f92672">?</span> a : b; }
-</code></pre></div>
+
+<pre><code class="language-cpp">inline int max(int a, int b) { return a &gt; b ? a : b; }
+</code></pre>
+
 <p>If you complain that the above inline function only deals with <code>int</code> type, then we may just use inline template function, which nicely fixes the problem:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span> 
-<span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> max (<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> a, <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> b) { <span style="color:#66d9ef">return</span> a <span style="color:#f92672">&gt;</span> b <span style="color:#f92672">?</span> a : b; }
-<span style="color:#75715e">// since we don&#39;t know what T is, 
-</span><span style="color:#75715e"></span><span style="color:#75715e">// we pass by reference-to-const, see item 20
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt; 
+inline const T&amp; max (const T&amp; a, const T&amp; b) { return a &gt; b ? a : b; }
+// since we don't know what T is, 
+// we pass by reference-to-const, see item 20
+</code></pre>
+
 <p>Basically, this template generates a whole family of functions, each of which takes two objects convertible to the same type and returns a reference to the greater of the two objects in const version.</p>
 
 <h1 id="when-to-use-preprocessor">When to use preprocessor</h1>

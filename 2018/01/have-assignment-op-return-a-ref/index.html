@@ -65,7 +65,7 @@
 
     <title>Item-10 Have assignment operators return a reference to *this</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -388,35 +388,40 @@ Suffering is optional.</p>
               <p>As title suggests.</p>
 
 <p>Assignment is able to chain together:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> x,y,z;
-x <span style="color:#f92672">=</span> y <span style="color:#f92672">=</span> z <span style="color:#f92672">=</span> <span style="color:#ae81ff">15</span>;  <span style="color:#75715e">// chain of assignment
-</span></code></pre></div>
+
+<pre><code class="language-cpp">int x,y,z;
+x = y = z = 15;  // chain of assignment
+</code></pre>
+
 <p>Basically, the chain is parsed from right to left, so the result of the updated <code>z</code> is assigned to y, then the result of the second assignment (the updated <code>y</code>) is assigned to <code>x</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">x <span style="color:#f92672">=</span> (y <span style="color:#f92672">=</span> (z <span style="color:#f92672">=</span> <span style="color:#ae81ff">15</span>));
-</code></pre></div>
+
+<pre><code class="language-cpp">x = (y = (z = 15));
+</code></pre>
+
 <p>In order to achieve this, we need to implement the assignment operators (as well as <code>+=</code>, <code>-=</code>, <code>*=</code>, etc) in the following convention, where we make the assignment return a reference to its left-hand argument:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Widget {
+public:
     ...
-    Widget<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs)  <span style="color:#75715e">// return type is a reference to the current class
-</span><span style="color:#75715e"></span>    {
-        ...
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;  <span style="color:#75715e">// return the left-hand object
-</span><span style="color:#75715e"></span>    }
-    Widget<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">int</span> rhs)
+    Widget&amp; operator=(const Widget&amp; rhs)  // return type is a reference to the current class
     {
         ...
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;  <span style="color:#75715e">// even if the right-hand side parameter type is unconventional
-</span><span style="color:#75715e"></span>                       <span style="color:#75715e">// we can still apply this convention
-</span><span style="color:#75715e"></span>    }
-    Widget<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs)
+        return *this;  // return the left-hand object
+    }
+    Widget&amp; operator=(int rhs)
     {
         ...
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+        return *this;  // even if the right-hand side parameter type is unconventional
+                       // we can still apply this convention
+    }
+    Widget&amp; operator+=(const Widget&amp; rhs)
+    {
+        ...
+        return *this;
     }
     ...
 };
-</code></pre></div>
+</code></pre>
               
             </div>
           </div>

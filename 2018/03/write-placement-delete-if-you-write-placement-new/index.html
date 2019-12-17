@@ -65,7 +65,7 @@
 
     <title>Item-52 Write placement delete if you write placement new</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -398,100 +398,119 @@ Suffering is optional.</p>
 <h1 id="placement-version-of-new">Placement version of <code>new</code></h1>
 
 <p>When an <code>operator new</code> function takes extra parameters (other than the mandatory <code>size_t</code> argument), that function is known as a <em>placement version of <code>new</code></em>. For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory) <span style="color:#66d9ef">throw</span>(); <span style="color:#75715e">// placement new
-</span></code></pre></div>
+
+<pre><code class="language-cpp">void* operator new(std::size_t, void *pMemory) throw(); // placement new
+</code></pre>
+
 <p>This specific version of placement <code>new</code> is in C++&rsquo;s standard library (access through <code>#include&lt;new&gt;</code>) and is the original placement <code>new</code>. Later, people also use the term &ldquo;placement <code>new</code>&rdquo; to refer any version of <code>operator new</code> that takes extra arguments. The phrace &ldquo;placement <code>delete</code>&rdquo; also derives from this version.</p>
 
 <h1 id="to-avoid-subtle-memory-leak">To avoid subtle memory leak</h1>
 
 <p>Suppose we want to write a class-specific <code>operator new</code> that requires specification of an <code>ostream</code> to which allocation information should be logged:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Widget {
+public:
     ...
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>ostream<span style="color:#f92672">&amp;</span> logStream) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc) <span style="color:#75715e">// non-normal form of new
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>();  <span style="color:#75715e">// normal class-specific form of delete
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+    static void* operator new(std::size_t size, std::ostream&amp; logStream) throw(std::bad_alloc) // non-normal form of new
+    static void operator delete(void *pMemory, std::size_t size) throw();  // normal class-specific form of delete
+};
+</code></pre>
+
 <p>And we call it this to log allocation informatino to <code>cerr</code> when dynamically creating a <code>Wdiget</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget <span style="color:#f92672">*</span>pw <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> (std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cerr) Widget; <span style="color:#75715e">// call operator new, passing cerr as the ostream; cause memory leak when Widget constructor throws
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Widget *pw = new (std::cerr) Widget; // call operator new, passing cerr as the ostream; cause memory leak when Widget constructor throws
+</code></pre>
+
 <p>Let&rsquo;s consider a special subtle situation: if memory allocation succeeds and the <code>Widget</code> constructor throws an exception, since <code>pw</code> not yet assigned and client code can&rsquo;t deallocate the memory, the runtime system is responsible for undoing the allocation that <code>operator new</code> performed. However, we&rsquo;re now using a non-normal version of <code>operator new</code>, unless it finds a version of <code>operator delete</code> that takes <em>the same number and types of extra arguments</em> as <code>operator new</code>, the runtime system choose to do nothing, so no <code>operator delete</code> will be called, ending up with memory leak.</p>
 
 <p>To eliminate the memory leak in this situation, we need to match the placement <code>new</code> with a placement <code>delete</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Widget {
+public:
     ...
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>ostream<span style="color:#f92672">&amp;</span> logStream) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc) <span style="color:#75715e">// non-normal form of new
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>();
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>ostream<span style="color:#f92672">&amp;</span> logStream) <span style="color:#66d9ef">throw</span>(); corresponding non<span style="color:#f92672">-</span>normal form of <span style="color:#66d9ef">delete</span>
+    static void* operator new(std::size_t size, std::ostream&amp; logStream) throw(std::bad_alloc) // non-normal form of new
+    static void operator delete(void *pMemory, std::size_t size) throw();
+    static void operator delete(void *pMemory, std::ostream&amp; logStream) throw(); corresponding non-normal form of delete
 };
-</code></pre></div>
+</code></pre>
+
 <p>Now following code will work without leak:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget <span style="color:#f92672">*</span>pw <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> (std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cerr) Widget; <span style="color:#75715e">// no potential leak
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">delete</span> pw;  <span style="color:#75715e">// invokes the normal operator delete
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Widget *pw = new (std::cerr) Widget; // no potential leak
+delete pw;  // invokes the normal operator delete
+</code></pre>
+
 <h1 id="do-not-hide-normal-form-of-new-and-delete">Do not hide normal form of <code>new</code> and <code>delete</code></h1>
 
 <p>By default, C++ offers the following forms of <code>operator new</code> (and corresponding <code>operator delete</code>) at global scope:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc); <span style="color:#75715e">// normal new
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t, <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc); <span style="color:#75715e">// placement new
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>nothrow_t<span style="color:#f92672">&amp;</span>) <span style="color:#66d9ef">throw</span>(); <span style="color:#75715e">// nothrow new, item 49
-</span></code></pre></div>
+
+<pre><code class="language-cpp">void* operator new(std::size_t) throw(std::bad_alloc); // normal new
+void* operator new(std::size_t, void*) throw(std::bad_alloc); // placement new
+void* operator new(std::size_t, const std::nothrow_t&amp;) throw(); // nothrow new, item 49
+</code></pre>
+
 <p>According to item 33, member function names hide functions with the same names in outer scopes, so we want to avoid having class-specific <code>new</code>s hide other <code>new</code>s that our client expect. For example, if the base class declares only a placement <code>new</code>, clients will find the normal version of <code>new</code> unavailable:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Base</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Base {
+public:
     ...
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>ostream<span style="color:#f92672">&amp;</span> logStream) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc); <span style="color:#75715e">// hide the normal global form
-</span><span style="color:#75715e"></span>    ...
+    static void* operator new(std::size_t size, std::ostream&amp; logStream) throw(std::bad_alloc); // hide the normal global form
+    ...
 };
 
-Base <span style="color:#f92672">*</span>pb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Base; <span style="color:#75715e">// error! the normal form is hidden
-</span><span style="color:#75715e"></span>Base <span style="color:#f92672">*</span>pb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> (std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cerr) Base;  <span style="color:#75715e">// fine, call the placement new
-</span></code></pre></div>
+Base *pb = new Base; // error! the normal form is hidden
+Base *pb = new (std::cerr) Base;  // fine, call the placement new
+</code></pre>
+
 <p>Similarly, redeclaring <code>operator new</code> in derived classes hide both global and inherited versions of <code>operator new</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Derived</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Base {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Derived: public Base {
+public:
     ...
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc); <span style="color:#75715e">// redeclare the normal form
-</span><span style="color:#75715e"></span>    ...
+    static void* operator new(std::size_t size) throw(std::bad_alloc); // redeclare the normal form
+    ...
 };
 
-Derived <span style="color:#f92672">*</span>pd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> (std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>clog) Derived; <span style="color:#75715e">// error! Base&#39;s placement new is hidden
-</span><span style="color:#75715e"></span>Derived <span style="color:#f92672">*</span>pd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Derived; <span style="color:#75715e">// fine, call Derived&#39;s operator new
-</span></code></pre></div>
+Derived *pd = new (std::clog) Derived; // error! Base's placement new is hidden
+Derived *pd = new Derived; // fine, call Derived's operator new
+</code></pre>
+
 <p>In order to make normal version of <code>operator new</code> accessible in addition to customed ones, we need to declare all forms (both standard version and placement version) in our class. If we want class-specific standard versions to behave in the usual way, just have the them call the global versions. An easy way to do this is to create a base class containing all the normal forms of <code>new</code> and <code>delete</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StandardNewDeleteForm</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#75715e">// normal new/delete
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc) 
-    { <span style="color:#66d9ef">return</span> <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(size); }
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory) <span style="color:#66d9ef">throw</span>()
-    { <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(pMemory); }
 
-    <span style="color:#75715e">// placement new/delete
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc) 
-    { <span style="color:#66d9ef">return</span> <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(size, ptr); }
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr) <span style="color:#66d9ef">throw</span>()
-    { <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(pMemory, ptr); }
+<pre><code class="language-cpp">class StandardNewDeleteForm {
+public:
+    // normal new/delete
+    static void* operator new(std::size_t size) throw(std::bad_alloc) 
+    { return ::operator new(size); }
+    static void operator delete(void *pMemory) throw()
+    { ::operator delete(pMemory); }
 
-    <span style="color:#75715e">// nothrow new/delete
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>nothrow_t<span style="color:#f92672">&amp;</span> nt) <span style="color:#66d9ef">throw</span>() 
-    { <span style="color:#66d9ef">return</span> <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(size, nt); }
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>nothrow_t<span style="color:#f92672">&amp;</span> nt) <span style="color:#66d9ef">throw</span>()
-    { <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(pMemory, nt); }
+    // placement new/delete
+    static void* operator new(std::size_t size, void *ptr) throw(std::bad_alloc) 
+    { return ::operator new(size, ptr); }
+    static void operator delete(void *pMemory, void *ptr) throw()
+    { ::operator delete(pMemory, ptr); }
+
+    // nothrow new/delete
+    static void* operator new(std::size_t size, const std::nothrow_t&amp; nt) throw() 
+    { return ::operator new(size, nt); }
+    static void operator delete(void *pMemory, const std::nothrow_t&amp; nt) throw()
+    { ::operator delete(pMemory, nt); }
 };
-</code></pre></div>
+</code></pre>
+
 <p>Clients who want to augment the standard forms with custom forms can just use inheritance and <code>using</code> declarations (item 33) to get all forms accessible:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> StandardNewDeleteForms { <span style="color:#75715e">// inherit std forms
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">using</span> StandardNewDeleteForms<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>;     <span style="color:#75715e">// make std forms of new visible
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">using</span> StandardNewDeleteForms<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>;  <span style="color:#75715e">// make std forms of delete visible
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>ostream<span style="color:#f92672">&amp;</span> logStream) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc);  <span style="color:#75715e">// custom placement new
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMemory, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>ostream<span style="color:#f92672">&amp;</span> logStream) <span style="color:#66d9ef">throw</span>(); <span style="color:#75715e">// corresponding placement delete
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class Widget: public StandardNewDeleteForms { // inherit std forms
+public:
+    using StandardNewDeleteForms::operator new;     // make std forms of new visible
+    using StandardNewDeleteForms::operator delete;  // make std forms of delete visible
+
+    static void* operator new(std::size_t size, std::ostream&amp; logStream) throw(std::bad_alloc);  // custom placement new
+    static void operator delete(void *pMemory, std::ostream&amp; logStream) throw(); // corresponding placement delete
+    ...
 };
-</code></pre></div>
+</code></pre>
               
             </div>
           </div>

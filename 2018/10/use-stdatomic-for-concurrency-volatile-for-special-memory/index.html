@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -390,12 +390,14 @@ Suffering is optional.</p>
 <h1 id="std-atomic-template"><code>std::atomic</code> template</h1>
 
 <p>Instantiations of <code>std::atomic</code> template offer operations that are guaranteed to be seen as atomic by other threads, as if they were inside a mutex-protected critical section, generally with the support of special machine instructions that are more efficient than the case of mutex. For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> ai(<span style="color:#ae81ff">0</span>);  <span style="color:#75715e">// init. ai to 0
-</span><span style="color:#75715e"></span>ai <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;                 <span style="color:#75715e">// atomically set ai to 10
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> ai;         <span style="color:#75715e">// atomically read ai&#39;s value
-</span><span style="color:#75715e"></span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>ai;                    <span style="color:#75715e">// atomically increment ai to 11
-</span><span style="color:#75715e"></span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>ai;                    <span style="color:#75715e">// atomically decrement ai to 10
-</span></code></pre></div>
+
+<pre><code class="language-cpp">std::atomic&lt;int&gt; ai(0);  // init. ai to 0
+ai = 10;                 // atomically set ai to 10
+std::cout &lt;&lt; ai;         // atomically read ai's value
+++ai;                    // atomically increment ai to 11
+--ai;                    // atomically decrement ai to 10
+</code></pre>
+
 <p>During execution of these statements, other threads reading <code>ai</code> may see only values of 0, 10, or 11 (assuming, of course, this is the only thread modifying <code>ai</code>). Two things worth noting here:</p>
 
 <ol>
@@ -407,17 +409,21 @@ Suffering is optional.</p>
 <p>In contrast, <code>volatile</code> offers <em>no guarantee of operation atomicity</em> and suffer <em>insufficient restrictions on code reordering</em> - basically not useful in multithreaded context. Say if we have a counter defined as <code>volatile int vc(0)</code>, and there are two threads increment the <code>volatile</code> counter simultaneously, then the ending value of <code>vc</code> need not be <code>2</code> - the RMW operation in each of two threads may take place in any order, involving in a data race, which leading to undefined behavior according to Standard&rsquo;s decree.</p>
 
 <p>The place in which <code>volatile</code> shines is in the context where <em>redundant loads</em> and <em>dead stores</em> should not be optimized away, that is, we need special memory to perform such kinds of redundent reads and superfluous writes:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> y <span style="color:#f92672">=</span> x;  <span style="color:#75715e">// read x
-</span><span style="color:#75715e"></span>y <span style="color:#f92672">=</span> x;       <span style="color:#75715e">// read x again
-</span><span style="color:#75715e"></span>
-x <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;      <span style="color:#75715e">// write x
-</span><span style="color:#75715e"></span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;      <span style="color:#75715e">// write x again
-</span></code></pre></div>
+
+<pre><code class="language-cpp">auto y = x;  // read x
+y = x;       // read x again
+
+x = 10;      // write x
+x = 20;      // write x again
+</code></pre>
+
 <p>The most common kind of special memory is memory used for <em>memory-mapped I/O</em>, which is used for communication with peripherals, e.g., external sensors or displays, printers, network ports, etc. rather than reading or writing normal memory (i.e., RAM). <code>volatile</code> is the way to tell compilers that we&rsquo;re dealing with special memory.</p>
 
 <p>Because <code>std::atomic</code> and <code>volatile</code> serve different purposes, they can be used together:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">volatile</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> vai;  <span style="color:#75715e">// operations on vai are atomic and can&#39;t be optimized away
-</span></code></pre></div>
+
+<pre><code class="language-cpp">volatile std::atomic&lt;int&gt; vai;  // operations on vai are atomic and can't be optimized away
+</code></pre>
+
 <p>This could be useful if <code>vai</code> corresponded to a memory-mapped I/O location that was concurrently accessed by multiple threads.</p>
               
             </div>

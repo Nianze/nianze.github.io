@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-1 Understand Template Type Deduction</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -408,10 +408,12 @@ Suffering is optional.</p>
 <p>Moreover, there&rsquo;s a niche case worth knowing about, that arguments that are array or function names decay to pointers unless they&rsquo;re used to initialize references.</p>
 
 <p>To tell the difference, let&rsquo;s think of a function template as looking like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">tempalte<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(ParamType param);
-f(expr); <span style="color:#75715e">// deduce T and ParamType from expr
-</span></code></pre></div>
+
+<pre><code class="language-cpp">tempalte&lt;typename T&gt;
+void f(ParamType param);
+f(expr); // deduce T and ParamType from expr
+</code></pre>
+
 <h1 id="case-1-paramtype-is-reference-or-pointer-but-not-a-universal-reference">Case 1: <code>ParamType</code> is Reference or Pointer, but not a Universal Reference</h1>
 
 <p>The rules in this case works like this:</p>
@@ -422,35 +424,41 @@ f(expr); <span style="color:#75715e">// deduce T and ParamType from expr
 </ol>
 
 <p>For example,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(T<span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// param is a reference
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>;         <span style="color:#75715e">// x is an int
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> cx <span style="color:#f92672">=</span> x;   <span style="color:#75715e">// cx is a const int
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> rx <span style="color:#f92672">=</span> x;  <span style="color:#75715e">// rx is a refrence to x as a const int
-</span><span style="color:#75715e"></span>
-f(x);   <span style="color:#75715e">// T is int, param&#39;s type is int&amp;
-</span><span style="color:#75715e"></span>f(cx);  <span style="color:#75715e">// T is const int, param&#39;s type is const int&amp;
-</span><span style="color:#75715e"></span>f(rx);  <span style="color:#75715e">// T is const int, param&#39;s type is const int&amp;
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T&amp; param);  // param is a reference
+
+int x = 27;         // x is an int
+const int cx = x;   // cx is a const int
+const int&amp; rx = x;  // rx is a refrence to x as a const int
+
+f(x);   // T is int, param's type is int&amp;
+f(cx);  // T is const int, param's type is const int&amp;
+f(rx);  // T is const int, param's type is const int&amp;
+</code></pre>
+
 <p>Note that even though rx&rsquo;s type is a reference, T is deduced to be a non-reference, because rx&rsquo;s reference-ness is ignored during type deduction.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// param is now a ref-to-const, 
-</span><span style="color:#75715e"></span>                         <span style="color:#75715e">// so there&#39;s no longer a need for const to be deduced as part of T
-</span><span style="color:#75715e"></span>f(x);  <span style="color:#75715e">// T is int, param&#39;s type is const int&amp;
-</span><span style="color:#75715e"></span>f(cx); <span style="color:#75715e">// T is int, param&#39;s type is const int&amp;
-</span><span style="color:#75715e"></span>f(rx); <span style="color:#75715e">// T is int, param&#39;s type is const int&amp;
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(const T&amp; param);  // param is now a ref-to-const, 
+                         // so there's no longer a need for const to be deduced as part of T
+f(x);  // T is int, param's type is const int&amp;
+f(cx); // T is int, param's type is const int&amp;
+f(rx); // T is int, param's type is const int&amp;
+</code></pre>
+
 <p>As before, rx&rsquo;s reference-ness is ignored during type deduction.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(T<span style="color:#f92672">*</span> param);     <span style="color:#75715e">// param is now a pointer
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>;           <span style="color:#75715e">// x is an int
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>px <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>x;   <span style="color:#75715e">// px is a ptr to x as a const int
-</span><span style="color:#75715e"></span>
-f(<span style="color:#f92672">&amp;</span>x);   <span style="color:#75715e">// T is int, param&#39;s type is int*
-</span><span style="color:#75715e"></span>f(px);   <span style="color:#75715e">// T is const int, param&#39;s type is const int*
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T* param);     // param is now a pointer
+
+int x = 27;           // x is an int
+const int *px = &amp;x;   // px is a ptr to x as a const int
+
+f(&amp;x);   // T is int, param's type is int*
+f(px);   // T is const int, param's type is const int*
+</code></pre>
+
 <p>As shown above, when param were a pointer (or a pointer to const), things work essentially the same way.</p>
 
 <h1 id="case-2-paramtype-is-a-universal-reference">Case 2: <code>ParamType</code> is a Universal Reference</h1>
@@ -463,18 +471,20 @@ f(<span style="color:#f92672">&amp;</span>x);   <span style="color:#75715e">// T
 </ol>
 
 <p>For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// param is now a universal reference
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>;         <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> cx <span style="color:#f92672">=</span> x;   <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> rx <span style="color:#f92672">=</span> x;  <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span>
-f(x);  <span style="color:#75715e">// x is lvalue, so T is int&amp;, param&#39;s type is also int&amp;
-</span><span style="color:#75715e"></span>f(cx); <span style="color:#75715e">// x is lvalue, so T is const int&amp;, param&#39;s type is also const int&amp;
-</span><span style="color:#75715e"></span>f(rx); <span style="color:#75715e">// x is lvalue, so T is const int&amp;, param&#39;s type is also const int&amp;
-</span><span style="color:#75715e"></span>f(<span style="color:#ae81ff">27</span>); <span style="color:#75715e">// x is rvlaue, so T is int, param&#39;s type is therefore int&amp;&amp;
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T&amp;&amp; param);  // param is now a universal reference
+
+int x = 27;         // as before
+const int cx = x;   // as before
+const int&amp; rx = x;  // as before
+
+f(x);  // x is lvalue, so T is int&amp;, param's type is also int&amp;
+f(cx); // x is lvalue, so T is const int&amp;, param's type is also const int&amp;
+f(rx); // x is lvalue, so T is const int&amp;, param's type is also const int&amp;
+f(27); // x is rvlaue, so T is int, param's type is therefore int&amp;&amp;
+</code></pre>
+
 <p>EMCpp Item24 explains why these examples play out the way they do.</p>
 
 <h1 id="case-3-paramtype-is-neither-a-pointer-nor-a-reference">Case 3: <code>ParamType</code> is Neither a Pointer nor a Reference</h1>
@@ -483,79 +493,92 @@ f(x);  <span style="color:#75715e">// x is lvalue, so T is int&amp;, param&#39;s
 
 <ol>
 <li>As before, if <code>expr</code>&rsquo;s type is a reference, ignore the reference part</li>
-
-<li><p>If, after ignoring <code>expr</code>&rsquo;s reference-ness, <code>expr</code> is const, ignore that, too. If it&rsquo;s <code>volatile</code>, also ignore that (refer to EMCpp item 40 for <code>volatile</code>).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(T param);  <span style="color:#75715e">// param is now passed by value
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>;         <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> cx <span style="color:#f92672">=</span> x;   <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">&amp;</span> rx <span style="color:#f92672">=</span> x;  <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> ptr <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Fun with pointers</span><span style="color:#e6db74">&#34;</span>; <span style="color:#75715e">// ptr is const ptr to const obj.
-</span><span style="color:#75715e"></span>
-f(x);  <span style="color:#75715e">// T&#39;s and param&#39;s types are both int
-</span><span style="color:#75715e"></span>f(cx); <span style="color:#75715e">// T&#39;s and param&#39;s types are both int
-</span><span style="color:#75715e"></span>f(rx); <span style="color:#75715e">// T&#39;s and param&#39;s types are both int
-</span><span style="color:#75715e"></span>f(ptr); <span style="color:#75715e">// T&#39;s and param&#39;s types are const char*, the constness of ptr is ignored.
-</span></code></pre></div></li>
+<li>If, after ignoring <code>expr</code>&rsquo;s reference-ness, <code>expr</code> is const, ignore that, too. If it&rsquo;s <code>volatile</code>, also ignore that (refer to EMCpp item 40 for <code>volatile</code>).</li>
 </ol>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T param);  // param is now passed by value
+
+int x = 27;         // as before
+const int cx = x;   // as before
+const int&amp; rx = x;  // as before
+const char* const ptr = &quot;Fun with pointers&quot;; // ptr is const ptr to const obj.
+
+f(x);  // T's and param's types are both int
+f(cx); // T's and param's types are both int
+f(rx); // T's and param's types are both int
+f(ptr); // T's and param's types are const char*, the constness of ptr is ignored.
+</code></pre>
 
 <h1 id="array-arguments">Array Arguments</h1>
 
 <p>Even though they sometimes seems to be interchangeable, array types are, in fact, different from pointer types. We had such equivalence illusion because, in many contexts, an array <em>decays</em> into a pointer to its first element:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> name[] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">J.P. Briggs</span><span style="color:#e6db74">&#34;</span>;  <span style="color:#75715e">// name&#39;s type is const char [13]
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> ptrToName <span style="color:#f92672">=</span> name;      <span style="color:#75715e">// array decays to pointer
-</span></code></pre></div>
-<p>Array parameter declarations are treated as if they were pointer parameters, so <code>void myFunc(int param[]);</code> is equivalent to <code>void myFunc(int* param);</code>. Thus, the type of an array that&rsquo;s passed to a template function by value is deduced to be a pointer type:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(T param);
 
-f(name);  <span style="color:#75715e">// name is array, but T deduced as const char*
-</span></code></pre></div>
+<pre><code class="language-cpp">const char name[] = &quot;J.P. Briggs&quot;;  // name's type is const char [13]
+const char * ptrToName = name;      // array decays to pointer
+</code></pre>
+
+<p>Array parameter declarations are treated as if they were pointer parameters, so <code>void myFunc(int param[]);</code> is equivalent to <code>void myFunc(int* param);</code>. Thus, the type of an array that&rsquo;s passed to a template function by value is deduced to be a pointer type:</p>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T param);
+
+f(name);  // name is array, but T deduced as const char*
+</code></pre>
+
 <p>Although functions can&rsquo;t declare parameters that are truly arrays, they <em>can</em> declare parameters that are <em>references</em> to arrays. Thus,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(T<span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// template with by-reference parameter
-</span><span style="color:#75715e"></span>
-f(name);  <span style="color:#75715e">// T is deduced as array type: const char [13], type of param is const char (&amp;)[13]
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(T&amp; param);  // template with by-reference parameter
+
+f(name);  // T is deduced as array type: const char [13], type of param is const char (&amp;)[13]
+</code></pre>
+
 <p>The actual type of the array includes the array size, so in this example, <code>T</code> is deduced to be <code>const char[13]</code>, and the type of <code>f</code>&rsquo;s parameter (a reference to this array) is <code>const char (&amp;)[13]</code>.</p>
 
 <p>Using this ability to declare references to arrays enables creation of a template that deduces the number of elements that an array contains:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// return size of an array as a compile-time constant.
-</span><span style="color:#75715e"></span><span style="color:#75715e">// array parameter has no name because we don&#39;t care its name
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t N<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">constexpr</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t arraySize(T (<span style="color:#f92672">&amp;</span>)[N]) <span style="color:#66d9ef">noexcept</span>
+
+<pre><code class="language-cpp">// return size of an array as a compile-time constant.
+// array parameter has no name because we don't care its name
+template&lt;typename T, std::size_t N&gt;
+constexpr std::size_t arraySize(T (&amp;)[N]) noexcept
 {
-    <span style="color:#66d9ef">return</span> N;
+    return N;
 }
-</code></pre></div>
+</code></pre>
+
 <p>There are two points worth noting in this declaration:</p>
 
 <ol>
 <li><p><code>constexpr</code>, as explained in EMCpp 15, makes the function result available during compilation, which makes it possible to declare an array with the same number of elements as a second array whose size is computed from a braced initializer:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> keyVals[] <span style="color:#f92672">=</span> { <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">22</span>, <span style="color:#ae81ff">35</span> };  <span style="color:#75715e">// 7 elements
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> mappedVals[arraySize(keyVals)]; <span style="color:#75715e">// 7 elements
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span>, arraySize(keyVals)<span style="color:#f92672">&gt;</span> values;  <span style="color:#75715e">// size == 7
-</span></code></pre></div></li>
 
-<li><p><code>noexcept</code>, as explained in EMCpp 14, helps compilers generate better code.</p></li>
+<pre><code class="language-cpp">int keyVals[] = { 1, 3, 7, 9, 11, 22, 35 };  // 7 elements
+int mappedVals[arraySize(keyVals)]; // 7 elements
+std::array&lt;int, arraySize(keyVals)&gt; values;  // size == 7
+</code></pre>
+
+<ol>
+<li><code>noexcept</code>, as explained in EMCpp 14, helps compilers generate better code.</li>
 </ol>
 
 <h1 id="function-arguments">Function Arguments</h1>
 
 <p>Apart from arrays, function types can decay into function pointers, too. As a result:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">someFunc</span>(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">double</span>); <span style="color:#75715e">// someFunc is a function, type is void(int, double)
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f1(T param);  <span style="color:#75715e">// in f1, param passed by value
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f2(T<span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// in f2, param passed by ref
-</span><span style="color:#75715e"></span>
-f1(someFunc);  <span style="color:#75715e">// param deduced as ptr-to-func, type is void (*)(int, double)
-</span><span style="color:#75715e"></span>
-f2(someFunc);  <span style="color:#75715e">// param deduced as ref-to-func, type is void (&amp;)(int, double)
-</span></code></pre></div>
+
+<pre><code class="language-cpp">void someFunc(int, double); // someFunc is a function, type is void(int, double)
+
+template&lt;typename T&gt;
+void f1(T param);  // in f1, param passed by value
+
+template&lt;typename T&gt;
+void f2(T&amp; param);  // in f2, param passed by ref
+
+f1(someFunc);  // param deduced as ptr-to-func, type is void (*)(int, double)
+
+f2(someFunc);  // param deduced as ref-to-func, type is void (&amp;)(int, double)
+</code></pre></li>
+</ol>
+
 <p>This rarely makes any difference in practice.</p>
               
             </div>

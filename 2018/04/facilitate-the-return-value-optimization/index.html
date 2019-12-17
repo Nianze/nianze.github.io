@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-20 Facilitate the Return Value Optimization</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -395,28 +395,33 @@ Suffering is optional.</p>
 </ul>
 
 <p>Although we can&rsquo;t eliminate by-value returns from functions that require them, we can still reduce the cost of returning objects: by the help of compilers, we can eliminate the cost of the temporaries by returning <em>constructor arguments</em> instead of objects:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
-{
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Rational</span>(lhs.numerator() <span style="color:#f92672">*</span> rhs.numerator(),
-                    lhs.denominator() <span style="color:#f92672">*</span> rhs.denominator());
-}
-</code></pre></div>
-<p>Here we&rsquo;re creating an anonymous temporary <code>Rational</code> object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of <code>operator*</code> under the use case below:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Rational a <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
-Rational <span style="color:#a6e22e">b</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);
 
-Rational c <span style="color:#f92672">=</span> a <span style="color:#f92672">*</span> b;  <span style="color:#75715e">// operator* is called
-</span></code></pre></div>
+<pre><code class="language-cpp">const Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs)
+{
+    return Rational(lhs.numerator() * rhs.numerator(),
+                    lhs.denominator() * rhs.denominator());
+}
+</code></pre>
+
+<p>Here we&rsquo;re creating an anonymous temporary <code>Rational</code> object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of <code>operator*</code> under the use case below:</p>
+
+<pre><code class="language-cpp">Rational a = 10;
+Rational b(1, 2);
+
+Rational c = a * b;  // operator* is called
+</code></pre>
+
 <p>The rules for C++ allow compilers to optimize such <em>anonymous</em> temporary objects out of existence by constructing the temporary <em>inside the memory allotted for the object</em> <code>c</code>. Thus, if compilers do this optimization, both the temporary inside <code>operator*</code> and the temporary returned by <code>operator*</code> are eliminated, and we only pay for one constructor call - the one to create <code>c</code>.</p>
 
 <p>Further more, we can eliminate the overhead of the call to <code>operator*</code> by declaring this function <code>inline</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// most efficient way to write a function returning an object
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">// most efficient way to write a function returning an object
+inline const Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs)
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Rational</span>(lhs.numerator() <span style="color:#f92672">*</span> rhs.numerator(),
-                    lhs.denominator() <span style="color:#f92672">*</span> rhs.denominator());
+    return Rational(lhs.numerator() * rhs.numerator(),
+                    lhs.denominator() * rhs.denominator());
 }
-</code></pre></div>
+</code></pre>
               
             </div>
           </div>

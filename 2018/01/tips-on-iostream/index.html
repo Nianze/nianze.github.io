@@ -65,7 +65,7 @@
 
     <title>Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -388,28 +388,32 @@ Suffering is optional.</p>
               <p>Some tips about <code>&lt;iostream&gt;</code></p>
 
 <p>One advantage of <code>&lt;iostream&gt;</code> over <code>&lt;stdio.h&gt;</code> (which includes C-style <code>scanf</code> and <code>printf</code>) is that built-in types like <code>int</code> are read and written in the same manner as user-defined types like <code>Rational</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> i;
-Rational r;  <span style="color:#75715e">// r is a user-defined rational number
-</span><span style="color:#75715e"></span>...
-cin <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> i <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> r;
-cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> r;
-</code></pre></div>
+
+<pre><code class="language-cpp">int i;
+Rational r;  // r is a user-defined rational number
+...
+cin &gt;&gt; i &gt;&gt; r;
+cout &lt;&lt; i &lt;&lt; r;
+</code></pre>
+
 <p>So considering type safety and extensibility offered by the classes and functionas in the iosteam library, in general we should prefer <code>&lt;iostream&gt;</code> to <code>&lt;stdio.h&gt;</code>. In order for this code to compile, we mus define <code>operator&gt;&gt;</code> and <code>operator&lt;&lt;</code> for <code>Rational</code> type. A typical output routine may look like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"> clas Rational {
- <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Rational (<span style="color:#66d9ef">int</span> numerator <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">int</span> denominator <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>);
+
+<pre><code class="language-cpp"> clas Rational {
+ public:
+    Rational (int numerator = 0, int denominator = 1);
     ...
- <span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> n, d;
- <span style="color:#66d9ef">friend</span> ostream<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span>(ostream<span style="color:#f92672">&amp;</span> s, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> r);
+ private:
+    int n, d;
+ friend ostream&amp; operator&lt;&lt;(ostream&amp; s, const Rational&amp; r);
  };
 
- ostream<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span>(ostream<span style="color:#f92672">&amp;</span> s, Rational<span style="color:#f92672">&amp;</span> r) 
+ ostream&amp; operator&lt;&lt;(ostream&amp; s, Rational&amp; r) 
  {
-     s <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> r.n <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">/</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> r.d;
-     <span style="color:#66d9ef">return</span> s;
+     s &lt;&lt; r.n &lt;&lt; '/' &lt;&lt; r.d;
+     return s;
  }
-</code></pre></div>
+</code></pre>
+
 <p>There are some subtle points worth noting: <code>operator&lt;&lt;</code> is not a member function (explained in item 19) and the <code>Rational</code> object to be output is passed as a reference-to-<code>const</code> rather than as an object (see item 22).</p>
 
 <p>Howerver, there are still very few situations where <code>&lt;stdio.h&gt;</code> may be more sensible to use:</p>

@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-33 Make Non-Leaf Classes Abstract</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -403,6 +403,7 @@ Suffering is optional.</p>
 <h1 id="redesign-concrete-base-classes-to-abstract-ones">Redesign concrete base classes to abstract ones</h1>
 
 <p>If we have two concrete classes C1 and C2 and we&rsquo;d like C2 to publicly inherit from C1, we should transform that two-class hierarchy into a three-class hierarchy by creating a new class A and having both C1 and C2 publicly inherit from it:</p>
+
 <pre><code>initial idea  |             the transformed hierarchy
 ┌─────────┐   |                    ┌─────┐
 │   C1    │   |                    │  A  │
@@ -410,42 +411,51 @@ Suffering is optional.</p>
      ↑        | public inheritance ↗     ↖ public inheritance
 ┌─────────┐   |              ┌────┐      ┌────┐
 │   C1    │   |              │ C1 │      │ C2 │
-└─────────┘   |              └────┘      └────┘</code></pre>
+└─────────┘   |              └────┘      └────┘
+</code></pre>
+
 <p>For example, we create a software dealing with animals, with two kinds of animals - lizards and chickens - require special handling:</p>
+
 <pre><code>                    ┌──────────┐
                     │  Animal  │
                     └──────────┘
    public inheritance ↗     ↖ public inheritance
              ┌────────┐      ┌─────────┐
              │ Lizard │      │ Chicken │
-             └────────┘      └─────────┘</code></pre>
+             └────────┘      └─────────┘
+</code></pre>
+
 <p>The <code>Animal</code> class embodies the features shared by all the creatures, and the <code>Lizerd</code> and <code>Chicken</code> classes specialize <code>Animal</code> in their own ways:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Animal</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Animal<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs);
+
+<pre><code class="language-cpp">class Animal {
+public:
+    Animal&amp; operator=(const Animal&amp; rhs);
     ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lizard</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Animal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Lizard<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Lizard<span style="color:#f92672">&amp;</span> rhs);
+class Lizard: public Animal {
+public:
+    Lizard&amp; operator=(const Lizard&amp; rhs);
     ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Chicken</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Animal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Chicken<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Chicken<span style="color:#f92672">&amp;</span> rhs);
+class Chicken: public Animal {
+public:
+    Chicken&amp; operator=(const Chicken&amp; rhs);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Now consider what happens for assignment operation:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Lizard liz1;
+
+<pre><code class="language-cpp">Lizard liz1;
 Lizard liz2;
-Animal <span style="color:#f92672">*</span>pAni1 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>liz1;
-Animal <span style="color:#f92672">*</span>pAni2 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>liz2;
+Animal *pAni1 = &amp;liz1;
+Animal *pAni2 = &amp;liz2;
 ...
-<span style="color:#f92672">*</span>pAni1 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>pAni2;
-</code></pre></div>
+*pAni1 = *pAni2;
+</code></pre>
+
 <p>The two problems here:</p>
 
 <ol>
@@ -454,68 +464,78 @@ Animal <span style="color:#f92672">*</span>pAni2 <span style="color:#f92672">=</
 </ol>
 
 <h2 id="solution-1-virtual-functions">Solution 1: virtual functions</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Animal</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> Animal<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs);
+
+<pre><code class="language-cpp">class Animal {
+public:
+    virtual Animal&amp; operator=(const Animal&amp; rhs);
     ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lizard</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Animal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> Lizard<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs);
+class Lizard: public Animal {
+public:
+    virtual Lizard&amp; operator=(const Animal&amp; rhs);
     ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Chicken</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Animal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> Chicken<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs);
+class Chicken: public Animal {
+public:
+    virtual Chicken&amp; operator=(const Animal&amp; rhs);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>We can customize the return value of the virtual assignment operators here, but the rules of C++ force us to declare identical <em>parameter</em> types for a virtual function in every class in which it is declared, leading to the problem that the assignment operator for the <code>Lizard</code> and <code>Chicken</code> must be prepared to accept <em>any</em> kind of <code>Animal</code> object on the right-hand side of an assignment:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Lizard liz;
+
+<pre><code class="language-cpp">Lizard liz;
 Chicken chick;
 
-Animal <span style="color:#f92672">*</span>pAni1 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>liz;
-Animal <span style="color:#f92672">*</span>pAni2 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>chick;
+Animal *pAni1 = &amp;liz;
+Animal *pAni2 = &amp;chick;
 
 ...
 
-<span style="color:#f92672">*</span>pAni1 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>pAni2; <span style="color:#75715e">// assign a chicken to a lizard!
-</span></code></pre></div>
+*pAni1 = *pAni2; // assign a chicken to a lizard!
+</code></pre>
+
 <p>By making <code>Animal</code>&rsquo;s assignment operator virtual, we opened the door to such mixed-type operations. To only allow the same type assignment in virtual assignment operation, we have to make distinctions the types at runtime:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Lizard<span style="color:#f92672">&amp;</span> Lizard<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">Lizard&amp; Lizard::operator=(const Animal&amp; rhs)
 {
-    <span style="color:#75715e">// make sure rhs is really a lizard
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> Lizard<span style="color:#f92672">&amp;</span> rhs_liz <span style="color:#f92672">=</span> <span style="color:#66d9ef">dynamic_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Lizard<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(rhs);
-    ... <span style="color:#75715e">// proceed with a normal assignment of rhs_liz to *this
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    // make sure rhs is really a lizard
+    const Lizard&amp; rhs_liz = dynamic_cast&lt;const Lizard&amp;&gt;(rhs);
+    ... // proceed with a normal assignment of rhs_liz to *this
+}
+</code></pre>
+
 <p>In this case, we have to worry about <code>std::bad_cast</code> exceptions thrown by <code>dynamic_cast</code> when <code>rhs</code> is not a <code>Lizard</code>, while paying for extra runtime check cost for valid assignment cases, as well as the harder to maintain code.</p>
 
 <h2 id="solution-2-adding-another-function">Solution 2: adding another function</h2>
 
 <p>If we don&rsquo;t want to pay for the complexity or cost of a <code>dynamic_cast</code> in the case of valid assignment, we add to <code>Lizard</code> the conventional assignment operator:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lizard</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Animal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> Lizard<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs);
-    Lizard<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Lizard<span style="color:#f92672">&amp;</span> rhs);  <span style="color:#75715e">// add this
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class Lizard: public Animal {
+public:
+    virtual Lizard&amp; operator=(const Animal&amp; rhs);
+    Lizard&amp; operator=(const Lizard&amp; rhs);  // add this
+    ...
 };
 
-Lizard<span style="color:#f92672">&amp;</span> Lizard<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs)
+Lizard&amp; Lizard::operator=(const Animal&amp; rhs)
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">dynamic_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Lizard<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(rhs));
+    return operator=(dynamic_cast&lt;const Lizard&amp;&gt;(rhs));
 }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Lizard liz1, liz2;
+</code></pre>
+
+<pre><code class="language-cpp">Lizard liz1, liz2;
 ...
-liz1 <span style="color:#f92672">=</span> liz2;   <span style="color:#75715e">// calls operator= taking a const Lizard&amp;
-</span><span style="color:#75715e"></span>
-Animal <span style="color:#f92672">*</span>pAni1 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>liz1;
-Animal <span style="color:#f92672">*</span>pAni2 <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>liz2;
+liz1 = liz2;   // calls operator= taking a const Lizard&amp;
+
+Animal *pAni1 = &amp;liz1;
+Animal *pAni2 = &amp;liz2;
 ...
-<span style="color:#f92672">*</span>pAni1 <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>pAni2;  <span style="color:#75715e">// calls operator= taking a const Animal&amp;
-</span></code></pre></div>
+*pAni1 = *pAni2;  // calls operator= taking a const Animal&amp;
+</code></pre>
+
 <p>Still, clients of <code>Lizard</code> and <code>Chicken</code> have to be prepared to catch <code>bad_cast</code> exceptions and do something sensible with them each time they perform an assignment, which most programmers are unwilling to do.</p>
 
 <h2 id="solution-3-making-partial-assignment-illegal">Solution 3: making partial assignment illegal</h2>
@@ -526,45 +546,48 @@ Animal <span style="color:#f92672">*</span>pAni2 <span style="color:#f92672">=</
 <li><code>Animal</code> is a concrete class. A private <code>operator=</code> makes also it illegal to make assignments between <code>Animal</code> objects: <code>animal1 = animal2;</code></li>
 
 <li><p>Assignment operator in derived classes are responsible for calling assignment operators in their base classes, but a private <code>Animal::operator=</code> makes it impossible to implement the <code>Lizard::operator=</code> and <code>Chicken::operator=</code> correctly to assign the <code>Animal</code> part of <code>*this</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Lizard<span style="color:#f92672">&amp;</span> Lizard<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Lizard<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">Lizard&amp; Lizard::operator=(const Lizard&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>rhs) <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
-    Animal<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(rhs); <span style="color:#75715e">// can&#39;t call private Animal::operator=
-</span><span style="color:#75715e"></span>    ...
+    if (this == &amp;rhs) return *this;
+    Animal::operator=(rhs); // can't call private Animal::operator=
+    ...
 }
-</code></pre></div></li>
-</ol>
+</code></pre>
 
 <p>Declaring <code>Animal::operator=</code> as <code>protected</code> will solve the latter problem, but the first one still remains.</p>
 
 <h2 id="solution-4-redesign-the-inheritance-hierarchy">Solution 4: redesign the inheritance hierarchy</h2>
 
 <p>Because our orignimal design for the system presupposed that <code>Animal</code> objects were necessary, we can not abstract <code>Animal</code> class. Instead, we create a new class - <code>AbstractAnimal</code> that consists of the common features of <code>Animal</code>, <code>Lizard</code>, and <code>Chicken</code>, and we make <em>that</em> class abstract by making its destructor a pure virtual function<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AbstractAnimal</span> {
-<span style="color:#66d9ef">protected</span><span style="color:#f92672">:</span>
-    AbstractAnimal<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> AbstractAnimal<span style="color:#f92672">&amp;</span> rhs);
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>AbstractAnimal() <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// still need to impl. the destructor even it&#39;s a pure virtual function
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class AbstractAnimal {
+protected:
+AbstractAnimal&amp; operator=(const AbstractAnimal&amp; rhs);
+public:
+virtual ~AbstractAnimal() = 0; // still need to impl. the destructor even it's a pure virtual function
+...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Animal</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> AbstractAnimal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Animal<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Animal<span style="color:#f92672">&amp;</span> rhs);
-    ...
+class Animal: public AbstractAnimal {
+public:
+Animal&amp; operator=(const Animal&amp; rhs);
+...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lizard</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> AbstractAnimal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Lizard<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Lizard<span style="color:#f92672">&amp;</span> rhs);
-    ...
+class Lizard: public AbstractAnimal {
+public:
+Lizard&amp; operator=(const Lizard&amp; rhs);
+...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Chicken</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> AbstractAnimal {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Chicken<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Chicken<span style="color:#f92672">&amp;</span> rhs);
+class Chicken: public AbstractAnimal {
+public:
+Chicken&amp; operator=(const Chicken&amp; rhs);
 };
-</code></pre></div>
+</code></pre></li>
+</ol>
+
 <p>This design gives us everything:</p>
 
 <ul>
@@ -585,29 +608,32 @@ Animal <span style="color:#f92672">*</span>pAni2 <span style="color:#f92672">=</
 <li>Try to find an abstract class higher in the library hierarchy that does most of what we need, then inherit from that class.</li>
 
 <li><p>Implement the new class in terms of the library class we&rsquo;d like to inherit from: having an object of the library class as a data member, then reimplement the library class&rsquo;s interface in the new class - this requires to update the class each time the library vendor updates our dependent library classes, and we also give up the ability to redefine virtual functions declared in the library class (we can&rsquo;t redefine virtual functions unless we inherit them):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Window</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> resize(<span style="color:#66d9ef">int</span> newWidth, <span style="color:#66d9ef">int</span> newHeight);
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">repaint</span>() <span style="color:#66d9ef">const</span>;
 
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">width</span>() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">height</span>() <span style="color:#66d9ef">const</span>;
+<pre><code class="language-cpp">class Window {
+public:
+    virtual void resize(int newWidth, int newHeight);
+    virtual void repaint() const;
+
+    int width() const;
+    int height() const;
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpecialWindow</span> { <span style="color:#75715e">// class we wanted to have inherit from Window
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+class SpecialWindow { // class we wanted to have inherit from Window
+public:
     ...
-    <span style="color:#66d9ef">int</span> width() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> w.width(); } <span style="color:#75715e">// pass through nonvirtual functions
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">height</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> w.height(); }
+    int width() const { return w.width(); } // pass through nonvirtual functions
+    int height() const { return w.height(); }
 
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resize</span>(<span style="color:#66d9ef">int</span> newWidth, <span style="color:#66d9ef">int</span> newHeight); <span style="color:#75715e">// new impl. of &#34;inherited&#34; virtual functions
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">repaint</span>() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    virtual void resize(int newWidth, int newHeight); // new impl. of &quot;inherited&quot; virtual functions
+    virtual void repaint() const;
+private:
     Window w;
 };
-</code></pre></div></li>
+</code></pre>
 
-<li><p>Use the concrete class that&rsquo;s in the library and modify the software so that the class suffices. Write non-member functions to proved the extra functionality we&rsquo;d like to add to the class, but can&rsquo;t - the result may not be as clear, as efficient, as maintainable, or as extensible as we&rsquo;d like.</p></li>
+<ul>
+<li>Use the concrete class that&rsquo;s in the library and modify the software so that the class suffices. Write non-member functions to proved the extra functionality we&rsquo;d like to add to the class, but can&rsquo;t - the result may not be as clear, as efficient, as maintainable, or as extensible as we&rsquo;d like.</li>
+</ul></li>
 </ul>
 <div class="footnotes">
 

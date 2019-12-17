@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-16 Make Const Member Functions Thread Safe</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -396,51 +396,57 @@ Suffering is optional.</p>
 </nav>
 
 <p>Due to <code>mutable</code> member datas, <code>const</code> member functions may not be thread safe. For a classic use case for <code>mutable</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Polynomial</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">using</span> RootsType <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span>;  <span style="color:#75715e">// holding val. where poly. evals to zero
-</span><span style="color:#75715e"></span>    RootsType <span style="color:#a6e22e">roots</span>() <span style="color:#66d9ef">const</span>
+
+<pre><code class="language-cpp">class Polynomial {
+public:
+    using RootsType = std::vector&lt;double&gt;;  // holding val. where poly. evals to zero
+    RootsType roots() const
     {
-        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>rootsAreValie) {       <span style="color:#75715e">// if cache not valid
-</span><span style="color:#75715e"></span>            ...                     <span style="color:#75715e">// compute roots, store them in rootVals
-</span><span style="color:#75715e"></span>            rootsAreValid <span style="color:#f92672">=</span> true; 
+        if (!rootsAreValie) {       // if cache not valid
+            ...                     // compute roots, store them in rootVals
+            rootsAreValid = true; 
         }
-        <span style="color:#66d9ef">return</span> rootVals;
+        return rootVals;
     }
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">mutable</span> <span style="color:#66d9ef">bool</span> rootsAreValid{ false };
-    <span style="color:#66d9ef">mutable</span> RootsType rootVals{};
+private:
+    mutable bool rootsAreValid{ false };
+    mutable RootsType rootVals{};
 };
-</code></pre></div>
+</code></pre>
+
 <p>Here <code>roots()</code> retrieves the roots of a polynomial without changing the value of the <code>Polynomial</code> object on which it operates, so <code>const</code> declaratoin is correct. However, <code>rootVals</code> and <code>rootsAreValid</code> might be modified for the purpose of caching. Seeing the <code>const</code> interface for <code>roots()</code>, clients are perfectly reasonable to do something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Polynomial p;
+
+<pre><code class="language-cpp">Polynomial p;
 ...
-<span style="color:#75715e">// thread 1                   // thread 2
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> rootsOfP <span style="color:#f92672">=</span> p.roots();    <span style="color:#66d9ef">auto</span> valsGivingZero <span style="color:#f92672">=</span> p.roots();
-</code></pre></div>
+// thread 1                   // thread 2
+auto rootsOfP = p.roots();    auto valsGivingZero = p.roots();
+</code></pre>
+
 <p>Having multiple threads perform a read operation without synchronization is safe. However, although <code>roots</code> is declared <code>const</code>, it&rsquo;s not thread safe: more than one threads might try to modify the data members <code>rootsAreValid</code> and <code>rootVals</code> inside <code>roots</code>, reading and writing the same memory without synchronization - which is data racing, leading to undefined behavior.</p>
 
 <h1 id="solution-mutex">Solution: mutex</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Polynomial</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">using</span> RootsType <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span>;  <span style="color:#75715e">// holding val. where poly. evals to zero
-</span><span style="color:#75715e"></span>    RootsType <span style="color:#a6e22e">roots</span>() <span style="color:#66d9ef">const</span>
+
+<pre><code class="language-cpp">class Polynomial {
+public:
+    using RootsType = std::vector&lt;double&gt;;  // holding val. where poly. evals to zero
+    RootsType roots() const
     {
-        std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>lock_guard<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>mutex<span style="color:#f92672">&gt;</span> g(m);  <span style="color:#75715e">// lock mutex
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>rootsAreValie) {       <span style="color:#75715e">// if cache not valid
-</span><span style="color:#75715e"></span>            ...                     <span style="color:#75715e">// compute roots, store them in rootVals
-</span><span style="color:#75715e"></span>            rootsAreValid <span style="color:#f92672">=</span> true; 
+        std::lock_guard&lt;std::mutex&gt; g(m);  // lock mutex
+        if (!rootsAreValie) {       // if cache not valid
+            ...                     // compute roots, store them in rootVals
+            rootsAreValid = true; 
         }
-        <span style="color:#66d9ef">return</span> rootVals;
-    }                                      <span style="color:#75715e">// unlock mutex
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">mutable</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>mutex m;
-    <span style="color:#66d9ef">mutable</span> <span style="color:#66d9ef">bool</span> rootsAreValid{ false };
-    <span style="color:#66d9ef">mutable</span> RootsType rootVals{};
+        return rootVals;
+    }                                      // unlock mutex
+    ...
+private:
+    mutable std::mutex m;
+    mutable bool rootsAreValid{ false };
+    mutable RootsType rootVals{};
 };
-</code></pre></div>
+</code></pre>
+
 <p><code>roots</code> is a <code>const</code> member function, inside which <code>std::mutex m</code> would be considered a <code>const</code> object, while <code>locking</code> and <code>unlocking</code> are non-<code>const</code> member functions, so we need to declared <code>m</code> as <code>mutable</code>.</p>
 
 <p>Another point worth noting is that <code>std::mutex</code> can be neither copied nor moved, so a side effect of adding <code>m</code> to <code>Polynomial</code> is that <code>Polynomial</code> loses the ability to be copied and moved.</p>
@@ -448,19 +454,21 @@ Suffering is optional.</p>
 <h1 id="for-a-single-variable-requiring-synchronization">For a single variable requiring synchronization</h1>
 
 <p>Sometimes when there&rsquo;s only one variable or memory location requiring synchronization, <code>mutex</code> might be overkill, and we might consider <code>std::atomic</code> counter (EMCpp item 40), which is often a less expensive way to go<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Point {
+public:
     ...
-    <span style="color:#66d9ef">double</span> distanceFromOrigin() <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">noexcept</span>
+    double distanceFromOrigin() const noexcept
     {
-        <span style="color:#f92672">+</span><span style="color:#f92672">+</span>callCount;   <span style="color:#75715e">// atomic increment
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>hypot(x, y);
+        ++callCount;   // atomic increment
+        return std::hypot(x, y);
     }
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">mutable</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>atomic<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">unsigned</span><span style="color:#f92672">&gt;</span> callCount{ <span style="color:#ae81ff">0</span> };
-    <span style="color:#66d9ef">double</span> x, y;
+private:
+    mutable std::atomic&lt;unsigned&gt; callCount{ 0 };
+    double x, y;
 };
-</code></pre></div>
+</code></pre>
+
 <p>The same side effect goes here: the existance of <code>callCount</code> in <code>Point</code> makes <code>Point</code> neither copyable nor movable.</p>
 
 <h1 id="summary">Summary</h1>

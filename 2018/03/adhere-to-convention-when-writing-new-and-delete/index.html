@@ -65,7 +65,7 @@
 
     <title>Item-51 Adhere to convention when writing new and delete</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -425,45 +425,49 @@ Suffering is optional.</p>
 <h2 id="cope-with-request-for-no-memory">Cope with request for no memory</h2>
 
 <p>C++ requires that <code>operator new</code> return a legitimate pointer even when zero bytes are requested (because this simplifies things else where in the language), so pseudocode for a non-member <code>operator new</code> looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc)
+
+<pre><code class="language-cpp">void* operator new(std::size_t size) throw(std::bad_alloc)
 {
-    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
-    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
-        size <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;  <span style="color:#75715e">// handle 0-byte requests by treating them as 1-byte requests
-</span><span style="color:#75715e"></span>    }
-    <span style="color:#66d9ef">while</span>(true) {
+    using namespace std;
+    if (size == 0) {
+        size = 1;  // handle 0-byte requests by treating them as 1-byte requests
+    }
+    while(true) {
         attempt to allocate size bytes
-        <span style="color:#66d9ef">if</span> (succeed to allocate)
-            <span style="color:#66d9ef">return</span> (a pointer to the memory);
-        <span style="color:#75715e">// allocation fails
-</span><span style="color:#75715e"></span>        new_handler globalHanlder <span style="color:#f92672">=</span> set_new_hanlder(<span style="color:#ae81ff">0</span>); <span style="color:#75715e">// find out current 
-</span><span style="color:#75715e"></span>        set_new_handler(globalHandler);   <span style="color:#75715e">// new handling-function
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (globalHandler) (<span style="color:#f92672">*</span>globaleHandler)();
-        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">throw</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc();
+        if (succeed to allocate)
+            return (a pointer to the memory);
+        // allocation fails
+        new_handler globalHanlder = set_new_hanlder(0); // find out current 
+        set_new_handler(globalHandler);   // new handling-function
+        if (globalHandler) (*globaleHandler)();
+        else throw std::bad_alloc();
     }
 }
-</code></pre></div>
+</code></pre>
+
 <h2 id="avoid-hiding-the-normal-form-of-new">Avoid hiding the &ldquo;normal&rdquo; form of <code>new</code></h2>
 
 <p>Class specific <code>operator new</code> member functions are inherited by derived classes, so it is possible that the <code>operator new</code> tuned for objects of size <code>sizeof(base)</code> might accidentally be called to allocate memory for an object of a derived class. To handle this situation, do following trick:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Base</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc);
+
+<pre><code class="language-cpp">class Base {
+public:
+    static void * operator new(std::size_t size) throw(std::bad_alloc);
     ... 
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Derived</span><span style="color:#f92672">:</span><span style="color:#66d9ef">public</span> Base  <span style="color:#75715e">// Derived doesn&#39;t declare operator new
-</span><span style="color:#75715e"></span>{...};
+class Derived:public Base  // Derived doesn't declare operator new
+{...};
 
-<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> Base<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc)
+void * Base::operator new(std::size_t size) throw(std::bad_alloc)
 {
-    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(Base))
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(size); <span style="color:#75715e">// if size is &#34;wrong&#34;, call standard operator new
-</span><span style="color:#75715e"></span>    ...  <span style="color:#75715e">// otherwise do the Base-specific operation
-</span><span style="color:#75715e"></span>}
+    if (size != sizeof(Base))
+        return ::operator new(size); // if size is &quot;wrong&quot;, call standard operator new
+    ...  // otherwise do the Base-specific operation
+}
 
-Derived <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Derived; <span style="color:#75715e">// calls Base::operator new
-</span></code></pre></div>
+Derived *p = new Derived; // calls Base::operator new
+</code></pre>
+
 <p>Note that <code>sizeof(Base)</code> can never be zero - freestanding objects have non-zero size (item 39) - so the zero-size memory request will be forwarded to <code>::operator new</code> to handle in a reasonable fashion.</p>
 
 <h2 id="control-memory-allocation-for-operator-new">Control memory allocation for <code>operator new[]</code></h2>
@@ -478,30 +482,34 @@ Derived <span style="color:#f92672">*</span>p <span style="color:#f92672">=</spa
 <h1 id="2-operator-delete">2. operator delete</h1>
 
 <p>C++ guarantees it&rsquo;s always safe to delete the null pointer, so things are easier in terms of implementing <code>operator delete</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// non-member operator delete
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>rawMemory) <span style="color:#66d9ef">throw</span>()
+
+<pre><code class="language-cpp">// non-member operator delete
+void operator delete(void *rawMemory) throw()
 {
-    <span style="color:#66d9ef">if</span> (rawMemory <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>;  <span style="color:#75715e">// do nothing if the null pointer is being deleted
-</span><span style="color:#75715e"></span>    deallocate the memory pointed to by rawMemory
+    if (rawMemory == 0) return;  // do nothing if the null pointer is being deleted
+    deallocate the memory pointed to by rawMemory
 }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// class-specific operator delete
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Base</span> {  <span style="color:#75715e">// same as before, except that operator delete is declared
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc);
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>rawMemory, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>();
+</code></pre>
+
+<pre><code class="language-cpp">// class-specific operator delete
+class Base {  // same as before, except that operator delete is declared
+public:
+    static void * operator new(std::size_t size) throw(std::bad_alloc);
+    static void operator delete(void *rawMemory, std::size_t size) throw();
     ...
 }
 
-<span style="color:#66d9ef">void</span> Base<span style="color:#f92672">:</span><span style="color:#f92672">:</span>opearator <span style="color:#66d9ef">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>rawMemory, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span>()
+void Base::opearator delete(void *rawMemory, std::size_t size) throw()
 {
-    <span style="color:#66d9ef">if</span> (rawMemory <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>;
-    <span style="color:#66d9ef">if</span> (size <span style="color:#f92672">!</span><span style="color:#f92672">=</span> sizeOf(Base)) {        <span style="color:#75715e">// if size is &#34;wrong&#34;, 
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(rawMemory);  <span style="color:#75715e">// use standard operator delete to handle the request
-</span><span style="color:#75715e"></span>    }
+    if (rawMemory == 0) return;
+    if (size != sizeOf(Base)) {        // if size is &quot;wrong&quot;, 
+        ::operator delete(rawMemory);  // use standard operator delete to handle the request
+    }
     deallocate the memory pointed to by rawMemory;
-    <span style="color:#66d9ef">return</span>;
+    return;
 }
-</code></pre></div>
+</code></pre>
+
 <p>BTW, the <code>size_t</code> value C++ passes to <code>operator delete</code> may be incorrect if object being deleted was derived from a base class lacking a virtual destructor, which is another reason to support the argument in item 7 that <code>operator delete</code> may not work correctly if virtual destructors is omitted in base classes.</p>
               
             </div>

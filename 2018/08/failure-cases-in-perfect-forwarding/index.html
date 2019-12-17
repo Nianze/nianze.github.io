@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-30 Failure Cases in Perfect Forwarding</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -390,15 +390,17 @@ Suffering is optional.</p>
 <p>Generally, forwarding means passing parameters that are <em>references</em> so that we can work with the originally-passed-in objects in another function, while perfect forwarding means we will use <em>universal references</em> to keep track of salient characteristics such as lvalue-ness/rvalue-ness, const-ness, volatile-ness, etc.</p>
 
 <p>The definition of failure is: given a target function <code>f</code>, and a forwarding function <code>fwd</code>, perfect forwarding <em>fails</em> if calling <code>f</code> with a particular argument does one thing, but calling <code>fwd</code> with the same argument does something difference:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">f( expression );
+
+<pre><code class="language-cpp">f( expression );
 fwd( expression );
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> fwd(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param)  <span style="color:#75715e">// accept any argument
-</span><span style="color:#75715e"></span>{
-    f(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(param));
+template&lt;typename T&gt;
+void fwd(T&amp;&amp; param)  // accept any argument
+{
+    f(std::forward&lt;T&gt;(param));
 }
-</code></pre></div>
+</code></pre>
+
 <p>Following kinds of arguments will lead to perfect forwarding failure:</p>
 
 <ul>

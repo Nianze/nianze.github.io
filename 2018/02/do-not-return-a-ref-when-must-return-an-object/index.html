@@ -65,7 +65,7 @@
 
     <title>Item-21 Don&#39;t return a reference when we have to return an object</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -402,19 +402,21 @@ Suffering is optional.</p>
 <p>There are some situations where we <strong>must</strong> return an object, no matter how much effort we want to put into rooting out the evil of pass-by-value to pursue the heighest efficiency. Otherwise, we may invariably make a fatal mistake: pass references to objects that don&rsquo;t exist.</p>
 
 <p>Consider following class for representing rational numbers with a multiplying function:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Rational(<span style="color:#66d9ef">int</span> numerator <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,     <span style="color:#75715e">// see item 24 for why this
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> denominator <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>);   <span style="color:#75715e">// ctor isn&#39;t declared explicit
-</span><span style="color:#75715e"></span>...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> n,d; <span style="color:#75715e">// numerator and denominator
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">friend</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">const</span> Rational  <span style="color:#75715e">// see item 3 for why the return type is const
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs,
-               <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs);
+
+<pre><code class="language-cpp">class Rational {
+public:
+    Rational(int numerator = 0,     // see item 24 for why this
+            int denominator = 1);   // ctor isn't declared explicit
+...
+private:
+    int n,d; // numerator and denominator
+friend:
+    const Rational  // see item 3 for why the return type is const
+    operator**(const Rational&amp; lhs,
+               const Rational&amp; rhs);
 };
-</code></pre></div>
+</code></pre>
+
 <p>We may want to remove the cost of construction and destruction from return-by-value, considering using return by reference instead. However, a reference is just a name for some <em>existing</em> object. In the case of <code>opeartor*</code>, the product of the two object does not exist before we call the function, so if <code>operator*</code> want to return a reference to the product, it must create the result itself.</p>
 
 <p>A function can create a new object in only two ways: on the stack or on the heap.</p>
@@ -422,12 +424,14 @@ Suffering is optional.</p>
 <h1 id="return-a-pointer-or-reference-to-a-local-stack-object">Return a pointer or reference to a local stack object</h1>
 
 <p>Creation on the stack is accomplished by defining a local variable:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs) <span style="color:#75715e">// bad code !
-</span><span style="color:#75715e"></span>{
-    Rational <span style="color:#a6e22e">result</span>(lhs.n <span style="color:#f92672">*</span> rhs.n, lhs.d <span style="color:#f92672">*</span> rhs.d);
-    <span style="color:#66d9ef">return</span> result;
+
+<pre><code class="language-cpp">const Rational&amp; operator*(const Rational&amp; lhs, const Rational&amp; rhs) // bad code !
+{
+    Rational result(lhs.n * rhs.n, lhs.d * rhs.d);
+    return result;
 }
-</code></pre></div>
+</code></pre>
+
 <p>There&rsquo;s a serious problem: the function returns a reference to <code>result</code>, which is a local object, and local objects are destroyed when the function exits, ending to return a reference to an ex-<code>Rational</code>. Any caller glancing at this return value would instantly enter the realm of undefined behavior.</p>
 
 <p>The fact is, any function returning a reference (or a pointer) to a local object is brocken.</p>
@@ -435,46 +439,56 @@ Suffering is optional.</p>
 <h1 id="return-a-reference-to-a-heap-allocated-object">Return a reference to a heap-allocated object</h1>
 
 <p>Heap-based objects come into being through the use of <code>new</code>, so the heap-based <code>opearator*</code> looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> operation<span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs) <span style="color:#75715e">// bad code !
-</span><span style="color:#75715e"></span>{
-    Rational <span style="color:#f92672">*</span>result <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Raional(lhs.n <span style="color:#f92672">*</span> rhs.n, lhs.d <span style="color:#f92672">*</span> rhs.d);
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>result;
+
+<pre><code class="language-cpp">const Rational&amp; operation*(const Rational&amp; lhs, const Rational&amp; rhs) // bad code !
+{
+    Rational *result = new Raional(lhs.n * rhs.n, lhs.d * rhs.d);
+    return *result;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Now comes a different problem: who will apply <code>delete</code> matching the use of <code>new</code>?</p>
 
 <p>Even if callers are conscientious and well intentioned, there&rsquo;s not much they can do to prevent leaks in reasonable usage scenarios like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Rational x, y, z;
 
-Rational w <span style="color:#f92672">=</span> x <span style="color:#f92672">*</span> y <span style="color:#f92672">*</span> z; <span style="color:#75715e">// same as operator*(operator*(x,y),z)
-</span></code></pre></div>
+<pre><code class="language-cpp">Rational x, y, z;
+
+Rational w = x * y * z; // same as operator*(operator*(x,y),z)
+</code></pre>
+
 <p>There are twoe uses of <code>new</code> that need to be undone with uses of <code>delete</code>. Yet there&rsquo;s no reasonable way for clients to get at the pointers hidden behind the references being returned from the calls to <code>operator*</code> and make calls to <code>delete</code>. This is a guaranteed resource leak.</p>
 
 <h1 id="return-a-reference-to-a-local-static-object">Return a reference to a local static object</h1>
 
 <p>If, however, we jump outside of the box, considering returning a reference to a <em>static</em> <code>Rational</code>, and think that this will avoid all but one initial constructor call without suffering from calling a constructor for each product result returned from <code>operatior*</code> in above on-the-stack and on-the-heap approaches:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs) <span style="color:#75715e">// bad code !
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">static</span> Rational result;  <span style="color:#75715e">// static object
-</span><span style="color:#75715e"></span>    result <span style="color:#f92672">=</span> ...; <span style="color:#75715e">// put the product inside result
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> result;
+
+<pre><code class="language-cpp">const Rational&amp; operator*(const Rational&amp; lhs, const Rational&amp; rhs) // bad code !
+{
+    static Rational result;  // static object
+    result = ...; // put the product inside result
+    return result;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Like all designs employing the use of static objects, this one immediately raises thread-safety hackles, but there&rsquo;s a deeper flaw: consider following perfectly reasonable client code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">bool</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs); 
+
+<pre><code class="language-cpp">bool operator==(const Rational&amp; lhs, const Rational&amp; rhs); 
 Rational a,b,c,d;
 ...
-<span style="color:#66d9ef">if</span> ((a <span style="color:#f92672">*</span> b) <span style="color:#f92672">=</span><span style="color:#f92672">=</span> (c <span style="color:#f92672">*</span> d)) {
-    <span style="color:#75715e">// do whatever appropriate when the products are equal
-</span><span style="color:#75715e"></span>} <span style="color:#66d9ef">else</span> {
-    <span style="color:#75715e">// do whatever appropriate when the products are unequal
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+if ((a * b) == (c * d)) {
+    // do whatever appropriate when the products are equal
+} else {
+    // do whatever appropriate when the products are unequal
+}
+</code></pre>
+
 <p>Problem here is that the expression <code>((a * b) == (c * d))</code> will <em>always</em> evaluate to <code>true</code>, regardless of the values of a, b, c, and d.</p>
 
 <p>Let&rsquo;s rewrite the code in its equivalent functional form to understand what happened:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(a, b), <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(c, d)))
-</code></pre></div>
+
+<pre><code class="language-cpp">if (operator==(operator*(a, b), operator*(c, d)))
+</code></pre>
+
 <p>When <code>operator==</code> is called, there will already be two active calls to <code>opearator*</code>, each of which will return a reference to the static <code>Rational</code> object inside <code>opeartion*</code>, which, as is a static local object, will always be the exact one, with same value.</p>
 
 <p>Some may ask,</p>
@@ -495,11 +509,13 @@ Rational a,b,c,d;
 <h1 id="the-right-way-return-by-value">The right way: return by value</h1>
 
 <p>The right way to write a function that must return a new object is to have that function reutrn a new object like this or something essentially equivalent:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">inline const Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs)
 {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Rational</span>(lhs.n <span style="color:#f92672">*</span> rhs.n, lhs.d <span style="color:#f92672">*</span> rhs.d);
+    return Rational(lhs.n * rhs.n, lhs.d * rhs.d);
 }
-</code></pre></div>
+</code></pre>
+
 <p>In the long run, the cost of constructing and destructing <code>operator*</code>&rsquo;s return value is a small price to pay for correct behavior. What&rsquo;s more, since C++ allows compiler implementers to apply optimizations to immprove the performance of the generated code, it turns out that in some cases, construction and destruction of <code>operator*</code>&rsquo;s return value can be safely eliminated, so the program will run faster than we expect and still behave correctly as it&rsquo;s supposed to be.</p>
 
 <p>In summary, when deciding between returning a reference and returning an object, we should make choice that offers correct behavior.</p>

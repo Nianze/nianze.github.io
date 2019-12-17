@@ -65,7 +65,7 @@
 
     <title>Item-32 Make sure public inheritance models &#34;Is-A&#34;</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -406,30 +406,34 @@ Suffering is optional.</p>
 </blockquote>
 
 <p>Then consider this code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rectangle</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> setHeight(<span style="color:#66d9ef">int</span> newHeight);
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setWidth</span>(<span style="color:#66d9ef">int</span> newWidth);
 
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">height</span>() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// return current values
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">width</span>() <span style="color:#66d9ef">const</span>;
+<pre><code class="language-cpp">class Rectangle {
+public:
+    virtual void setHeight(int newHeight);
+    virtual void setWidth(int newWidth);
+
+    virtual int height() const;  // return current values
+    virtual int width() const;
     ...
 };
 
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">makeBigger</span>(Rectangle<span style="color:#f92672">&amp;</span> r)  <span style="color:#75715e">// function to increase r&#39;s area
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">int</span> oldHeight <span style="color:#f92672">=</span> r.height();
-    r.setWidth(r.width() <span style="color:#f92672">+</span> <span style="color:#ae81ff">10</span>);  <span style="color:#75715e">// add 10 to r&#39;s width
-</span><span style="color:#75715e"></span>    assert(r.height() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> oldHeight);  <span style="color:#75715e">// assert that r&#39;s height is unchanged
-</span><span style="color:#75715e"></span>}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Square</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Rectangle {...};
+void makeBigger(Rectangle&amp; r)  // function to increase r's area
+{
+    int oldHeight = r.height();
+    r.setWidth(r.width() + 10);  // add 10 to r's width
+    assert(r.height() == oldHeight);  // assert that r's height is unchanged
+}
+</code></pre>
+
+<pre><code class="language-cpp">class Square: public Rectangle {...};
 
 Square s;
 ...
-assert(s.width() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s.height());  <span style="color:#75715e">// must be true for all squares
-</span><span style="color:#75715e"></span>makeBigger(s);  <span style="color:#75715e">// by inheritance, s is-a Rectangle, so we can increase its area
-</span><span style="color:#75715e"></span>assert(s.width() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s.height());  <span style="color:#75715e">// must be true for all squares
-</span></code></pre></div>
+assert(s.width() == s.height());  // must be true for all squares
+makeBigger(s);  // by inheritance, s is-a Rectangle, so we can increase its area
+assert(s.width() == s.height());  // must be true for all squares
+</code></pre>
+
 <p>Now we face a big problem: how can we reconcile the following assertion:</p>
 
 <ul>

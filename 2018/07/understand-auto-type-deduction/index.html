@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-2 Understand Auto Type Deduction</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -388,10 +388,12 @@ Suffering is optional.</p>
               <p><code>auto</code> type deduction is usually the same as template type deduction, with an exception in the case of braced initializer. Also, in C++14, as a function return type or a lambda parameter, <code>auto</code> implies template type deduction instead of <code>auto</code> type deduction.</p>
 
 <p>With only one curious exception, <code>auto</code> type deduction <em>is</em> template type deduction. In the case of general function template form and its general function call:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(ParamType param);
-f(expr);  <span style="color:#75715e">// general call
-</span></code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void f(ParamType param);
+f(expr);  // general call
+</code></pre>
+
 <p>compilers use <code>expr</code> to deduce types for <code>T</code> and <code>ParamType</code>. Similarly, in the case where a variable is declared using <code>auto</code>, <code>auto</code> plays the role of <code>T</code>, and the type specifier for the variable acts as <code>ParamType</code>.</p>
 
 <p>Therefore, there are also three cases based on the type specifier:</p>
@@ -403,37 +405,45 @@ f(expr);  <span style="color:#75715e">// general call
 </ul>
 
 <p>For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>;  <span style="color:#75715e">// case 3. type specifier is simply auto by itself.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> cx <span style="color:#f92672">=</span> x; <span style="color:#75715e">// case 3. type specifier is const auto.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> rx <span style="color:#f92672">=</span> x; <span style="color:#75715e">// case 1. type specifier is const auto&amp;. 
-</span><span style="color:#75715e"></span><span style="color:#75715e">// case 2:
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> uref1 <span style="color:#f92672">=</span> x; <span style="color:#75715e">// x is int and lvalue, so uref1&#39;s type is int&amp;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> uref2 <span style="color:#f92672">=</span> cx; <span style="color:#75715e">// cx is const int and lvalue, so uref2&#39;s type is const int&amp;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> uref3 <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>; <span style="color:#75715e">// 27 is int and rvlue, so uref3&#39;s type is int&amp;&amp;
-</span><span style="color:#75715e"></span><span style="color:#75715e">// array and function names decay into pointers for non-ref type specifiers:
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> name[] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">R. N. Briggs</span><span style="color:#e6db74">&#34;</span>; <span style="color:#75715e">// name&#39;s type is const char [13]
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> arr1 <span style="color:#f92672">=</span> name;  <span style="color:#75715e">// arr1&#39;s type is const char*
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> arr2 <span style="color:#f92672">=</span> name;  <span style="color:#75715e">// arr2&#39;s type is const char (&amp;)[13]
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">someFunc</span>(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">double</span>); <span style="color:#75715e">// someFunc is a function, type is void(int, double)
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> func1 <span style="color:#f92672">=</span> someFunc; <span style="color:#75715e">// func1&#39;s type is void (*)(int, double)
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> func2 <span style="color:#f92672">=</span> someFunc; <span style="color:#75715e">// func2&#39;s type is void (&amp;)(int, double)
-</span></code></pre></div>
+
+<pre><code class="language-cpp">auto x = 27;  // case 3. type specifier is simply auto by itself.
+const auto cx = x; // case 3. type specifier is const auto.
+const auto&amp; rx = x; // case 1. type specifier is const auto&amp;. 
+// case 2:
+auto&amp;&amp; uref1 = x; // x is int and lvalue, so uref1's type is int&amp;
+auto&amp;&amp; uref2 = cx; // cx is const int and lvalue, so uref2's type is const int&amp;
+auto&amp;&amp; uref3 = 27; // 27 is int and rvlue, so uref3's type is int&amp;&amp;
+// array and function names decay into pointers for non-ref type specifiers:
+const char name[] = &quot;R. N. Briggs&quot;; // name's type is const char [13]
+auto arr1 = name;  // arr1's type is const char*
+auto&amp; arr2 = name;  // arr2's type is const char (&amp;)[13]
+void someFunc(int, double); // someFunc is a function, type is void(int, double)
+auto func1 = someFunc; // func1's type is void (*)(int, double)
+auto&amp; func2 = someFunc; // func2's type is void (&amp;)(int, double)
+</code></pre>
+
 <h4 id="exception-uniform-initialization">Exception: uniform initialization</h4>
 
 <p>C++98 provides two syntactic choices when we want to declare an int with an initial value:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> x1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>;
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">x2</span>(<span style="color:#ae81ff">27</span>);
-</code></pre></div>
+
+<pre><code class="language-cpp">int x1 = 27;
+int x2(27);
+</code></pre>
+
 <p>By introducing uniform initialization, C++11 adds these two forms:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> x3 <span style="color:#f92672">=</span> { <span style="color:#ae81ff">27</span> };
-<span style="color:#66d9ef">int</span> x4{ <span style="color:#ae81ff">27</span> };
-</code></pre></div>
+
+<pre><code class="language-cpp">int x3 = { 27 };
+int x4{ 27 };
+</code></pre>
+
 <p>As EMCpp 5 explains, there are advantages to declare variables using <code>auto</code>, so we may prefer:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> x1 <span style="color:#f92672">=</span> <span style="color:#ae81ff">27</span>;  <span style="color:#75715e">// type is int, value is 27
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> <span style="color:#a6e22e">x2</span>(<span style="color:#ae81ff">27</span>);   <span style="color:#75715e">// ditto
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> x3 <span style="color:#f92672">=</span> { <span style="color:#ae81ff">27</span> };  <span style="color:#75715e">// type is std::initializer_list&lt;int&gt;, value is {27}
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> x4{ <span style="color:#ae81ff">27</span> };  <span style="color:#75715e">// ditto
-</span></code></pre></div>
+
+<pre><code class="language-cpp">auto x1 = 27;  // type is int, value is 27
+auto x2(27);   // ditto
+auto x3 = { 27 };  // type is std::initializer_list&lt;int&gt;, value is {27}
+auto x4{ 27 };  // ditto
+</code></pre>
+
 <p>However, after this modification, while the first two statements do declare a variable of type <code>int</code> with value 27, the second two actually declare a variable of type <code>std::initializer_list&lt;int&gt;</code> containing a single element with value 27.</p>
 
 <p>In fact, when an auto-declared variable is initialized with a braced initializer, <code>auto</code> will assume that the braced initilizer represents a <code>std::initializer_list</code>, which itself is a template for some type <code>T</code>, so there are actually two kinds of type deduction taking place:</p>
@@ -444,32 +454,35 @@ f(expr);  <span style="color:#75715e">// general call
 </ol>
 
 <p><strong>The only real difference between <code>auto</code> and template type deduction is the assumption that a braced initializer represents a <code>std::initializer_list</code>.</strong> This lead to some interesting results:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> x <span style="color:#f92672">=</span> { <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">9</span> };  <span style="color:#75715e">// x&#39;s type is std::initializer_list&lt;int&gt;
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f1(T param);
-f1({ <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">9</span> });  <span style="color:#75715e">// error! can&#39;t deduce type for T. Do not recognise the type for braced initializer
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f2(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>initializer_list<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> initList);
-f({ <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">23</span>, <span style="color:#ae81ff">9</span> });  <span style="color:#75715e">// T deduced as T, and initList&#39;s type is std::initializer_list&lt;int&gt;
-</span></code></pre></div>
+
+<pre><code class="language-cpp">auto x = { 11, 23, 9 };  // x's type is std::initializer_list&lt;int&gt;
+
+template&lt;typename T&gt;
+void f1(T param);
+f1({ 11, 23, 9 });  // error! can't deduce type for T. Do not recognise the type for braced initializer
+
+template&lt;typename T&gt;
+void f2(std::initializer_list&lt;T&gt; initList);
+f({ 11, 23, 9 });  // T deduced as T, and initList's type is std::initializer_list&lt;int&gt;
+</code></pre>
+
 <h4 id="more-exceptions-in-c-14">More exceptions in C++14</h4>
 
 <p>C++14 permits to use <code>auto</code> as a function&rsquo;s return type as well as in lambda parameter declarations. However, these uses of <code>auto</code> employ <em>tamplate type deduction</em>, not <code>auto</code> type deduction - so a braced initializer won&rsquo;t imply the type of <code>std::initializer_list</code> automatically, and following statement won&rsquo;t compile:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// auto in return type
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> <span style="color:#a6e22e">createInitList</span>()
-{
-    <span style="color:#66d9ef">return</span> { <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span> };  <span style="color:#75715e">// error: can&#39;t deduce type for { 1, 2, 3 }
-</span><span style="color:#75715e"></span>}
 
-<span style="color:#75715e">// auto in a parameter type specification in a C++14 lambda
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> v;
+<pre><code class="language-cpp">// auto in return type
+auto createInitList()
+{
+    return { 1, 2, 3 };  // error: can't deduce type for { 1, 2, 3 }
+}
+
+// auto in a parameter type specification in a C++14 lambda
+std::vector&lt;int&gt; v;
 ...
-<span style="color:#66d9ef">auto</span> resetV <span style="color:#f92672">=</span> [<span style="color:#f92672">&amp;</span>v](<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> newValue) { v <span style="color:#f92672">=</span> newValue; };  <span style="color:#75715e">// C++14 lambda, second auto is in parameter list
-</span><span style="color:#75715e"></span>...
-resetV({ <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span> }); <span style="color:#75715e">// error: can&#39;t deduce type for { 1, 2, 3 }
-</span></code></pre></div>
+auto resetV = [&amp;v](const auto&amp; newValue) { v = newValue; };  // C++14 lambda, second auto is in parameter list
+...
+resetV({ 1, 2, 3 }); // error: can't deduce type for { 1, 2, 3 }
+</code></pre>
               
             </div>
           </div>

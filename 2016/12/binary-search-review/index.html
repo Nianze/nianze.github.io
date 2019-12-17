@@ -63,7 +63,7 @@
 
     <title>Binary search review</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -412,18 +412,22 @@ Suffering is optional.</p>
 <p>| 55 | 68 |</p>
 
 <p>Depending on how we choose the median of an even number of elements we will either find 55 in the next step or chop off 68 to get a search space of only one element. Either way, we conclude that the index where the target value is located is 7.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">binary_search(A, target):
-   lo <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, hi <span style="color:#f92672">=</span> size(A)
-   <span style="color:#66d9ef">while</span> lo <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> hi:
-      mid <span style="color:#f92672">=</span> lo <span style="color:#f92672">+</span> (hi<span style="color:#f92672">-</span>lo)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>
-      <span style="color:#66d9ef">if</span> A[mid] <span style="color:#f92672">==</span> target:
-         <span style="color:#66d9ef">return</span> mid            
-      <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> A[mid] <span style="color:#f92672">&lt;</span> target: 
-         lo <span style="color:#f92672">=</span> mid<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
-      <span style="color:#66d9ef">else</span>:
-         hi <span style="color:#f92672">=</span> mid<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+
+<pre><code class="language-python">binary_search(A, target):
+   lo = 1, hi = size(A)
+   while lo &lt;= hi:
+      mid = lo + (hi-lo)/2
+      if A[mid] == target:
+         return mid            
+      else if A[mid] &lt; target: 
+         lo = mid+1
+      else:
+         hi = mid-1
             
-   <span style="color:#f92672">/</span><span style="color:#f92672">/</span> target was <span style="color:#f92672">not</span> found</code></pre></div>
+   // target was not found
+
+</code></pre>
+
 <h1 id="taking-it-further-the-main-theorem">Taking it further: the main theorem</h1>
 
 <p>Consider a predicate p defined over some ordered set S (the search space). The search space consists of candidate solutions to the problem. We use the predicate to verify if a candidate solution is legal (does not violate some constraint) according to the definition of the problem.</p>
@@ -462,18 +466,22 @@ Suffering is optional.</p>
 <p>| no | no | no | no | no | no | yes | yes | yes | yes | yes |</p>
 
 <p>Implementing the discrete algorithm:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">binary_search(lo, hi, p):
-   <span style="color:#66d9ef">while</span> lo <span style="color:#f92672">&lt;</span> hi:
-      mid <span style="color:#f92672">=</span> lo <span style="color:#f92672">+</span> (hi<span style="color:#f92672">-</span>lo)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>
-      <span style="color:#66d9ef">if</span> p(mid) <span style="color:#f92672">==</span> true:
-         hi <span style="color:#f92672">=</span> mid
-      <span style="color:#66d9ef">else</span>:
-         lo <span style="color:#f92672">=</span> mid<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>
+
+<pre><code class="language-python">binary_search(lo, hi, p):
+   while lo &lt; hi:
+      mid = lo + (hi-lo)/2
+      if p(mid) == true:
+         hi = mid
+      else:
+         lo = mid+1
           
-   <span style="color:#66d9ef">if</span> p(lo) <span style="color:#f92672">==</span> false:
-      complain                <span style="color:#f92672">/</span><span style="color:#f92672">/</span> p(x) <span style="color:#f92672">is</span> false <span style="color:#66d9ef">for</span> all x <span style="color:#f92672">in</span> S<span style="color:#960050;background-color:#1e0010">!</span>
+   if p(lo) == false:
+      complain                // p(x) is false for all x in S!
       
-   <span style="color:#66d9ef">return</span> lo         <span style="color:#f92672">/</span><span style="color:#f92672">/</span> lo <span style="color:#f92672">is</span> the least x <span style="color:#66d9ef">for</span> which p(x) <span style="color:#f92672">is</span> true</code></pre></div>
+   return lo         // lo is the least x for which p(x) is true
+
+</code></pre>
+
 <p>Two crucial lines:</p>
 
 <ol>
@@ -484,18 +492,21 @@ If p(mid) is false, we can discard the first half of the search space, but this 
 </ol>
 
 <p>If we wanted to find the last x for which p(x) is false:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">binary_search(lo, hi, p):
-   <span style="color:#66d9ef">while</span> lo <span style="color:#f92672">&lt;</span> hi:
-      mid <span style="color:#f92672">=</span> lo <span style="color:#f92672">+</span> (hi<span style="color:#f92672">-</span>lo<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>    <span style="color:#f92672">/</span><span style="color:#f92672">/</span> note: rounds up instead of down
-      <span style="color:#66d9ef">if</span> p(mid) <span style="color:#f92672">==</span> true:
-         hi <span style="color:#f92672">=</span> mid<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
-      <span style="color:#66d9ef">else</span>:
-         lo <span style="color:#f92672">=</span> mid
+
+<pre><code class="language-python">binary_search(lo, hi, p):
+   while lo &lt; hi:
+      mid = lo + (hi-lo+1)/2    // note: rounds up instead of down
+      if p(mid) == true:
+         hi = mid-1
+      else:
+         lo = mid
           
-   <span style="color:#66d9ef">if</span> p(lo) <span style="color:#f92672">==</span> true:
-      complain                <span style="color:#f92672">/</span><span style="color:#f92672">/</span> p(x) <span style="color:#f92672">is</span> true <span style="color:#66d9ef">for</span> all x <span style="color:#f92672">in</span> S<span style="color:#960050;background-color:#1e0010">!</span>
+   if p(lo) == true:
+      complain                // p(x) is true for all x in S!
       
-   <span style="color:#66d9ef">return</span> lo         <span style="color:#f92672">/</span><span style="color:#f92672">/</span> lo <span style="color:#f92672">is</span> the greatest x <span style="color:#66d9ef">for</span> which p(x) <span style="color:#f92672">is</span> false</code></pre></div>
+   return lo         // lo is the greatest x for which p(x) is false
+</code></pre>
+
 <p>Explanation:
 If we use <code>mid = lo + (hi-lo)/2</code>, which rounds down, consider what happens when running this code on some search space for which the predicate gives:</p>
 
@@ -530,38 +541,39 @@ We assign first worker to the cabinet 1. Since the cabinets must be assigned in 
 
 <p><strong>Can the workload be spread so that each worker has to examine no more than x folders, with the limited number of workers available?</strong></p></li>
 
-<li><p>The code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getMostWork</span>( vector  folders, <span style="color:#66d9ef">int</span> workers ) {
-<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> folders.size();
-<span style="color:#66d9ef">int</span> lo <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>max_element( folders.begin(), folders.end() );
-<span style="color:#66d9ef">int</span> hi <span style="color:#f92672">=</span> accumulate( folders.begin(), folders.end(), <span style="color:#ae81ff">0</span> );
-
-<span style="color:#66d9ef">while</span> ( lo <span style="color:#f92672">&lt;</span> hi ) {
-  <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> lo <span style="color:#f92672">+</span> (hi<span style="color:#f92672">-</span>lo)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>;
-
-  <span style="color:#66d9ef">int</span> required <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>, current_load <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-  <span style="color:#66d9ef">for</span> ( <span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span>n; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i ) {
-     <span style="color:#66d9ef">if</span> ( current_load <span style="color:#f92672">+</span> folders[i] <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> x ) {
-        <span style="color:#75715e">// the current worker can handle it
-</span><span style="color:#75715e"></span>        current_load <span style="color:#f92672">+</span><span style="color:#f92672">=</span> folders[i];
-     }
-     <span style="color:#66d9ef">else</span> {
-        <span style="color:#75715e">// assign next worker
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">+</span><span style="color:#f92672">+</span>required;
-        current_load <span style="color:#f92672">=</span> folders[i];               
-     }
-  }
-
-  <span style="color:#66d9ef">if</span> ( required <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> workers )
-     hi <span style="color:#f92672">=</span> x;
-  <span style="color:#66d9ef">else</span>
-     lo <span style="color:#f92672">=</span> x<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
-}
-
-<span style="color:#66d9ef">return</span> lo;
-}
-</code></pre></div></li>
+<li><p>The code:</p></li>
 </ol>
+
+<pre><code class="language-cpp">int getMostWork( vector  folders, int workers ) {
+   int n = folders.size();
+   int lo = *max_element( folders.begin(), folders.end() );
+   int hi = accumulate( folders.begin(), folders.end(), 0 );
+
+   while ( lo &lt; hi ) {
+      int x = lo + (hi-lo)/2;
+
+      int required = 1, current_load = 0;
+      for ( int i=0; i&lt;n; ++i ) {
+         if ( current_load + folders[i] &lt;= x ) {
+            // the current worker can handle it
+            current_load += folders[i];
+         }
+         else {
+            // assign next worker
+            ++required;
+            current_load = folders[i];               
+         }
+      }
+
+      if ( required &lt;= workers )
+         hi = x;
+      else
+         lo = x+1;
+   }
+
+   return lo;
+}
+</code></pre>
 
 <p>To verify that the solution doesn’t lock up, we can use a small no/yes example with folders={1,1} and workers=1.</p>
 
@@ -575,43 +587,44 @@ We assign first worker to the cabinet 1. Since the cabinets must be assigned in 
 <li>Design a predicate which can be efficiently evaluated and so that binary search can be applied</li>
 <li>Decide on what you’re looking for and code so that the search space always contains that (if it exists)</li>
 <li>If the search space consists only of integers, test your algorithm on a two-element set to be sure it doesn’t lock up</li>
-
-<li><p>Verify that the lower and upper bounds are not overly constrained: it’s usually better to relax them as long as it doesn’t break the predicate. An all-around template looks like this according to my previous <a href="https:nianze.tk/2016/08/binary-search">post</a> on binary search:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> <span style="color:#f92672">{</span>
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * @return first occurrence position of the target
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findPosition</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>   
-    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> start <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">-</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            end <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span> <span style="color:#75715e">// for case of &#34;return first position&#34;
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">//start = mid; for case of &#34;return last position&#34;
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">//return mid; for case of &#34;return any position&#34;
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            start <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            end <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>   
-    <span style="color:#75715e">// exchange the position of two [if statement] if want to return last postion
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> start<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>end<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> end<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#75715e">// target strictly between {A[start-1], A[start]}
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// or strictly between {A[start], A[end]}
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// or strictly between {A[end, A[end+1]}
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span></code></pre></div></li>
+<li>Verify that the lower and upper bounds are not overly constrained: it’s usually better to relax them as long as it doesn’t break the predicate. An all-around template looks like this according to my previous <a href="https:nianze.tk/2016/08/binary-search">post</a> on binary search:</li>
 </ul>
+
+<pre><code class="language-java">public class Solution {
+    /**
+     * @return first occurrence position of the target
+     */
+    int findPosition(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }   
+        int start = 0, end = nums.length - 1;
+        while (start + 1 &lt; end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                end = mid; // for case of &quot;return first position&quot;
+                //start = mid; for case of &quot;return last position&quot;
+                //return mid; for case of &quot;return any position&quot;
+            } else if (nums[mid] &lt; target) {
+                start = mid;
+            } else if (nums[mid] &gt; target) {
+                end = mid;
+            }
+        }   
+        // exchange the position of two [if statement] if want to return last postion
+        if (nums[start] == target) {
+            return start;
+        }
+        if (nums[end] == target) {
+            return end;
+        }
+        // target strictly between {A[start-1], A[start]}
+        // or strictly between {A[start], A[end]}
+        // or strictly between {A[end, A[end+1]}
+        return -1;
+    }
+}
+</code></pre>
               
             </div>
           </div>

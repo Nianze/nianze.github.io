@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-18 Amortize the Cost of Expected Computations</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -399,48 +399,54 @@ Suffering is optional.</p>
 <h1 id="caching">Caching</h1>
 
 <p>Say we&rsquo;re writing a program to provide information about employees, and one of the pieces of information we expect to request frequently is an employee&rsquo;s cubicle number, which is stored in a database, but the database is not optimized to find it. In this case, we could cache the cubicle numbers to save the subsequent database lookups.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findCubicleNumber</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> employeeName)
+
+<pre><code class="language-cpp">int findCubicleNumber(const string&amp; employeeName)
 {
-    <span style="color:#66d9ef">typedef</span> map<span style="color:#f92672">&lt;</span>string, <span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> CubicleMap;
-    <span style="color:#66d9ef">static</span> CubicleMap cubes;
-    CubicleMap<span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it <span style="color:#f92672">=</span> cubes.find(employeeName);
-    <span style="color:#66d9ef">if</span> (it <span style="color:#f92672">=</span><span style="color:#f92672">=</span> cubes.end()) {
-        <span style="color:#66d9ef">int</span> cubicle <span style="color:#f92672">=</span> <span style="color:#75715e">// db query for the cubicle number
-</span><span style="color:#75715e"></span>        cubes[employeeName] <span style="color:#f92672">=</span> cubicle;
-        <span style="color:#66d9ef">return</span> cubicle;
+    typedef map&lt;string, int&gt; CubicleMap;
+    static CubicleMap cubes;
+    CubicleMap::iterator it = cubes.find(employeeName);
+    if (it == cubes.end()) {
+        int cubicle = // db query for the cubicle number
+        cubes[employeeName] = cubicle;
+        return cubicle;
     }
-    <span style="color:#66d9ef">else</span> {
-        <span style="color:#66d9ef">return</span> it<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>second; <span style="color:#75715e">// or &#34;(*it).second&#34; if compiler does not support &#34;-&gt;&#34; for &#34;it&#34; object
-</span><span style="color:#75715e"></span>    }
+    else {
+        return it-&gt;second; // or &quot;(*it).second&quot; if compiler does not support &quot;-&gt;&quot; for &quot;it&quot; object
+    }
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="prefetching">Prefetching</h1>
 
 <p>According to the infamous <em>locality of reference</em> phenomenon, if data in one place is requested, it&rsquo;s quite common to want nearby data, too, which justifies disk caches, memory caches for both instructions and data, and instruction prefetches.</p>
 
 <p>Adopting similar concept, we can use similar strategy when writing a template for dynamic arrays, which will automatically extend themselves:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DynArray</span> {...};
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">&amp;</span> DynArray<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index)
+<pre><code class="language-cpp">template&lt;class T&gt;
+class DynArray {...};
+
+template&lt;class T&gt;
+T&amp; DynArray&lt;T&gt;::operator[](int index)
 {
-    <span style="color:#66d9ef">if</span> (index <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) {
-        <span style="color:#66d9ef">throw</span> an exception;
+    if (index &lt; 0) {
+        throw an exception;
     }
-    <span style="color:#66d9ef">if</span> (index <span style="color:#f92672">&gt;</span> the current maximum index value) {
-        <span style="color:#66d9ef">int</span> diff <span style="color:#f92672">=</span> index <span style="color:#f92672">-</span> the current maximum index value;
-        call <span style="color:#66d9ef">new</span> to allocate enough additional memory so <span style="color:#a6e22e">that</span> (index<span style="color:#f92672">+</span>diff) is valid;
+    if (index &gt; the current maximum index value) {
+        int diff = index - the current maximum index value;
+        call new to allocate enough additional memory so that (index+diff) is valid;
     }
-    <span style="color:#66d9ef">return</span> the indexth element of the array;
+    return the indexth element of the array;
 }
-</code></pre></div>
+</code></pre>
+
 <p>This <code>operator[]</code> function allocates twice as much memory as needed each time the array must be extended, so that it saves one memory allocation when its logical size is extended twice in the following case:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">DynArray<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span> a;  <span style="color:#75715e">// only a[0] is valid
-</span><span style="color:#75715e"></span>a[<span style="color:#ae81ff">22</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">3.5</span>;         <span style="color:#75715e">// new is called to expand a&#39;s storage through index 44, 
-</span><span style="color:#75715e"></span>                     <span style="color:#75715e">// a&#39;s logical size is 23
-</span><span style="color:#75715e"></span>a[<span style="color:#ae81ff">32</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;           <span style="color:#75715e">// a&#39;s logical size is now 33, without new being called
-</span></code></pre></div><div class="footnotes">
+
+<pre><code class="language-cpp">DynArray&lt;double&gt; a;  // only a[0] is valid
+a[22] = 3.5;         // new is called to expand a's storage through index 44, 
+                     // a's logical size is 23
+a[32] = 0;           // a's logical size is now 33, without new being called
+</code></pre>
+<div class="footnotes">
 
 <hr />
 

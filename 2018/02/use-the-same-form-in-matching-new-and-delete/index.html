@@ -65,7 +65,7 @@
 
     <title>Item-16 Use the same form in corresponding uses of new and delete</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -425,9 +425,11 @@ Suffering is optional.</p>
 </table>
 
 <p>When we use <code>delete</code> on a pointer, <code>delete []</code> will assumes an array is pointed to, otherwise it assumes a single object. Let&rsquo;s see what will happen if the uses of <code>new</code> and <code>delete</code> is not matching:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string <span style="color:#f92672">*</span>stringPtr1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string;
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string <span style="color:#f92672">*</span>stringPtr2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string[<span style="color:#ae81ff">100</span>];
-</code></pre></div>
+
+<pre><code class="language-cpp">std::string *stringPtr1 = new std::string;
+std::string *stringPtr2 = new std::string[100];
+</code></pre>
+
 <ul>
 <li><p><code>delete [] stringPtr1;</code></p>
 
@@ -441,12 +443,14 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>strin
 <p>The rule is particularly important to bear in mind when writing a class containing a pointer to dynamically allocated memory and also offering multiple constructors, for we must be careful to use the same form of <code>new</code> in all the constructors to initialize the pointer member. After all, there&rsquo;s only one form of <code>delete</code> in the destructor.</p>
 
 <p>The rule is also noteworthy for <code>typedef</code>-inclined:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string AddressLines[<span style="color:#ae81ff">4</span>];  <span style="color:#75715e">// a person&#39;s address has 4 lines
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string <span style="color:#f92672">*</span>pal <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AddressLines;  <span style="color:#75715e">// return type is string*, just like &#34;new string[4]&#34; would
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">delete</span> pal;     <span style="color:#75715e">// undefined!
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">delete</span> [] pal;  <span style="color:#75715e">// fine, array form of delete is the matched version
-</span></code></pre></div>
+
+<pre><code class="language-cpp">typedef std::string AddressLines[4];  // a person's address has 4 lines
+std::string *pal = new AddressLines;  // return type is string*, just like &quot;new string[4]&quot; would
+
+delete pal;     // undefined!
+delete [] pal;  // fine, array form of delete is the matched version
+</code></pre>
+
 <p>To avoid such confusion, abstain from <code>typedef</code>s for array types. Try using <code>string</code> and <code>vector</code> from the standard C++ library (item 54) - those templates reduce the need for dynamically allocated arrays to nearly zero: for example, we may define <code>AddressLines</code> as type <code>vector&lt;string&gt;</code>.</p>
               
             </div>

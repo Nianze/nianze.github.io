@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-17 Understand Special Member Function Generation</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -425,30 +425,34 @@ Suffering is optional.</p>
 <h1 id="use-of-default">Use of &ldquo;=default&rdquo;</h1>
 
 <p>The default implementation for special member functions inside a base class is correct. Since we have to explicitly declare the base destructor as <code>virtual</code> to avoid undefined or misleading results that often occurs in polymorphic inheritance, using  &ldquo;=default&rdquo; will be a good way to express the suppressed default implementation of the move and/or copy operations:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Base</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>Base() <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;   <span style="color:#75715e">// make dtor virtual
-</span><span style="color:#75715e"></span>
-    Base(Base<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;   <span style="color:#75715e">// support moving
-</span><span style="color:#75715e"></span>    Base<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(Base<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>; 
 
-    Base(<span style="color:#66d9ef">const</span> Base<span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;  <span style="color:#75715e">// support copying
-</span><span style="color:#75715e"></span>    Base<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Base<span style="color:#f92672">&amp;</span>) <span style="color:#f92672">=</span> <span style="color:#66d9ef">default</span>;
+<pre><code class="language-cpp">class Base {
+public:
+    virtual ~Base() = default;   // make dtor virtual
+
+    Base(Base&amp;&amp;) = default;   // support moving
+    Base&amp; operator=(Base&amp;&amp;) = default; 
+
+    Base(const Base&amp;) = default;  // support copying
+    Base&amp; operator=(const Base&amp;) = default;
 };
-</code></pre></div>
+</code></pre>
+
 <h1 id="member-function-templates">Member function templates</h1>
 
 <p>Note that there&rsquo;s nothing in the rules about the existence of a member function template preventing compilers from generating the special member functions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
+
+<pre><code class="language-cpp">class Widget {
     ...
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-    Widget(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> rhs);   <span style="color:#75715e">// construct Widget from anything
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-    Widget<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> rhs);  <span style="color:#75715e">// assign Widget from anything
-</span><span style="color:#75715e"></span>    ...
+    template&lt;typename T&gt;
+    Widget(const T&amp; rhs);   // construct Widget from anything
+
+    template&lt;typename T&gt;
+    Widget&amp; operator=(const T&amp; rhs);  // assign Widget from anything
+    ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>Assuming the usual conditions governing special member functions are fulfilled, compilers will still generate copy and move operations for <code>Widget</code> even though these templates could be instantiated to produce the signatures for the copy constructor and copy assignment operator (when <code>T</code> is <code>Widget</code>). Refer to EMCpp item 26 for cases that have important consequences.</p>
               
             </div>

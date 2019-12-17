@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-25 Virtualizing Constructors and Non-Member Functions</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -399,100 +399,111 @@ Suffering is optional.</p>
 <h1 id="virtual-constructor">Virtual constructor</h1>
 
 <p>Suppose we write applications for working with newsletters, where a newsletter consists of components that are either textual or graphical:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NLComponent</span> {  <span style="color:#75715e">// abstract base class for newsletter components
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#75715e">// constain at least one pure virtual function
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">virtual</span> NLComponet <span style="color:#f92672">*</span> clone() <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// virtual copy constructor
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class NLComponent {  // abstract base class for newsletter components
+public:
+    // constain at least one pure virtual function
+    virtual NLComponet * clone() const = 0; // virtual copy constructor
+    ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TextBlocks</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> NLComponent { <span style="color:#75715e">// 
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> TextBlock <span style="color:#f92672">*</span> clone() <span style="color:#66d9ef">const</span>  <span style="color:#75715e">// virtual copy constructor
-</span><span style="color:#75715e"></span>    { <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">TextBlock</span>(<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>); }  
-    ...                                <span style="color:#75715e">// constain no pure virtual function
-</span><span style="color:#75715e"></span>};
+class TextBlocks: public NLComponent { // 
+public:
+    virtual TextBlock * clone() const  // virtual copy constructor
+    { return new TextBlock(*this); }  
+    ...                                // constain no pure virtual function
+};
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Graphic</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> NLComponent {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> Graphic <span style="color:#f92672">*</span> clone() <span style="color:#66d9ef">const</span>  <span style="color:#75715e">// virtual copy constructor
-</span><span style="color:#75715e"></span>    { <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Graphic</span>(<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>); } 
-    ...                                <span style="color:#75715e">// constain no pure virtual function    
-</span><span style="color:#75715e"></span>};
+class Graphic: public NLComponent {
+public:
+    virtual Graphic * clone() const  // virtual copy constructor
+    { return new Graphic(*this); } 
+    ...                                // constain no pure virtual function    
+};
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NewsLetter</span> {  <span style="color:#75715e">// a newsletter object consists of a list of NLComponent objects
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    NewsLetter(istream<span style="color:#f92672">&amp;</span> str);
-    NewsLetter(<span style="color:#66d9ef">const</span> NewsLetter<span style="color:#f92672">&amp;</span> rhs);  <span style="color:#75715e">// normal copy constructor
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    list<span style="color:#f92672">&lt;</span>NLComponet<span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span> components; 
-    <span style="color:#66d9ef">static</span> NLComponet <span style="color:#f92672">*</span> <span style="color:#a6e22e">readComponet</span>(istream<span style="color:#f92672">&amp;</span> str); <span style="color:#75715e">// read the data for the next NLComponet from str, create the component and return a pointer to it
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+class NewsLetter {  // a newsletter object consists of a list of NLComponent objects
+public:
+    NewsLetter(istream&amp; str);
+    NewsLetter(const NewsLetter&amp; rhs);  // normal copy constructor
+    ...
+private:
+    list&lt;NLComponet*&gt; components; 
+    static NLComponet * readComponet(istream&amp; str); // read the data for the next NLComponet from str, create the component and return a pointer to it
+};
+</code></pre>
+
 <p>The classes relate in this way:</p>
+
 <pre><code>NewsLetter object
 ┌───────────────┐
 │     ...       │
 ├───────────────┤                    ┌──────────────┐
-│[list object]--│-----pointers------>│  NLComponent │
+│[list object]--│-----pointers------&gt;│  NLComponent │
 └───────────────┘                    └──────────────┘
                        public inheritance ↗   ↖ public inheritance
                              ┌───────────┐      ┌──────────┐
                              │ TextBlock │      │  Graphic │
-                             └───────────┘      └──────────┘</code></pre>
+                             └───────────┘      └──────────┘
+</code></pre>
+
 <p>Suppose <code>NewsLetter</code> objects are stored on disk, it is convevient that <code>NewsLetter</code>  takes an <code>istream</code> to read information from the stream as it creates the necessary in-core data structures. Depending on the data it reads, we need to create either a <code>TextBlock</code> or a <code>Graphic</code>, which are different types of objects. Here comes the <code>readComponent</code>, which acts like constructor for its creating new objects, while it is also able to create different types of objects according to the iput it is given. Thus we call such a constructor as the <em>virtual constructor</em>, which are useful in many constexts.</p>
 
 <p>Given <code>readComponent</code> acting as a virtual constructor, it is easy to implement the constructor for <code>NewsLetter</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">NewsLetter<span style="color:#f92672">:</span><span style="color:#f92672">:</span>NewsLetter(istream<span style="color:#f92672">&amp;</span> str)
+
+<pre><code class="language-cpp">NewsLetter::NewsLetter(istream&amp; str)
 {
-    <span style="color:#66d9ef">while</span> (str) {
+    while (str) {
         componets.push_back(readComponet(str));
     }
 }
-</code></pre></div>
+</code></pre>
+
 <p>Among all kinds of virtual functions, there is another widely useful one: the <em>virtual copy constructor</em>, which returns a pointer to a new copy of the object invoking the function, and is typically named like <code>copySelf</code>, <code>cloneSelf</code>, or simply <code>clone</code>. These virtual copy constructors just calls its real copy constructor, so that the meaning of &ldquo;copy&rdquo; keeps the same for both functions<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> - consistency.</p>
 
 <p>Notice that a derived class&rsquo;s redefinition of a base class&rsquo;s virtual function declare different return types here: if the function&rsquo;s return type is a pointer (or a reference) to a base class, the derived class&rsquo;s function may return a pointer (or reference)  to a class derived from that base class. Thus <code>TextBlock</code>&rsquo;s <code>clone</code> returns a <code>TextBlock*</code> and <code>Graphic</code>&rsquo;s <code>clone</code> returns a <code>Graphic*</code> while the return type of <code>NLComponent</code>&rsquo;s <code>clone</code> is <code>NLComponent*</code>.</p>
 
 <p>Taking advantage of the virtual copy constructor in <code>NLComponent</code>, <code>NewsLetter</code> only need to implement a normal copy constructor:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">NewsLetter<span style="color:#f92672">:</span><span style="color:#f92672">:</span>NewsLetter(<span style="color:#66d9ef">const</span> NewsLetter<span style="color:#f92672">&amp;</span> rhs); <span style="color:#75715e">// normal copy constructor impl. in terms of virtual copy constructor
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">for</span> (list<span style="color:#f92672">&lt;</span>NLComponent<span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>const_iterator it <span style="color:#f92672">=</span> rhs.components.begin();
-         it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> rhs.componets.end();
-         <span style="color:#f92672">+</span><span style="color:#f92672">+</span>it) {
-             componets.push_back((<span style="color:#f92672">*</span>it)<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>clone());
+
+<pre><code class="language-cpp">NewsLetter::NewsLetter(const NewsLetter&amp; rhs); // normal copy constructor impl. in terms of virtual copy constructor
+{
+    for (list&lt;NLComponent*&gt;::const_iterator it = rhs.components.begin();
+         it != rhs.componets.end();
+         ++it) {
+             componets.push_back((*it)-&gt;clone());
          }
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="virtual-non-member-functions">Virtual Non-member functions</h1>
 
 <p>Suppose we&rsquo;d like to implement output operators for the <code>TextBlock</code> and <code>Graphic</code> classes. Given that the defaultly output operator <code>operator&lt;&lt;</code> takes an <code>ostream&amp;</code> as its left-hand argument, we can not make it a member function of the <code>TextBlock</code> or <code>Graphic</code> classes, so it can&rsquo;t be declared as <code>virtual</code>. On the other hand, if we insist on declaring a virtual function for printing (e.g., <code>print</code>), and thus define a <code>print</code> for the <code>TextBlock</code> and <code>Graphic</code>, the syntax for printing <code>TextBlock</code> and <code>Graphic</code> objects is inconsistent with that for the other types in the language, which makes our clients unhappy.</p>
 
 <p>What we want it a non-member function called <code>operator&lt;&lt;</code> that exhibits the behavior of a virtual function like <code>print</code>. The solution? We define both <code>operator&lt;&lt;</code> and <code>print</code> and have the former call the latter, and we get the virtual-acting non-member function:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NLComponent</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> ostream<span style="color:#f92672">&amp;</span> print(ostream<span style="color:#f92672">&amp;</span> s) <span style="color:#66d9ef">const</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+
+<pre><code class="language-cpp">class NLComponent {
+public:
+    virtual ostream&amp; print(ostream&amp; s) const = 0;
     ...
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TextBlock</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> NLComponent {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> ostream<span style="color:#f92672">&amp;</span> print(ostream<span style="color:#f92672">&amp;</span> s) <span style="color:#66d9ef">const</span>;
+class TextBlock: public NLComponent {
+public:
+    virtual ostream&amp; print(ostream&amp; s) const;
     ...
 }
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Graphic</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> NLComponent {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> ostream<span style="color:#f92672">&amp;</span> print(ostream<span style="color:#f92672">&amp;</span> s) <span style="color:#66d9ef">const</span>;
+class Graphic: public NLComponent {
+public:
+    virtual ostream&amp; print(ostream&amp; s) const;
     ...
 }
 
-iinline ostream<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span>(ostream<span style="color:#f92672">&amp;</span> s, <span style="color:#66d9ef">const</span> NLComponent<span style="color:#f92672">&amp;</span> c)
+iinline ostream&amp; operator&lt;&lt;(ostream&amp; s, const NLComponent&amp; c)
 {
-    <span style="color:#66d9ef">return</span> c.print(s);
+    return c.print(s);
 }
-</code></pre></div>
+</code></pre>
+
 <p>Since the non-virtual function does nothing but call the virtual function that does the real work, we inline the non-virtual function to avoid the cost of a function call.</p>
 
 <p>Note that, although not easy, it is possible to make non-member functions act virtually on more than one of their arguments - details in MECpp item 31.</p>

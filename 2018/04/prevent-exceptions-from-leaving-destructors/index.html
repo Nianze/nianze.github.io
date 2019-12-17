@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-11 Prevent Exceptions From Leaving Destructors</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -401,30 +401,34 @@ Suffering is optional.</p>
 </blockquote>
 
 <p>For example, consider a <code>Session</code> class that will record object creations and destructions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Session</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Session {
+public:
     Session();
-    <span style="color:#f92672">~</span>Session();
+    ~Session();
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> logCreation(Session <span style="color:#f92672">*</span>objAddr);
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">logDestruction</span>(Session <span style="color:#f92672">*</span>objAddr);
+private:
+    static void logCreation(Session *objAddr);
+    static void logDestruction(Session *objAddr);
 };
 
-Session<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Session()
+Session::~Session()
 {
-    logDestruction(<span style="color:#66d9ef">this</span>);
+    logDestruction(this);
 }
-</code></pre></div>
+</code></pre>
+
 <p>Because there&rsquo;s no <code>try...catch</code> statement, any exception inside the destructor will be propagated to the caller of the destructor. Thus once <code>logDestructoin</code> throws an exception during a special case when the destructor itself is called due to some other exception, the <code>terminate</code> function would automatically be invoked. So we prefer this design:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Session<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Session()
+
+<pre><code class="language-cpp">Session::~Session()
 {
-    <span style="color:#66d9ef">try</span> {
-        logDestruction(<span style="color:#66d9ef">this</span>);
+    try {
+        logDestruction(this);
     }
-    <span style="color:#66d9ef">catch</span> (...) {}  <span style="color:#75715e">// do nothing!
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    catch (...) {}  // do nothing!
+}
+</code></pre>
+
 <p>The point here is that the <code>catch</code> block shouldn&rsquo;t hold any statement that has potential of throwing exception, and its only purpose here is to prevent exception thrown from <code>logDestruction</code> from propagating beyond <code>Session</code>&rsquo;s destructor. Another good reason of catching the exception and prevent the propagation is to make sure the destructor will run to completion, so that any leftover cleanup code after the exception-thrown statement is able to run properly, without being interrupted by the excpetion propagation.</p>
               
             </div>

@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-29 Reference Counting</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -400,36 +400,42 @@ Suffering is optional.</p>
 </nav>
 
 <p>Consider a customized naive version of <code>class String;</code>: its assignment operator is implemented in a naive way:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    String(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>value <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span>);
-    String<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> rhs);
+
+<pre><code class="language-cpp">class String {
+public:
+    String(const char *value = &quot;&quot;);
+    String&amp; operator=(const String&amp; rhs);
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>data;
+private:
+    char *data;
 };
 
-String<span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> rhs)
+String&amp; String::operator=(const String&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>rhs) <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    if (this == &amp;rhs) return *this;
 
-    <span style="color:#66d9ef">delete</span>[] data;
-    data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[strlen(rhs.data)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>];
+    delete[] data;
+    data = new char[strlen(rhs.data)+1];
     strcpy(data, rhs.data);
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <p>When we write statement <code>a = b = c = d = e = &quot;Hello&quot;;</code> where <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code> and <code>e</code> are all <code>String</code> type, we get five objects, each with the same value &ldquo;Hello&rdquo;:</p>
+
 <pre><code>┌───┐     ┌───────┐   ┌───┐     ┌───────┐
-│ a │ --> │ Hello │   │ b │ --> │ Hello │ 
+│ a │ --&gt; │ Hello │   │ b │ --&gt; │ Hello │ 
 └───┘     └───────┘   └───┘     └───────┘
 ┌───┐     ┌───────┐   ┌───┐     ┌───────┐
-│ c │ --> │ Hello │   │ d │ --> │ Hello │ 
+│ c │ --&gt; │ Hello │   │ d │ --&gt; │ Hello │ 
 └───┘     └───────┘   └───┘     └───────┘
 ┌───┐     ┌───────┐
-│ e │ --> │ Hello │
-└───┘     └───────┘</code></pre>
+│ e │ --&gt; │ Hello │
+└───┘     └───────┘
+</code></pre>
+
 <p>Ideally, we&rsquo;d like to change the picture to look like this:</p>
+
 <pre><code>┌───┐    
 │ a ├──┐
 └───┘  | 
@@ -437,15 +443,18 @@ String<span style="color:#f92672">&amp;</span> String<span style="color:#f92672"
 │ c ├──┤
 └───┘  | 
 ┌───┐  |  ┌───────┐
-│ e ├──┼─>│ Hello │
+│ e ├──┼─&gt;│ Hello │
 └───┘  |  └───────┘
 ┌───┐  | 
 │ e ├──┤
 └───┘  │ 
 ┌───┐  │ 
 │ e ├──┘
-└───┘    </code></pre>
+└───┘    
+</code></pre>
+
 <p>In practice, we need to keep track of how many objects are sharing - <em>refering to</em>- a value to make sure the best time to destroy or modify the value &ldquo;Hello&rdquo;, so we need to add <em>reference count</em> into the picuture:</p>
+
 <pre><code>┌───┐    
 │ a ├──┐
 └───┘  | 
@@ -453,171 +462,192 @@ String<span style="color:#f92672">&amp;</span> String<span style="color:#f92672"
 │ c ├──┤
 └───┘  | 
 ┌───┐  |  ┌───┐    ┌───────┐
-│ c ├──┼─>│ 5 ├───>│ Hello │
+│ c ├──┼─&gt;│ 5 ├───&gt;│ Hello │
 └───┘  |  └───┘    └───────┘
 ┌───┐  | 
 │ d ├──┤
 └───┘  │ 
 ┌───┐  │ 
 │ e ├──┘
-└───┘    </code></pre>
+└───┘    
+</code></pre>
+
 <h1 id="implementing-reference-counting">Implementing Reference Counting</h1>
 
 <p>From the picture above, we can see we need one reference count per string <em>value</em>, instead of one per string <em>object</em>. This implies a decoupling between values and reference counts, leading to our first design: nesting a <code>StringValue</code> struct in the private part of <code>String</code> class, so that all the members of <code>String</code> class get full access to this inner data structure, while everybody else get denied (except friends of the class).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">StringValue</span> { <span style="color:#75715e">// holds a reference count and a string value
-</span><span style="color:#75715e"></span>        size_t refCount;
-        <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>data;
-        StringValue(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue);
-        <span style="color:#f92672">~</span>StringValue();
-    }
-    StringValue <span style="color:#f92672">*</span>value;        <span style="color:#75715e">// value of this String
-</span><span style="color:#75715e"></span>};
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue)
-<span style="color:#f92672">:</span> refCount(<span style="color:#ae81ff">1</span>)
+<pre><code class="language-cpp">class String {
+public:
+    ...
+private:
+    struct StringValue { // holds a reference count and a string value
+        size_t refCount;
+        char *data;
+        StringValue(const char *initValue);
+        ~StringValue();
+    }
+    StringValue *value;        // value of this String
+};
+
+String::StringValue::StringValue(const char *initValue)
+: refCount(1)
 {
-    data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[strlen(initValue)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>];
+    data = new char[strlen(initValue)+1];
     strcpy(data, initValue);
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>StringValue()
+String::StringValue::~StringValue()
 {
-    <span style="color:#66d9ef">delete</span> [] data;
+    delete [] data;
 }
-</code></pre></div>
+</code></pre>
+
 <p>The primary purpose of <code>StringValue</code> is to provide a place to associate a particular value with a count of the number of <code>String</code> objects sharing that value, so there&rsquo;s need to define copy constructor or assignment operator for this inner struct, and we provide the manipulation of the <code>refCount</code> field in <code>String</code> class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    String(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span>);
-    String(<span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> rhs);
-    <span style="color:#f92672">~</span>String();
-    String<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> rhs);
+
+<pre><code class="language-cpp">class String {
+public:
+    String(const char *initValue = &quot;&quot;);
+    String(const String&amp; rhs);
+    ~String();
+    String&amp; operator=(const String&amp; rhs);
     ...
 };
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>String(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue)
-<span style="color:#f92672">:</span> value(<span style="color:#66d9ef">new</span> StringValue(initValue))
+String::String(const char *initValue)
+: value(new StringValue(initValue))
 {}
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>String(<span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> rhs)
-<span style="color:#f92672">:</span> value(rhs.value)
+String::String(const String&amp; rhs)
+: value(rhs.value)
 {
-    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount;
+    ++value-&gt;refCount;
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>String()
+String::~String()
 {
-    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#f92672">-</span>value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">delete</span> value;
+    if (--value-&gt;refCount == 0) delete value;
 }
 
-String<span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> rhs)
+String&amp; String::operator=(const String&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (value <span style="color:#f92672">=</span><span style="color:#f92672">=</span> rhs.value) {
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    if (value == rhs.value) {
+        return *this;
     }
 
-    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#f92672">-</span>value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) { <span style="color:#75715e">// destroy *this&#39;s value
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">delete</span> value;             <span style="color:#75715e">// if no one else is using it
-</span><span style="color:#75715e"></span>    }
+    if (--value-&gt;refCount == 0) { // destroy *this's value
+        delete value;             // if no one else is using it
+    }
 
-    value <span style="color:#f92672">=</span> rhs.value;
-    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount;
+    value = rhs.value;
+    ++value-&gt;refCount;
 
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="copy-on-write">Copy-on-write</h1>
 
 <p>Now comes the troublesome one: an array-bracket operator([]), which allows individual characters within strings to be read and written:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// for const Strings
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index); <span style="color:#75715e">// for non-const Strings
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">class String {
+public:
+    const char&amp; operator[](int index) const;  // for const Strings
+    char&amp; operator[](int index); // for non-const Strings
+    ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>It&rsquo;s straightforward to implement the const version, because it&rsquo;s a read-only operation:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>
+
+<pre><code class="language-cpp">const char&amp; String::operator[](int index) const
 {
-    <span style="color:#66d9ef">return</span> value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[index]; <span style="color:#75715e">// here&#39;s no sanity checking on index, just like C++ tradition; easy to add though
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
-<p>However, since non-const version of <code>operator[]</code> might be called to write a character, the implementation must consider more scenario to avoid modifying the value of other <code>String</code> objects that happen to be sharing the same <code>StringValue</code> object - since there&rsquo;s no way for C++ compilers to tell us whether a particular use of <code>operator[]</code> is for a read or a write, we must be pessimistic and assume <em>all</em> calls to the non-const <code>operator[]</code> are for writes (Proxy classes casn help us differentiate reads from writes, see MECpp item 30.)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index)
-{
-    <span style="color:#75715e">// if sharing a value with other String obj.
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// break off a separate copy of the value
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>) {
-        <span style="color:#f92672">-</span><span style="color:#f92672">-</span>value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount;
-        value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringValue(value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data);
-    }
-    <span style="color:#66d9ef">return</span> value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[index];
+    return value-&gt;data[index]; // here's no sanity checking on index, just like C++ tradition; easy to add though
 }
-</code></pre></div>
+</code></pre>
+
+<p>However, since non-const version of <code>operator[]</code> might be called to write a character, the implementation must consider more scenario to avoid modifying the value of other <code>String</code> objects that happen to be sharing the same <code>StringValue</code> object - since there&rsquo;s no way for C++ compilers to tell us whether a particular use of <code>operator[]</code> is for a read or a write, we must be pessimistic and assume <em>all</em> calls to the non-const <code>operator[]</code> are for writes (Proxy classes casn help us differentiate reads from writes, see MECpp item 30.)</p>
+
+<pre><code class="language-cpp">char&amp; String::operator[](int index)
+{
+    // if sharing a value with other String obj.
+    // break off a separate copy of the value
+    if (value-&gt;refCount &gt; 1) {
+        --value-&gt;refCount;
+        value = new StringValue(value-&gt;data);
+    }
+    return value-&gt;data[index];
+}
+</code></pre>
+
 <p>This technique - to share a value with other objects until we have to write on our own copy of the value - is the well-knwon <em>copy-on-write</em>, which is a specific example of <em>lazy evaluation</em> (MECpp item 17), which is a more general approach to efficiency.</p>
 
 <h1 id="pointers-references-and-copy-on-write">Pointers, References, and Copy-on-write</h1>
 
 <p>Consider this code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">String s1 <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Hello</span><span style="color:#e6db74">&#34;</span>;
-<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>s1[<span style="color:#ae81ff">1</span>];
-Stirng s2 <span style="color:#f92672">=</span> s1;
-</code></pre></div>
+
+<pre><code class="language-cpp">String s1 = &quot;Hello&quot;;
+char *p = &amp;s1[1];
+Stirng s2 = s1;
+</code></pre>
+
 <p>The data structure looks like this:</p>
+
 <pre><code>┌───┐    
 │s1 ├──┐  ┌───┐    ┌───────┐
-└───┘  ├─>│ 2 ├───>│ Hello │
+└───┘  ├─&gt;│ 2 ├───&gt;│ Hello │
 ┌───┐  │  └───┘    └───────┘
 │s2 ├──┘              ↑
-└───┘                 p</code></pre>
+└───┘                 p
+</code></pre>
+
 <p>Now there is a dangerous situation, where pointer <code>p</code> modifies both <code>s1</code> and <code>s2</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">x</span><span style="color:#e6db74">&#39;</span>;  <span style="color:#75715e">// modifies both s1 and s2
-</span></code></pre></div>
+
+<pre><code class="language-cpp">*p = 'x';  // modifies both s1 and s2
+</code></pre>
+
 <p>To eliminate the problem, we add a flag to each <code>StringValue</code> object indicating whether that object is shareable. Initially, the flag is set to <code>true</code> (indicating shareable), but turn it off whenever the non-const <code>operator[]</code> is invoked on the value represented by that object (once the flag is set to <code>false</code>, it stays that way forever).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">StirngValue</span> {
+
+<pre><code class="language-cpp">class String {
+public:
+    struct StirngValue {
         size_t refCount;
-        <span style="color:#66d9ef">bool</span> shareable;  <span style="color:#75715e">// add this line
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>data;
+        bool shareable;  // add this line
+        char *data;
         ...
     };
     ...
 };
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue)
-<span style="color:#f92672">:</span> refCount(<span style="color:#ae81ff">1</span>),
-  shareable(true) <span style="color:#75715e">// add this line
-</span><span style="color:#75715e"></span>{
-    data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[strlen(initValue) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>];
+String::StringValue::StringValue(const char *initValue)
+: refCount(1),
+  shareable(true) // add this line
+{
+    data = new char[strlen(initValue) + 1];
     strcpy(data, initValue);
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>String(<span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> rhs)
+String::String(const String&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (rhs.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>shareable) {  <span style="color:#75715e">// add this checking
-</span><span style="color:#75715e"></span>        value <span style="color:#f92672">=</span> rhs.value;
-        <span style="color:#f92672">+</span><span style="color:#f92672">+</span>value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount;
+    if (rhs.value-&gt;shareable) {  // add this checking
+        value = rhs.value;
+        ++value-&gt;refCount;
     }
-    <span style="color:#66d9ef">else</span> {
-        value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringValue(rhs.value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data);
+    else {
+        value = new StringValue(rhs.value-&gt;data);
     }
 }
 
-<span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index)
+char&amp; String::operator[](int index)
 {
-    <span style="color:#66d9ef">if</span> (value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>) {
-        <span style="color:#f92672">-</span><span style="color:#f92672">-</span>value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>refCount;
-        value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringValue(value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data);
+    if (value-&gt;refCount &gt; 1) {
+        --value-&gt;refCount;
+        value = new StringValue(value-&gt;data);
     }
-    value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>shareable <span style="color:#f92672">=</span> false;  <span style="color:#75715e">// add this
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[index];
+    value-&gt;shareable = false;  // add this
+    return value-&gt;data[index];
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="a-reference-counting-base-class">A Reference-Counting Base class</h1>
 
 <p>Reference counting is useful for more than just strings, so it&rsquo;s good practice to separate reference counting code in a context-independent manner. This leads us to the design of a base class <code>RCObject</code>. Any class wishing to take advantage of automatic reference counting may inherit from this class. Basically, for general purpose usage, <code>RCObject</code> class should include</p>
@@ -625,51 +655,53 @@ String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>St
 <ul>
 <li>the reference count, as well as functions for incrementing and decrementing that count.</li>
 <li>the code for destroying a value when it is no longer in use (count == 0)</li>
-
-<li><p>a field that keeps track of whether this value is shareable, as well as functions to query this flag and set it to false</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RCObject</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-RCObject();
-RCObject(<span style="color:#66d9ef">const</span> RCObject<span style="color:#f92672">&amp;</span> rhs);
-RCObject<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCObject<span style="color:#f92672">&amp;</span> rhs);
-<span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>RCObject() <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// virtual shows this class is designed as a base class; pure virtual so that this class should be used only as a base class
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addReference</span>();
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeReference</span>();
-    
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">markUnshareable</span>();
-<span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isShareable</span>() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isShared</span>() <span style="color:#66d9ef">const</span>;
-
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-size_t refCount;
-<span style="color:#66d9ef">bool</span> shareable;
-};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCObject()
-<span style="color:#f92672">:</span> refCount(<span style="color:#ae81ff">0</span>), shareable(true) {}
-
-RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCObject(<span style="color:#66d9ef">const</span> RCObject<span style="color:#f92672">&amp;</span>)
-<span style="color:#f92672">:</span> refCount(<span style="color:#ae81ff">0</span>), shareable(true) {}
-
-RCObject<span style="color:#f92672">&amp;</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCObject<span style="color:#f92672">&amp;</span>)
-{ <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>; }
-
-RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>RCObject() {} <span style="color:#75715e">// pure virtual dtor still need to be impl. see MECpp item 33
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">void</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>addReference() { <span style="color:#f92672">+</span><span style="color:#f92672">+</span>refCount; }
-
-<span style="color:#66d9ef">void</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>removeReference() 
-{ <span style="color:#66d9ef">if</span>(<span style="color:#f92672">-</span><span style="color:#f92672">-</span>refCount <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">this</span>; }
-
-<span style="color:#66d9ef">void</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>markUnshareable()
-{ shareable <span style="color:#f92672">=</span> false; }
-
-<span style="color:#66d9ef">bool</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>isShareable() <span style="color:#66d9ef">const</span>
-{ <span style="color:#66d9ef">return</span> shareable; }
-
-<span style="color:#66d9ef">bool</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>isShared() <span style="color:#66d9ef">const</span>
-{ <span style="color:#66d9ef">return</span> refCount <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>; }
-</code></pre></div></li>
+<li>a field that keeps track of whether this value is shareable, as well as functions to query this flag and set it to false</li>
 </ul>
+
+<pre><code class="language-cpp">class RCObject {
+public:
+    RCObject();
+    RCObject(const RCObject&amp; rhs);
+    RCObject&amp; operator=(const RCObject&amp; rhs);
+    virtual ~RCObject() = 0; // virtual shows this class is designed as a base class; pure virtual so that this class should be used only as a base class
+    void addReference();
+    void removeReference();
+    
+    void markUnshareable();
+    bool isShareable() const;
+    bool isShared() const;
+
+private:
+    size_t refCount;
+    bool shareable;
+};
+</code></pre>
+
+<pre><code class="language-cpp">RCObject::RCObject()
+: refCount(0), shareable(true) {}
+
+RCObject::RCObject(const RCObject&amp;)
+: refCount(0), shareable(true) {}
+
+RCObject&amp; RCObject::operator=(const RCObject&amp;)
+{ return *this; }
+
+RCObject::~RCObject() {} // pure virtual dtor still need to be impl. see MECpp item 33
+
+void RCObject::addReference() { ++refCount; }
+
+void RCObject::removeReference() 
+{ if(--refCount == 0) delete this; }
+
+void RCObject::markUnshareable()
+{ shareable = false; }
+
+bool RCObject::isShareable() const
+{ return shareable; }
+
+bool RCObject::isShared() const
+{ return refCount &gt; 1; }
+</code></pre>
 
 <p>In this design, there are a few things worth noting:</p>
 
@@ -681,27 +713,29 @@ RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>
 </ol>
 
 <p>Now taking advantage of this new reference-counting base class, we modify <code>StringValue</code> to inherit its reference counting capabilities from <code>RCObject</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">StringValue</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> RCObject {
-        <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>data;
-        StringValue(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue);
-        <span style="color:#f92672">~</span>StringValue();
+
+<pre><code class="language-cpp">class String {
+private:
+    struct StringValue: public RCObject {
+        char *data;
+        StringValue(const char *initValue);
+        ~StringValue();
     };
 ...
 };
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue)
+String::StringValue::StringValue(const char *initValue)
 {
-    data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[strlen(initValue) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>];
+    data = new char[strlen(initValue) + 1];
     strcpy(data, initValue);
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>StringValue()
+String::StringValue::~StringValue()
 {
-    <span style="color:#66d9ef">delete</span> [] data;
+    delete [] data;
 }
-</code></pre></div>
+</code></pre>
+
 <p>After this change, <code>RCObject</code> now provide the manipulation ability of the <code>refCount</code> field, instead of <code>StringValue</code>.</p>
 
 <h1 id="automating-reference-count-manipulations">Automating Reference Count Manipulations</h1>
@@ -709,250 +743,269 @@ String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>St
 <p>The <code>RCObject</code> class only gives us a place to store a reference count, as well as the member functions to manipulate the <code>refCount</code> field. However, the <em>calls</em> to these functions must still be mannually inserted in other classes: <code>String</code> copy constructor and assignment operator need to call <code>addReference</code> and <code>removeReference</code> on <code>StringValue</code> objects, which is not good practice for reuse.</p>
 
 <p>To remove such manual works, we introduce <em>smart pointer</em> for help:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// template class for smart pointers-to-T object. T must
-</span><span style="color:#75715e"></span><span style="color:#75715e">// support the RCObject interface, typically by inheriting from RCObject
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RCPtr</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    RCPtr(T<span style="color:#f92672">*</span> realPtr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);
-    RCPtr(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs);
-    <span style="color:#f92672">~</span>RCPtr();
 
-    RCPtr<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs);
+<pre><code class="language-cpp">// template class for smart pointers-to-T object. T must
+// support the RCObject interface, typically by inheriting from RCObject
+template&lt;class T&gt;
+class RCPtr {
+public:
+    RCPtr(T* realPtr = 0);
+    RCPtr(const RCPtr&amp; rhs);
+    ~RCPtr();
 
-    T<span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span>;
-    T<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    T <span style="color:#f92672">*</span>pointee;  <span style="color:#75715e">// dumb pointer this object is emulating
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span>(); <span style="color:#75715e">// common init. code
-</span><span style="color:#75715e"></span>};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCPtr(T<span style="color:#f92672">*</span> realPtr)<span style="color:#f92672">:</span> pointee(realPtr)
+    RCPtr&amp; operator=(const RCPtr&amp; rhs);
+
+    T* operator-&gt;() const;
+    T&amp; operator*() const;
+private:
+    T *pointee;  // dumb pointer this object is emulating
+    void init(); // common init. code
+};
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+RCPtr&lt;T&gt;::RCPtr(T* realPtr): pointee(realPtr)
 {
     init();
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCPtr(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs)<span style="color:#f92672">:</span> pointee(rhs.pointee)
+template&lt;class T&gt;
+RCPtr&lt;T&gt;::RCPtr(const RCPtr&amp; rhs): pointee(rhs.pointee)
 {
     init();
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>init()
+template&lt;class T&gt;
+void RCPtr&lt;T&gt;::init()
 {
-    <span style="color:#66d9ef">if</span> (pointee <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
-        <span style="color:#66d9ef">return</span>;
+    if (pointee == 0) {
+        return;
     }
-    <span style="color:#66d9ef">if</span> (pointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isShareable() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> false) {
-        pointee <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> T(<span style="color:#f92672">*</span>pointee);
+    if (pointee-&gt;isShareable() == false) {
+        pointee = new T(*pointee);
     }
-    pointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>addReference(); <span style="color:#75715e">// always add a new reference to the value
-</span><span style="color:#75715e"></span>}
+    pointee-&gt;addReference(); // always add a new reference to the value
+}
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs)
+template&lt;class T&gt;
+RCPtr&lt;T&gt;&amp; RCPtr&lt;T&gt;::operator=(const RCPtr&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (pointee <span style="color:#f92672">!</span><span style="color:#f92672">=</span> rhs.pointee)
-        T <span style="color:#f92672">*</span>oldPointee <span style="color:#f92672">=</span> pointee;
-        pointee <span style="color:#f92672">=</span> rhs.pointee;
-        init();  <span style="color:#75715e">// if possible, share it; else make own copy
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (oldPointee) {
-            oldPointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>removeReference();
+    if (pointee != rhs.pointee)
+        T *oldPointee = pointee;
+        pointee = rhs.pointee;
+        init();  // if possible, share it; else make own copy
+        if (oldPointee) {
+            oldPointee-&gt;removeReference();
         }
     }
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    return *this;
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>RCPtr()
+template&lt;class T&gt;
+RCPtr&lt;T&gt;::~RCPtr()
 {
-    <span style="color:#66d9ef">if</span> (pointee) pointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>removeReference();
+    if (pointee) pointee-&gt;removeReference();
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">*</span> RCPtr<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> pointee; }
+template&lt;class T&gt;
+T* RCPtr::operator-&gt;() const { return pointee; }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">&amp;</span> RCPtr<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>pointee; }
-</code></pre></div>
+template&lt;class T&gt;
+T&amp; RCPtr::operator*() const { return *pointee; }
+</code></pre>
+
 <p>There are three assumptions in this implementation:</p>
 
 <ol>
 <li><p><code>T</code> has a deep-copying constructor, because <code>pointee = new T(*pointee);</code> will call <code>T</code>&rsquo;s copy constructor. In the example above, <code>String::StringValue</code> lack such a user-defined copy constructor, and compiler generated default copy constructor will not copy <code>char*</code> string <code>data</code> points to, so we need to add a customized version of copy constructor:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StirngValue(<span style="color:#66d9ef">const</span> StringValue<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">String::StringValue::StirngValue(const StringValue&amp; rhs)
 {
-data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>(strlen(rhs.data) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+data = new char(strlen(rhs.data) + 1);
 strcpy(data, rhs.data);
 }
-</code></pre></div></li>
+</code></pre>
 
-<li><p>For the same statement calling <code>T</code>&rsquo;s copy constructor, we assume the type of <code>*pointee</code> is <code>T</code> rather than <code>T</code>&rsquo;s derived class. If, however, chances are <code>poinee</code> might point to <code>T</code>&rsquo;s derived class instances, we need to use a virtual copy constructor.</p></li>
-
-<li><p><code>T</code> should prove all the functionality that <code>RCObject</code> does, either or not by inheriting from <code>RCObject</code>.</p></li>
+<ol>
+<li>For the same statement calling <code>T</code>&rsquo;s copy constructor, we assume the type of <code>*pointee</code> is <code>T</code> rather than <code>T</code>&rsquo;s derived class. If, however, chances are <code>poinee</code> might point to <code>T</code>&rsquo;s derived class instances, we need to use a virtual copy constructor.</li>
+<li><code>T</code> should prove all the functionality that <code>RCObject</code> does, either or not by inheriting from <code>RCObject</code>.</li>
 </ol>
 
 <h1 id="puting-everyting-together">Puting Everyting Together</h1>
-<pre><code>                     ┌──────────┐  
+
+<pre><code>                 ┌──────────┐  
 ┌──────────┐         │ RCObject │ 
 │  String  │         │  class   │
 │  object  │         └──────────┘
 │          │              ↑ public inheritance
 │ ┌─────┐  │         ┌───────────┐         ┌────────────┐
-│ │RCPtr├──┼────────>│StringValue├────────>| Heap Memory|
+│ │RCPtr├──┼────────&gt;│StringValue├────────&gt;| Heap Memory|
 │ └─────┘  │ pointer │  object   | pointer └────────────┘
-└──────────┘         └───────────┘ </code></pre>
+└──────────┘         └───────────┘ 
+</code></pre>
+
 <p>The class declaration looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RCPtr</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    RCPtr(T<span style="color:#f92672">*</span> realPtr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);
-    RCPtr(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs);
-    RCPtr<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs);
-    <span style="color:#f92672">~</span>RCPtr();
 
-    T<span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span>;
-    T<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    T <span style="color:#f92672">*</span>pointee;
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span>();
+<pre><code class="language-cpp">template&lt;class T&gt;
+class RCPtr {
+public:
+RCPtr(T* realPtr = 0);
+RCPtr(const RCPtr&amp; rhs);
+RCPtr&amp; operator=(const RCPtr&amp; rhs);
+~RCPtr();
+
+T* operator-&gt;() const;
+T&amp; operator*() const;
+private:
+T *pointee;
+void init();
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RCObject</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    RCObjet();
-    RCObject(<span style="color:#66d9ef">const</span> RCObject<span style="color:#f92672">&amp;</span> rhs);
-    RCObject<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCOBject<span style="color:#f92672">&amp;</span> rhs);
-    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>RCObject() <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+class RCObject {
+public:
+RCObjet();
+RCObject(const RCObject&amp; rhs);
+RCObject&amp; operator=(const RCOBject&amp; rhs);
+virtual ~RCObject() = 0;
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addReference</span>();
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeReference</span>();
+void addReference();
+void removeReference();
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">markUnshareable</span>();
-    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isShareable</span>() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isShared</span>() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    size_t refCount;
-    <span style="color:#66d9ef">bool</span> shareable;
+void markUnshareable();
+bool isShareable() const;
+bool isShared() const;
+private:
+size_t refCount;
+bool shareable;
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    String(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>value <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span>);
+class String {
+public:
+String(const char *value = &quot;&quot;);
 
-    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index);
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#75715e">// class representing string value
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">StringValue</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> RCObject {
-        <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>data;
+const char&amp; operator[](int index) const;
+char&amp; operator[](int index);
+private:
+// class representing string value
+struct StringValue: public RCObject {
+    char *data;
 
-        StringValue(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue);
-        StringValue(<span style="color:#66d9ef">const</span> StringValue<span style="color:#f92672">&amp;</span> rhs);
-        <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue);
-        <span style="color:#f92672">~</span>StringValue();
-    };
-    RCPtr<span style="color:#f92672">&lt;</span>StringValue<span style="color:#f92672">&gt;</span> value;
-</code></pre></div>
+    StringValue(const char *initValue);
+    StringValue(const StringValue&amp; rhs);
+    void init(const char *initValue);
+    ~StringValue();
+};
+RCPtr&lt;StringValue&gt; value;
+</code></pre></li>
+</ol>
+
 <p>It is worth to note that we don&rsquo;t need the copy constructor or assignment operator for <code>String</code> anymore: compiler-generated copy constructor for <code>Stirng</code> will automatically call the copy constructor for <code>Stirng</code>&rsquo;s <code>RCPtr</code> member, and the copy constructor for <em>that</em> class will perform all the necessary manipulations of the <code>StringValue</code> object, including its reference count, and the same goes for assignment and destruction. That&rsquo;s why it is called <em>smart</em> pointer.</p>
 
 <p>Now here is all the implementation:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCObject()
-<span style="color:#f92672">:</span> refCount(<span style="color:#ae81ff">0</span>), shareable(true) {}
 
-RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCObject(<span style="color:#66d9ef">const</span> RCObject<span style="color:#f92672">&amp;</span>)
-<span style="color:#f92672">:</span> refCount(<span style="color:#ae81ff">0</span>), shareable(true) {}
+<pre><code class="language-cpp">RCObject::RCObject()
+: refCount(0), shareable(true) {}
 
-RCObject<span style="color:#f92672">&amp;</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCObject<span style="color:#f92672">&amp;</span>)
-{ <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>; }
+RCObject::RCObject(const RCObject&amp;)
+: refCount(0), shareable(true) {}
 
-RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>RCObject() {}
+RCObject&amp; RCObject::operator=(const RCObject&amp;)
+{ return *this; }
 
-<span style="color:#66d9ef">void</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>addReference() { <span style="color:#f92672">+</span><span style="color:#f92672">+</span>refCount; }
+RCObject::~RCObject() {}
 
-<span style="color:#66d9ef">void</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>removeReference() 
-{ <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-</span><span style="color:#f92672">-</span>refCount <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">this</span>; }
+void RCObject::addReference() { ++refCount; }
 
-<span style="color:#66d9ef">void</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>markUnshareable()
-{ shareable <span style="color:#f92672">=</span> false; }
+void RCObject::removeReference() 
+{ if (--refCount == 0) delete this; }
 
-<span style="color:#66d9ef">bool</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>isShareable() <span style="color:#66d9ef">const</span>
-{ <span style="color:#66d9ef">return</span> shareable; }
+void RCObject::markUnshareable()
+{ shareable = false; }
 
-<span style="color:#66d9ef">bool</span> RCObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>isShared() <span style="color:#66d9ef">const</span>
-{ <span style="color:#66d9ef">return</span> refCount <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>; }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>init()
+bool RCObject::isShareable() const
+{ return shareable; }
+
+bool RCObject::isShared() const
+{ return refCount &gt; 1; }
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+void RCPtr&lt;T&gt;::init()
 {
-    <span style="color:#66d9ef">if</span> (pointee <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
-        <span style="color:#66d9ef">return</span>;
+    if (pointee == 0) {
+        return;
     }
-    <span style="color:#66d9ef">if</span> (pointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isShareable() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> false) {
-        pointee <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> T(<span style="color:#f92672">*</span>pointee);
+    if (pointee-&gt;isShareable() == false) {
+        pointee = new T(*pointee);
     }
-    pointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>addReference(); 
+    pointee-&gt;addReference(); 
 }
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCPtr(T<span style="color:#f92672">*</span> realPtr)<span style="color:#f92672">:</span> pointee(realPtr)
+template&lt;class T&gt;
+RCPtr&lt;T&gt;::RCPtr(T* realPtr): pointee(realPtr)
 { init(); }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCPtr(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs)<span style="color:#f92672">:</span> pointee(rhs.pointee)
+template&lt;class T&gt;
+RCPtr&lt;T&gt;::RCPtr(const RCPtr&amp; rhs): pointee(rhs.pointee)
 { init(); }
 
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCPtr<span style="color:#f92672">&amp;</span> rhs)
+template&lt;class T&gt;
+RCPtr&lt;T&gt;&amp; RCPtr&lt;T&gt;::operator=(const RCPtr&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (pointee <span style="color:#f92672">!</span><span style="color:#f92672">=</span> rhs.pointee)
-        T <span style="color:#f92672">*</span>oldPointee <span style="color:#f92672">=</span> pointee;
-        pointee <span style="color:#f92672">=</span> rhs.pointee;
-        init();  <span style="color:#75715e">// if possible, share it; else make own copy
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (oldPointee) {
-            oldPointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>removeReference();
+    if (pointee != rhs.pointee)
+        T *oldPointee = pointee;
+        pointee = rhs.pointee;
+        init();  // if possible, share it; else make own copy
+        if (oldPointee) {
+            oldPointee-&gt;removeReference();
         }
     }
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    return *this;
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>RCPtr()
-{ <span style="color:#66d9ef">if</span> (pointee) pointee<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>removeReference(); }
+template&lt;class T&gt;
+RCPtr&lt;T&gt;::~RCPtr()
+{ if (pointee) pointee-&gt;removeReference(); }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">*</span> RCPtr<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> pointee; }
+template&lt;class T&gt;
+T* RCPtr::operator-&gt;() const { return pointee; }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">&amp;</span> RCPtr<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>pointee; }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span>init(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue) <span style="color:#75715e">// ctor and deep copy ctor share this same init function
-</span><span style="color:#75715e"></span>{
-    data <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span>[strlen(initValue) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>];
+template&lt;class T&gt;
+T&amp; RCPtr::operator*() const { return *pointee; }
+</code></pre>
+
+<pre><code class="language-cpp">void String::StringValue::init(const char *initValue) // ctor and deep copy ctor share this same init function
+{
+    data = new char[strlen(initValue) + 1];
     strcpy(data, initValue);
 }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue)
+String::StringValue::StringValue(const char *initValue)
 { init(initValue); }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue(<span style="color:#66d9ef">const</span> StringValue<span style="color:#f92672">&amp;</span> rhs)
+String::StringValue::StringValue(const StringValue&amp; rhs)
 { init(rhs.data); }
 
-String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>StringValue<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>StringValue()
-{ <span style="color:#66d9ef">delete</span> [] data; }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>String(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>initValue)
-<span style="color:#f92672">:</span> value(<span style="color:#66d9ef">new</span> StringValue(initValue)) {}
+String::StringValue::~StringValue()
+{ delete [] data; }
+</code></pre>
 
-<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index) <span style="color:#66d9ef">const</span>
-{ <span style="color:#66d9ef">return</span> value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[index]; }
+<pre><code class="language-cpp">String::String(const char *initValue)
+: value(new StringValue(initValue)) {}
 
-<span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> String<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index)
+const char&amp; String::operator[](int index) const
+{ return value-&gt;data[index]; }
+
+char&amp; String::operator[](int index)
 {
-    <span style="color:#66d9ef">if</span> (value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isShared()) {
-        value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StirngValue(value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data);
+    if (value-&gt;isShared()) {
+        value = new StirngValue(value-&gt;data);
     }
-    value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>markUnshareable();
-    <span style="color:#66d9ef">return</span> value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>data[index];
+    value-&gt;markUnshareable();
+    return value-&gt;data[index];
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="adding-refenrence-counting-to-existing-classes">Adding Refenrence Counting to Existing Classes</h1>
 
 <p>Given some class <code>Widget</code> that&rsquo;s in a library we can&rsquo;t modify, and suppose we want to apply the benefits of reference counting to <code>Widget</code> without being able to inherit <code>Widget</code> from <code>RCObject</code>, we solve the problem with an additional level of indirection by adding a new class <code>CountHolder</code>, which does three jobs:</p>
@@ -964,116 +1017,125 @@ String<span style="color:#f92672">:</span><span style="color:#f92672">:</span>St
 </ol>
 
 <p>The only thing left to do is just an equivalent smart pointer as <code>RCPtr</code>, and we call it <code>RCIPtr</code>, where &ldquo;I&rdquo; stands for &ldquo;indirect&rdquo;. Thus, we get someting like this:</p>
+
 <pre><code>                     ┌──────────┐  
 ┌──────────┐         │ RCObject │ 
 │ RCWidget │         │  class   │
 │  object  │         └──────────┘
 │ ┌──────┐ │              ↑ public inheritance
 │ |RCIPtr| │         ┌───────────┐         ┌─────────────┐
-│ |Object├─┼────────>│CountHolder├────────>|Widget Object|
+│ |Object├─┼────────&gt;│CountHolder├────────&gt;|Widget Object|
 │ └──────┘ │ pointer │  object   | pointer └─────────────┘
-└──────────┘         └───────────┘ </code></pre>
+└──────────┘         └───────────┘ 
+</code></pre>
+
 <p>Since here <code>CountHolder</code> is just an implementation detial of <code>RCIPtr</code>, we can simply nested it inside <code>RCIPtr</code>, just as how <code>StringValue</code> relates with <code>String</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RCIPtr</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    RCIPtr(T<span style="color:#f92672">*</span> realPtr <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>);
-    RCIPtr(<span style="color:#66d9ef">const</span> RCIPtr<span style="color:#f92672">&amp;</span> rhs);
-    <span style="color:#f92672">~</span>RCIPtr();
 
-    RCIPtr<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCIPtr<span style="color:#f92672">&amp;</span> rhs);
+<pre><code class="language-cpp">template&lt;class T&gt;
+class RCIPtr {
+public:
+    RCIPtr(T* realPtr = 0);
+    RCIPtr(const RCIPtr&amp; rhs);
+    ~RCIPtr();
 
-    T<span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span>;
-    T<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span>;
+    RCIPtr&amp; operator=(const RCIPtr&amp; rhs);
 
-    RCObject<span style="color:#f92672">&amp;</span> getRCObject();  <span style="color:#75715e">// give clients access
-</span><span style="color:#75715e"></span>    { <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>counter; }      <span style="color:#75715e">// isShared, etc.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">CountHolder</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> RCObject {
-        <span style="color:#f92672">~</span>CountHolder() { <span style="color:#66d9ef">delete</span> pointee; }
-        T <span style="color:#f92672">*</span>pointee;
+    T* operator-&gt;() const;
+    T&amp; operator*() const;
+
+    RCObject&amp; getRCObject();  // give clients access
+    { return *counter; }      // isShared, etc.
+private:
+    struct CountHolder: public RCObject {
+        ~CountHolder() { delete pointee; }
+        T *pointee;
     };
-    CountHolder <span style="color:#f92672">*</span>counter;
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span>();
+    CountHolder *counter;
+    void init();
 };
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>init()
+template&lt;class T&gt;
+void RCIPtr&lt;T&gt;::init()
 {
-    <span style="color:#66d9ef">if</span> (counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>iShareable() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> false) {
-        T <span style="color:#f92672">*</span>oldValue <span style="color:#f92672">=</span> counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>pointee;
-        counter <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> CountHolder;
-        counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>pointee <span style="color:#f92672">=</span> oldValue <span style="color:#f92672">?</span> <span style="color:#66d9ef">new</span> T(<span style="color:#f92672">*</span>oldValue) <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+    if (counter-&gt;iShareable() == false) {
+        T *oldValue = counter-&gt;pointee;
+        counter = new CountHolder;
+        counter-&gt;pointee = oldValue ? new T(*oldValue) : 0;
     }
-    counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>addReference();
+    counter-&gt;addReference();
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCIPtr(T<span style="color:#f92672">*</span> realPtr)
-<span style="color:#f92672">:</span> counter(<span style="color:#66d9ef">new</span> CountHolder)
+template&lt;class T&gt;
+RCIPtr&lt;T&gt;::RCIPtr(T* realPtr)
+: counter(new CountHolder)
 {
-    counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>ponitee <span style="color:#f92672">=</span> realPtr;
+    counter-&gt;ponitee = realPtr;
     init();
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>RCIPtr(<span style="color:#66d9ef">const</span> RCIPtr<span style="color:#f92672">&amp;</span> rhs)
-<span style="color:#f92672">:</span> counter(rhs.counter)
+template&lt;class T&gt;
+RCIPtr&lt;T&gt;::RCIPtr(const RCIPtr&amp; rhs)
+: counter(rhs.counter)
 { init(); }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>RCIPtr()
-{ counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>removeReference(); }
+template&lt;class T&gt;
+RCIPtr&lt;T&gt;::~RCIPtr()
+{ counter-&gt;removeReference(); }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> RCIPtr<span style="color:#f92672">&amp;</span> rhs)
+template&lt;class T&gt;
+RCIPtr&lt;T&gt;&amp; RCIPtr&lt;T&gt;::operator=(const RCIPtr&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (counter <span style="color:#f92672">!</span><span style="color:#f92672">=</span> rhs.counter) {
-        counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>removeReference();
-        counter <span style="color:#f92672">=</span> rhs.counter;
+    if (counter != rhs.counter) {
+        counter-&gt;removeReference();
+        counter = rhs.counter;
         init();
     }
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    return *this;
 }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">*</span> RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>() <span style="color:#66d9ef">const</span>
-{ <span style="color:#66d9ef">return</span> counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>pointee; }
+template&lt;class T&gt;
+T* RCIPtr&lt;T&gt;::operator-&gt;() const
+{ return counter-&gt;pointee; }
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-T<span style="color:#f92672">&amp;</span> RCIPtr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>() <span style="color:#66d9ef">const</span>
-{ <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>(counter<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>pointee); }
-</code></pre></div>
+template&lt;class T&gt;
+T&amp; RCIPtr&lt;T&gt;::operator*() const
+{ return *(counter-&gt;pointee); }
+</code></pre>
+
 <p>Then, for a library class <code>Widget</code> with following interface:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Widget(<span style="color:#66d9ef">int</span> size);
-    Widget(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs);
-    <span style="color:#f92672">~</span>Widget();
 
-    Widge<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs);
+<pre><code class="language-cpp">class Widget {
+public:
+    Widget(int size);
+    Widget(const Widget&amp; rhs);
+    ~Widget();
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doThis</span>();
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">showThat</span>() <span style="color:#66d9ef">const</span>;
+    Widge&amp; operator=(const Widget&amp; rhs);
+
+    void doThis();
+    int showThat() const;
 };
-</code></pre></div>
+</code></pre>
+
 <p>We can implementing wrapper <code>RCWidget</code> by simply forwarding the call through underlying <code>RCIPtr</code> to a <code>Widget</code>object:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RCWidget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    RCWidget(<span style="color:#66d9ef">int</span> size)<span style="color:#f92672">:</span> value(<span style="color:#66d9ef">new</span> Widget(size)) {}
 
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doThis</span>()
+<pre><code class="language-cpp">class RCWidget {
+public:
+    RCWidget(int size): value(new Widget(size)) {}
+
+    void doThis()
     {
-        <span style="color:#66d9ef">if</span> (value.getRCObject().isShared()) {
-            value <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Widget(<span style="color:#f92672">*</span>value);
+        if (value.getRCObject().isShared()) {
+            value = new Widget(*value);
         }
-        value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>doThis();
+        value-&gt;doThis();
     }
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">showThat</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>showThat(); }
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    RCIPtr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> value;
+    int showThat() const { return value-&gt;showThat(); }
+private:
+    RCIPtr&lt;Widget&gt; value;
 };
-</code></pre></div>
+</code></pre>
+
 <p>As with <code>Stirng</code> class, there&rsquo;s no need to write copy constructor, assignment operator, or destructor, because the default versions do the right thing.</p>
 <div class="footnotes">
 

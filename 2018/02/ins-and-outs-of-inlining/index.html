@@ -65,7 +65,7 @@
 
     <title>Item-30 Understand ins and outs of inlining</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -419,24 +419,30 @@ Suffering is optional.</p>
 
 <ol>
 <li><p>Implicitly inline request</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ...
-    <span style="color:#66d9ef">int</span> age() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> theAge; } <span style="color:#75715e">// an implicit inline request
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> theAge;
-};
-</code></pre></div>
-<p>Apart from the member functions, we can also define friend functions inside classes (item 46), resulting to implicitly inline declaration.</p></li>
 
-<li><p>Explicitly inline request (and its relationship with template)</p>
+<pre><code class="language-cpp">class Person {
+public:
+    ...
+    int age() const { return theAge; } // an implicit inline request
+    ...
+private:
+    int theAge;
+};
+</code></pre>
+
+<p>Apart from the member functions, we can also define friend functions inside classes (item 46), resulting to implicitly inline declaration.</p>
+
+<ol>
+<li>Explicitly inline request (and its relationship with template)</li>
+</ol>
 
 <p>We can explicitly daclare an inline function with the <code>inline</code> keyword, such as how the standard <code>max</code> template from <code>&lt;algorithm&gt;</code> is implemeted:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>   <span style="color:#75715e">// an explicit inline
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>max(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> a, <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> b) <span style="color:#75715e">// request:: std::max is preceded by &#34;inline&#34;
-</span><span style="color:#75715e"></span>{ <span style="color:#66d9ef">return</span> a <span style="color:#f92672">&lt;</span> b <span style="color:#f92672">?</span> b : a;}
-</code></pre></div>
+
+<pre><code class="language-cpp">template&lt;typename T&gt;   // an explicit inline
+inline const T&amp; std::max(const T&amp; a, const T&amp; b) // request:: std::max is preceded by &quot;inline&quot;
+{ return a &lt; b ? b : a;}
+</code></pre>
+
 <p>It&rsquo;s true that both template and inline functions are typically defined in header files, but this doesn&rsquo;t mean that function templates must be inline. In fact, template instantiation is independent of inlining:</p>
 
 <ul>
@@ -459,33 +465,37 @@ Suffering is optional.</p>
 <ol>
 <li>compilers deem the function too complicated (e.g., those containing loogs or are recursive)</li>
 <li>the function is virtual (<code>virtual</code> means runtime, while <code>inline</code> usually happens before execution)</li>
-
-<li><p>when the program will take the address of an inline function:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f</span>(){...} <span style="color:#75715e">// assume compilers are willing to inline calls to f
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>pf)() <span style="color:#f92672">=</span> f;    <span style="color:#75715e">// pf points to f
-</span><span style="color:#75715e"></span>...
-f();                 <span style="color:#75715e">// this call will be inlined, for it&#39;s a &#34;normal&#34; call
-</span><span style="color:#75715e"></span>pf();                <span style="color:#75715e">// this call probably won&#39;t be, for it&#39;s through a function pointer
-</span></code></pre></div></li>
+<li>when the program will take the address of an inline function:<br /></li>
 </ol>
+
+<pre><code class="language-cpp">inline void f(){...} // assume compilers are willing to inline calls to f
+void (*pf)() = f;    // pf points to f
+...
+f();                 // this call will be inlined, for it's a &quot;normal&quot; call
+pf();                // this call probably won't be, for it's through a function pointer
+</code></pre>
 
 <h2 id="inline-constructors-and-destructors">Inline constructors and destructors?</h2>
 
 <p>Note that even if we never use function pointers, sometimes compilers will generate those pointers: compilers may generate out-of-line copies of constructors and destructors so that they can get pointers to those functions for use during construction and destruction of objects in arrays. Let alone that constructors and destructors are often worse candidates of inlining than a casual examination would indicate:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Base</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Base {
+public:
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string bm1, bm2;  <span style="color:#75715e">// base members 1 and 2
-</span><span style="color:#75715e"></span>};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Derived</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Base {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Derived(){}   <span style="color:#75715e">// Derived&#39;s ctor is empty, or is it?
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string dm1, dm2, dm3;  <span style="color:#75715e">// derived members 1,2,3
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+private:
+    std::string bm1, bm2;  // base members 1 and 2
+};
+</code></pre>
+
+<pre><code class="language-cpp">class Derived: public Base {
+public:
+    Derived(){}   // Derived's ctor is empty, or is it?
+    ...
+private:
+    std::string dm1, dm2, dm3;  // derived members 1,2,3
+}
+</code></pre>
+
 <p>The constructor of <code>Derived</code> seems empty, so it may seem a good candidate for inlining. But looks can be deceiving:</p>
 
 <blockquote>
@@ -493,32 +503,34 @@ f();                 <span style="color:#75715e">// this call will be inlined, f
 </blockquote>
 
 <p>Therefore, in the example above, extra code will be generated by compilers and added into the empty <code>Derived</code> constructor in order to offer those guarantees, ending up with some code equivalent to the following conceptual implementation (the real one will certainly be more sophisticated):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Derived<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Derived()  <span style="color:#75715e">// conceptual impl. of &#34;empty&#34; Derived ctor
-</span><span style="color:#75715e"></span>{
-    Base<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Base();  <span style="color:#75715e">// init. Base part
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">try</span> { dm1.std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string(); } <span style="color:#75715e">// try to construct dm1
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">catch</span> (...) {       <span style="color:#75715e">// if it throws
-</span><span style="color:#75715e"></span>        Base<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Base();  <span style="color:#75715e">// destroy base class part and
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">throw</span>;          <span style="color:#75715e">// propagate the exception
-</span><span style="color:#75715e"></span>    }
 
-    <span style="color:#66d9ef">try</span> { dm2.std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string();} <span style="color:#75715e">// try to construct dm2
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">catch</span>(...) {                      <span style="color:#75715e">// if it throws
-</span><span style="color:#75715e"></span>        dm1.std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>string();   <span style="color:#75715e">// destroy dm1,
-</span><span style="color:#75715e"></span>        Base<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Base();                <span style="color:#75715e">// destroy base class part
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">throw</span>;                        <span style="color:#75715e">// and propagate the exception
-</span><span style="color:#75715e"></span>    }
+<pre><code class="language-cpp">Derived::Derived()  // conceptual impl. of &quot;empty&quot; Derived ctor
+{
+    Base::Base();  // init. Base part
 
-    <span style="color:#66d9ef">try</span> { dm3.std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string();}  <span style="color:#75715e">// try to construct dm3
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">catch</span>(...) {                       <span style="color:#75715e">// if it throws
-</span><span style="color:#75715e"></span>        dm1.std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>string();    <span style="color:#75715e">// destroy dm1,
-</span><span style="color:#75715e"></span>        dm1.std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>string();    <span style="color:#75715e">// destroy dm2,
-</span><span style="color:#75715e"></span>        Base<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Base();                 <span style="color:#75715e">// destroy base class part
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">throw</span>;                         <span style="color:#75715e">// and propagate the exception
-</span><span style="color:#75715e"></span>    }
+    try { dm1.std::string::string(); } // try to construct dm1
+    catch (...) {       // if it throws
+        Base::~Base();  // destroy base class part and
+        throw;          // propagate the exception
+    }
+
+    try { dm2.std::string::string();} // try to construct dm2
+    catch(...) {                      // if it throws
+        dm1.std::string::~string();   // destroy dm1,
+        Base::~Base();                // destroy base class part
+        throw;                        // and propagate the exception
+    }
+
+    try { dm3.std::string::string();}  // try to construct dm3
+    catch(...) {                       // if it throws
+        dm1.std::string::~string();    // destroy dm1,
+        dm1.std::string::~string();    // destroy dm2,
+        Base::~Base();                 // destroy base class part
+        throw;                         // and propagate the exception
+    }
 }
-</code></pre></div>
+</code></pre>
+
 <p>The same reasoning applies to the <code>Base</code> constructor, so if <code>Base</code>&rsquo;s constructor is inlined, and <code>string</code> constructor also happens to be inlined, the <code>Derived</code> constructor will gain <em>five</em> copies of <code>string</code>&rsquo;s constructor, one for each of the five strings in a <code>Derived</code> object - that is a big code bloat. Similar considerations apply to <code>Derived</code>&rsquo;s destructor.</p>
 
 <h1 id="other-costs-of-inlining">Other costs of inlining</h1>

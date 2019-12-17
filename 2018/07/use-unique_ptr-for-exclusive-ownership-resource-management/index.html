@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-18 Use std::unique_ptr for Exclusive-ownership Resource Management</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -398,74 +398,84 @@ Suffering is optional.</p>
 </ul>
 
 <p>Factory functions and Pimpl Idiom are two common use case for <code>std::ptr</code>s. For example, supporse we have a hierarchy for types of investments (e.g., stocks, bonds, real estate, etc.) with a factory function alllocating an object on the heap and returning a pointer to it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Investment</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Investment {
+public:
     ...
-    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>Investment();
-    <span style="color:#960050;background-color:#1e0010">`</span><span style="color:#960050;background-color:#1e0010">`</span><span style="color:#960050;background-color:#1e0010">`</span>
+    virtual ~Investment();
+    ```
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Stock</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Investment {...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bond</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Investment {...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RealEstate</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Invesetment {...};
+class Stock: public Investment {...};
+class Bond: public Investment {...};
+class RealEstate: public Invesetment {...};
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// return std::unique_ptr to an object 
-</span><span style="color:#75715e"></span>makeInvestment(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params);  <span style="color:#75715e">// created from the given args with cutomized deleter
-</span></code></pre></div>
+template&lt;typename... Ts&gt;
+std::unique_ptr&lt;Investment, decltype(delInvmt)&gt;  // return std::unique_ptr to an object 
+makeInvestment(Ts&amp;&amp;... params);  // created from the given args with cutomized deleter
+</code></pre>
+
 <p>By the help of <code>std::unique_ptr</code>, clients will no longer worry about deleting it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">{
+
+<pre><code class="language-cpp">{
     ...
-    <span style="color:#66d9ef">auto</span> pInvestment <span style="color:#f92672">=</span> makeInvestment( arguments );
+    auto pInvestment = makeInvestment( arguments );
     ...
-}  <span style="color:#75715e">// destroy *pInvestment
-</span></code></pre></div>
+}  // destroy *pInvestment
+</code></pre>
+
 <p>Callers can also take use of <code>std::unique_ptr</code>&rsquo;s feature to adapt it to its more flexible sibling <code>std::shared_ptr</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> sp <span style="color:#f92672">=</span> makeInvestment( arguments );
-</code></pre></div>
+
+<pre><code class="language-cpp">std::shared_ptr&lt;Investment&gt; sp = makeInvestment( arguments );
+</code></pre>
+
 <h4 id="implementation">Implementation</h4>
 
 <p>For C++11, we can implement the factory function this way:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> delInvmt <span style="color:#f92672">=</span> [](Investment<span style="color:#f92672">*</span> pInvestment)       <span style="color:#75715e">// custom deleter
-</span><span style="color:#75715e"></span>                {                                 <span style="color:#75715e">// (a lambda expression)
-</span><span style="color:#75715e"></span>                    makeLogEntry(pInvestment);   
-                    <span style="color:#66d9ef">delete</span> pInvestment;
+
+<pre><code class="language-cpp">auto delInvmt = [](Investment* pInvestment)       // custom deleter
+                {                                 // (a lambda expression)
+                    makeLogEntry(pInvestment);   
+                    delete pInvestment;
                 };
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span>
-makeInvestment(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params)
+template&lt;typename... Ts&gt;
+std::unique_ptr&lt;Investment, decltype(delInvmt)&gt;
+makeInvestment(Ts&amp;&amp;... params)
 {
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span>
-        pInv(<span style="color:#66d9ef">nullptr</span>, delInvmt);
-    <span style="color:#66d9ef">if</span> ( <span style="color:#75715e">/* a Stock should be created */</span> )
+    std::unique_ptr&lt;Investment, decltype(delInvmt)&gt;
+        pInv(nullptr, delInvmt);
+    if ( /* a Stock should be created */ )
     {
-        pInv.reset(<span style="color:#66d9ef">new</span> Stock(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>Ts<span style="color:#f92672">&gt;</span>(params)...));
+        pInv.reset(new Stock(std::forward&lt;Ts&gt;(params)...));
     }
-    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> ( <span style="color:#75715e">/* a Bond should be created */</span> )
+    else if ( /* a Bond should be created */ )
     {
-        pInv.reset(<span style="color:#66d9ef">new</span> Bond(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>Ts<span style="color:#f92672">&gt;</span>(params)...));
+        pInv.reset(new Bond(std::forward&lt;Ts&gt;(params)...));
     }
-    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> ( <span style="color:#75715e">/* a RealEstate should be created */</span> )
+    else if ( /* a RealEstate should be created */ )
     {
-        pInv.reset(<span style="color:#66d9ef">new</span> RealEstate(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>Ts<span style="color:#f92672">&gt;</span>(params)...));
+        pInv.reset(new RealEstate(std::forward&lt;Ts&gt;(params)...));
     }
-    <span style="color:#66d9ef">return</span> pInv;
+    return pInv;
 }
-</code></pre></div>
+</code></pre>
+
 <p>In C++14, we could use function return type deduction to make it simpler and more encapsulated:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">auto</span> makeInvestment(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params) <span style="color:#75715e">// C++14
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">auto</span> delInvmt <span style="color:#f92672">=</span> [](Investment<span style="color:#f92672">*</span> pInvestment)     <span style="color:#75715e">// now inside makeInvestment
-</span><span style="color:#75715e"></span>                    {
+
+<pre><code class="language-cpp">template&lt;typename... Ts&gt;
+auto makeInvestment(Ts&amp;&amp;... params) // C++14
+{
+    auto delInvmt = [](Investment* pInvestment)     // now inside makeInvestment
+                    {
                         makeLogEntry(pInvestment);
-                        <span style="color:#66d9ef">delete</span> pInvestment;
+                        delete pInvestment;
                     };
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Investment, <span style="color:#66d9ef">decltype</span>(delInvmt)<span style="color:#f92672">&gt;</span> pInv(<span style="color:#66d9ef">nullptr</span>, delInvmt);
-    ... <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    std::unique_ptr&lt;Investment, decltype(delInvmt)&gt; pInv(nullptr, delInvmt);
+    ... // as before
+}
+</code></pre>
+
 <p>It is worth thinking about the size impact on a <code>std::unique_ptr</code> after introducing a custome deleter:</p>
 
 <ul>

@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-26 Avoid Overloading on Universal References</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -399,18 +399,22 @@ Suffering is optional.</p>
 <h1 id="why-universal-references">Why universal references?</h1>
 
 <p>We want to introduce universal references because we can eliminate some inefficiencies via it. For example,</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>multiset<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&gt;</span> names;
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">logAndAdd</span>(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> name)
+
+<pre><code class="language-cpp">std::multiset&lt;std::string&gt; names;
+void logAndAdd(const std::string&amp; name)
 {
-    <span style="color:#66d9ef">auto</span> now <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>chrono<span style="color:#f92672">:</span><span style="color:#f92672">:</span>system_clock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>now();
-    log(now, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">logAndAdd</span><span style="color:#e6db74">&#34;</span>);
-    names.emplace(name);  <span style="color:#75715e">// add name to global data structure. See EMCpp Item 42 for info on emplace
-</span><span style="color:#75715e"></span>}
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string petName(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Amy</span><span style="color:#e6db74">&#34;</span>);
-logAndAdd(petName);  <span style="color:#75715e">// passing lvalue
-</span><span style="color:#75715e"></span>logAndAdd(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Ben</span><span style="color:#e6db74">&#34;</span>));  <span style="color:#75715e">// passing rvalue
-</span><span style="color:#75715e"></span>logAndAdd(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Candice</span><span style="color:#e6db74">&#34;</span>);  <span style="color:#75715e">// passing string literal
-</span></code></pre></div>
+    auto now = std::chrono::system_clock::now();
+    log(now, &quot;logAndAdd&quot;);
+    names.emplace(name);  // add name to global data structure. See EMCpp Item 42 for info on emplace
+}
+</code></pre>
+
+<pre><code class="language-cpp">std::string petName(&quot;Amy&quot;);
+logAndAdd(petName);  // passing lvalue
+logAndAdd(std::string(&quot;Ben&quot;));  // passing rvalue
+logAndAdd(&quot;Candice&quot;);  // passing string literal
+</code></pre>
+
 <ol>
 <li><code>petName</code> is lvalue, so <code>name</code> is bound to it, and then copied into <code>names</code>. Since an lvalue was passed into <code>logAndAdd</code>, the final copy operation can not be avoided.</li>
 <li>the parameter for the second call is rvalue, where a temporary of type <code>std::string</code> is explicitly created and gets bound to <code>name</code>, and then <code>name</code> get copied into <code>names</code>. In this call, we might optimize that final copy operation with a move operation since we are dealing with an rvalue</li>
@@ -418,70 +422,84 @@ logAndAdd(petName);  <span style="color:#75715e">// passing lvalue
 </ol>
 
 <p>To achieve such optimization, we find universal reference, accompany with <code>std::forward</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> logAndAdd(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> name)
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+void logAndAdd(T&amp;&amp; name)
 {
-    <span style="color:#66d9ef">auto</span> now <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>chrono<span style="color:#f92672">:</span><span style="color:#f92672">:</span>system_clock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>now();  
-    log(now, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">logAndAdd</span><span style="color:#e6db74">&#34;</span>);  
-    names.emplace(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(name));
+    auto now = std::chrono::system_clock::now();  
+    log(now, &quot;logAndAdd&quot;);  
+    names.emplace(std::forward&lt;T&gt;(name));
 }
-</code></pre></div>
+</code></pre>
+
 <h1 id="what-trouble-universal-references-introduces">What trouble universal references introduces?</h1>
 
 <p>Functions taking universal references are the greediest functions in C++, so the usually overload more argument types than the developer generally expects. Suppose there&rsquo;s another function overloading for the type of <code>int</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string nameFromIdx(<span style="color:#66d9ef">int</span> idx); <span style="color:#75715e">// return name corresponding to idx
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">logAndAdd</span>(<span style="color:#66d9ef">int</span> idx)
+
+<pre><code class="language-cpp">std::string nameFromIdx(int idx); // return name corresponding to idx
+void logAndAdd(int idx)
 {
-    <span style="color:#66d9ef">auto</span> now <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>chrono<span style="color:#f92672">:</span><span style="color:#f92672">:</span>system_clock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>now();  
-    log(now, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">logAndAdd</span><span style="color:#e6db74">&#34;</span>);  
+    auto now = std::chrono::system_clock::now();  
+    log(now, &quot;logAndAdd&quot;);  
     names.emplace(nameFromIdx(idx));
 }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">logAndAdd(<span style="color:#ae81ff">22</span>);  <span style="color:#75715e">// calls int overload
-</span><span style="color:#75715e"></span>logAndAdd(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">David</span><span style="color:#e6db74">&#34;</span>);  <span style="color:#75715e">// calls T&amp;&amp; overload
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">short</span> nameIdx;
+</code></pre>
+
+<pre><code class="language-cpp">logAndAdd(22);  // calls int overload
+logAndAdd(&quot;David&quot;);  // calls T&amp;&amp; overload
+short nameIdx;
 ...
-logAndAdd(nameIdx);  <span style="color:#75715e">// error!
-</span></code></pre></div>
+logAndAdd(nameIdx);  // error!
+</code></pre>
+
 <p>We generally assume the last call will invoke the <code>int</code> overload, but instead it will invoke the <code>T&amp;&amp;</code> one, since the universal reference overload version exactly matches the <code>short</code> argument by deduce <code>T</code> to be <code>short&amp;</code>, while <code>int</code> version has to match <code>short</code> with a promotion. As a result, the exact match beats a match with a promotion. However, within the <code>T&amp;&amp;</code> overload, the parameter <code>name</code> with type <code>short&amp;</code> first get passed into <code>std::forward</code>, which will not get casted into a rvalue since <code>name</code> is initialized with an lvalue (refer to EMCpp item 24), and then get passed into <code>emplace</code> member function on <code>names</code>, which finally forwards it to the <code>std::string</code> constructor, and we get an error here because no constructor for <code>std::string</code> will take a short.</p>
 
 <h1 id="more-problematic-perfect-forwarding-consturctors">More problematic: Perfect-forwarding consturctors</h1>
 
 <p>Perfect-forwarding constructors are typically better matches than copy constructors for non-<code>const</code> lvalues, and they can hijack derived class calls to base class copy and move constructors, which makes them problematic. For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">explicit</span> Person(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n)
-    <span style="color:#f92672">:</span> name(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(n)) {}  <span style="color:#75715e">// perfect forwarding ctor;
-</span><span style="color:#75715e"></span>    
-    <span style="color:#66d9ef">explicit</span> <span style="color:#a6e22e">Person</span>(<span style="color:#66d9ef">int</span> idx)
-    <span style="color:#f92672">:</span> name(nameFromIdx(idx)) {} <span style="color:#75715e">// int ctor
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string name;
+
+<pre><code class="language-cpp">class Person {
+public:
+    template&lt;typename T&gt;
+    explicit Person(T&amp;&amp; n)
+    : name(std::forward&lt;T&gt;(n)) {}  // perfect forwarding ctor;
+    
+    explicit Person(int idx)
+    : name(nameFromIdx(idx)) {} // int ctor
+    ...
+private:
+    std::string name;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Remember in EMCpp item 17 we mensioned that, under appropriate conditions, the compiler will generate copy and move constructors for us, even if the class contains a templatized constructor that could be instantiated to produce the signature of the copy or move constructor. In that case, we get following two compiler-generated member functions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Person(<span style="color:#66d9ef">const</span> Person<span style="color:#f92672">&amp;</span> rhs);  <span style="color:#75715e">// copy ctor generated by compiler
-</span><span style="color:#75715e"></span>Person(Person<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rhs); <span style="color:#75715e">// move ctor generated by compiler
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Person(const Person&amp; rhs);  // copy ctor generated by compiler
+Person(Person&amp;&amp; rhs); // move ctor generated by compiler
+</code></pre>
+
 <p>And now comes the problem: these two member functions will easily get shadowed by the universal reference constructor:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Person <span style="color:#a6e22e">p1</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Edward</span><span style="color:#e6db74">&#34;</span>);
-<span style="color:#66d9ef">auto</span> <span style="color:#a6e22e">cloneOfP1</span>(p1);  <span style="color:#75715e">// create new Person from p; 
-</span><span style="color:#75715e"></span>                     <span style="color:#75715e">// T&amp;&amp; ctor get invoked: T is deduces as &#34;Person&amp;&#34;, better than copy ctor&#39;s type &#34;const Person&amp;&#34;
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> Person <span style="color:#a6e22e">p2</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Fernando</span><span style="color:#e6db74">&#34;</span>);
-<span style="color:#66d9ef">auto</span> <span style="color:#a6e22e">cloneOfP2</span>(p2);  <span style="color:#75715e">// fine; copy ctor get invoked.
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Person p1(&quot;Edward&quot;);
+auto cloneOfP1(p1);  // create new Person from p; 
+                     // T&amp;&amp; ctor get invoked: T is deduces as &quot;Person&amp;&quot;, better than copy ctor's type &quot;const Person&amp;&quot;
+const Person p2(&quot;Fernando&quot;);
+auto cloneOfP2(p2);  // fine; copy ctor get invoked.
+</code></pre>
+
 <p>Moreover, the inheritance makes the mess even worse:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpecialPerson</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Person {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    SpecialPerson(<span style="color:#66d9ef">const</span> SpecialPerson<span style="color:#f92672">&amp;</span> rhs)
-    <span style="color:#f92672">:</span> Person(rhs)  <span style="color:#75715e">// calls base class forwarding ctor
-</span><span style="color:#75715e"></span>    { ... }
-    SpecialPerson(SpecialPerson<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rhs)
-    <span style="color:#f92672">:</span> Person(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(rhs)) <span style="color:#75715e">// calls base class forwarding ctor
-</span><span style="color:#75715e"></span>    { ... }
+
+<pre><code class="language-cpp">class SpecialPerson: public Person {
+public:
+    SpecialPerson(const SpecialPerson&amp; rhs)
+    : Person(rhs)  // calls base class forwarding ctor
+    { ... }
+    SpecialPerson(SpecialPerson&amp;&amp; rhs)
+    : Person(std::move(rhs)) // calls base class forwarding ctor
+    { ... }
 }
-</code></pre></div>
+</code></pre>
+
 <p>Here, the derived class will call the perfect forwarding constructor for their copy and move constructors, because they are using arguments of type <code>SpecialPerson</code> to pass to their base class, and base class&rsquo;s forwarding constructor will happily instantiate an exact match for this call. Since there&rsquo;s no <code>std::string</code> constructor taking a <code>SpecialPerson</code>, the code won&rsquo;t compile.</p>
 
 <h1 id="conclusion">Conclusion</h1>

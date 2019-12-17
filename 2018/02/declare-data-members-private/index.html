@@ -65,7 +65,7 @@
 
     <title>Item-22 Declare data members private</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -403,33 +403,37 @@ Suffering is optional.</p>
 <h1 id="pricise-control-over-the-accessibility">Pricise control over the accessibility</h1>
 
 <p>If we use functions to get or set data member&rsquo;s value, we can implement multiple levels of accessibility:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AccessLevels</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class AccessLevels {
+public:
     ...
-    <span style="color:#66d9ef">int</span> getReadOnly() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> readOnly; }
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getReadWrite</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> readWrite; }
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setReadWrite</span>(<span style="color:#66d9ef">int</span> value) { readWrite <span style="color:#f92672">=</span> value; }
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setWriteOnly</span>(<span style="color:#66d9ef">int</span> value) { writeOnly <span style="color:#f92672">=</span> value; }
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">int</span> noAccess;   <span style="color:#75715e">// no access to this int
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> readOnly;   <span style="color:#75715e">// read-only access to this int
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> readWrite;  <span style="color:#75715e">// read-write access to this int
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> writeOnly;  <span style="color:#75715e">// write-only access to this int
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+    int getReadOnly() const { return readOnly; }
+    int getReadWrite() const { return readWrite; }
+    void setReadWrite(int value) { readWrite = value; }
+    void setWriteOnly(int value) { writeOnly = value; }
+private:
+    int noAccess;   // no access to this int
+    int readOnly;   // read-only access to this int
+    int readWrite;  // read-write access to this int
+    int writeOnly;  // write-only access to this int
+};
+</code></pre>
+
 <p>Since it is rare that every data member need a getter and setter, such fine-grained access control is important.</p>
 
 <h1 id="encapsulation">Encapsulation</h1>
 
 <p>Encapsulation offers class authors implementation flexibility. Through a function, we can replace a data member with a computationi while nobody using the interface notice the change. For example, suppose we are writing an application monitoring the speed of passing cars, and each passing car&rsquo;s speed will be collected into the class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpeedDataCollection</span> {
+
+<pre><code class="language-cpp">class SpeedDataCollection {
     ...
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">void</span> addValue(<span style="color:#66d9ef">int</span> speed);    <span style="color:#75715e">// add a new data value
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">averageSoFar</span>() <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// return average speed
-</span><span style="color:#75715e"></span>    ...
+public:
+    void addValue(int speed);    // add a new data value
+    double averageSoFar() const; // return average speed
+    ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>There are two ways to implement the member function <code>averageSoFar</code>:</p>
 
 <ol>

@@ -63,7 +63,7 @@
 
     <title>Alien dictionary</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -400,13 +400,16 @@ Suffering is optional.</p>
 <p>For example,</p>
 
 <p>Given the following words in dictionary,</p>
+
 <pre><code>[
-  "wrt",
-  "wrf",
-  "er",
-  "ett",
-  "rftt"
-]</code></pre>
+  &quot;wrt&quot;,
+  &quot;wrf&quot;,
+  &quot;er&quot;,
+  &quot;ett&quot;,
+  &quot;rftt&quot;
+]
+</code></pre>
+
 <p>The correct order is: &ldquo;wertf&rdquo;.</p>
 
 <p>Note:</p>
@@ -425,56 +428,57 @@ Suffering is optional.</p>
 
 <ol>
 <li>visited[]: -1(not exist), 0(no pre-node), 1(visiting), 2(visited)</li>
-
-<li><p>The order of adding char into stringbuilder is reversed: add post nodes to sb firstly in order to avoid missing pre-nodes for current nodes later. e.g.: for correct order &ldquo;abc&rdquo;, if meet &lsquo;b&rsquo; firstly, build the sb as &ldquo;cb&rdquo;, and then meet &lsquo;a&rsquo;, build it as &ldquo;cba&rdquo;; otherwise, when meet &lsquo;b&rsquo;, build sb as &ldquo;bc&rdquo;, and then meet &lsquo;a&rsquo;, resulting in &ldquo;bca&rdquo;, which is incorrect.)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> 26<span style="color:#f92672">;</span>
-<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">alienOrder</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> adj <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>N<span style="color:#f92672">]</span><span style="color:#f92672">[</span>N<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> visited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>N<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>buildGraph<span style="color:#f92672">(</span>words<span style="color:#f92672">,</span> adj<span style="color:#f92672">,</span> visited<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span> <span style="color:#75715e">// &#34;abcd&#34; -&gt; &#34;ab&#34;
-</span><span style="color:#75715e"></span>
-    StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>dfs<span style="color:#f92672">(</span>adj<span style="color:#f92672">,</span> visited<span style="color:#f92672">,</span> sb<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">reverse</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> adj<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> visited<span style="color:#f92672">,</span> StringBuilder sb<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    visited<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>  <span style="color:#75715e">// visiting
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>adj<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// connected post nodes
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// loop case
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>dfs<span style="color:#f92672">(</span>adj<span style="color:#f92672">,</span> visited<span style="color:#f92672">,</span> sb<span style="color:#f92672">,</span> j<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    visited<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span> <span style="color:#75715e">// visited
-</span><span style="color:#75715e"></span>    sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">)</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>        
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">buildGraph</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> words<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> adj<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> visited<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>visited<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// init to not existed
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> words<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> words<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> visited<span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            String w1 <span style="color:#f92672">=</span> words<span style="color:#f92672">[</span>i<span style="color:#f92672">-</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> w2 <span style="color:#f92672">=</span> words<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>w1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> w2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> len<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">char</span> c1 <span style="color:#f92672">=</span> w1<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">,</span> c2 <span style="color:#f92672">=</span> w2<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> c2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    adj<span style="color:#f92672">[</span>c1 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span>c2 <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> len <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> w1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> w2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#75715e">// &#34;abcd&#34; -&gt; &#34;ab&#34;
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span></code></pre></div></li>
+<li>The order of adding char into stringbuilder is reversed: add post nodes to sb firstly in order to avoid missing pre-nodes for current nodes later. e.g.: for correct order &ldquo;abc&rdquo;, if meet &lsquo;b&rsquo; firstly, build the sb as &ldquo;cb&rdquo;, and then meet &lsquo;a&rsquo;, build it as &ldquo;cba&rdquo;; otherwise, when meet &lsquo;b&rsquo;, build sb as &ldquo;bc&rdquo;, and then meet &lsquo;a&rsquo;, resulting in &ldquo;bca&rdquo;, which is incorrect.)</li>
 </ol>
+
+<pre><code class="language-java">    private static int N = 26;
+    public String alienOrder(String[] words) {
+        boolean[][] adj = new boolean[N][N];
+        int[] visited = new int[N];
+        if (!buildGraph(words, adj, visited)) return &quot;&quot;; // &quot;abcd&quot; -&gt; &quot;ab&quot;
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i &lt; N; i++) {
+            if (visited[i] == 0) {
+                if (!dfs(adj, visited, sb, i)) return &quot;&quot;;
+            }
+        }
+        return sb.reverse().toString();
+    }
+    private boolean dfs(boolean[][] adj, int[] visited, StringBuilder sb, int i) {
+        visited[i] = 1;  // visiting
+        for (int j = 0; j &lt; N; j++) {
+            if (adj[i][j]) { // connected post nodes
+                if (visited[j] == 1) return false;  // loop case
+                if (visited[j] == 0) {
+                    if (!dfs(adj, visited, sb, j)) return false;
+                }
+            }
+        }
+        visited[i] = 2; // visited
+        sb.append((char)('a' + i));
+        return true;
+    }        
+    private boolean buildGraph(String[] words, boolean[][] adj, int[] visited) {
+        Arrays.fill(visited, -1); // init to not existed
+        for (int i = 0; i &lt; words.length; i++) {
+            for (char c : words[i].toCharArray()) visited[c - 'a'] = 0;
+            if (i &gt; 0) {
+                String w1 = words[i-1], w2 = words[i];
+                int len = Math.min(w1.length(), w2.length()), j = 0;
+                for (; j &lt; len; j++) {
+                    char c1 = w1.charAt(j), c2 = w2.charAt(j);
+                    if (c1 != c2) {
+                        adj[c1 - 'a'][c2 - 'a'] = true;
+                        break;
+                    }
+                }
+                if (j == len &amp;&amp; w1.length() &gt; w2.length()) return false; // &quot;abcd&quot; -&gt; &quot;ab&quot;
+            }
+        }
+        return true;
+    }
+</code></pre>
 
 <h1 id="method-2-bfs">Method 2: BFS</h1>
 
@@ -483,51 +487,53 @@ Suffering is optional.</p>
 <p>Note:</p>
 
 <ol>
-<li><p>visited[]: -1(not exist), 0(no pre-node), 1,2,3&hellip;(pre-nodes number)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">alienOrder</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>Set<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> adj <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> adj<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> degree <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>degree<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#75715e">// init the adj and degree list
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> words<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> words<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>degree<span style="color:#f92672">[</span>c<span style="color:#f92672">-</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> degree<span style="color:#f92672">[</span>c<span style="color:#f92672">-</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            String w1 <span style="color:#f92672">=</span> words<span style="color:#f92672">[</span>i<span style="color:#f92672">-</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> w2 <span style="color:#f92672">=</span> words<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>w1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> w2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> len<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">int</span> c1 <span style="color:#f92672">=</span> w1<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">,</span> c2 <span style="color:#f92672">=</span> w2<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> c2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>adj<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c1<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>c2<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        adj<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c1<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                        degree<span style="color:#f92672">[</span>c2<span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> len<span style="color:#f92672">-</span>1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> w1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> w2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span> <span style="color:#75715e">// &#34;abcd&#34; -&gt; &#34;ab&#34;   
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#75715e">// topological sort
-</span><span style="color:#75715e"></span>    Deque<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayDeque<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> degree<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>degree<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#39;a&#39;</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">:</span> adj<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            degree<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>degree<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> d <span style="color:#f92672">:</span> degree<span style="color:#f92672">)</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span> <span style="color:#75715e">// has loop
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span></code></pre></div></li>
+<li>visited[]: -1(not exist), 0(no pre-node), 1,2,3&hellip;(pre-nodes number)</li>
 </ol>
+
+<pre><code class="language-java">    public String alienOrder(String[] words) {
+        List&lt;Set&lt;Integer&gt;&gt; adj = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; 26; i++) adj.add(new HashSet&lt;Integer&gt;());
+        int[] degree = new int[26];
+        Arrays.fill(degree, -1);
+        // init the adj and degree list
+        for (int i = 0; i &lt; words.length; i++) {
+            for (char c : words[i].toCharArray()) {
+                if (degree[c-'a'] &lt; 0) degree[c-'a'] = 0;
+            }
+            if (i &gt; 0) {
+                String w1 = words[i-1], w2 = words[i];
+                int len = Math.min(w1.length(), w2.length());
+                for (int j = 0; j &lt; len; j++) {
+                    int c1 = w1.charAt(j) - 'a', c2 = w2.charAt(j) - 'a';
+                    if (c1 != c2) {
+                        if (!adj.get(c1).contains(c2)) {
+                            adj.get(c1).add(c2);
+                            degree[c2]++;
+                        }
+                        break;
+                    }
+                    if (j == len-1 &amp;&amp; w1.length() &gt; w2.length()) return &quot;&quot;; // &quot;abcd&quot; -&gt; &quot;ab&quot;   
+                }
+            }
+        }
+        // topological sort
+        Deque&lt;Integer&gt; q = new ArrayDeque&lt;&gt;();
+        for (int i = 0; i &lt; degree.length; i++) {
+            if (degree[i] == 0) q.offer(i);
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!q.isEmpty()) {
+            int i = q.poll();
+            sb.append((char) ('a' + i));
+            for (int j : adj.get(i)) {
+                degree[j]--;
+                if (degree[j] == 0) q.offer(j);
+            }
+        }
+        for (int d : degree) if (d &gt; 0) return &quot;&quot;; // has loop
+        return sb.toString();
+    }
+</code></pre>
               
             </div>
           </div>

@@ -65,7 +65,7 @@
 
     <title>Item-29 Strive for exception-safe code</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -424,24 +424,28 @@ Suffering is optional.</p>
 <h1 id="example">Example</h1>
 
 <p>With all these terminologies bear in mind, let&rsquo;s see an example representing exception-unsafe style. Suppose there&rsquo;s a class for GUI menus with background images, and it will be used in a threaded environment, so it has a mutex for concurrency control:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PrettyMenu</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class PrettyMenu {
+public:
     ...
-    <span style="color:#66d9ef">void</span> changeBackGround(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>istream<span style="color:#f92672">&amp;</span> imgSrc); <span style="color:#75715e">// change background image
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    Mutex mutex;      <span style="color:#75715e">// mutex for this obejct
-</span><span style="color:#75715e"></span>    Image <span style="color:#f92672">*</span>bgImage;   <span style="color:#75715e">// current background image
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> imageChanges; <span style="color:#75715e">// # of times image has been changed
-</span><span style="color:#75715e"></span>};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> PrettyMenu<span style="color:#f92672">:</span><span style="color:#f92672">:</span>changeBackground(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>istream<span style="color:#f92672">&amp;</span> imgSrc)
+    void changeBackGround(std::istream&amp; imgSrc); // change background image
+private:
+    Mutex mutex;      // mutex for this obejct
+    Image *bgImage;   // current background image
+    int imageChanges; // # of times image has been changed
+};
+</code></pre>
+
+<pre><code class="language-cpp">void PrettyMenu::changeBackground(std::istream&amp; imgSrc)
 {
-    lock(<span style="color:#f92672">&amp;</span>mutex);   <span style="color:#75715e">// acquire mutex (item 14)
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">delete</span> bgImage; <span style="color:#75715e">// get rid of old background
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>imageChanges; <span style="color:#75715e">// update image change count
-</span><span style="color:#75715e"></span>    bgImage <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Image(imgSrc); <span style="color:#75715e">// install new background
-</span><span style="color:#75715e"></span>    unlock(<span style="color:#f92672">&amp;</span>mutex); <span style="color:#75715e">// release mutex 
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    lock(&amp;mutex);   // acquire mutex (item 14)
+    delete bgImage; // get rid of old background
+    ++imageChanges; // update image change count
+    bgImage = new Image(imgSrc); // install new background
+    unlock(&amp;mutex); // release mutex 
+}
+</code></pre>
+
 <p>Firstly, the code above is likely to encounter resource leak, because if the <code>new Image(imgSrc)</code> expression yields an exception, the call to <code>unlock</code> never gets executed, and the mutex is held forever.</p>
 
 <p>Secondly, this function guarantees none of the 3 promises in terms of data structure corruption above: when <code>new Image(Src)</code> throws, <code>bgImage</code> is left pointing to a deleted object, and <code>imageChanges</code> has been increamented before the new image has been installed, resulting to invalid object state.</p>
@@ -449,14 +453,16 @@ Suffering is optional.</p>
 <h2 id="resource-leak">Resource leak</h2>
 
 <p>To address the resource leak issue, we can use objects to manage resources (item 13), and take advantage of <code>Lock</code> class to ensure that mutexes are released in a timely fashion (item 14):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> PrettyMenu<span style="color:#f92672">:</span><span style="color:#f92672">:</span>changeBackground(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>istream<span style="color:#f92672">&amp;</span> imgSrc)
+
+<pre><code class="language-cpp">void PrettyMenu::changeBackground(std::istream&amp; imgSrc)
 {
-    Lock <span style="color:#a6e22e">ml</span>(<span style="color:#f92672">&amp;</span>mutex);   <span style="color:#75715e">// item 14: acquire mutex and ensure its later release
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">delete</span> bgImage; 
-    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>imageChanges; <span style="color:#75715e">// update image change count
-</span><span style="color:#75715e"></span>    bgImage <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Image(imgSrc); <span style="color:#75715e">// install new background
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    Lock ml(&amp;mutex);   // item 14: acquire mutex and ensure its later release
+    delete bgImage; 
+    ++imageChanges; // update image change count
+    bgImage = new Image(imgSrc); // install new background
+}
+</code></pre>
+
 <h2 id="data-structure-corruption">Data structure corruption</h2>
 
 <p>To address the issue of data structure corruption, we may need to determine which guarantee to offer. As a general rule,</p>
@@ -476,22 +482,24 @@ Suffering is optional.</p>
 <li>preventing resource leaks</li>
 <li>offering strong exception safety guarantee</li>
 </ol></li>
-
-<li><p>secondly, we reorder the statements so that we don&rsquo;t increment <code>imageChanges</code> until the image has been changed.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PrettyMenu</span> {
-...
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Imgae<span style="color:#f92672">&gt;</span> bgImage;
-...
-};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> PrettyMenu<span style="color:#f92672">:</span><span style="color:#f92672">:</span>changeBackground(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>istream<span style="color:#f92672">&amp;</span> imgSrc)
-{
-Lock <span style="color:#a6e22e">ml</span>(<span style="color:#f92672">&amp;</span>mutex);
-bgImage.reset(<span style="color:#66d9ef">new</span> Image(imgSrc)); <span style="color:#75715e">// replace bgImage&#39;s internal pointer with the
-</span><span style="color:#75715e"></span>                                  <span style="color:#75715e">// result of the &#34;new Image&#34; expression
-</span><span style="color:#75715e"></span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>imageChanges;
-}
-</code></pre></div></li>
+<li>secondly, we reorder the statements so that we don&rsquo;t increment <code>imageChanges</code> until the image has been changed.</li>
 </ul>
+
+<pre><code class="language-cpp">class PrettyMenu {
+    ...
+    std::tr1::shared_ptr&lt;Imgae&gt; bgImage;
+    ...
+};
+</code></pre>
+
+<pre><code class="language-cpp">void PrettyMenu::changeBackground(std::istream&amp; imgSrc)
+{
+    Lock ml(&amp;mutex);
+    bgImage.reset(new Image(imgSrc)); // replace bgImage's internal pointer with the
+                                      // result of the &quot;new Image&quot; expression
+    ++imageChanges;
+}
+</code></pre>
 
 <p>Note how the use of resource magangement object (i.e., the smart pointer here) helps:</p>
 
@@ -516,28 +524,32 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </blockquote>
 
 <p>The strategy is usually implemented by putting all the per-object data from the &ldquo;real&rdquo; object into a separate implementation object, then giving the real object a pointer to its implementation object (know as the &ldquo;pimpl idiom&rdquo;, item 31). For <code>PrettyMenu</code>, it would look something like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">PMImpl</span> {  <span style="color:#75715e">// PMIpml = &#34;PrettyMenu Impl.&#34;
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Image<span style="color:#f92672">&gt;</span> bgImage; 
-    <span style="color:#66d9ef">int</span> imageChanges; 
+
+<pre><code class="language-cpp">struct PMImpl {  // PMIpml = &quot;PrettyMenu Impl.&quot;
+    std::tr1::shared_ptr&lt;Image&gt; bgImage; 
+    int imageChanges; 
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PrettyMenu</span> {
+class PrettyMenu {
 ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+private:
     Mutex mutex;
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>PMImpl<span style="color:#f92672">&gt;</span> pImpl;
+    std::tr1::shared_ptr&lt;PMImpl&gt; pImpl;
 };
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> PrettyMenu<span style="color:#f92672">:</span><span style="color:#f92672">:</span>changeBackground(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>istream<span style="color:#f92672">&amp;</span> imgSrc)
+</code></pre>
+
+<pre><code class="language-cpp">void PrettyMenu::changeBackground(std::istream&amp; imgSrc)
 {
-    <span style="color:#66d9ef">using</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>swap;  <span style="color:#75715e">// item 25
-</span><span style="color:#75715e"></span>    Lock <span style="color:#a6e22e">ml</span>(<span style="color:#f92672">&amp;</span>mutex);  <span style="color:#75715e">// acquire the mutex
-</span><span style="color:#75715e"></span>    
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>PMImpl<span style="color:#f92672">&gt;</span> pNew(<span style="color:#66d9ef">new</span> PMImpl(<span style="color:#f92672">*</span>pImpl));  <span style="color:#75715e">// copy obj. data
-</span><span style="color:#75715e"></span>    pNew<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>bgImage.reset(<span style="color:#66d9ef">new</span> Image(imgSrc)); <span style="color:#75715e">// modify the copy
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>pNew<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>imageChanges;
-    swap(pImpl, pNew);  <span style="color:#75715e">// swap the new data into place
-</span><span style="color:#75715e"></span>} <span style="color:#75715e">// release the mutex
-</span></code></pre></div>
+    using std::swap;  // item 25
+    Lock ml(&amp;mutex);  // acquire the mutex
+    
+    std::tr1::shared_ptr&lt;PMImpl&gt; pNew(new PMImpl(*pImpl));  // copy obj. data
+    pNew-&gt;bgImage.reset(new Image(imgSrc)); // modify the copy
+    ++pNew-&gt;imageChanges;
+    swap(pImpl, pNew);  // swap the new data into place
+} // release the mutex
+</code></pre>
+
 <p>We don&rsquo;t have to make the struct <code>PMImpl</code> as a class, because the encapsulation of <code>PrettyMenu</code> data is assured by <code>pImpl</code> being private, and it is more convenient to use struct. If desired, <code>PMImpl</code> could be nested inside <code>PrettyMenu</code> when considering packaging issues.</p>
 
 <h3 id="side-effects-and-efficiency">Side effects and efficiency</h3>
@@ -547,14 +559,16 @@ Make a copy of the object we want to modify, then make all needed changes to the
 <h4 id="1-side-effects">1. Side effects</h4>
 
 <p>Suppose <code>someFunc</code> uses copy-and-<code>swap</code> and includes calls to two other functions, <code>f1</code> and <code>f2</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">someFunc</span>()
+
+<pre><code class="language-cpp">void someFunc()
 {
-    ...    <span style="color:#75715e">// make copy of local state
-</span><span style="color:#75715e"></span>    f1();
+    ...    // make copy of local state
+    f1();
     f2();
-    ...    <span style="color:#75715e">// swap modified state into place
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+    ...    // swap modified state into place
+}
+</code></pre>
+
 <p>Apparently, if <code>f1</code> or <code>f2</code> is less than strongly exception-safe, it will be hard for <code>someFunc</code> to be strong exception-safe. For example, suppose <code>f1</code> offers only the basic guarantee, in order to offer the strong guarantee for <code>someFunc</code>, we have to write code to determine the state of the entire program before calling <code>f1</code>, catch all exceptions from <code>f1</code>, and then store the original state. It&rsquo;s complicated, but it&rsquo;s doable. However, even if <code>f1</code> and <code>f2</code> are both strongly exception safe, as long as there are side effects on non-local data, it&rsquo;s much harder to offer the strong guarantee.</p>
 
 <p>For example, if a side effect of calling <code>f1</code> is that a database is modified, and there is, in general, no way to undo a database modification that has already been committed; so after successfully calling <code>f1</code>, if <code>f2</code> then throws an exception, the state of the program is not the same as it was when calling <code>someFunc</code>, even though <code>f2</code> didn&rsquo;t change anything.</p>

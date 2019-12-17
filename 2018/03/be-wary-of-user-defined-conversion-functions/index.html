@@ -65,7 +65,7 @@
 
     <title>[MECpp]Item-5 Be Wary of User Defined Conversion Functions</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -406,101 +406,120 @@ Suffering is optional.</p>
 </ul>
 
 <h1 id="implicit-type-conversion-operators">Implicit type conversion operators</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Rational {
+public:
     ...
-    <span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">double</span>() <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// converts Rational to double
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+    operator double() const; // converts Rational to double
+};
+</code></pre>
+
 <p>This implicit type conversion function will be automatically invoked in contexts like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Rational <span style="color:#a6e22e">r</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);    <span style="color:#75715e">// r has a value 1/2
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> d <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.5</span> <span style="color:#f92672">*</span> r;  <span style="color:#75715e">// converts r to a double, then do multiplication
-</span><span style="color:#75715e"></span>count <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> r;          <span style="color:#75715e">// will print a floating point number instead of 1/2 if lacking difinition of operator&lt;&lt;
-</span></code></pre></div>
+
+<pre><code class="language-cpp">Rational r(1, 2);    // r has a value 1/2
+double d = 0.5 * r;  // converts r to a double, then do multiplication
+count &lt;&lt; r;          // will print a floating point number instead of 1/2 if lacking difinition of operator&lt;&lt;
+</code></pre>
+
 <p>Suppose we forget to write an <code>operator&lt;&lt;</code> for <code>Rational</code> objects, and expect the attempt to print <code>r</code> would fail due to the lack of appropriate <code>operator&lt;&lt;</code> to call. However, in the lack of <code>operator&lt;&lt;</code>, compilers are happy to find an acceptable sequence of implicit type conversions they could apply to make the call succeed. In this case, they will discover they could make the call succeed by implicitly converting <code>r</code> to a <code>double</code> by calling <code>Rational::operator double</code>, leading to <em>wrong</em> (often unexpected) function being called.</p>
 
 <p>Solution: replace the implicit type conversion operators with equivalent functions that don&rsquo;t have the syntactically magic names, just like the explicit member function <code>c_str</code> in <code>string</code> type from standard C++ library (MECpp item 35):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ...
-    <span style="color:#66d9ef">double</span> asDouble() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// converts Rational to double
-</span><span style="color:#75715e"></span>};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Rational <span style="color:#a6e22e">r</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);
 
-cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> r; <span style="color:#75715e">// error! no operator&lt;&lt; for Rationals
-</span><span style="color:#75715e"></span>cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> r.asDouble();  <span style="color:#75715e">// fine, prints r as a double
-</span></code></pre></div>
+<pre><code class="language-cpp">class Rational {
+public:
+    ...
+    double asDouble() const;  // converts Rational to double
+};
+</code></pre>
+
+<pre><code class="language-cpp">Rational r(1, 2);
+
+cout &lt;&lt; r; // error! no operator&lt;&lt; for Rationals
+cout &lt;&lt; r.asDouble();  // fine, prints r as a double
+</code></pre>
+
 <h1 id="single-argument-constructor">Single-argument constructor</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Array</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    Array(<span style="color:#66d9ef">int</span> lowBound, <span style="color:#66d9ef">int</span> highBound); <span style="color:#75715e">// specify a range of array indices, ineligible for type-conversion
-</span><span style="color:#75715e"></span>    Array(<span style="color:#66d9ef">int</span> size);  <span style="color:#75715e">// specify the number of elements in the array, can be used as a type conversion function
-</span><span style="color:#75715e"></span>    
-    T<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">int</span> index);
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class Array {
+public:
+    Array(int lowBound, int highBound); // specify a range of array indices, ineligible for type-conversion
+    Array(int size);  // specify the number of elements in the array, can be used as a type conversion function
+    
+    T&amp; operator[](int index);
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>The problem of implicit type conversion occurs in following condition:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">bool</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> rhs);
-Array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> a(<span style="color:#ae81ff">10</span>);
-Array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> b(<span style="color:#ae81ff">10</span>);
+
+<pre><code class="language-cpp">bool operator==(const Array&lt;int&gt;&amp; lhs, const Array&lt;int&gt;&amp; rhs);
+Array&lt;int&gt; a(10);
+Array&lt;int&gt; b(10);
 ...
-<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i) {  <span style="color:#75715e">// oops! &#34;a&#34; should be &#34;a[i]&#34;
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (a <span style="color:#f92672">=</span><span style="color:#f92672">=</span> b[i]) {
+for (int i = 0; i &lt; 10; ++i) {  // oops! &quot;a&quot; should be &quot;a[i]&quot;
+    if (a == b[i]) {
         ....
-    } <span style="color:#66d9ef">else</span> {
+    } else {
         ...
     }
 }
-</code></pre></div>
+</code></pre>
+
 <p>Here, we mistakenly omitted the subscripting syntax when typing <code>a</code>. We expect this will cause compilers complaining, but they will not:</p>
 
 <ul>
 <li>Compilers see a call to <code>operator==</code> taking type <code>Array&lt;int&gt;</code> (for <code>a</code>) and <code>int</code> (for <code>b[i]</code>), and fail to find the corresponding function</li>
 
 <li><p>There&rsquo;s a <code>operator==</code> taking two <code>Array&lt;int&gt;</code> type arguments, and compilers are able to convert the <code>int</code> into an <code>Array&lt;int&gt;</code> object by calling <code>Array&lt;int&gt;</code> constructor that taking a single <code>int</code> as an argument, ending up with something like this<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i) {
-    <span style="color:#66d9ef">if</span> (a <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span> Array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span>(b[i])) ...
+
+<pre><code class="language-cpp">for (int i = 0; i &lt; 10; ++i) {
+    if (a == static_cast&lt; Array&lt;int&gt; &gt;(b[i])) ...
 }
-</code></pre></div></li>
-</ul>
+</code></pre>
 
 <p>Each iteration through the loop compares the contents of <code>a</code> with the contents of a temporary array of size <code>b[i]</code> (whose contents are presumably undefined and will be created and destroyed in every loop, see MECpp item 19), which is both unwanted and tremendously inefficient behavior.</p>
 
 <p>There are two solutions: use keyword <code>explicit</code> or creating proxy classes.</p>
 
 <h2 id="solution-1-keyword-explicit">Solution 1: Keyword <code>explicit</code></h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Array</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ...
-    <span style="color:#66d9ef">explicit</span> Array(<span style="color:#66d9ef">int</span> size);  <span style="color:#75715e">// use &#34;explicit&#34; to prevent implicit type conversion    
-</span><span style="color:#75715e"></span>    ...    
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class Array {
+public:
+...
+explicit Array(int size);  // use &quot;explicit&quot; to prevent implicit type conversion    
+...    
 };
-</code></pre></div>
+</code></pre></li>
+</ul>
+
 <h2 id="solution-2-proxy-classes">Solution 2: Proxy classes</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Array</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ArraySize</span> {
-    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-        ArraySize(<span style="color:#66d9ef">int</span> numElements)<span style="color:#f92672">:</span> theSize(numElements) {}
-        <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">size</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> theSize; }
-    <span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-        <span style="color:#66d9ef">int</span> theSize;
+
+<pre><code class="language-cpp">template&lt;class T&gt;
+class Array {
+public:
+    class ArraySize {
+    public:
+        ArraySize(int numElements): theSize(numElements) {}
+        int size() const { return theSize; }
+    private:
+        int theSize;
     };
 
-    Array(<span style="color:#66d9ef">int</span> lowBound, <span style="color:#66d9ef">int</span> highBound);
-    Array(ArraySize size);  <span style="color:#75715e">// new declaration
-</span><span style="color:#75715e"></span>    ...
+    Array(int lowBound, int highBound);
+    Array(ArraySize size);  // new declaration
+    ...
 };
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Array<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> a(<span style="color:#ae81ff">10</span>); <span style="color:#75715e">// convert 10 to a temp. ArraySize object, then feed that temp. object to Array&lt;int&gt; ctor.
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i) {
-    <span style="color:#66d9ef">if</span> (a <span style="color:#f92672">=</span><span style="color:#f92672">=</span> b[i]) ...   <span style="color:#75715e">// error now!
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+</code></pre>
+
+<pre><code class="language-cpp">Array&lt;int&gt; a(10); // convert 10 to a temp. ArraySize object, then feed that temp. object to Array&lt;int&gt; ctor.
+
+for (int i = 0; i &lt; 10; ++i) {
+    if (a == b[i]) ...   // error now!
+}
+</code></pre>
+
 <p>One of the rules governing implicit type conversions is that no sequence of conversions is allowed to contain more than one user-defined conversion (i.e., a call to a single-argument constructor or an implicit type conversion operator). The above class difinition adopting a general technique called <em>proxy classes</em> takes advantage of this rule, ending up with ideal behavior that the object constructions we want to allow are legal, but the implicit conversions we don&rsquo;t want to allow are illegal (compilers in one implicit conversion can&rsquo;t call two user-defined conversions, one from <code>int</code> to <code>ArraySize</code> and one from <code>ArraySize</code> to <code>Array&lt;int&gt;</code>).</p>
 
 <p>Proxy objects can give us control over aspects of software&rsquo;s behavior that is otherswise beyond our grasp. For more detail, refer to MECpp item 30.</p>

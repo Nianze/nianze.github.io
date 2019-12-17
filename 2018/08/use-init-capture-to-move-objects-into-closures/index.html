@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-32 Use Init Capture to Move Objects Into Closures</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -397,46 +397,52 @@ Suffering is optional.</p>
 </ol>
 
 <p>For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class Widget {
+public:
     ...
-    <span style="color:#66d9ef">bool</span> isValidated() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isProcessed</span>() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isArchived</span>() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    bool isValidated() const;
+    bool isProcessed() const;
+    bool isArchived() const;
+private:
     ...
 };
 
-<span style="color:#66d9ef">auto</span> pw <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_unique<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>();
+auto pw = std::make_unique&lt;Widget&gt;();
 ...
-<span style="color:#66d9ef">auto</span> func <span style="color:#f92672">=</span> [pw <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(pw)]  <span style="color:#75715e">// init data mbr in closure with std::move(pw)
-</span><span style="color:#75715e"></span>            { <span style="color:#66d9ef">return</span> pw<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isValidated() <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> pw<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isArchived(); }
-</code></pre></div>
+auto func = [pw = std::move(pw)]  // init data mbr in closure with std::move(pw)
+            { return pw-&gt;isValidated() &amp;&amp; pw-&gt;isArchived(); }
+</code></pre>
+
 <p>One thing to note in init capture: the left side of &ldquo;=&rdquo; is the name of the data member in the closure we&rsquo;re specifying, which is in the closure class scope; the right side is the initializing expresion, which is the same scope as where the lambda is being defined. The code in the body of the lambda is in the scope of the closure class, so uses of <code>pw</code> refer to the closure class data member.</p>
 
 <h4 id="in-c-11">In C++11</h4>
 
 <p>In C++11, it&rsquo;s not possible to capture the result of an expression. We can still emulate the behaivor by either manually write a class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IsValAndArch</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">using</span> DataType <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>;
-    <span style="color:#66d9ef">explicit</span> <span style="color:#a6e22e">IsValAndArch</span>(DataType<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> ptr)
-    <span style="color:#f92672">:</span> pw(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(ptr)) {}
-    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">operator</span>()() <span style="color:#66d9ef">const</span>
-    { <span style="color:#66d9ef">return</span> pw<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isValidated() <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> pw<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isArchived(); }
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class IsValAndArch {
+public:
+    using DataType = std::unique_ptr&lt;Widget&gt;;
+    explicit IsValAndArch(DataType&amp;&amp; ptr)
+    : pw(std::move(ptr)) {}
+    bool operator()() const
+    { return pw-&gt;isValidated() &amp;&amp; pw-&gt;isArchived(); }
+private:
     DataType pw;
 }
 
-<span style="color:#66d9ef">auto</span> func <span style="color:#f92672">=</span> IsValAndArch(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_unique<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>());
-</code></pre></div>
+auto func = IsValAndArch(std::make_unique&lt;Widget&gt;());
+</code></pre>
+
 <p>or use <code>std::bind</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> func <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bind(
-                [](<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> pw)
-                { <span style="color:#66d9ef">return</span> pw<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isValidated() <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> pw<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isArchived(); },
-                std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_unique<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>()
+
+<pre><code class="language-cpp">auto func = std::bind(
+                [](const std::unique_ptr&lt;Widget&gt;&amp; pw)
+                { return pw-&gt;isValidated() &amp;&amp; pw-&gt;isArchived(); },
+                std::make_unique&lt;Widget&gt;()
             );
-</code></pre></div>
+</code></pre>
+
 <p>Some facts about <code>std::bind</code> above:</p>
 
 <ul>

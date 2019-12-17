@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-12 Declare Overriding Functions Override</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -399,22 +399,24 @@ Suffering is optional.</p>
 </ul>
 
 <p>All these requirements for overriding mean that small mistakes can make a big difference. Code containing unintended overriding errors is typically still valid, so compilers may fail to notify us the errors. For example, following code is completely legal:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Base</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> mf1() <span style="color:#66d9ef">const</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf2</span>(<span style="color:#66d9ef">int</span>);
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf3</span>() <span style="color:#f92672">&amp;</span>;
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf4</span>() <span style="color:#66d9ef">const</span>;
+
+<pre><code class="language-cpp">class Base {
+public:
+    virtual void mf1() const;
+    virtual void mf2(int);
+    virtual void mf3() &amp;;
+    void mf4() const;
 };
 
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Derived</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Base {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">void</span> mf1();  <span style="color:#75715e">// virtual is optional here for derived classes
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf2</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>);
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf3</span>() <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf4</span>() <span style="color:#66d9ef">const</span>;
+class Derived: public Base {
+public:
+    void mf1();  // virtual is optional here for derived classes
+    void mf2(unsigned int);
+    void mf3() &amp;&amp;;
+    virtual void mf4() const;
 };
-</code></pre></div>
+</code></pre>
+
 <p>However, we almost certainly intend to override base class functions with derived class ones with the same names, yet none of the derived class functions are tied to the base class ones:</p>
 
 <ul>
@@ -425,14 +427,16 @@ Suffering is optional.</p>
 </ul>
 
 <p>If we explicitly declare with the <em>contextual keyword</em> <code>override</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Derived</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Base {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> mf1() <span style="color:#66d9ef">override</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf2</span>(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">override</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf3</span>() <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">override</span>;
-    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mf4</span>() <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span>;
+
+<pre><code class="language-cpp">class Derived: public Base {
+public:
+    virtual void mf1() override;
+    virtual void mf2(unsigned int) override;
+    virtual void mf3() &amp;&amp; override;
+    virtual void mf4() const override;
 };
-</code></pre></div>
+</code></pre>
+
 <p>Then the code won&rsquo;t compile, because compilers will complain the overriding-related problems above, which is exactly what we want.</p>
 
 <p>Moreover, taking use of compilers&rsquo; ability to diagnostic overriding problems, we can easily use <code>override</code> keyword to gauge the ramifications if we&rsquo;re contemplating changing the signature of a virtual funciton in a base class: if derived classes use <code>override</code> everywhere, we can just change the signature, recompile the system, see how much damage we&rsquo;ve caused, and then decide whether the signature change is worth the trouble.</p>

@@ -65,7 +65,7 @@
 
     <title>Item-8 Prevent exception from leaving destructor</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -388,82 +388,90 @@ Suffering is optional.</p>
               <p>It is discouraged practice to emit exceptions from destructors.</p>
 
 <p>Consider what should be done to create a resource-managing class for DBConnection class below:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DBConnection</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class DBConnection {
+public:
     ...
-    <span style="color:#66d9ef">static</span> DBConnection creast();  <span style="color:#75715e">// return DBConnection obj
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">close</span>();                  <span style="color:#75715e">// close connection; throw an exception if closing fails
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+    static DBConnection creast();  // return DBConnection obj
+    void close();                  // close connection; throw an exception if closing fails
+};
+</code></pre>
+
 <p>To ensure clients don&rsquo;t forget to call <code>close()</code> on DBConnection objects, we may want to put <code>close()</code> inside the destructor of managing class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DBConn</span> {    <span style="color:#75715e">// class to manage DBConnection object
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class DBConn {    // class to manage DBConnection object
+public:
     ...
-    <span style="color:#f92672">~</span>DBConn()     <span style="color:#75715e">// make sure database connections are closed
-</span><span style="color:#75715e"></span>    {
+    ~DBConn()     // make sure database connections are closed
+    {
         db.close();
     }
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+private:
     DBConnetion db;
 };
-</code></pre></div>
+</code></pre>
+
 <p>However, once <code>db.close()</code> yields an exception, <code>DBConn</code>&rsquo;s destructor will propogate the exception, which would be a problem: considering <code>std::vector&lt;DBConn&gt; v</code>, chances are that two simultaneously active exceptions (from calling <code>~DBConn()</code>) arise during destroying the vector <code>v</code>, and program execution will either terminate or yield undefined behavior. Moreover, premature program termination or undefined behavior can result from destructors emitting exceptions even without using containers and arrays. There are 2 ways to handle the situation:</p>
 
 <ul>
-<li><p>Terminate the program</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">DBConn<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>DBConn()
-{
-<span style="color:#66d9ef">try</span> { db.close(); }
-<span style="color:#66d9ef">catch</span>(...) {
-    <span style="color:#75715e">// make log entry: the call to close failed;
-</span><span style="color:#75715e"></span>    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>abort();
-}
-}
-</code></pre></div></li>
+<li>Terminate the program<br /></li>
 </ul>
+
+<pre><code class="language-cpp">DBConn::~DBConn()
+{
+    try { db.close(); }
+    catch(...) {
+        // make log entry: the call to close failed;
+        std::abort();
+    }
+}
+</code></pre>
 
 <p>This will prevent the exception from propagating out of the destructor and then leading to undefined behavior.</p>
 
 <ul>
-<li><p>Swallow the exception</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">DBConn<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>DBConn()
-{
-<span style="color:#66d9ef">try</span> { db.close(); }
-<span style="color:#66d9ef">catch</span>(...) {
-    <span style="color:#75715e">// make log entry: the call to close failed;
-</span><span style="color:#75715e"></span>}
-}
-</code></pre></div></li>
+<li>Swallow the exception</li>
 </ul>
+
+<pre><code class="language-cpp">DBConn::~DBConn()
+{
+    try { db.close(); }
+    catch(...) {
+        // make log entry: the call to close failed;
+    }
+}
+</code></pre>
 
 <p>In general, swallowing exception is a bad idea for it suppresses imporant information, but it is preferable sometimes when the program is asked to be able to reliably continue execution even after an error has been encountered.</p>
 
 <p>A better strategy is to design <code>DBConn</code>&rsquo;s interface so that its clients have an opportunity to handle the possible exception by themselves:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DBConn</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class DBConn {
+public:
     ...
-    <span style="color:#66d9ef">void</span> close()         <span style="color:#75715e">// new interface for clients
-</span><span style="color:#75715e"></span>    {                    <span style="color:#75715e">// to handle possible exception outside dtor
-</span><span style="color:#75715e"></span>        db.close();
-        closed <span style="color:#f92672">=</span> true;   <span style="color:#75715e">// keep track of whether db has been closed
-</span><span style="color:#75715e"></span>    }
-    <span style="color:#f92672">~</span>DBConn()
-    {
-        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>closed) {
-            <span style="color:#66d9ef">try</span> {              <span style="color:#75715e">// close the connecton
-</span><span style="color:#75715e"></span>                db.close();    <span style="color:#75715e">// if the client didn&#39;t
-</span><span style="color:#75715e"></span>            }
-        }
-        <span style="color:#66d9ef">catch</span> (...) {
-            <span style="color:#75715e">// make log entry: the call to close failed;
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">//  terminate or swallow
-</span><span style="color:#75715e"></span>        }
+    void close()         // new interface for clients
+    {                    // to handle possible exception outside dtor
+        db.close();
+        closed = true;   // keep track of whether db has been closed
     }
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    ~DBConn()
+    {
+        if (!closed) {
+            try {              // close the connecton
+                db.close();    // if the client didn't
+            }
+        }
+        catch (...) {
+            // make log entry: the call to close failed;
+            //  terminate or swallow
+        }
+    }
+private:
     DBConnection db;
-    <span style="color:#66d9ef">bool</span> closed;
+    bool closed;
 };
-</code></pre></div>
+</code></pre>
+
 <p>Under such a design, if clients decide to ignore the opportunity to close the connection and handle the possible exception by themselves for they believe that no error will occur, they can rely on <code>DBConn</code>&rsquo;s destructor to call <code>close()</code> for them. However, if <code>close()</code> does throw in <code>~DBConn</code>, they&rsquo;re in no position to complain if <code>DBConn</code> swallows the exception or terminates the program.</p>
 
 <p>In summary,</p>

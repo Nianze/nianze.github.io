@@ -65,7 +65,7 @@
 
     <title>Item-26 Postpone variable definitions as long as possible</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -390,33 +390,37 @@ Suffering is optional.</p>
 <p>After defining a variable of a type with a constructor or destructor, there&rsquo;s a cost of construction when control reaches a variable&rsquo;s definition, and a cost of destruction when the variable goes out of scope. If the variable is unused, the cost is wasted, which is the case we want to avoid.</p>
 
 <p>Nobody declares unused variables on purpose, but chances are we may still encounter them unexpectedly: suppose there&rsquo;s a function that returns an encrypted version of a password as long as the password is long enough and may throw an exception of type <code>logic_error</code> (defined in standard C++ library, item 54) if the passwod is too short:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string encryptPassword(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> password)
+
+<pre><code class="language-cpp">std::string encryptPassword(const std::string&amp; password)
 {
-    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
-    string encrypted; <span style="color:#75715e">// definition is too soon
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (password.length() <span style="color:#f92672">&lt;</span> MinimumPasswordLength) {
-        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">logic_error</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Password is too short</span><span style="color:#e6db74">&#34;</span>);
+    using namespace std;
+    string encrypted; // definition is too soon
+    if (password.length() &lt; MinimumPasswordLength) {
+        throw logic_error(&quot;Password is too short&quot;);
     }
-    ...   <span style="color:#75715e">// do whatever is necessary to place an encrypted version of password in encrypted
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> encrypted;
+    ...   // do whatever is necessary to place an encrypted version of password in encrypted
+    return encrypted;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Apparently, the object <code>encrypted</code> is unused if an exception is thrown, and we still have to pay the cost of construction and destruction of <code>encrypted</code>.</p>
 
 <p>A better solution is to postpone <code>encrypted</code>&rsquo;s definition until we <em>know</em> we&rsquo;ll need it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string encryptPassword(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> password)
-{
-    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
 
-    <span style="color:#66d9ef">if</span> (password.length() <span style="color:#f92672">&lt;</span> MinimumPasswordLength) {
-        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">logic_error</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Password is too short</span><span style="color:#e6db74">&#34;</span>);
+<pre><code class="language-cpp">std::string encryptPassword(const std::string&amp; password)
+{
+    using namespace std;
+
+    if (password.length() &lt; MinimumPasswordLength) {
+        throw logic_error(&quot;Password is too short&quot;);
     }
 
-    string encrypted; <span style="color:#75715e">// postpones encrypted&#39;s definition until it&#39;s truly necessary
-</span><span style="color:#75715e"></span>    ...   <span style="color:#75715e">// do whatever is necessary to place an encrypted version of password in encrypted
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> encrypted;
+    string encrypted; // postpones encrypted's definition until it's truly necessary
+    ...   // do whatever is necessary to place an encrypted version of password in encrypted
+    return encrypted;
 }
-</code></pre></div>
+</code></pre>
+
 <p>This code still isn&rsquo;t as tight as it might be, because <code>encrypted</code> is defined without any initialization arguments, leading to its default constructor getting called and an extra aassignment operation being used later. As item 4 suggests,</p>
 
 <blockquote>
@@ -424,22 +428,26 @@ Suffering is optional.</p>
 </blockquote>
 
 <p>Suppose the hard part of <code>encryptPassword</code> is performed in this function:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">encrypt</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> s);  <span style="color:#75715e">// encrypts s in place
-</span></code></pre></div>
-<p>Then we&rsquo;d better skip the pointless and potentially expensive default construction, directly initializing <code>encrypted</code> with <code>password</code> until right before we have to use the variable:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string encryptPassword(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> password)
-{
-    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
 
-    <span style="color:#66d9ef">if</span> (password.length() <span style="color:#f92672">&lt;</span> MinimumPasswordLength) {
-        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">logic_error</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Password is too short</span><span style="color:#e6db74">&#34;</span>);
+<pre><code class="language-cpp">void encrypt(std::string&amp; s);  // encrypts s in place
+</code></pre>
+
+<p>Then we&rsquo;d better skip the pointless and potentially expensive default construction, directly initializing <code>encrypted</code> with <code>password</code> until right before we have to use the variable:</p>
+
+<pre><code class="language-cpp">std::string encryptPassword(const std::string&amp; password)
+{
+    using namespace std;
+
+    if (password.length() &lt; MinimumPasswordLength) {
+        throw logic_error(&quot;Password is too short&quot;);
     }
 
-    string <span style="color:#a6e22e">encrypted</span>(password); <span style="color:#75715e">// define and initialize via copy constructor right before we have to use it
-</span><span style="color:#75715e"></span>    encrypt(encrypted);
-    <span style="color:#66d9ef">return</span> encrypted;
+    string encrypted(password); // define and initialize via copy constructor right before we have to use it
+    encrypt(encrypted);
+    return encrypted;
 }
-</code></pre></div>
+</code></pre>
+
 <p>This gives us certain benifits:<br />
 1. we avoid constructing and destructing unneeded obejcts<br />
 2. we avoid unnecessary default constructions<br />
@@ -448,20 +456,24 @@ Suffering is optional.</p>
 <h2 id="loop">Loop</h2>
 
 <p>If a variable is used only inside a loop, should we define it outside the loop and make an assignment to it on each loop iteration, or to define the variable inside the loop？</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// Approach A: define outside loop
-</span><span style="color:#75715e"></span>Widget w;
-<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> n; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i)
+
+<pre><code class="language-cpp">// Approach A: define outside loop
+Widget w;
+for (int i = 0; i &lt; n; ++i)
 {
-    w <span style="color:#f92672">=</span> some value dependent on i;
+    w = some value dependent on i;
     ...
 }
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// Approach B: define inside loop
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> n; <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i) 
+</code></pre>
+
+<pre><code class="language-cpp">// Approach B: define inside loop
+for (int i = 0; i &lt; n; ++i) 
 {
-    Widget <span style="color:#a6e22e">w</span>(some value dependent on i);
+    Widget w(some value dependent on i);
     ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>Let&rsquo;s see the costs of the two approaches above:</p>
 
 <ul>

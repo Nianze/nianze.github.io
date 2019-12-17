@@ -65,7 +65,7 @@
 
     <title>Item-4 Initialize objects before they&#39;re used</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -411,11 +411,13 @@ Suffering is optional.</p>
 <p>No need to remember rules about when built-in type object initialization is guaranteed to take place and when it isn&rsquo;t, for they&rsquo;re too complicated to know.</p>
 
 <p>Just form a good habit to always initialize objects before using them manually.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// manual init. of an int
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>text <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">A C-style string</span><span style="color:#e6db74">&#34;</span>; <span style="color:#75715e">// manual init. of a pointer
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> d;
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cin <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> d;
-</code></pre></div>
+
+<pre><code class="language-cpp">int x = 0; // manual init. of an int
+const char *text = &quot;A C-style string&quot;; // manual init. of a pointer
+double d;
+std::cin &gt;&gt; d;
+</code></pre>
+
 <h1 id="2-initialize-data-member-with-member-initialization-list">2. Initialize data member with member initialization list</h1>
 
 <p>The arguments in the initialization list are used as constructor arguments for the various data members (will be copy-constructed), which will be more efficient than a call to the default constructor followed by a calll to the copy assignment operator.</p>
@@ -451,70 +453,74 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cin <
 </ol>
 
 <p>Below is an example of non-local static objects requiring correct order of initialization (firstly tfs, secondly tempDir):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">//========================
-</span><span style="color:#75715e"></span><span style="color:#75715e">// fileSystem.h       
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FileSystem</span> {            <span style="color:#75715e">// created by library developer
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">//========================
+// fileSystem.h       
+class FileSystem {            // created by library developer
+public:
     ...
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t numDisks() <span style="color:#66d9ef">const</span>;
+    std::size_t numDisks() const;
     ...
 };
 
-<span style="color:#66d9ef">extern</span> FileSystem tfs;        <span style="color:#75715e">// non-local static object for clients to use 
-</span><span style="color:#75715e"></span>                              <span style="color:#75715e">// &#34;tfs&#34; = &#34;the file system&#34;
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">//========================
-</span><span style="color:#75715e"></span><span style="color:#75715e">// directory.h           
-</span><span style="color:#75715e"></span><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&lt;fileSystem.h&gt;       // created by library client</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Directory</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+extern FileSystem tfs;        // non-local static object for clients to use 
+                              // &quot;tfs&quot; = &quot;the file system&quot;
+
+//========================
+// directory.h           
+#include &lt;fileSystem.h&gt;       // created by library client
+class Directory {
+public:
     Directory( params );
     ...
 };
 
-Directory <span style="color:#a6e22e">tempDir</span>( params );  <span style="color:#75715e">// non-local static object for
-</span><span style="color:#75715e"></span>                              <span style="color:#75715e">// directory of temporary files
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">//========================
-</span><span style="color:#75715e"></span><span style="color:#75715e">// directory.cpp
-</span><span style="color:#75715e"></span>Directory<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Directory( params )
+Directory tempDir( params );  // non-local static object for
+                              // directory of temporary files
+
+//========================
+// directory.cpp
+Directory::Directory( params )
 {
     ...
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t disks <span style="color:#f92672">=</span> tfs.numDisks(); <span style="color:#75715e">// use the tfs objects
-</span><span style="color:#75715e"></span>    ...
+    std::size_t disks = tfs.numDisks(); // use the tfs objects
+    ...
 }
-</code></pre></div>
+</code></pre>
+
 <p>Since the relative order of initialization of non-local static objects (tfs vs. tempDir) defined in different translation units (fileSystem vs. directory) is undefined, and given the fact that C++ guarantees that local static objects are initialized when the object&rsquo;s definition is first encountered during a call to that function, simply replace direct accesses to non-local static objects with calls to functions that return references to local static objects, and the problem is solved, with a little bonus of saving the cost of constructing/destructing the object in the situation of the function never being called (this design implementation is the well-known singleton pattern):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">//========================
-</span><span style="color:#75715e"></span><span style="color:#75715e">// fileSystem.h       
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FileSystem</span> {...};     <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span>
-FileSystem<span style="color:#f92672">&amp;</span> tfs()           <span style="color:#75715e">// replace the tfs object;
-</span><span style="color:#75715e"></span>{                           <span style="color:#75715e">// could also be static in the FileSystem class
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> FileSystem fs;   <span style="color:#75715e">// define and initialize a local static object
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> fs;              <span style="color:#75715e">// return a reference to it
-</span><span style="color:#75715e"></span>} 
 
-<span style="color:#75715e">//========================
-</span><span style="color:#75715e"></span><span style="color:#75715e">// directory.h           
-</span><span style="color:#75715e"></span><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&lt;fileSystem.h&gt;       </span><span style="color:#75715e">
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Directory</span> { ... };          <span style="color:#75715e">// as before
-</span><span style="color:#75715e"></span>
-Directory<span style="color:#f92672">&amp;</span> tempDir( params )      <span style="color:#75715e">// replace the tempDir object;
-</span><span style="color:#75715e"></span>{                                 <span style="color:#75715e">// could also be static in the Directory class
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> Directory <span style="color:#a6e22e">td</span>(params);  <span style="color:#75715e">// definea and initialize a local static object
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> td;                    <span style="color:#75715e">// return a reference to it
-</span><span style="color:#75715e"></span>}
+<pre><code class="language-cpp">//========================
+// fileSystem.h       
+class FileSystem {...};     // as before
 
-<span style="color:#75715e">//========================
-</span><span style="color:#75715e"></span><span style="color:#75715e">// directory.cpp
-</span><span style="color:#75715e"></span>Directory<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Directory( params )
+FileSystem&amp; tfs()           // replace the tfs object;
+{                           // could also be static in the FileSystem class
+    static FileSystem fs;   // define and initialize a local static object
+    return fs;              // return a reference to it
+} 
+
+//========================
+// directory.h           
+#include &lt;fileSystem.h&gt;       
+class Directory { ... };          // as before
+
+Directory&amp; tempDir( params )      // replace the tempDir object;
+{                                 // could also be static in the Directory class
+    static Directory td(params);  // definea and initialize a local static object
+    return td;                    // return a reference to it
+}
+
+//========================
+// directory.cpp
+Directory::Directory( params )
 {
     ...
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t disks <span style="color:#f92672">=</span> tfs().numDisks(); <span style="color:#75715e">// use the new tfs()
-</span><span style="color:#75715e"></span>    ...
+    std::size_t disks = tfs().numDisks(); // use the new tfs()
+    ...
 }
-</code></pre></div>
+</code></pre>
+
 <blockquote>
 <p>P.S.: There&rsquo;s limitation for non-<code>const</code> static object (local or non-local) in multiple threads scenarios. One way to deal with the trouble is to manually invoke all the reference-returning functions during the single-threaded startup portion of the program to eliminate initialization-related race condition.</p>
 </blockquote>

@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-4 Know How to View Deduced Types</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -396,64 +396,80 @@ Suffering is optional.</p>
 <h4 id="compiler-diagnostics">Compiler Diagnostics</h4>
 
 <p>We can get a compiler to show what it deduced for a type by causing a compilation problem using that type:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span> <span style="color:#75715e">// Declaration only.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TD</span>; <span style="color:#75715e">// TD == &#34;Type Displayer&#34;. 
-</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> theAnser <span style="color:#f92672">=</span> <span style="color:#ae81ff">42</span>;
-<span style="color:#66d9ef">auto</span> x <span style="color:#f92672">=</span> theAnswer;
-<span style="color:#66d9ef">auto</span> y <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>theAnswer;
 
-TD<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">decltype</span>(x)<span style="color:#f92672">&gt;</span> xType;
-TD<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">decltype</span>(y)<span style="color:#f92672">&gt;</span> yType;
-</code></pre></div>
+<pre><code class="language-cpp">template&lt;typename T&gt; // Declaration only.
+class TD; // TD == &quot;Type Displayer&quot;. 
+</code></pre>
+
+<pre><code class="language-cpp">const int theAnser = 42;
+auto x = theAnswer;
+auto y = &amp;theAnswer;
+
+TD&lt;decltype(x)&gt; xType;
+TD&lt;decltype(y)&gt; yType;
+</code></pre>
+
 <p>For the code above, since there&rsquo;s no template definition to instantiate, compiler will yield the error messages like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">error: <span style="color:#960050;background-color:#1e0010">&#39;</span>xType<span style="color:#960050;background-color:#1e0010">&#39;</span> uses undefined <span style="color:#66d9ef">class</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">TD</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#960050;background-color:#1e0010">&#39;</span>
-error: <span style="color:#960050;background-color:#1e0010">&#39;</span>yType<span style="color:#960050;background-color:#1e0010">&#39;</span> uses undefined <span style="color:#66d9ef">class</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">TD</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span><span style="color:#960050;background-color:#1e0010">&#39;</span>
-</code></pre></div>
+
+<pre><code class="language-cpp">error: 'xType' uses undefined class 'TD&lt;int&gt;'
+error: 'yType' uses undefined class 'TD&lt;const int *&gt;'
+</code></pre>
+
 <p>Through these errors, we get useful type information.</p>
 
 <h4 id="runtime-output">Runtime Output</h4>
 
 <p>Consider a more complex example involving a user-defined type (<code>Widget</code>), an STL container(<code>std::vector</code>), and an <code>auto</code> variable (<code>vm</code>), which is more representative of the situation where we want to see deduced type information:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>               <span style="color:#75715e">// template function to
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> f(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> param);            <span style="color:#75715e">// be called
-</span><span style="color:#75715e"></span>
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> createVec();   <span style="color:#75715e">// factory function
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> vw <span style="color:#f92672">=</span> createVec();       <span style="color:#75715e">// init vm with factory return
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>vm.empty()) {  
-    f(<span style="color:#f92672">&amp;</span>vm[<span style="color:#ae81ff">0</span>]);                     <span style="color:#75715e">// call f
-</span><span style="color:#75715e"></span>    ...
-}
-</code></pre></div>
-<p>This time, if we want to see what type is deduced for <code>T</code> and <code>param</code>, the type information displayed by IDE editors is not reliably useful. For example, the deduced type for <code>T</code> is shown as:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">conststd<span style="color:#f92672">:</span><span style="color:#f92672">:</span>_Simple_types<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>_Wrap_alloc<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>_Vec_base_types<span style="color:#f92672">&lt;</span>Widget,std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>allocator<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>_Alloc<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value_type<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value_type <span style="color:#f92672">*</span>
-</code></pre></div>
-<p>and the <code>param</code>&rsquo;s type is:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>_Simple_types<span style="color:#f92672">&lt;</span>...<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>value_type <span style="color:#f92672">*</span><span style="color:#66d9ef">const</span> <span style="color:#f92672">&amp;</span>
-</code></pre></div>
-<p>In order to create a textual representation of the type we care about and print it out on screen, we might consider the Boost TypeIndex library<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>. For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&lt;boost/type_index.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> f(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> param)
-{  
-    <span style="color:#66d9ef">using</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cout;  
-    <span style="color:#66d9ef">using</span> boost<span style="color:#f92672">:</span><span style="color:#f92672">:</span>typeindex<span style="color:#f92672">:</span><span style="color:#f92672">:</span>type_id_with_cvr;  
 
-    <span style="color:#75715e">// show T  
-</span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">T =     </span><span style="color:#e6db74">&#34;</span>       
-         <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> type_id_with_cvr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>().pretty_name() 
-         <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">\n</span><span style="color:#e6db74">&#39;</span>;  
-    <span style="color:#75715e">// show param&#39;s type  
-</span><span style="color:#75715e"></span>    cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">param = </span><span style="color:#e6db74">&#34;</span>
-         <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> type_id_with_cvr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">decltype</span>(param)<span style="color:#f92672">&gt;</span>().pretty_name()       
-         <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">\n</span><span style="color:#e6db74">&#39;</span>;  
+<pre><code class="language-cpp">template&lt;typename T&gt;               // template function to
+void f(const T&amp; param);            // be called
+
+std::vector&lt;Widget&gt; createVec();   // factory function
+const auto vw = createVec();       // init vm with factory return
+
+if (!vm.empty()) {  
+    f(&amp;vm[0]);                     // call f
     ...
 }
-</code></pre></div>
+</code></pre>
+
+<p>This time, if we want to see what type is deduced for <code>T</code> and <code>param</code>, the type information displayed by IDE editors is not reliably useful. For example, the deduced type for <code>T</code> is shown as:</p>
+
+<pre><code class="language-cpp">conststd::_Simple_types&lt;std::_Wrap_alloc&lt;std::_Vec_base_types&lt;Widget,std::allocator&lt;Widget&gt; &gt;::_Alloc&gt;::value_type&gt;::value_type *
+</code></pre>
+
+<p>and the <code>param</code>&rsquo;s type is:</p>
+
+<pre><code class="language-cpp">const std::_Simple_types&lt;...&gt;::value_type *const &amp;
+</code></pre>
+
+<p>In order to create a textual representation of the type we care about and print it out on screen, we might consider the Boost TypeIndex library<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>. For example:</p>
+
+<pre><code class="language-cpp">#include &lt;boost/type_index.hpp&gt;
+template&lt;typename T&gt;
+void f(const T&amp; param)
+{  
+    using std::cout;  
+    using boost::typeindex::type_id_with_cvr;  
+
+    // show T  
+    cout &lt;&lt; &quot;T =     &quot;       
+         &lt;&lt; type_id_with_cvr&lt;T&gt;().pretty_name() 
+         &lt;&lt; '\n';  
+    // show param's type  
+    cout &lt;&lt; &quot;param = &quot;
+         &lt;&lt; type_id_with_cvr&lt;decltype(param)&gt;().pretty_name()       
+         &lt;&lt; '\n';  
+    ...
+}
+</code></pre>
+
 <p>Under compilers from GNU and Clang, Boost.TypeIndex produces this accurate output:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">T <span style="color:#f92672">=</span>     Widget <span style="color:#66d9ef">const</span><span style="color:#f92672">*</span>
-param <span style="color:#f92672">=</span> Widget <span style="color:#66d9ef">const</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span>
-</code></pre></div><div class="footnotes">
+
+<pre><code class="language-cpp">T =     Widget const*
+param = Widget const* const&amp;
+</code></pre>
+<div class="footnotes">
 
 <hr />
 

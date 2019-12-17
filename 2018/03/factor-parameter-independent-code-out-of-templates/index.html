@@ -65,7 +65,7 @@
 
     <title>Item-44 Factor parameter-independent code out of templates</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -405,79 +405,91 @@ Suffering is optional.</p>
 <h1 id="bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</h1>
 
 <p>For example, suppose we&rsquo;d like to write a template for fixed-size square matrices that support matrix inversion:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t n<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// template for n*n matrices of obejcts of type T
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareMatrix</span>{
+
+<pre><code class="language-cpp">template&lt;typename T, std::size_t n&gt;  // template for n*n matrices of obejcts of type T
+class SquareMatrix{
 pubic:
-    <span style="color:#66d9ef">void</span> invert();  <span style="color:#75715e">// invert the matrix in place
-</span><span style="color:#75715e"></span>    ...
+    void invert();  // invert the matrix in place
+    ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>This template takes a type parameter <code>T</code> as well as a <em>non-type parameter</em> <code>n</code> of type <code>size_t</code>. This example is actually a classic way for template-induced code bloat:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">SquareMatrix<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span>, <span style="color:#ae81ff">5</span><span style="color:#f92672">&gt;</span> sm1;
-sm1.invert();  <span style="color:#75715e">// call SquareMatrix&lt;double, 5&gt;::invert
-</span><span style="color:#75715e"></span>SquareMatrix<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span>, <span style="color:#ae81ff">10</span><span style="color:#f92672">&gt;</span> sm2;
-sm2.invert();  <span style="color:#75715e">// call SquareMatrix&lt;double, 10&gt;::invert
-</span></code></pre></div>
+
+<pre><code class="language-cpp">SquareMatrix&lt;double, 5&gt; sm1;
+sm1.invert();  // call SquareMatrix&lt;double, 5&gt;::invert
+SquareMatrix&lt;double, 10&gt; sm2;
+sm2.invert();  // call SquareMatrix&lt;double, 10&gt;::invert
+</code></pre>
+
 <p>In the statements above, two copies of <code>invert</code> will be instantiated, and these two version of <code>invert</code> are character-for-character identical except for the use of 5 in one version and 10 in the other. To reduce the code bloat, we could redesign and call a parameterized function instead.</p>
 
 <h2 id="replace-with-function-parameters">Replace with function parameters</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>     <span style="color:#75715e">// size-independent base class for square matrices
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareMatrixBase</span>{  <span style="color:#75715e">// all matrices holding a givin type of object will share a single base class with a single copy of this base class&#39;s version of invert
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">protected</span><span style="color:#f92672">:</span> 
-    <span style="color:#75715e">// intend only to be a way for derived classes to avoid code replication, so declared as protected instaend of public
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> invert(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t matrixSize); <span style="color:#75715e">// invert matrix of the given size
-</span><span style="color:#75715e"></span>    ...
+
+<pre><code class="language-cpp">template&lt;typename T&gt;     // size-independent base class for square matrices
+class SquareMatrixBase{  // all matrices holding a givin type of object will share a single base class with a single copy of this base class's version of invert
+protected: 
+    // intend only to be a way for derived classes to avoid code replication, so declared as protected instaend of public
+    void invert(std::size_t matrixSize); // invert matrix of the given size
+    ...
 };
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t n<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SqureMatrix</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> SquareMatrixBase<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> { <span style="color:#75715e">// not a is-a relationship, using private inheritance only for base class implementation, item 39
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">using</span> SquareMatrixBase<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>invert;  <span style="color:#75715e">// avoid hiding base version of invert, item 33
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    ...                                 <span style="color:#75715e">// make inline call to base class version of invert:
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> invert() { <span style="color:#66d9ef">this</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>invert(n); }  <span style="color:#75715e">// 1. it&#39;s implicit inline, so there&#39;s no addictional cost of calling it, item 30
-</span><span style="color:#75715e"></span>    ...                                 <span style="color:#75715e">// 2. use &#34;this-&gt;&#34; so that function names in templatized base classes are revealed in derived classes, item 43
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+template&lt;typename T, std::size_t n&gt;
+class SqureMatrix: private SquareMatrixBase&lt;T&gt; { // not a is-a relationship, using private inheritance only for base class implementation, item 39
+private:
+    using SquareMatrixBase&lt;T&gt;::invert;  // avoid hiding base version of invert, item 33
+public:
+    ...                                 // make inline call to base class version of invert:
+    void invert() { this-&gt;invert(n); }  // 1. it's implicit inline, so there's no addictional cost of calling it, item 30
+    ...                                 // 2. use &quot;this-&gt;&quot; so that function names in templatized base classes are revealed in derived classes, item 43
+};
+</code></pre>
+
 <p>This design addressed the issue of code bloat, but it also introduces a problem: <code>SquareMatrixBase::invert</code> only knows the size of the data, but it does not know where the data for a particular matrix is, because only the derived class knows that. We could add another parameter to <code>SquareMatrixBase::invert</code>, such as a pointer to the beginning of a chunk of memory that stores the matrix&rsquo;s data.</p>
 
 <p>However, an alternative and possibly better solution will be to have <code>SquareMatrixBase</code> store both a pointer to the memory for the matrix values, as well as the matrix size, so that any other functions asking for the matrix memory address or matrix size can be written in a address-independent-and-size-independent manner, and moved into <code>SquareMatrixBase</code>.</p>
 
 <h2 id="replace-with-class-data-members">Replace with class data members</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareMatrixBase</span> {
-<span style="color:#66d9ef">protected</span><span style="color:#f92672">:</span>
-    SquareMatrixBase(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t n, T <span style="color:#f92672">*</span>pMem)  <span style="color:#75715e">// store matrix size and a ptr to matrix values
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> size(n), pData(pMem) {}
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setDataPtr</span>(T <span style="color:#f92672">*</span>ptr) { pData <span style="color:#f92672">=</span> ptr; }  <span style="color:#75715e">// reassign pData
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size;  <span style="color:#75715e">// size of matrix
-</span><span style="color:#75715e"></span>    T <span style="color:#f92672">*</span>pData;  <span style="color:#75715e">// pointer to matrix values
-</span><span style="color:#75715e"></span>};
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t n<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareMatrix</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> SqureMatrixBase<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    SquareMatrix()  <span style="color:#75715e">// send matrix size and data ptr to base class
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> SquareMatrixBase<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(n, data) {} 
+
+<pre><code class="language-cpp">template&lt;typename T&gt;
+class SquareMatrixBase {
+protected:
+    SquareMatrixBase(std::size_t n, T *pMem)  // store matrix size and a ptr to matrix values
+    : size(n), pData(pMem) {}
+    void setDataPtr(T *ptr) { pData = ptr; }  // reassign pData
     ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    T data[n<span style="color:#f92672">*</span>n];
+private:
+    std::size_t size;  // size of matrix
+    T *pData;  // pointer to matrix values
 };
-</code></pre></div>
+</code></pre>
+
+<pre><code class="language-cpp">template&lt;typename T, std::size_t n&gt;
+class SquareMatrix: private SqureMatrixBase&lt;T&gt; {
+public:
+    SquareMatrix()  // send matrix size and data ptr to base class
+    : SquareMatrixBase&lt;T&gt;(n, data) {} 
+    ...
+private:
+    T data[n*n];
+};
+</code></pre>
+
 <p>Objects of such type have no need for dynamic memory allocation, but the objects could be very large. An alternative would be to put the data for each matrix on the heap:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t n<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareMatrix</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> SqureMatrixBase<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">template&lt;typename T, std::size_t n&gt;
+class SquareMatrix: private SqureMatrixBase&lt;T&gt; {
+public:
     SquareMatrix()  
-    <span style="color:#f92672">:</span> SquareMatrixBase<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(n, <span style="color:#ae81ff">0</span>),         <span style="color:#75715e">// set base class ptr to null
-</span><span style="color:#75715e"></span>      pData(<span style="color:#66d9ef">new</span> T[n<span style="color:#f92672">*</span>n])                  <span style="color:#75715e">// allocate memory for matrix values and save a ptr to the memory
-</span><span style="color:#75715e"></span>    { <span style="color:#66d9ef">this</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>setDataPtr(pData.get()); }   <span style="color:#75715e">// give a copy of the ptr to the base class
-</span><span style="color:#75715e"></span>    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    boost<span style="color:#f92672">:</span><span style="color:#f92672">:</span>scoped_array<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> pData;  <span style="color:#75715e">// see item 13 for info on boost::scoped_array
-</span><span style="color:#75715e"></span>};
-</code></pre></div>
+    : SquareMatrixBase&lt;T&gt;(n, 0),         // set base class ptr to null
+      pData(new T[n*n])                  // allocate memory for matrix values and save a ptr to the memory
+    { this-&gt;setDataPtr(pData.get()); }   // give a copy of the ptr to the base class
+    ...
+private:
+    boost::scoped_array&lt;T&gt; pData;  // see item 13 for info on boost::scoped_array
+};
+</code></pre>
+
 <p>No matter where the matrix value data is stored, the result from a bloat point of view is that many <code>SquareMatrix</code>&rsquo;s member functions can be simple inline calls to base class versions that are shared with all other matrices holding the same type of data, regardless of their size.</p>
 
 <h2 id="efficiency-concerns">Efficiency concerns</h2>

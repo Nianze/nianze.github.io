@@ -65,7 +65,7 @@
 
     <title>Item-11 Handle self assignment in operator=</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -388,27 +388,31 @@ Suffering is optional.</p>
               <p>Solve self assignment situation in operator= by comparing addresses of source and target objects, careful statement ordering, and copy-and-<code>swap</code>.</p>
 
 <p>When operator= applies on more than one object, two or more of the objects may be the same:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">a[i] <span style="color:#f92672">=</span> a[j]  <span style="color:#75715e">// potential assignment to self
-</span><span style="color:#75715e"></span><span style="color:#f92672">*</span>px <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>py;   <span style="color:#75715e">// potential assignment to self
-</span></code></pre></div>
+
+<pre><code class="language-cpp">a[i] = a[j]  // potential assignment to self
+*px = *py;   // potential assignment to self
+</code></pre>
+
 <p>This is the result of <em>aliasing</em> (having more than one way to refer to an object). In general, operations on references or pointers to multiple objects of the same type (or objects of different types derived from the same base class) need to consider that the objects might be the same.</p>
 
 <p>When trying to manage resources manually rather than to take advantage of resource-managing objects (item 13, item 14), it is possible to accidentally release a resource before being done using it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bitmap</span>{...};
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span>{
-    ...
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    Bitmap <span style="color:#f92672">*</span>pb;  <span style="color:#75715e">// ptr to a heap-allocated object
-</span><span style="color:#75715e"></span>};
 
-Widget<span style="color:#f92672">&amp;</span>
-Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs)  <span style="color:#75715e">// unsafe impl. of operator=
-</span><span style="color:#75715e"></span>{
-    <span style="color:#66d9ef">delete</span> pb;                <span style="color:#75715e">// stop using cur. bitmap
-</span><span style="color:#75715e"></span>    pb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bitmap(<span style="color:#f92672">*</span>rhs.pb); <span style="color:#75715e">// start using a copy of rhs&#39;s bitmap
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;             <span style="color:#75715e">// item 10
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+<pre><code class="language-cpp">class Bitmap{...};
+class Widget{
+    ...
+private:
+    Bitmap *pb;  // ptr to a heap-allocated object
+};
+
+Widget&amp;
+Widget::operator=(const Widget&amp; rhs)  // unsafe impl. of operator=
+{
+    delete pb;                // stop using cur. bitmap
+    pb = new Bitmap(*rhs.pb); // start using a copy of rhs's bitmap
+    return *this;             // item 10
+}
+</code></pre>
+
 <p>When <code>*this</code> (the target of the assignment) and <code>rhs</code> (the source of the assignment) are the same object, <code>delete</code> destroys both of them in the begining, resulting to the fact that <code>this</code> points to a deleted object instead of being unchanged by the assignment to self. Moreover, besides self-assignment-unsafe, this implementation of operator= is also exception-unsafe.</p>
 
 <p>There are three possible ways to solve the problem:</p>
@@ -420,25 +424,29 @@ Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span><s
 </ol>
 
 <h4 id="1-identity-test">1. Identity test</h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">Widget&amp; Widget::operator=(const Widget&amp; rhs)
 {
-    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>rhs) <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>; <span style="color:#75715e">// test: if a self-assignment, do nothing
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">delete</span> pb;
-    pb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bitmap(<span style="color:#f92672">*</span>rhs.pb);
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    if (this == &amp;rhs) return *this; // test: if a self-assignment, do nothing
+    delete pb;
+    pb = new Bitmap(*rhs.pb);
+    return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <p>The problem here is that once the <code>new Bitmap</code> expression yields an exception (due to insufficient memory or <code>Bitmap</code>&rsquo;s copy constructor throwing one), <code>this</code> will end up refer to a deleted <code>Bitmap</code>, which is toxic for there&rsquo;s no way to safely delete them or even safely read them.</p>
 
 <h4 id="2-careful-reorder">2. Careful reorder</h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs)
+
+<pre><code class="language-cpp">Widget&amp; Widget::operator=(const Widget&amp; rhs)
 {
-    Bitmap <span style="color:#f92672">*</span>pOrig <span style="color:#f92672">=</span> pb;  <span style="color:#75715e">// remember original pb
-</span><span style="color:#75715e"></span>    pb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bitmap(<span style="color:#f92672">*</span>rhs.pb); <span style="color:#75715e">// point pb to a copy of rhs&#39; bitmap
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">delete</span> pOrig;  <span style="color:#75715e">// delete the original pb
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    Bitmap *pOrig = pb;  // remember original pb
+    pb = new Bitmap(*rhs.pb); // point pb to a copy of rhs' bitmap
+    delete pOrig;  // delete the original pb
+    return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Under this implementation, even it <code>new Bitmap</code> throws an exception, <code>pb</code> and <code>this</code> remain unchanged. Moreover, it does work even without the identity test.</p>
 
 <p>Considering efficiency, it may be sensible to put the identity test back at the top. However, considering the frequency of self-assignment situation as well as the longer codes and more branches in the flow of control, it may actually decrease runtime speed (at least the effectiveness of instruction prefetching, caching, and pipelining can be reduced).</p>
@@ -446,25 +454,29 @@ Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span><s
 <h4 id="3-copy-and-swap">3. Copy and swap</h4>
 
 <p>This is an alternative way to the above careful reordering technique, which is closely associated with exception safety (item 29).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
-    ...
-    <span style="color:#66d9ef">void</span> swap(Widget<span style="color:#f92672">&amp;</span> rhs); <span style="color:#75715e">// exchange *this&#39;s and rhs&#39;s data; see item 29 for details
-</span><span style="color:#75715e"></span>};
 
-Widget<span style="color:#f92672">&amp;</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs)
+<pre><code class="language-cpp">class Widget {
+    ...
+    void swap(Widget&amp; rhs); // exchange *this's and rhs's data; see item 29 for details
+};
+
+Widget&amp; Widget::operator=(const Widget&amp; rhs)
 {
-    Widget <span style="color:#a6e22e">temp</span>(rhs);   <span style="color:#75715e">// make a copy
-</span><span style="color:#75715e"></span>    swap(temp);         <span style="color:#75715e">// swap *this&#39;s data with the copy&#39;s
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+    Widget temp(rhs);   // make a copy
+    swap(temp);         // swap *this's data with the copy's
+    return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <p>A variation taking advantage of the fact that passing by value makes a copy of it (item 20):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span> Widget<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(Widget rhs)  <span style="color:#75715e">// pass by value, rhs is a copy of the object passed in
-</span><span style="color:#75715e"></span>{
-    swap(rhs);         <span style="color:#75715e">// swap *this&#39;s data with the copy&#39;s
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
+
+<pre><code class="language-cpp">Widget&amp; Widget::operator=(Widget rhs)  // pass by value, rhs is a copy of the object passed in
+{
+    swap(rhs);         // swap *this's data with the copy's
+    return *this;
 }
-</code></pre></div>
+</code></pre>
+
 <p>This variation sacrifices the clarity but may let compilers generate more efficient code by moving the copying operation from the body of the function to construction of the parameter.</p>
               
             </div>

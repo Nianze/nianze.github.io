@@ -65,7 +65,7 @@
 
     <title>Item-3 Use const whenever possible</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -412,13 +412,15 @@ Suffering is optional.</p>
 </ol>
 
 <h1 id="1-const-pointer">1. <code>const</code> pointer</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">char</span> greeting[] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Hello</span><span style="color:#e6db74">&#34;</span>;
-<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> greeting; <span style="color:#75715e">// non-const pointer, non-const data
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> greeting; <span style="color:#75715e">// non-const pointer, const data
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> p <span style="color:#f92672">=</span> greeting; <span style="color:#75715e">// const pointer, non-const data
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> p <span style="color:#f92672">=</span> greeting; <span style="color:#75715e">// const pointer, const data
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> <span style="color:#66d9ef">const</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">const</span> p <span style="color:#f92672">=</span> greeting; <span style="color:#75715e">// const pointer, const data
-</span></code></pre></div>
+
+<pre><code class="language-cpp">char greeting[] = &quot;Hello&quot;;
+char *p = greeting; // non-const pointer, non-const data
+const char *p = greeting; // non-const pointer, const data
+char * const p = greeting; // const pointer, non-const data
+const char * const p = greeting; // const pointer, const data
+char const * const p = greeting; // const pointer, const data
+</code></pre>
+
 <p>If the <code>const</code> appears to the left of the asterisk, what&rsquo;s pointed to is constant; if the word <code>const</code> appears to the right of the asterisk, the pointer itself is constant. It&rsquo;s helpful to read pointer declarations right to left: <code>const char * const p</code> reads as &ldquo;p is a constant pointer to constant chars&rdquo;.</p>
 
 <h1 id="2-const-iterator">2. <code>const</code> iterator</h1>
@@ -428,32 +430,36 @@ Suffering is optional.</p>
 <ol>
 <li>iterator -&gt; <code>T*</code> pointer</li>
 <li>const iterator -&gt; <code>T* const</code> pointer</li>
-
-<li><p>const_iterator -&gt; <code>const T*</code> pointer</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> vec;
-...
-<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator iter <span style="color:#f92672">=</span> vec.begin(); <span style="color:#75715e">// acts like T* const
-</span><span style="color:#75715e"></span><span style="color:#f92672">*</span>iter <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// OK.
-</span><span style="color:#75715e"></span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>iter;     <span style="color:#75715e">// error.
-</span><span style="color:#75715e"></span>
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>const_iterator cIter <span style="color:#f92672">=</span> vec.begin(); <span style="color:#75715e">// acts like const T*
-</span><span style="color:#75715e"></span><span style="color:#f92672">*</span>cIter <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// error.
-</span><span style="color:#75715e"></span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>cIter;     <span style="color:#75715e">// OK.
-</span></code></pre></div></li>
+<li>const_iterator -&gt; <code>const T*</code> pointer</li>
 </ol>
+
+<pre><code class="language-cpp">std::vector&lt;int&gt; vec;
+...
+const std::vector&lt;int&gt;::iterator iter = vec.begin(); // acts like T* const
+*iter = 10; // OK.
+++iter;     // error.
+
+std::vector&lt;int&gt;::const_iterator cIter = vec.begin(); // acts like const T*
+*cIter = 10; // error.
+++cIter;     // OK.
+</code></pre>
 
 <h1 id="3-const-function-return-value">3. <code>const</code> function return value</h1>
 
 <p>Generally speaking, having a function return a constant value is inappropriate, but sometimes doing so may reduce implicit errors out of incidence without giving up safety or efficiency.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rational</span> {
-... <span style="color:#75715e">// contains no operator*
-</span><span style="color:#75715e"></span>};
-<span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, 
-                         <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs);
-</code></pre></div>
+
+<pre><code class="language-cpp">class Rational {
+... // contains no operator*
+};
+const Rational operator*(const Rational&amp; lhs, 
+                         const Rational&amp; rhs);
+</code></pre>
+
 <p>Declaring the return value of <code>operator*</code> to be const prevent typos like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">if</span> (a <span style="color:#f92672">*</span> b <span style="color:#f92672">=</span> c) <span style="color:#75715e">// meant to do a comparison for some user-defined objects
-</span></code></pre></div>
+
+<pre><code class="language-cpp">if (a * b = c) // meant to do a comparison for some user-defined objects
+</code></pre>
+
 <h1 id="4-const-function-parameters">4. <code>const</code> function parameters</h1>
 
 <p><code>const</code> parameters act just like local <code>const</code> objects. Unless there&rsquo;s a need to modify aparameter or local object, be sure to declare it <code>const</code>, for it may save you from annoying errors like <code>if (a = b)</code> above.</p>
@@ -476,44 +482,52 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vecto
 </blockquote>
 
 <p>However, member functions that don&rsquo;t act very <em>const</em> pass the bitwise test, such as a function including a <code>char* const</code> pointer manipulating a <code>char*</code> type class member:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CTextBlock</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class CTextBlock {
+public:
 ...
-    <span style="color:#75715e">//inappropriate but bitwise const declaration of operator[]
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t position) <span style="color:#66d9ef">const</span> 
-    {<span style="color:#66d9ef">return</span> pText[position];}
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>pText;
+    //inappropriate but bitwise const declaration of operator[]
+    char&amp; operator[](std::size_t position) const 
+    {return pText[position];}
+private:
+    char *pText;
 };
-</code></pre></div>
+</code></pre>
+
 <p>Since operator[]&rsquo;s implementation doesn&rsquo;t modify pText in any way, compilers will happily generate code after verifying that it is indeed bitwise const. However, when you create a constant object with a particular value and invoke only <code>const</code> member functions on it, you can still change its value:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> CTextBlock <span style="color:#a6e22e">cctb</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Hello</span><span style="color:#e6db74">&#34;</span>); <span style="color:#75715e">// declare constant object
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>pc <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>cctb[<span style="color:#ae81ff">0</span>]; <span style="color:#75715e">// call the const operator[]
-</span><span style="color:#75715e"></span><span style="color:#f92672">*</span>pc <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">J</span><span style="color:#e6db74">&#39;</span>  <span style="color:#75715e">// cctb has value &#34;Jello&#34; now
-</span></code></pre></div>
+
+<pre><code class="language-cpp">const CTextBlock cctb(&quot;Hello&quot;); // declare constant object
+char *pc = &amp;cctb[0]; // call the const operator[]
+*pc = 'J'  // cctb has value &quot;Jello&quot; now
+</code></pre>
+
 <p>To solve this problem, we may store data as a string instead of communicating through a C API char*:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TextBlock</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class TextBlock {
+public:
 ...
-    <span style="color:#75715e">// operator[] for const objects
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[] (<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t position) <span style="color:#66d9ef">const</span>
-    {<span style="color:#66d9ef">return</span> text[position];}
-    <span style="color:#75715e">// operator[] for non-const objects
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[] (<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t position) <span style="color:#66d9ef">const</span>
-    {<span style="color:#66d9ef">return</span> text[posion];}
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string text;
+    // operator[] for const objects
+    const char&amp; operator[] (const std::size_t position) const
+    {return text[position];}
+    // operator[] for non-const objects
+    char&amp; operator[] (const std::size_t position) const
+    {return text[posion];}
+private:
+    std::string text;
 };
-</code></pre></div>
+</code></pre>
+
 <p>Remeber the C++ feature mentioned above? By overloading operator[] and giving the different versions different return types, we can handle const and non-const TextBlock objects differently:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">TextBlock <span style="color:#a6e22e">tb</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Hello</span><span style="color:#e6db74">&#34;</span>);
-<span style="color:#66d9ef">const</span> TextBlock <span style="color:#a6e22e">ctb</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">World</span><span style="color:#e6db74">&#34;</span>);
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> tb[<span style="color:#ae81ff">0</span>];  <span style="color:#75715e">// fine, call and reading a non-const TextBlock object
-</span><span style="color:#75715e"></span>tb[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">x</span><span style="color:#e6db74">&#39;</span>;         <span style="color:#75715e">// fine, call and writing a non-const TextBlock object
-</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> ctb[<span style="color:#ae81ff">0</span>]; <span style="color:#75715e">// fine, call and reading a const TextBlock object
-</span><span style="color:#75715e"></span>ctb[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">x</span><span style="color:#e6db74">&#39;</span>;        <span style="color:#75715e">// error! call to a const TextBlock object is fine
-</span><span style="color:#75715e"></span>                     <span style="color:#75715e">// but making an assignment to returned const char&amp; type gives us an error
-</span></code></pre></div>
+
+<pre><code class="language-cpp">TextBlock tb(&quot;Hello&quot;);
+const TextBlock ctb(&quot;World&quot;);
+std::cout &lt;&lt; tb[0];  // fine, call and reading a non-const TextBlock object
+tb[0] = 'x';         // fine, call and writing a non-const TextBlock object
+std::cout &lt;&lt; ctb[0]; // fine, call and reading a const TextBlock object
+ctb[0] = 'x';        // error! call to a const TextBlock object is fine
+                     // but making an assignment to returned const char&amp; type gives us an error
+</code></pre>
+
 <h2 id="5-1-2-logical-constness">5.1.2 Logical constness</h2>
 
 <blockquote>
@@ -521,45 +535,49 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>cout 
 </blockquote>
 
 <p>A typical example of logical constness shows in such a scenario: say we want to cache the length for a CTextBlock object, and we define it like as</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CTextBlock</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class CTextBlock {
+public:
 ...
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t length() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>pText;
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t textLength;
+    std::size_t length() const;
+private:
+    char *pText;
+    std::size_t textLength;
     book lengthIsValid;
 };
 
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t CTextBlock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>length() <span style="color:#66d9ef">const</span>
+std::size_t CTextBlock::length() const
 {
-    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>lengthIsValid) {
-        textLength <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>strlen(pText); <span style="color:#75715e">// error: can&#39;t asssign to textLength 
-</span><span style="color:#75715e"></span>        lengthIsValid <span style="color:#f92672">=</span> true;            <span style="color:#75715e">// and lengthIsValid in a const member function
-</span><span style="color:#75715e"></span>    }
-    <span style="color:#66d9ef">return</span> textLength;
+    if(!lengthIsValid) {
+        textLength = std::strlen(pText); // error: can't asssign to textLength 
+        lengthIsValid = true;            // and lengthIsValid in a const member function
+    }
+    return textLength;
 }
-</code></pre></div>
+</code></pre>
+
 <p>Bitwise constness test fails and compilers complains due to the assignment to textLength and lengthIsValid, but it is supposed to be valid for <code>const</code> CTextBlock objects. The solution is to take advantage of C++&rsquo;s keyword <code>mutable</code>, which frees non-static data members from the constraints of bitwise constness:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CTextBlock</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class CTextBlock {
+public:
 ...
-    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t length() <span style="color:#66d9ef">const</span>;
-<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
-    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>pText;
-    <span style="color:#66d9ef">mutable</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t textLength;
-    <span style="color:#66d9ef">mutable</span> book lengthIsValid;
+    std::size_t length() const;
+private:
+    char *pText;
+    mutable std::size_t textLength;
+    mutable book lengthIsValid;
 };
 
-std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t CTextBlock<span style="color:#f92672">:</span><span style="color:#f92672">:</span>length() <span style="color:#66d9ef">const</span>
+std::size_t CTextBlock::length() const
 {
-    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>lengthIsValid) {
-        textLength <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>strlen(pText); <span style="color:#75715e">// error: can&#39;t asssign to textLength 
-</span><span style="color:#75715e"></span>        lengthIsValid <span style="color:#f92672">=</span> true;            <span style="color:#75715e">// and lengthIsValid in a const member function
-</span><span style="color:#75715e"></span>    }
-    <span style="color:#66d9ef">return</span> textLength;
+    if(!lengthIsValid) {
+        textLength = std::strlen(pText); // error: can't asssign to textLength 
+        lengthIsValid = true;            // and lengthIsValid in a const member function
+    }
+    return textLength;
 }
-</code></pre></div>
+</code></pre>
+
 <p>According to the mutable&rsquo;s definition, you may notice that <code>const</code> member function will not check bitwise constness for static data members. This is because following <a href="https://stackoverflow.com/questions/43936404/why-can-a-const-member-function-modify-a-static-data-member">facts</a>:</p>
 
 <ol>
@@ -572,24 +590,26 @@ std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_
 <h2 id="5-2-avoiding-duplication-in-const-and-non-const-member-function">5.2 Avoiding duplication in <code>const</code> and non-<code>const</code> member function</h2>
 
 <p>There are two versions of operator[] in class TextBlock, which is duplication and tempts us to have one version of operator[] call the other one. Although generally speaking casting is a bad idea, here we may find enough reasons to justify its usage so long as we use it properly (note that we call <code>const</code> version in non-<code>const</code> version, not the other way around!):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TextBlock</span> {
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+
+<pre><code class="language-cpp">class TextBlock {
+public:
 ...
-    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t position) <span style="color:#66d9ef">const</span>
+    const char&amp; operator[](const std::size_t position) const
     {
-        ...    <span style="color:#75715e">// some extra tasks such as bounds checking, 
-</span><span style="color:#75715e"></span>        ...    <span style="color:#75715e">// log access data, verify data integrity 
-</span><span style="color:#75715e"></span>        ...    <span style="color:#75715e">// to make code duplication unbearablly tedious
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> text[position];
+        ...    // some extra tasks such as bounds checking, 
+        ...    // log access data, verify data integrity 
+        ...    // to make code duplication unbearablly tedious
+        return text[position];
     }
-    <span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span>[](<span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t position) <span style="color:#66d9ef">const</span> 
+    char&amp; operator[](const std::size_t position) const 
     {
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">const_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">char</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span> ( <span style="color:#75715e">// cast away const on return type
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> TextBlock<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>)[position]; <span style="color:#75715e">// add const to *this&#39;s type in order to call const version of operator[]
-</span><span style="color:#75715e"></span>        );
+        return const_cast&lt;char&amp;&gt; ( // cast away const on return type
+            static_cast&lt;const TextBlock&amp;&gt;(*this)[position]; // add const to *this's type in order to call const version of operator[]
+        );
     }
 };
-</code></pre></div>
+</code></pre>
+
 <p>It&rsquo;s definitely worth knowing this technique of implementing a non-<code>const</code> member function in terms of its <code>const</code> twin, although the syntax is somehow ungainly.</p>
               
             </div>

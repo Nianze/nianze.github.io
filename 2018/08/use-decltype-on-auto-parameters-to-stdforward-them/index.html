@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-33 Use decltype on auto&amp;&amp; parameters to std::forward them</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -387,17 +387,18 @@ Suffering is optional.</p>
             <div class="main-content-wrap">
               <p>C++14 introduces generic lambdas, which use <code>auto</code> in their parameter specifications.</p>
 
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> f <span style="color:#f92672">=</span> [](<span style="color:#66d9ef">auto</span> x){ <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">normalize</span>(x); };
-</code></pre></div>
+<pre><code class="language-cpp">auto f = [](auto x){ return normalize(x); };
+</code></pre>
+
 <p>If we want to perfect-fowrad a parameter <code>x</code> to <code>normalize</code>, we make two changes:</p>
 
 <ol>
 <li>use universal reference <code>auto&amp;&amp;</code></li>
-
-<li><p>apply <code>decltype</code> on parameter to specify the correct type for type argument of <code>std::forward</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> f <span style="color:#f92672">=</span> [](<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> x){ <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">normalize</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">decltype</span>(x)<span style="color:#f92672">&gt;</span>(x)); };
-</code></pre></div></li>
+<li>apply <code>decltype</code> on parameter to specify the correct type for type argument of <code>std::forward</code></li>
 </ol>
+
+<pre><code class="language-cpp">auto f = [](auto&amp;&amp; x){ return normalize(std::forward&lt;decltype(x)&gt;(x)); };
+</code></pre>
 
 <p>As a fact of <code>decltype(x)</code>:
 * if <code>x</code> is bound to an lvalue, it will yield an lvalue refernece;
@@ -406,31 +407,38 @@ Suffering is optional.</p>
 <p>Actually, the result of <code>decltype(x)</code> doesn&rsquo;t follow the convention of <code>std::forward</code>, where it dictates that the type argument be an lvalue reference to indicate an lvalue and a non-reference to indicate an rvalue.</p>
 
 <p>Thanks to reference-collapsing rule, even though rvalue convention is broken here, the collapsing result is still the same. Say the <code>T</code> in the implementation of <code>std::forward</code> below is instantiated as <code>Widget&amp;&amp;</code>, an rvalue reference type:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>                         <span style="color:#75715e">// in namespace
-</span><span style="color:#75715e"></span>T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> forward(remove_reference_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> param)    <span style="color:#75715e">// std
-</span><span style="color:#75715e"></span>{  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);
+
+<pre><code class="language-cpp">template&lt;typename T&gt;                         // in namespace
+T&amp;&amp; forward(remove_reference_t&lt;T&gt;&amp; param)    // std
+{  return static_cast&lt;T&amp;&amp;&gt;(param);
 }
-</code></pre></div>
+</code></pre>
+
 <p>and we get this before reference collapsing:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> forward(Widget<span style="color:#f92672">&amp;</span> param)         <span style="color:#75715e">// instantiation of
-</span><span style="color:#75715e"></span>{                                          <span style="color:#75715e">// std::forward when 
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);       <span style="color:#75715e">// T is Widget&amp;&amp; 
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+
+<pre><code class="language-cpp">Widget&amp;&amp; &amp;&amp; forward(Widget&amp; param)         // instantiation of
+{                                          // std::forward when 
+    static_cast&lt;Widget&amp;&amp; &amp;&amp;&gt;(param);       // T is Widget&amp;&amp; 
+}
+</code></pre>
+
 <p>After reference collapsing:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> forward(Widget<span style="color:#f92672">&amp;</span> param)         <span style="color:#75715e">// instantiation of
-</span><span style="color:#75715e"></span>{                                       <span style="color:#75715e">// std::forward when 
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(param);       <span style="color:#75715e">// T is Widget&amp;&amp; 
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+
+<pre><code class="language-cpp">Widget&amp;&amp; forward(Widget&amp; param)         // instantiation of
+{                                       // std::forward when 
+    static_cast&lt;Widget&amp;&amp;&gt;(param);       // T is Widget&amp;&amp; 
+}
+</code></pre>
+
 <p>This is exactly what we expect.</p>
 
 <h4 id="variadic-parameters">Variadic parameters</h4>
 
 <p>For more than a single parameter, using following format:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> f <span style="color:#f92672">=</span> [](<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... xs)
-         { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">normalize</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">decltype</span>(xs)<span style="color:#f92672">&gt;</span>(xs)...); }
-</code></pre></div>
+
+<pre><code class="language-cpp">auto f = [](auto&amp;&amp;... xs)
+         { return normalize(std::forward&lt;decltype(xs)&gt;(xs)...); }
+</code></pre>
               
             </div>
           </div>

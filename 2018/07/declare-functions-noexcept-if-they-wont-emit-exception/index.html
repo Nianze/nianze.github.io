@@ -65,7 +65,7 @@
 
     <title>[EMCpp]Item-14 Declare Functions Noexcept if They Won&#39;t Emit Exception</title>
 
-    <link rel="icon" href="https://nianze.tk/favicon.png">
+    <link rel="icon" href="https://nianze.tk/images/favicon.png">
     
 
     
@@ -399,9 +399,11 @@ Suffering is optional.</p>
 <h1 id="more-optimizable">More optimizable</h1>
 
 <p>For functions that won&rsquo;t produce exceptions, we have C++98 style as well as C++11 style:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">f</span>(<span style="color:#66d9ef">int</span> x) <span style="color:#66d9ef">throw</span>();   <span style="color:#75715e">// C++98 style
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">f</span>(<span style="color:#66d9ef">int</span> x) <span style="color:#66d9ef">noexcept</span>;  <span style="color:#75715e">// C++11 style
-</span></code></pre></div>
+
+<pre><code class="language-cpp">int f(int x) throw();   // C++98 style
+int f(int x) noexcept;  // C++11 style
+</code></pre>
+
 <p>The difference:</p>
 
 <ol>
@@ -412,17 +414,19 @@ Suffering is optional.</p>
 <p>The difference in <em>possibly</em> unwinding leads to large impact on code generation: optimizers need not keep the runtime stack in an unwindable state, and need not ensure that objects in a <code>noexcept</code> function are destroyed in the inverse order of construction, both of which optimization flexibility is lacked for <code>throw()</code>. In fact, <code>throw</code> has the same level of optimizability as functions with no exception specification.</p>
 
 <p>For some functions, <code>noexcept</code> is even more desired. For example, calls to copy operations in C++98 will be replaced with calls to move operations in C++11, only if the move operation is declared <code>noexcept</code>. Similarly, <code>swap</code>s in the Standard Library are <code>noexcpet</code> sometimes dependends on whether uesr-defined swaps are <code>noexcept</code>. Following is the declarations for the Standard Library&rsquo;s <code>swap</code>s for arrays and <code>std::pair</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span>, size_t N<span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">void</span> swap(T (<span style="color:#f92672">&amp;</span>a)[N], T (<span style="color:#f92672">&amp;</span>b)[N]) <span style="color:#66d9ef">noexcept</span>(<span style="color:#66d9ef">noexcept</span>(swap(<span style="color:#f92672">*</span>a, <span style="color:#f92672">*</span>b)));
 
-<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T1</span>, <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T2</span><span style="color:#f92672">&gt;</span>
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">pair</span> {
+<pre><code class="language-cpp">template&lt;class T, size_t N&gt;
+void swap(T (&amp;a)[N], T (&amp;b)[N]) noexcept(noexcept(swap(*a, *b)));
+
+template&lt;class T1, class T2&gt;
+struct pair {
     ...
-    <span style="color:#66d9ef">void</span> swap(pair<span style="color:#f92672">&amp;</span> p) <span style="color:#66d9ef">noexcept</span>(<span style="color:#66d9ef">noexcept</span>(swap(first, p.first)) <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-                                <span style="color:#66d9ef">noexcept</span>(swap(second, p.second)));
+    void swap(pair&amp; p) noexcept(noexcept(swap(first, p.first)) &amp;&amp;
+                                noexcept(swap(second, p.second)));
     ...
 };
-</code></pre></div>
+</code></pre>
+
 <p>These functions are <em>conditionally</em> <code>noexcept</code>: whether they are <code>noexcept</code> depends on whether the expression inside the <code>noexcept</code> clauses are <code>noexcept</code>. The fact that swapping higher-level data structures can generally be <code>noexcept</code> only if swapping their lower-level constituents is <code>noexcept</code> should be reasonable enough to offer <code>noexcept</code> <code>swap</code> functions whenever we can.</p>
 
 <h1 id="exception-neutral-functions">Exception Neutral Functions</h1>
@@ -446,16 +450,17 @@ Suffering is optional.</p>
 <h1 id="backward-compatibility">Backward compatibility</h1>
 
 <p>So much legacy code is not decalred with <code>noexcpet</code> even though they actually never emit exceptions. For the reason of backward compatibility, <code>noexcept</code> functions calling non-<code>noexcept</code> functions are permitted in C++, and compilers generally don&rsquo;t issue warnings about it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setup</span>();    <span style="color:#75715e">// legacy code defined elsewhere
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">cleanup</span>();  <span style="color:#75715e">// without declaring noexcept
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doWork</span>() <span style="color:#66d9ef">noexcept</span>
+
+<pre><code class="language-cpp">void setup();    // legacy code defined elsewhere
+void cleanup();  // without declaring noexcept
+
+void doWork() noexcept
 {
     setup();
     ...
     clean();
 }
-</code></pre></div>
+</code></pre>
               
             </div>
           </div>
