@@ -7,18 +7,26 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
+<meta name="description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
 
 
-<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
+<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-5 Be Wary of User Defined Conversion Functions">
 <meta name="twitter:title" content="[MECpp]Item-5 Be Wary of User Defined Conversion Functions">
 <meta property="og:url" content="https://nianze.tk/2018/03/be-wary-of-user-defined-conversion-functions/">
 <meta property="twitter:url" content="https://nianze.tk/2018/03/be-wary-of-user-defined-conversion-functions/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
-<meta name="twitter:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.">
+<meta property="og:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
+<meta name="twitter:description" content="Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
+
+">
 <meta property="og:locale" content="en-us">
 
   
@@ -92,17 +100,14 @@
 
     
       
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
 </script>
 
     
@@ -385,7 +390,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.</p>
+              <p>Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -396,7 +401,7 @@ Suffering is optional.</p>
 <li><a href="#solution-2-proxy-classes">Solution 2: Proxy classes</a></li>
 </ul></li>
 </ul>
-</nav>
+</nav></p>
 
 <p>There are two kinds of functions allowing compilers to perform implicit type conversions:</p>
 
@@ -476,7 +481,8 @@ for (int i = 0; i &lt; 10; ++i) {  // oops! &quot;a&quot; should be &quot;a[i]&q
 <pre><code class="language-cpp">for (int i = 0; i &lt; 10; ++i) {
     if (a == static_cast&lt; Array&lt;int&gt; &gt;(b[i])) ...
 }
-</code></pre>
+</code></pre></li>
+</ul>
 
 <p>Each iteration through the loop compares the contents of <code>a</code> with the contents of a temporary array of size <code>b[i]</code> (whose contents are presumably undefined and will be created and destroyed in every loop, see MECpp item 19), which is both unwanted and tremendously inefficient behavior.</p>
 
@@ -487,12 +493,11 @@ for (int i = 0; i &lt; 10; ++i) {  // oops! &quot;a&quot; should be &quot;a[i]&q
 <pre><code class="language-cpp">template&lt;class T&gt;
 class Array {
 public:
-...
-explicit Array(int size);  // use &quot;explicit&quot; to prevent implicit type conversion    
-...    
+    ...
+    explicit Array(int size);  // use &quot;explicit&quot; to prevent implicit type conversion    
+    ...    
 };
-</code></pre></li>
-</ul>
+</code></pre>
 
 <h2 id="solution-2-proxy-classes">Solution 2: Proxy classes</h2>
 

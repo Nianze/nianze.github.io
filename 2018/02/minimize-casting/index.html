@@ -7,18 +7,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.">
+<meta name="description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.
+">
 
 
-<meta property="og:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.">
+<meta property="og:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.
+">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-27 Minimize_casting">
 <meta name="twitter:title" content="Item-27 Minimize_casting">
 <meta property="og:url" content="https://nianze.tk/2018/02/minimize-casting/">
 <meta property="twitter:url" content="https://nianze.tk/2018/02/minimize-casting/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.">
-<meta name="twitter:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.">
+<meta property="og:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.
+">
+<meta name="twitter:description" content="Avoid casts and develop a cast-free alternative whenever practical, especially dynamic_cast in performance-sensitive code.
+">
 <meta property="og:locale" content="en-us">
 
   
@@ -92,17 +96,14 @@
 
     
       
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
 </script>
 
     
@@ -385,7 +386,8 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Avoid casts and develop a cast-free alternative whenever practical, especially <code>dynamic_cast</code> in performance-sensitive code.</p>
+              <p>Avoid casts and develop a cast-free alternative whenever practical, especially <code>dynamic_cast</code> in performance-sensitive code.
+</p>
 
 <p>Casts subvert the C++ type system, so it is a feature we want to approach with great respect.</p>
 
@@ -397,15 +399,13 @@ Suffering is optional.</p>
 <li><p>C-style casts:</p>
 
 <pre><code class="language-cpp">(T) expression // cast expression to be of type T
-</code></pre>
+</code></pre></li>
 
-<ol>
-<li>Function-style casts<br />
-<code>cpp
-T(expression)  // There's no difference in meaning between C-style and function-style casts. 
-           // Both of them are old-style casts
-</code></li>
-</ol></li>
+<li><p>Function-style casts</p>
+
+<pre><code class="language-cpp">T(expression)  // There's no difference in meaning between C-style and function-style casts. 
+               // Both of them are old-style casts
+</code></pre></li>
 
 <li><p>C++-style casts (new-style casts)</p>
 
@@ -415,11 +415,15 @@ reinterpret_cast&lt;T&gt;(expression)
 static_cast&lt;T&gt;(expression)
 </code></pre>
 
-<p>Each serves a distinct purpose:<br />
-* <code>const_cast</code> is used to cast away the constness of objects, which is the only C++-style cast that can do this.
-* <code>dynamic_cast</code> is primarily used to perform &ldquo;safe downcasting,&rdquo; i.e., to determine whether an object is of a particular type in an inheritance hierarchy. This is the only cast that cannot be performed using the old-style syntax. It is also the only cast that may have a significant runtime cost.
-* <code>reinterpret_cast</code> in intended for low-level casts that yield implementation-dependent (i.e., unportable) results, e.g., casting a pointer to an <code>int</code>. Item 50 shows once its usage.
-* <code>static_cast</code> is used to force implicit conversions (e.g., non-<code>const</code> object to <code>const</code> object (item3), <code>int</code> to <code>double</code>, etc.) as well as some reverse of such conversions (e.g., <code>void*</code> pointers to typed pointers, pointer-to-base to pointer-to-derived), but it cannot cast from <code>const</code> to non-<code>const</code> objects.</p>
+<p>Each serves a distinct purpose:</p>
+
+<ul>
+<li><code>const_cast</code> is used to cast away the constness of objects, which is the only C++-style cast that can do this.</li>
+<li><code>dynamic_cast</code> is primarily used to perform &ldquo;safe downcasting,&rdquo; i.e., to determine whether an object is of a particular type in an inheritance hierarchy. This is the only cast that cannot be performed using the old-style syntax. It is also the only cast that may have a significant runtime cost.</li>
+<li><code>reinterpret_cast</code> in intended for low-level casts that yield implementation-dependent (i.e., unportable) results, e.g., casting a pointer to an <code>int</code>. Item 50 shows once its usage.</li>
+<li><code>static_cast</code> is used to force implicit conversions (e.g., non-<code>const</code> object to <code>const</code> object (item3), <code>int</code> to <code>double</code>, etc.) as well as some reverse of such conversions (e.g., <code>void*</code> pointers to typed pointers, pointer-to-base to pointer-to-derived), but it cannot cast from <code>const</code> to non-<code>const</code> objects.</li>
+</ul></li>
+</ol>
 
 <p>The good points of using new style casts are:<br />
 1. new styles are much easier to identify in code for both humans and for tools like <code>grep</code>, thus simplifying the process of locating the code during debugging.<br />
@@ -429,15 +433,14 @@ static_cast&lt;T&gt;(expression)
 
 <pre><code class="language-cpp">class Widget {
 public:
-explicit Widget(int size);
-...
+    explicit Widget(int size);
+    ...
 };
 void doSomeWork(const Widget&amp; w);
 
 doSomeWork(Widget(15));  // create Widget from in with function-style cast
 doSomeWork(static_cast&lt;Widget&gt;(15)); // cast with C++-style
-</code></pre></li>
-</ol>
+</code></pre>
 
 <p>However, feeling is just feeling. Code that leads to a core dump also feels pretty reasonable when we write it - we&rsquo;d better ignore feelings and use new-style casts all the time.</p>
 
@@ -544,12 +547,10 @@ for (VPSW::iterator iter = winPtrs.begin();
     }
 </code></pre>
 
-<p>Of course, we cannot store all possible <code>Window</code> derivatives in the same container under this approach, instead, we may work with multiple type-safe containers.</p>
+<p>Of course, we cannot store all possible <code>Window</code> derivatives in the same container under this approach, instead, we may work with multiple type-safe containers.</p></li>
 
-<ol>
-<li>Use virtual functions<br />
-If we insist on manipulating all possible <code>Window</code> derivatives through a base class interface, we could declare a useless <code>blink</code> as a virtual functions in base class (if it makes sense):</li>
-</ol>
+<li><p>Use virtual functions<br />
+If we insist on manipulating all possible <code>Window</code> derivatives through a base class interface, we could declare a useless <code>blink</code> as a virtual functions in base class (if it makes sense):</p>
 
 <pre><code class="language-cpp">class Window {
 public:

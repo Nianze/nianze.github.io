@@ -7,18 +7,26 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="The behaviors of new operator and operator new is different.">
+<meta name="description" content="The behaviors of new operator and operator new is different.
+
+">
 
 
-<meta property="og:description" content="The behaviors of new operator and operator new is different.">
+<meta property="og:description" content="The behaviors of new operator and operator new is different.
+
+">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-8 Understand the Different Meanings of New and Delete">
 <meta name="twitter:title" content="[MECpp]Item-8 Understand the Different Meanings of New and Delete">
 <meta property="og:url" content="https://nianze.tk/2018/03/understand-the-different-meanings-of-new-and-delete/">
 <meta property="twitter:url" content="https://nianze.tk/2018/03/understand-the-different-meanings-of-new-and-delete/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="The behaviors of new operator and operator new is different.">
-<meta name="twitter:description" content="The behaviors of new operator and operator new is different.">
+<meta property="og:description" content="The behaviors of new operator and operator new is different.
+
+">
+<meta name="twitter:description" content="The behaviors of new operator and operator new is different.
+
+">
 <meta property="og:locale" content="en-us">
 
   
@@ -92,17 +100,14 @@
 
     
       
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-71584380-1', 'auto');
+ga('send', 'pageview');
 </script>
 
     
@@ -385,7 +390,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>The behaviors of <code>new</code> operator and <code>operator new</code> is different.</p>
+              <p>The behaviors of <code>new</code> operator and <code>operator new</code> is different.
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -393,7 +398,7 @@ Suffering is optional.</p>
 <li><a href="#deletion-and-memory-deallocation">Deletion and memory deallocation</a></li>
 <li><a href="#arrays">Arrays</a></li>
 </ul>
-</nav>
+</nav></p>
 
 <h1 id="relationship-between-new-operator-and-operator-new">Relationship between &lsquo;<code>new</code> operator&rsquo; and &lsquo;<code>operator new</code>&lsquo;</h1>
 
@@ -425,13 +430,11 @@ string *ps = static_cast&lt;stirng*&gt;(memory);  // make ps point to the new ob
 <li><p>if we only want to allocate memory, just call <code>operator new</code> directly:</p>
 
 <pre><code class="language-cpp">void *rawMemory = operator new(sizeof(string));
-</code></pre>
+</code></pre></li>
 
-<ol>
 <li><p>if we want to customize the memory allocation that takes place when heap objects are created, write our own version of <code>operator new</code> and use the <code>new</code> operator, which will automatically invoke the custom version of <code>operator new</code></p></li>
 
-<li><p>if we want to construct an object in memory we&rsquo;ve already got a pointer to, use <strong>placement <code>new</code></strong>.</p></li>
-</ol>
+<li><p>if we want to construct an object in memory we&rsquo;ve already got a pointer to, use <strong>placement <code>new</code></strong>.</p>
 
 <p>A special version of <code>oeprator new</code> called <em>placement <code>new</code></em> allows us to construct an object in the memory that&rsquo;s already been allocated, which is helpful for applications using shared memory or memory-mapped I/O, where objects must be placed at specific addresses or in memory allocated by special routines:</p>
 
@@ -455,15 +458,15 @@ Widget * constructWidgetInBuffer(void *buffer, int widgetSize)
 }
 </code></pre>
 
-<p>All placement <code>new</code> has to do is return the pointer that&rsquo;s passed into it, because the memory for the object is already known. The unused (but mandatory) <code>size_t</code> parameter has no name to keep compilers from complaining about its not being used (MECpp item 6).</p>
+<p>All placement <code>new</code> has to do is return the pointer that&rsquo;s passed into it, because the memory for the object is already known. The unused (but mandatory) <code>size_t</code> parameter has no name to keep compilers from complaining about its not being used (MECpp item 6).</p></li>
+</ol>
 
 <h1 id="deletion-and-memory-deallocation">Deletion and memory deallocation</h1>
 
 <p>The <code>delete</code> operator also includes two steps: destructing the object and deallocating the memory occupied by that object. The second part of memory deallocation is performed by the <code>operator delete</code> function:</p>
 
 <pre><code class="language-cpp">void operator delete(void *memoryToBeDeallocated);
-</code></pre></li>
-</ol>
+</code></pre>
 
 <p>Hence, for a pointer to string <code>ps</code>, <code>delete ps;</code> causes compilers to generate code that approximately corresponds to this:</p>
 
