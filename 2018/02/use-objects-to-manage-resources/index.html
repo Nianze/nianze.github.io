@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.
-
-">
+<meta name="description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.">
 
 
-<meta property="og:description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.
-
-">
+<meta property="og:description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-13 Use objects to manage resources">
 <meta name="twitter:title" content="Item-13 Use objects to manage resources">
 <meta property="og:url" content="https://nianze.tk/2018/02/use-objects-to-manage-resources/">
 <meta property="twitter:url" content="https://nianze.tk/2018/02/use-objects-to-manage-resources/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.
-
-">
-<meta name="twitter:description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.
-
-">
+<meta property="og:description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.">
+<meta name="twitter:description" content="Use RAII objects such as tr1::shared_ptr and auto_ptr to prevent resource leaks.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,14 +385,14 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Use RAII objects such as <code>tr1::shared_ptr</code> and <code>auto_ptr</code> to prevent resource leaks.
+              <p>Use RAII objects such as <code>tr1::shared_ptr</code> and <code>auto_ptr</code> to prevent resource leaks.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
 <li><a href="#1-auto-ptr">1. <code>auto_ptr</code></a></li>
 <li><a href="#2-shared-ptr">2. <code>shared_ptr</code></a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p>First of all, let&rsquo;s make clear the concept: a resource is something that we need to return to the system once we&rsquo;re done using it, such as dynamically allocated memory, file descriptors, mutex locks, fonts and brushes in graphical user interfaces (GUIs), database connections, and network sockets.</p>
 
@@ -413,16 +408,14 @@ Suffering is optional.</p>
 <h1 id="1-auto-ptr">1. <code>auto_ptr</code></h1>
 
 <p>We can use <code>auto_ptr</code> to manage a class <code>Investment</code> that comes with a factory function (item 7) without worrying about resource leak:</p>
-
-<pre><code class="language-cpp">Investment* createInvestment();  // factory function, return ptr to dynamically allocated object
-
-void f() 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Investment<span style="color:#f92672">*</span> <span style="color:#a6e22e">createInvestment</span>();  <span style="color:#75715e">// factory function, return ptr to dynamically allocated object
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f</span>() 
 {
-    std::auto_ptr&lt;Investment&gt; pInv(createInvestment()); // call factory function
-    ...  // use pInv like a pointer
-}        // automatically delete pInv via auto_ptr's dtor
-</code></pre>
-
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>auto_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> pInv(createInvestment()); <span style="color:#75715e">// call factory function
+</span><span style="color:#75715e"></span>    ...  <span style="color:#75715e">// use pInv like a pointer
+</span><span style="color:#75715e"></span>}        <span style="color:#75715e">// automatically delete pInv via auto_ptr&#39;s dtor
+</span></code></pre></div>
 <p>There are two critical aspects worth noting:</p>
 
 <ol>
@@ -431,39 +424,33 @@ void f()
 </ol>
 
 <p>Pay attention to the limitation of <code>auto_ptr</code>: its <strong>sole ownership of the resource policy</strong> requires that copying <code>auto_ptr</code>s via copy constructor or copy assignment operator sets them to null:</p>
-
-<pre><code class="language-cpp">std::auto_ptr&lt;Investment&gt; pInv1(createInvestment()); // pInv1 points to the object returned from the factory function
-
-std::auto_ptr&lt;Investment&gt; pInv2(pInv1);  // pInv2 now points to the object; pInv1 is null 
-
-pInv1 = pInv2;  // pInv1 points to the object, and pInv2 is null now
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>auto_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> pInv1(createInvestment()); <span style="color:#75715e">// pInv1 points to the object returned from the factory function
+</span><span style="color:#75715e"></span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>auto_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> pInv2(pInv1);  <span style="color:#75715e">// pInv2 now points to the object; pInv1 is null 
+</span><span style="color:#75715e"></span>
+pInv1 <span style="color:#f92672">=</span> pInv2;  <span style="color:#75715e">// pInv1 points to the object, and pInv2 is null now
+</span></code></pre></div>
 <h1 id="2-shared-ptr">2. <code>shared_ptr</code></h1>
 
 <p>An alternative <strong>RAII</strong> object, <code>shared_ptr</code>, is an RCSP(reference-counting smart pointer), which is a smart pointer that keeps track of how many objects point to a particular resource and automatically deletes  the resource when nobody is pointing to it any longer. The code above is almost the same as with <code>shared_ptr</code>, but copying behavior is much more natural:</p>
-
-<pre><code class="language-cpp">void f()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f</span>()
 {
-    std::tr1::shared_ptr&lt;Investment&gt; pInv(createInvestment()); // call factory function
-    ...  // use pInv as before
-
-    std::tr1::shared_ptr&lt;Investment&gt; pInv1(createInvestment()); // pInv1 points to the object returned from createInvestment
-
-    std::tr1::shared_ptr&lt;Investment&gt; pInv2(pInv1); // both pInv1 and pInv2 now point to the object
-
-    pInv1 = pInv2;  // nothing has changed
-
-}        // automatically delete pInv via shared_ptr's dtor
-</code></pre>
-
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> pInv(createInvestment()); <span style="color:#75715e">// call factory function
+</span><span style="color:#75715e"></span>    ...  <span style="color:#75715e">// use pInv as before
+</span><span style="color:#75715e"></span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> pInv1(createInvestment()); <span style="color:#75715e">// pInv1 points to the object returned from createInvestment
+</span><span style="color:#75715e"></span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Investment<span style="color:#f92672">&gt;</span> pInv2(pInv1); <span style="color:#75715e">// both pInv1 and pInv2 now point to the object
+</span><span style="color:#75715e"></span>
+    pInv1 <span style="color:#f92672">=</span> pInv2;  <span style="color:#75715e">// nothing has changed
+</span><span style="color:#75715e"></span>
+}        <span style="color:#75715e">// automatically delete pInv via shared_ptr&#39;s dtor
+</span></code></pre></div>
 <p>There is more information on <code>tr1::shared_ptr</code> in item 14, item 18, and item 54. For now, another point worth noting is that, since both <code>auto_ptr</code> and <code>tr1::shared_ptr</code> use <code>delete</code> in their destructors rather than <code>delete []</code> (item 16), it is a bad idea to wrap dynamically allocated arrays with <code>auto_ptr</code> or <code>tr1::shared_ptr</code>:</p>
-
-<pre><code class="language-cpp">std::auto_ptr&lt;std::string&gt; pStr(new std::string[10]); // wrong delete form will be used, bad idea!
-
-std::tr1::shared_ptr&lt;int&gt; pInt(new int[1024]); // same problem
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>auto_ptr<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&gt;</span> pStr(<span style="color:#66d9ef">new</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string[<span style="color:#ae81ff">10</span>]); <span style="color:#75715e">// wrong delete form will be used, bad idea!
+</span><span style="color:#75715e"></span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> pInt(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span>[<span style="color:#ae81ff">1024</span>]); <span style="color:#75715e">// same problem
+</span></code></pre></div>
 <p>Since having <code>createInvestment</code> returning a raw pointer type is error-prone, we&rsquo;ll see in item 18 that an interface modification is preferred.</p>
               
             </div>

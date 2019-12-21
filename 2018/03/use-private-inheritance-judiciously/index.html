@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.
-
-">
+<meta name="description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.">
 
 
-<meta property="og:description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.
-
-">
+<meta property="og:description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-39 Use private inheritance judiciously">
 <meta name="twitter:title" content="Item-39 Use private inheritance judiciously">
 <meta property="og:url" content="https://nianze.tk/2018/03/use-private-inheritance-judiciously/">
 <meta property="twitter:url" content="https://nianze.tk/2018/03/use-private-inheritance-judiciously/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.
-
-">
-<meta name="twitter:description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.
-
-">
+<meta property="og:description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.">
+<meta name="twitter:description" content="Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.
+              <p>Private inheritance means is-implemented-in-terms-of. It is usually inferior to composition, but it makes sense when a derived class needs access to protected base members or needs to redefine inherited virtual functions. For library developers who strive to minimize object sizes, it also offers the ability of empty base optimization.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -401,7 +396,7 @@ Suffering is optional.</p>
 <li><a href="#edge-case">Edge case</a></li>
 <li><a href="#in-summary">In summary</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p>The behavior of private inheritance is that</p>
 
@@ -432,43 +427,37 @@ Suffering is optional.</p>
 <h1 id="typical-usage">Typical usage</h1>
 
 <p>Let&rsquo;s see a typical usecase for private inheritance. Suppose we want to periodically examine the the internal status of class <code>Widget</code>, and we&rsquo;d like to reuse the following utility class:</p>
-
-<pre><code class="language-cpp">class Timer {
-public:
-    explicit Timer(int tickFrequency);
-    virtual void onTick() const;  // automatically called for each tick
-    ...
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Timer</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">explicit</span> Timer(<span style="color:#66d9ef">int</span> tickFrequency);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onTick</span>() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// automatically called for each tick
+</span><span style="color:#75715e"></span>    ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>A <code>Timer</code> object can be configured to tick with whatever frequency we need, and on each tick, it calls a virtual function, which we can redefine so that it examines the current state of the <code>Widget</code> object. In order to redefine a virtual function, <code>Widget</code> must inherit from <code>Timer</code>. But public inheritance is inappropriate in this case: it&rsquo;s not true that a <code>Widget</code> is-a <code>Timer</code>, because <code>Widget</code> clients should not be able to call <code>onTick</code> on a <code>Widget</code><sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.</p>
 
 <p>Public inheritance is not a valid option here. Instead, we inherit privately:</p>
-
-<pre><code class="language-cpp">class Widget: private Timer {
-private:
-    virtual void onTick() const; // look at Widget usage data, etc.
-};
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> Timer {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> onTick() <span style="color:#66d9ef">const</span>; <span style="color:#75715e">// look at Widget usage data, etc.
+</span><span style="color:#75715e"></span>};
+</code></pre></div>
 <p>After private inheritance, <code>Timer</code>&rsquo;s public <code>onTick</code> function becomes private in <code>Widget</code>, so keep it as private when we redeclare it<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>.</p>
 
 <h2 id="alternatives">Alternatives</h2>
 
 <p>This is a nice design, but it&rsquo;s worth noting that private inheritance isn&rsquo;t strictly necessary - we could use composition instead:</p>
-
-<pre><code class="language-cpp">class Widget {
-private:
-    class WidgetTimer: public Timer {
-    public:
-        virtual void onTick() const;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WidgetTimer</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Timer {
+    <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+        <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> onTick() <span style="color:#66d9ef">const</span>;
         ...
     };
     WidgetTimer timer;
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>This design is more complicated involving both (public) inheritance and composition, but we do get two more advantages from its complixity:</p>
 
 <ol>
@@ -479,26 +468,22 @@ private:
 <h1 id="edge-case">Edge case</h1>
 
 <p>The edge case, as the name suggests, is edgy indeed: it applies only when we&rsquo;re dealing with a class that has no data in it: no non-static data members; no virtual functions (which introduces <code>vptr</code> to each object, item 7); and no virual base classes (which also incurs a size overhead, item 40). Conceptually, such an <em>empty</em> class should use no space, but C++ requires that freestanding objects must have non-zero size for some technical reasons. That being said,</p>
-
-<pre><code class="language-cpp">class Empty {}; // has no data, so obj. should use no memory
-
-class HoldsAnInt {
-private:
-    int x;
-    Empty e;  // should use no memory
-};
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Empty</span> {}; <span style="color:#75715e">// has no data, so obj. should use no memory
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HoldsAnInt</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> x;
+    Empty e;  <span style="color:#75715e">// should use no memory
+</span><span style="color:#75715e"></span>};
+</code></pre></div>
 <p>We&rsquo;ll find that  <code>sizeof(HoldsAnInt) &gt; sizeof(int)</code>, so <code>Empty</code> data member does require extra memory. With most compilers, <code>sizeof(Empty)</code> is 1, which is a silently inserted <code>char</code> inside the <code>Empty</code> objects to satisfy C++&rsquo;s requirements. However, alignment requirements (see item 50) may casue compilers to add padding to <code>HoldsAnInt</code> classes, so the objects of <code>HoldsAnInt</code> may gain more than just the size of a char - they would actually enlarge enough to hold a second int.</p>
 
 <p>Now comes the point of using private inheritance: rather than containing &ldquo;freestanding&rdquo; objects that can not have zero size, we could inherit from <code>Empty</code> type:</p>
-
-<pre><code class="language-cpp">class HoldsAnInt: private Empty {
-private:
-    int x;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HoldsAnInt</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> Empty {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> x;
 };
-</code></pre>
-
+</code></pre></div>
 <p>Now <code>sizeof(HoldsAnInt) == sizeof(int)</code>, thanks to <em>empty base optimization (EBO)</em>, which is typically supported by most compilersp<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup>.</p>
 
 <p>In practice, &ldquo;empty&rdquo; base classes often contain typedefs, enums, static data members, or non-virtual functions, such as those in the STL that contains useful members (usually typedefs), and thus classes for user-defined function objects may inherit from them without worrying about size increase thanks to EBO.</p>

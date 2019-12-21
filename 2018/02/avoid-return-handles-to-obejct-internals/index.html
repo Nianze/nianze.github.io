@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.
-">
+<meta name="description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.">
 
 
-<meta property="og:description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.
-">
+<meta property="og:description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-28 Avoid returning handles to object internals">
 <meta name="twitter:title" content="Item-28 Avoid returning handles to object internals">
 <meta property="og:url" content="https://nianze.tk/2018/02/avoid-return-handles-to-obejct-internals/">
 <meta property="twitter:url" content="https://nianze.tk/2018/02/avoid-return-handles-to-obejct-internals/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.
-">
-<meta name="twitter:description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.
-">
+<meta property="og:description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.">
+<meta name="twitter:description" content="Avoid returning handles to object internals to increase encapsulation, help const member functions act const, and minimize the creation of dangling handles.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Avoid returning handles to object internals to increase encapsulation, help <code>const</code> member functions act <code>const</code>, and minimize the creation of dangling handles.
-</p>
+              <p>Avoid returning handles to object internals to increase encapsulation, help <code>const</code> member functions act <code>const</code>, and minimize the creation of dangling handles.</p>
 
 <p>References, pointers, and iterators are all <em>handlers</em> (ways to get at other objects), and returning a handle to an object&rsquo;s internals always runs the risk of</p>
 
@@ -399,46 +397,39 @@ Suffering is optional.</p>
 
 <p>To see how handlers result in these resks, let&rsquo;s see an example.<br />
 Suppose we&rsquo;re working with a rectangle class, represented by its upper left corner and lower right corner. To keep a <code>Rectangle</code> object small, we decide that the corner points should be stored in an auxiliary struct that the <code>Rectangle</code> points to:</p>
-
-<pre><code class="language-cpp">class Point {  // class representing points
-public:
-    Point(int x, int y);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> {  <span style="color:#75715e">// class representing points
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    Point(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
     ...
-    void setX(int newVal);
-    void setY(int newVal);
-    ...
-};
-</code></pre>
-
-<pre><code class="language-cpp">struct RectData {  // Rectangle corner point data
-    Point ulhc;    // &quot;upper left-hand corner&quot;
-    Point lrhc;    // &quot;lower right-hand corner&quot;
-}
-</code></pre>
-
-<pre><code class="language-cpp">class Rectangle {
-public:
-    Point&amp; upperLeft() const { return pData-&gt;ulhc; }
-    Point&amp; lowerRight() const { return pData-&gt;lrhc; }
-    ...
-private:
-    std::tr1::shared_ptr&lt;RectData&gt; pData; // see item 13 for tr1::shared_ptr
+    <span style="color:#66d9ef">void</span> setX(<span style="color:#66d9ef">int</span> newVal);
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setY</span>(<span style="color:#66d9ef">int</span> newVal);
     ...
 };
-</code></pre>
-
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">RectData</span> {  <span style="color:#75715e">// Rectangle corner point data
+</span><span style="color:#75715e"></span>    Point ulhc;    <span style="color:#75715e">// &#34;upper left-hand corner&#34;
+</span><span style="color:#75715e"></span>    Point lrhc;    <span style="color:#75715e">// &#34;lower right-hand corner&#34;
+</span><span style="color:#75715e"></span>}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rectangle</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    Point<span style="color:#f92672">&amp;</span> upperLeft() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> pData<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>ulhc; }
+    Point<span style="color:#f92672">&amp;</span> lowerRight() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> pData<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>lrhc; }
+    ...
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>RectData<span style="color:#f92672">&gt;</span> pData; <span style="color:#75715e">// see item 13 for tr1::shared_ptr
+</span><span style="color:#75715e"></span>    ...
+};
+</code></pre></div>
 <p>As item 20 suggests that  passing user-defined types by reference is typically more efficient than passing them by value, the two public member functions return references to the underlying <code>Point</code> ojects. Yet this design is wrong, for it&rsquo;s self-contradictory:</p>
 
 <ul>
 <li>on the one side, the two member functions are declared <code>const</code>, indicating read-only access level of the point they return</li>
 
 <li><p>on the other side, returning handles to private internal data lets callers be able to modify that internal data:</p>
-
-<pre><code class="language-cpp">Point coord1(0, 0);
-Point coord3(100, 100);
-const Rectangle rec(coord1, coord2); // rec is a const rectangle from (0,0) to (100,100)
-rec.upperLeft().setX(50); // now (50,0) to (100,100)
-</code></pre></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Point <span style="color:#a6e22e">coord1</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>);
+Point <span style="color:#a6e22e">coord3</span>(<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">100</span>);
+<span style="color:#66d9ef">const</span> Rectangle <span style="color:#a6e22e">rec</span>(coord1, coord2); <span style="color:#75715e">// rec is a const rectangle from (0,0) to (100,100)
+</span><span style="color:#75715e"></span>rec.upperLeft().setX(<span style="color:#ae81ff">50</span>); <span style="color:#75715e">// now (50,0) to (100,100)
+</span></code></pre></div></li>
 </ul>
 
 <p>Apparently, by returning handles to the <em>private</em> <code>ulhc</code> and <code>lrhc</code> through the <em>public</em> member functions <code>upperLeft</code> and <code>lowerRight</code>, the overall access level of data member goes to <code>public</code>, and the encapsulation decreases. This makes the risk 1 above.</p>
@@ -446,16 +437,14 @@ rec.upperLeft().setX(50); // now (50,0) to (100,100)
 <p>The second risk comes from the fact that if a <code>const</code> member function returns a reference (or any other handles) to data associated with an object that is stored outside the object itself, the caller of the function can modify that data due to its fallout of the limitation of bitwise constness (item 3).</p>
 
 <p>You may think the two risks above may be eliminated by applying <code>const</code> to the return types:</p>
-
-<pre><code class="language-cpp">class Rectangle {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rectangle</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    const Point&amp; upperLeft() const { return pData-&gt;ulhc; }
-    const Point&amp; lowerRight() const { return pData-&gt;lrhc; }
+    <span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> upperLeft() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> pData<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>ulhc; }
+    <span style="color:#66d9ef">const</span> Point<span style="color:#f92672">&amp;</span> lowerRight() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> pData<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>lrhc; }
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>With this altered design, the 2 problems above are indeed solved. Even so, the dangling handles in risk 3 are still possible.</p>
 
 <blockquote>
@@ -463,18 +452,14 @@ public:
 </blockquote>
 
 <p>In fact, function return values are the most common source of dangling handles. Consider a function that returns the bounding box for a GUI object in the form of a rectangle:</p>
-
-<pre><code class="language-cpp">class GUIObject {...};
-const Rectangle boundingBox(const GUIObject&amp; obj); // returns a rectangle by value; see item 3 for why return type is const
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GUIObject</span> {...};
+<span style="color:#66d9ef">const</span> Rectangle <span style="color:#a6e22e">boundingBox</span>(<span style="color:#66d9ef">const</span> GUIObject<span style="color:#f92672">&amp;</span> obj); <span style="color:#75715e">// returns a rectangle by value; see item 3 for why return type is const
+</span></code></pre></div>
 <p>If client use this function like this:</p>
-
-<pre><code class="language-cpp">GUIObject *pgo;  // make pgo point to some GUIObject
-...
-const Point *pUpperLeft = &amp;(boundingBox(*pgo).upperLeft()); // get a ptr to the upper left point of its bounding box
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">GUIObject <span style="color:#f92672">*</span>pgo;  <span style="color:#75715e">// make pgo point to some GUIObject
+</span><span style="color:#75715e"></span>...
+<span style="color:#66d9ef">const</span> Point <span style="color:#f92672">*</span>pUpperLeft <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>(boundingBox(<span style="color:#f92672">*</span>pgo).upperLeft()); <span style="color:#75715e">// get a ptr to the upper left point of its bounding box
+</span></code></pre></div>
 <p>This is a good example for dangling handle. The call to <code>boundingBox</code> will return a new, temporary <code>Rectangle</code> object. Let&rsquo;s call it <em>temp</em>. <code>upperLeft</code> will then be called on <em>temp</em>, and that call will return a reference to an internal part of <em>temp</em> (i.e., the upperLeft corner point), to which <code>pUpperLeft</code> will then point. The tragedy comes at the end of the statement, when <code>boundongBox</code>&rsquo;s return value <em>temp</em> is destroyed, and then it indirectly leads to the destruction of <em>temp</em>&rsquo;s upperLeft corner point, leaving <code>pUpperLeft</code> pointing to an object that no longer exists.</p>
 
 <p>As long as a handle is being returned, we run the risk that the handle will outlive the object it refers to. But this doesn&rsquo;t mean we should <em>never</em> have a member function that returns a handle. Sometimes we have to - an exception is <code>operator[]</code> in <code>string</code> and <code>vector</code>, which works by returning references to the data in the containers (item 3), and that data will be destroyed when the containers themselves are.</p>

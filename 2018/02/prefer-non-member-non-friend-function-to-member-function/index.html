@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
+<meta name="description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
 
 
-<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
+<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-23 Prefer non-member non-friend function to member function">
 <meta name="twitter:title" content="Item-23 Prefer non-member non-friend function to member function">
 <meta property="og:url" content="https://nianze.tk/2018/02/prefer-non-member-non-friend-function-to-member-function/">
 <meta property="twitter:url" content="https://nianze.tk/2018/02/prefer-non-member-non-friend-function-to-member-function/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
-<meta name="twitter:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-">
+<meta property="og:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
+<meta name="twitter:description" content="Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,46 +385,39 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.
-</p>
+              <p>Prefer non-member non-friend functions to member functions for better encapsulation, packaging flexibility, and functional extensibility.</p>
 
 <p>Suppose there&rsquo;s a class representing web browsers containing following three functions:</p>
-
-<pre><code class="language-cpp">class WebBrowser {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    void clearCache();
-    void clearHistory();
-    void removeCookies();
+    <span style="color:#66d9ef">void</span> clearCache();
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearHistory</span>();
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeCookies</span>();
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>Clients may want to perform these three actions together, so <code>WebBrowser</code> might offer two ways to achieve the goal:</p>
 
 <ul>
-<li>Add a member function</li>
-</ul>
-
-<pre><code class="language-cpp">class WebBrowser {
-public:
-    ...
-    void clearEverything(); // calls clearCache(), clearHistory(), and removeCookies()
-    ...
+<li><p>Add a member function</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+...
+<span style="color:#66d9ef">void</span> clearEverything(); <span style="color:#75715e">// calls clearCache(), clearHistory(), and removeCookies()
+</span><span style="color:#75715e"></span>...
 };
-</code></pre>
+</code></pre></div></li>
 
-<ul>
-<li>Add a non-member non-friend function</li>
-</ul>
-
-<pre><code class="language-cpp">void clearBrowser(WebBrowser&amp; wb) 
+<li><p>Add a non-member non-friend function</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearBrowser</span>(WebBrowser<span style="color:#f92672">&amp;</span> wb) 
 {
-    wb.clearCache();
-    wb.clearHistory();
-    wb.removeCookies();
+wb.clearCache();
+wb.clearHistory();
+wb.removeCookies();
 }
-</code></pre>
+</code></pre></div></li>
+</ul>
 
 <p>As the title suggests, the non-member approach is better, and below is the reasons:</p>
 
@@ -449,36 +441,28 @@ public:
 <h2 id="packaging-flexibility">Packaging flexibility</h2>
 
 <p>In C++, rather than declared in a class, a more natural approach would be to make <code>clearBrowser()</code> a non-member function in the same namespace as <code>WebBrowser</code>:</p>
-
-<pre><code class="language-cpp">namespace WebBrowserStuff {
-class WebBrowser {...};
-void clearBrowser {...};
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {...};
+<span style="color:#66d9ef">void</span> clearBrowser {...};
 ...
 }
-</code></pre>
-
+</code></pre></div>
 <p>Unlike classes, namespace can be spread across multiple source file. For convenience functions like &lsquo;clearBrowser&rsquo;, this is important, because clients will generally be interested in only some of the convenience functions, and there&rsquo;s no reason for them to compile all of the functions including those they don&rsquo;t need. A straight forward way to separate convenience functions by their functionalities is to declare them in different header files:</p>
-
-<pre><code class="language-cpp">// header &quot;webbrowser.h&quot; - header for class WebBrowser itself 
-// as well as &quot;core&quot; WebBrowser-related functionality
-namespace WebBrowserStuff {
-    class WebBrowser {...};
-    ...  // &quot;core&quot; related functionality, e.g.: non-member functions almost all clients need
-}
-</code></pre>
-
-<pre><code class="language-cpp">// header &quot;webbrowserbookmarks.h&quot;
-namespace WebBrowserStuff {
-    ...  // bookmark-related convenience functions
-}
-</code></pre>
-
-<pre><code class="language-cpp">// header &quot;webbrowsercookies.h&quot;
-namespace WebBrowserStuff {
-    ...  // cookie-related convenience functions
-}
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// header &#34;webbrowser.h&#34; - header for class WebBrowser itself 
+</span><span style="color:#75715e"></span><span style="color:#75715e">// as well as &#34;core&#34; WebBrowser-related functionality
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WebBrowser</span> {...};
+    ...  <span style="color:#75715e">// &#34;core&#34; related functionality, e.g.: non-member functions almost all clients need
+</span><span style="color:#75715e"></span>}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// header &#34;webbrowserbookmarks.h&#34;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+    ...  <span style="color:#75715e">// bookmark-related convenience functions
+</span><span style="color:#75715e"></span>}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// header &#34;webbrowsercookies.h&#34;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">namespace</span> WebBrowserStuff {
+    ...  <span style="color:#75715e">// cookie-related convenience functions
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>This is exactly how the standard C++ library is organized: there are dozens of headers (e.g.: <code>&lt;vector&gt;</code>, <code>&lt;algorithm&gt;</code>, <code>&lt;memory&gt;</code>, etc.), each declaring some of the functionality in <code>std</code>. This allows clients to be compilation dependent only on the parts of the system they actually use (item 31 shows other ways to reduce compilation dependencies).</p>
 
 <p>On the other side, partitioning is not possible for member functions, because a class must be defined in its entirety.</p>

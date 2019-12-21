@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.
-">
+<meta name="description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.">
 
 
-<meta property="og:description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.
-">
+<meta property="og:description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-9 Prefer Alias Declarations to Typedefs">
 <meta name="twitter:title" content="[EMCpp]Item-9 Prefer Alias Declarations to Typedefs">
 <meta property="og:url" content="https://nianze.tk/2018/07/prefer-alias-declarations-to-typedefs/">
 <meta property="twitter:url" content="https://nianze.tk/2018/07/prefer-alias-declarations-to-typedefs/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.
-">
-<meta name="twitter:description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.
-">
+<meta property="og:description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.">
+<meta name="twitter:description" content="Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer typedefs.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,77 +385,65 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer <code>typedef</code>s.
-</p>
+              <p>Alias declaration support templatization, which avoids the &ldquo;::type&rdquo; suffix and &ldquo;typename&rdquo; prefix often required to refer <code>typedef</code>s.</p>
 
 <p>Compared with <code>typedef</code>, alias declarations have following advantages:</p>
 
 <h4 id="easier-to-understand">Easier to understand</h4>
-
-<pre><code class="language-cpp">typedef void (*FP)(int, const std::string&amp;);
-// same meaning as above using alias declaration
-using FP = void (*)(int, const std::string&amp;);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">void</span> (<span style="color:#f92672">*</span>FP)(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span>);
+<span style="color:#75715e">// same meaning as above using alias declaration
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> FP <span style="color:#f92672">=</span> <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>)(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">const</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span>);
+</code></pre></div>
 <h4 id="support-for-template">Support for template</h4>
 
 <p>Alias declarations may be templatized (called <em>alias templates</em>), while <code>typedef</code>s cannot. For example, suppose we want to define a synonym for a linked list that uses a custom allocator <code>MyAlloc</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">using</span> MyAllocList <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>list<span style="color:#f92672">&lt;</span>T, MyAlloc<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>; 
 
-<pre><code class="language-cpp">template&lt;typename T&gt;
-using MyAllocList = std::list&lt;T, MyAlloc&lt;T&gt;&gt;; 
-
-// client code
-MyAllocList&lt;std::string&gt; ls;
-template&lt;typename T&gt;
-class Widget {   // Widget contains a MyAllocList&lt;T&gt; as a data member
-private:
-    typename MyAllocList&lt;T&gt; list; 
+<span style="color:#75715e">// client code
+</span><span style="color:#75715e"></span>MyAllocList<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&gt;</span> ls;
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {   <span style="color:#75715e">// Widget contains a MyAllocList&lt;T&gt; as a data member
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">typename</span> MyAllocList<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> list; 
 }
-</code></pre>
-
+</code></pre></div>
 <p>With a <code>typedef</code>, to support template, we need the trick to nest <code>typedef</code> inside templatized structs:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-struct MyAllocList {
-    typedef std::list&lt;T, MyAlloc&lt;T&gt;&gt; type;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">MyAllocList</span> {
+    <span style="color:#66d9ef">typedef</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>list<span style="color:#f92672">&lt;</span>T, MyAlloc<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> type;
 };
 
-// client code
-MyAllocList&lt;Widget&gt;::type lw;
-</code></pre>
-
+<span style="color:#75715e">// client code
+</span><span style="color:#75715e"></span>MyAllocList<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type lw;
+</code></pre></div>
 <p>To make things worse, when using the <code>typedef</code> inside a template class, we have to precede the <code>typedef</code> name with <code>typename</code>, so that compilers get comfirmed that <code>MyAllocList&lt;T&gt;::type</code> refers to a type, instead of a data member named <code>type</code> inside <code>MyAllocList</code>:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-class Widget {
-private:
-    typename MyAllocList&lt;T&gt;::type list; 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">typename</span> MyAllocList<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type list; 
 }
-</code></pre>
-
+</code></pre></div>
 <p><strong>Type traits supported by alias templates in C++14</strong></p>
 
 <p>When we need to take template type parameters and create revised types from them(e.g., turn <code>Widget</code> into <code>Widget&amp;</code>), we perform these kinds of transformations through <em>type traits</em>. Since type traits in C++11 are implemented as nested <code>typedef</code>s inside templatized structs, C++14 provides corresponding alias templates:</p>
-
-<pre><code class="language-cpp">std::remove_const&lt;T&gt;::type  // C++11: const T -&gt; T
-std::remove_const_t&lt;T&gt;  // C++14 equivalent
-
-std::remove_reference&lt;T&gt;::type  // C++11: T&amp;/T&amp;&amp; -&gt; T
-std::remove_reference_t&lt;T&gt;  // C++14 equivalent
-
-std::add_lvalue_reference&lt;T&gt;::type  // C++11: T -&gt; T&amp;
-std::add_lvalue_refernece_t&lt;T&gt;  // C++14 equivalent
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove_const<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type  <span style="color:#75715e">// C++11: const T -&gt; T
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove_const_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// C++14 equivalent
+</span><span style="color:#75715e"></span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type  <span style="color:#75715e">// C++11: T&amp;/T&amp;&amp; -&gt; T
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>remove_reference_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// C++14 equivalent
+</span><span style="color:#75715e"></span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>add_lvalue_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type  <span style="color:#75715e">// C++11: T -&gt; T&amp;
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>add_lvalue_refernece_t<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// C++14 equivalent
+</span></code></pre></div>
 <p>Basically what C++14 adds is simply some code like this:</p>
-
-<pre><code class="language-cpp">template &lt;class T&gt;
-using remove_const_t = typename remove_const&lt;T&gt;::type;
-template &lt;class T&gt;
-using remove_reference_t = typename remove_reference&lt;T&gt;::type;
-template &lt;class T&gt;
-using add_lvalue_reference_t = typename add_lvalue_reference&lt;T&gt;::type;
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">using</span> remove_const_t <span style="color:#f92672">=</span> <span style="color:#66d9ef">typename</span> remove_const<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type;
+<span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">using</span> remove_reference_t <span style="color:#f92672">=</span> <span style="color:#66d9ef">typename</span> remove_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type;
+<span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">using</span> add_lvalue_reference_t <span style="color:#f92672">=</span> <span style="color:#66d9ef">typename</span> add_lvalue_reference<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>type;
+</code></pre></div>
               
             </div>
           </div>

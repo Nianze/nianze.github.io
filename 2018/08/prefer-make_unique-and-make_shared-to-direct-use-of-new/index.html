@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.
-">
+<meta name="description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
 
 
-<meta property="og:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.
-">
+<meta property="og:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New">
 <meta name="twitter:title" content="[EMCpp]Item-21 Prefer std::make_unique and std::make_shared to Direct Use of New">
 <meta property="og:url" content="https://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/">
 <meta property="twitter:url" content="https://nianze.tk/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.
-">
-<meta name="twitter:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.
-">
+<meta property="og:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
+<meta name="twitter:description" content="Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that&rsquo;s smaller and faster.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Compared to <code>new</code>, make functions eliminate source code duplication, improve exception safety, and, for <code>std::make_shard</code> and <code>std::allocate_shared</code>, generate code that&rsquo;s smaller and faster.
-</p>
+              <p>Compared to <code>new</code>, make functions eliminate source code duplication, improve exception safety, and, for <code>std::make_shard</code> and <code>std::allocate_shared</code>, generate code that&rsquo;s smaller and faster.</p>
 
 <p><em>Make functions</em> take an arbitrary set of arguments, perfect forward them to the constructor for a dynamically allocacted object, and return a smart pointer to that objet. There are three <em>make functions</em>:</p>
 
@@ -398,39 +396,31 @@ Suffering is optional.</p>
 </ul>
 
 <p>According to the description above, a basic version of <code>std::make_unique</code> is simply:</p>
-
-<pre><code class="language-cpp">template&lt;typename T, typename... Ts&gt;
-std::unique_ptr&lt;T&gt; make_unique(Ts&amp;&amp;... params){
-    return std::unique_ptr&lt;T&gt;(new T(std::forward&lt;Ts&gt;(params)...));
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, <span style="color:#66d9ef">typename</span>... Ts<span style="color:#f92672">&gt;</span>
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> make_unique(Ts<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... params){
+    <span style="color:#66d9ef">return</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> T(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span>Ts<span style="color:#f92672">&gt;</span>(params)...));
 }
-</code></pre>
-
+</code></pre></div>
 <h4 id="good-parts">Good parts</h4>
 
 <p>There are thee reasons to prefer make functions to direct use of <code>new</code>.</p>
 
 <ol>
 <li><p>Eliminate code duplication</p>
-
-<pre><code class="language-cpp">auto upw1(std::make_unique&lt;Widget&gt;());
-std::unique_ptr&lt;Widget&gt; upw2(new Widget);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> <span style="color:#a6e22e">upw1</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_unique<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>());
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> upw2(<span style="color:#66d9ef">new</span> Widget);
+</code></pre></div>
 <p>As we can see above, using make functions avoids code duplication of the repeating type <code>Widget</code>.</p></li>
 
 <li><p>Improve exception safety</p>
 
 <p>Given following functions:</p>
-
-<pre><code class="language-cpp">void processWidget(std::shared_ptr&lt;Widget&gt; spw, int priority);
-int computePriority();
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processWidget</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> spw, <span style="color:#66d9ef">int</span> priority);
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">computePriority</span>();
+</code></pre></div>
 <p>then there will be potential resource leak if we directly use <code>new</code> like this:</p>
-
-<pre><code class="language-cpp">processWidget(std::shared_ptr&lt;Widget&gt;(new Widget), computePriority());
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">processWidget(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> Widget), computePriority());
+</code></pre></div>
 <p>The potential edge case comes with compilers&rsquo; translation of source code into object code: compilers may emit code to execute the operations in this order:</p>
 
 <ol>
@@ -470,25 +460,21 @@ int computePriority();
 <li><p>Specify custom deleters</p>
 
 <p>There&rsquo;s no way to specify a custom deleter using a make function, but using <code>new</code> is straightforward:</p>
-
-<pre><code class="language-cpp">auto widgetDeleter = [](Widget* pw) {...};
-std::unique_ptr&lt;Widget, decltype(widgettDeleter)&gt; upw(new Widget, widgetDeleter);
-std::shared_ptr&lt;Widget&gt; spw(new Widget, widgetDeleter);
-</code></pre></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> widgetDeleter <span style="color:#f92672">=</span> [](Widget<span style="color:#f92672">*</span> pw) {...};
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>unique_ptr<span style="color:#f92672">&lt;</span>Widget, <span style="color:#66d9ef">decltype</span>(widgettDeleter)<span style="color:#f92672">&gt;</span> upw(<span style="color:#66d9ef">new</span> Widget, widgetDeleter);
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> spw(<span style="color:#66d9ef">new</span> Widget, widgetDeleter);
+</code></pre></div></li>
 
 <li><p>Pass braced initializers</p>
 
 <p>In these calls,</p>
-
-<pre><code class="language-cpp">auto upv = std::make_unique&lt;std::vector&lt;int&gt;&gt;(10, 20);
-auto spv = std::make_shared&lt;std::vector&lt;int&gt;&gt;(10, 20);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> upv <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_unique<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>);
+<span style="color:#66d9ef">auto</span> spv <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_shared<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>);
+</code></pre></div>
 <p>the resulting smart pointers point to <code>std::vector</code>s with 10 elements, each of value 20, which means within the make functions, the perfect forwarding code uses the non-<code>std::initializer_list</code> constructor. If we do want to perfect-forward a braced initializer, we use following workaround;</p>
-
-<pre><code class="language-cpp">auto initList = { 10, 20 }; // create std::initializer_list
-auto spv = std::make_shared&lt;std::vector&lt;int&gt;&gt;(initList); // create std:vector using std::initializer_list cotr
-</code></pre></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> initList <span style="color:#f92672">=</span> { <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span> }; <span style="color:#75715e">// create std::initializer_list
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> spv <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>make_shared<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>(initList); <span style="color:#75715e">// create std:vector using std::initializer_list cotr
+</span></code></pre></div></li>
 
 <li><p>Custom memory management or memory restriction concerns for <code>std::shared_ptr</code></p>
 
@@ -515,11 +501,9 @@ auto spv = std::make_shared&lt;std::vector&lt;int&gt;&gt;(initList); // create s
 </ol>
 
 <p>Due to the reasons above, we may have to give up make function and directly use <code>new</code>, but we also want to keep our program exception-safe. Here is a workaround, take the same <code>processWidget</code> for example:</p>
-
-<pre><code class="language-cpp">std::shared_ptr&lt;Widget&gt; spw(new Widget, cusDel);
-processWidget(std::move(spw), computePriority());  // keep arg as rvalue, so it's move-enabled
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span> spw(<span style="color:#66d9ef">new</span> Widget, cusDel);
+processWidget(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(spw), computePriority());  <span style="color:#75715e">// keep arg as rvalue, so it&#39;s move-enabled
+</span></code></pre></div>
 <p>The <code>std::move</code> here is to make sure the argument we pass to <code>processWidget</code> is rvalue, so that expensive copy construction for a <code>std::shared_ptr</code> object, which involves atomic increment of its reference count, will be replaced by a move construction, which requires no reference count manipulation.</p>
 <div class="footnotes">
 

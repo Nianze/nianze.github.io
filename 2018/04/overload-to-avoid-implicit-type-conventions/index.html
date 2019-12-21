@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Overloading to avoid temporaries.
-">
+<meta name="description" content="Overloading to avoid temporaries.">
 
 
-<meta property="og:description" content="Overloading to avoid temporaries.
-">
+<meta property="og:description" content="Overloading to avoid temporaries.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-21 Overload to Avoid Implicit Type Conventions">
 <meta name="twitter:title" content="[MECpp]Item-21 Overload to Avoid Implicit Type Conventions">
 <meta property="og:url" content="https://nianze.tk/2018/04/overload-to-avoid-implicit-type-conventions/">
 <meta property="twitter:url" content="https://nianze.tk/2018/04/overload-to-avoid-implicit-type-conventions/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Overloading to avoid temporaries.
-">
-<meta name="twitter:description" content="Overloading to avoid temporaries.
-">
+<meta property="og:description" content="Overloading to avoid temporaries.">
+<meta name="twitter:description" content="Overloading to avoid temporaries.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,39 +385,32 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Overloading to avoid temporaries.
-</p>
+              <p>Overloading to avoid temporaries.</p>
 
 <p>Consider following code:</p>
-
-<pre><code class="language-cpp">class UPInt {  // unlimited precision integers
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UPInt</span> {  <span style="color:#75715e">// unlimited precision integers
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     UPInt();
-    UPInt(int value);
+    UPInt(<span style="color:#66d9ef">int</span> value);
     ...
 };
 
-const UPInt operator+(const UPInt&amp; lhs, const UPInt&amp; rhs);
-</code></pre>
-
+<span style="color:#66d9ef">const</span> UPInt <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">const</span> UPInt<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> UPInt<span style="color:#f92672">&amp;</span> rhs);
+</code></pre></div>
 <p>And following statements:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">UPInt upi1, upi2;
 
-<pre><code class="language-cpp">UPInt upi1, upi2;
-
-UPInt upi3 = upi1 + 10;
-UPInt upi4 = 10 + upi2;
-</code></pre>
-
+UPInt upi3 <span style="color:#f92672">=</span> upi1 <span style="color:#f92672">+</span> <span style="color:#ae81ff">10</span>;
+UPInt upi4 <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">+</span> upi2;
+</code></pre></div>
 <p>These statements succeed by the creation of temporary objects to convert the integer 10 into <code>UPInts</code> (MECpp item 19).</p>
 
 <p>It is convenient to have compilers perform such kinds of conversions, but the we do pay the cost of implicit type conversion. If we want to eliminate this cost, we cancel the type conversions by function overloading;</p>
-
-<pre><code class="language-cpp">const UPInt operator+(const UPInt&amp; lhs, const UPInt&amp; rhs);
-const UPInt operator+(const UPInt&amp; lhs, int);
-const UPInt operator+(int, const UPInt&amp; rhs);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> UPInt <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">const</span> UPInt<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> UPInt<span style="color:#f92672">&amp;</span> rhs);
+<span style="color:#66d9ef">const</span> UPInt <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">const</span> UPInt<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">const</span> UPInt <span style="color:#66d9ef">operator</span><span style="color:#f92672">+</span>(<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">const</span> UPInt<span style="color:#f92672">&amp;</span> rhs);
 ...
-</code></pre>
-
+</code></pre></div>
 <p>Notice that <code>const UPInt operator+(int, int);</code> is not allowed: C++ rules that every overloaded operator must take at leas one argument of a user-defined type. <code>int</code> isn&rsquo;t a user-defined type, so we can&rsquo;t overload this <code>operator+</code> in this form.</p>
 
 <p>Still, before doing such optimizations, it&rsquo;s important to follow the 80-20 rule (MECpp item 16) to make sure it will make a noticeable improvement in the overall efficiency of the programs.</p>

@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="A generalized basic rule from item 7.
-">
+<meta name="description" content="A generalized basic rule from item 7.">
 
 
-<meta property="og:description" content="A generalized basic rule from item 7.
-">
+<meta property="og:description" content="A generalized basic rule from item 7.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-36 Never redefine an inherited non-virtaul function">
 <meta name="twitter:title" content="Item-36 Never redefine an inherited non-virtaul function">
 <meta property="og:url" content="https://nianze.tk/2018/03/never-redefine-an-inherited-non-virtaul-function/">
 <meta property="twitter:url" content="https://nianze.tk/2018/03/never-redefine-an-inherited-non-virtaul-function/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="A generalized basic rule from item 7.
-">
-<meta name="twitter:description" content="A generalized basic rule from item 7.
-">
+<meta property="og:description" content="A generalized basic rule from item 7.">
+<meta name="twitter:description" content="A generalized basic rule from item 7.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,34 +385,29 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>A generalized basic rule from item 7.
-</p>
+              <p>A generalized basic rule from item 7.</p>
 
 <p>Suppose we have an inheritance hierarchy defined like this:</p>
-
-<pre><code class="language-cpp">class B {
-public:
-    void mf();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">B</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">void</span> mf();
     ...
 };
 
-class D: public B {
-public: 
-    void mf();  // hide B::mf
-    ...
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">D</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> B {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span> 
+    <span style="color:#66d9ef">void</span> mf();  <span style="color:#75715e">// hide B::mf
+</span><span style="color:#75715e"></span>    ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>According to item 33, this will lead to following behavior:</p>
-
-<pre><code class="language-cp">D x;  // x is an object of type D
-B *pB = &amp;x;  // get pointer to x
-D *pD = &amp;x;  // get pointer to x
-
-pB-&gt;mf();  // calls B::mf
-pD-&gt;mf();  // calls D::mf
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cp" data-lang="cp">D x;  <span style="color:#75715e">// x is an object of type D
+</span><span style="color:#75715e"></span>B <span style="color:#f92672">*</span>pB <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>x;  <span style="color:#75715e">// get pointer to x
+</span><span style="color:#75715e"></span>D <span style="color:#f92672">*</span>pD <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>x;  <span style="color:#75715e">// get pointer to x
+</span><span style="color:#75715e"></span>
+pB<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>mf();  <span style="color:#75715e">// calls B::mf
+</span><span style="color:#75715e"></span>pD<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>mf();  <span style="color:#75715e">// calls D::mf
+</span></code></pre></div>
 <p>The reason for this two-faced behavior if that non-virtual functions like <code>B::mf</code> and <code>D::mf</code> are statically bound (item 37), which means that non-virtual functions invoked through pB will <em>always</em> be those defined for class B, even if pB points to an object of a class derived from <code>B</code>. This mismatched behavior exhibits inconsistent behavior, since any given D object may act like either a B or a D (depending on the pointer type) when <code>mf</code> is called.</p>
 
 <p>On the other hand, virtual functions are dynamically bound (item 37), so if <code>mf</code> were a virtual function, a call to <code>mf</code> through either pB or pD would result in an invocation of <code>D::mf</code>, because pB and pD <em>really</em> point to is an object of type D.</p>

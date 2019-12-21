@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.
-">
+<meta name="description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.">
 
 
-<meta property="og:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.
-">
+<meta property="og:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-32 Make sure public inheritance models &#34;Is-A&#34;">
 <meta name="twitter:title" content="Item-32 Make sure public inheritance models &#34;Is-A&#34;">
 <meta property="og:url" content="https://nianze.tk/2018/02/make-sure-public-inheritance-models-is-a/">
 <meta property="twitter:url" content="https://nianze.tk/2018/02/make-sure-public-inheritance-models-is-a/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.
-">
-<meta name="twitter:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.
-">
+<meta property="og:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.">
+<meta name="twitter:description" content="Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object is a base class object.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object <em>is</em> a base class object.
-</p>
+              <p>Everything that applies to base classes must also apply to derived classes in public inheritance, for every derived class object <em>is</em> a base class object.</p>
 
 <p>There are multiple relationships that can exist between classes:</p>
 
@@ -408,34 +406,30 @@ Suffering is optional.</p>
 </blockquote>
 
 <p>Then consider this code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rectangle</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> setHeight(<span style="color:#66d9ef">int</span> newHeight);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setWidth</span>(<span style="color:#66d9ef">int</span> newWidth);
 
-<pre><code class="language-cpp">class Rectangle {
-public:
-    virtual void setHeight(int newHeight);
-    virtual void setWidth(int newWidth);
-
-    virtual int height() const;  // return current values
-    virtual int width() const;
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">height</span>() <span style="color:#66d9ef">const</span>;  <span style="color:#75715e">// return current values
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">width</span>() <span style="color:#66d9ef">const</span>;
     ...
 };
 
-void makeBigger(Rectangle&amp; r)  // function to increase r's area
-{
-    int oldHeight = r.height();
-    r.setWidth(r.width() + 10);  // add 10 to r's width
-    assert(r.height() == oldHeight);  // assert that r's height is unchanged
-}
-</code></pre>
-
-<pre><code class="language-cpp">class Square: public Rectangle {...};
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">makeBigger</span>(Rectangle<span style="color:#f92672">&amp;</span> r)  <span style="color:#75715e">// function to increase r&#39;s area
+</span><span style="color:#75715e"></span>{
+    <span style="color:#66d9ef">int</span> oldHeight <span style="color:#f92672">=</span> r.height();
+    r.setWidth(r.width() <span style="color:#f92672">+</span> <span style="color:#ae81ff">10</span>);  <span style="color:#75715e">// add 10 to r&#39;s width
+</span><span style="color:#75715e"></span>    assert(r.height() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> oldHeight);  <span style="color:#75715e">// assert that r&#39;s height is unchanged
+</span><span style="color:#75715e"></span>}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Square</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Rectangle {...};
 
 Square s;
 ...
-assert(s.width() == s.height());  // must be true for all squares
-makeBigger(s);  // by inheritance, s is-a Rectangle, so we can increase its area
-assert(s.width() == s.height());  // must be true for all squares
-</code></pre>
-
+assert(s.width() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s.height());  <span style="color:#75715e">// must be true for all squares
+</span><span style="color:#75715e"></span>makeBigger(s);  <span style="color:#75715e">// by inheritance, s is-a Rectangle, so we can increase its area
+</span><span style="color:#75715e"></span>assert(s.width() <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s.height());  <span style="color:#75715e">// must be true for all squares
+</span></code></pre></div>
 <p>Now we face a big problem: how can we reconcile the following assertion:</p>
 
 <ul>

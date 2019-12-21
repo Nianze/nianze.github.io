@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Take use of the return value optimization in compilers.
-">
+<meta name="description" content="Take use of the return value optimization in compilers.">
 
 
-<meta property="og:description" content="Take use of the return value optimization in compilers.
-">
+<meta property="og:description" content="Take use of the return value optimization in compilers.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-20 Facilitate the Return Value Optimization">
 <meta name="twitter:title" content="[MECpp]Item-20 Facilitate the Return Value Optimization">
 <meta property="og:url" content="https://nianze.tk/2018/04/facilitate-the-return-value-optimization/">
 <meta property="twitter:url" content="https://nianze.tk/2018/04/facilitate-the-return-value-optimization/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Take use of the return value optimization in compilers.
-">
-<meta name="twitter:description" content="Take use of the return value optimization in compilers.
-">
+<meta property="og:description" content="Take use of the return value optimization in compilers.">
+<meta name="twitter:description" content="Take use of the return value optimization in compilers.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Take use of the <em>return value optimization</em> in compilers.
-</p>
+              <p>Take use of the <em>return value optimization</em> in compilers.</p>
 
 <p>Some functions (such as <code>operator*</code>) have to return objects:</p>
 
@@ -397,33 +395,28 @@ Suffering is optional.</p>
 </ul>
 
 <p>Although we can&rsquo;t eliminate by-value returns from functions that require them, we can still reduce the cost of returning objects: by the help of compilers, we can eliminate the cost of the temporaries by returning <em>constructor arguments</em> instead of objects:</p>
-
-<pre><code class="language-cpp">const Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
 {
-    return Rational(lhs.numerator() * rhs.numerator(),
-                    lhs.denominator() * rhs.denominator());
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Rational</span>(lhs.numerator() <span style="color:#f92672">*</span> rhs.numerator(),
+                    lhs.denominator() <span style="color:#f92672">*</span> rhs.denominator());
 }
-</code></pre>
-
+</code></pre></div>
 <p>Here we&rsquo;re creating an anonymous temporary <code>Rational</code> object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of <code>operator*</code> under the use case below:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Rational a <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+Rational <span style="color:#a6e22e">b</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>);
 
-<pre><code class="language-cpp">Rational a = 10;
-Rational b(1, 2);
-
-Rational c = a * b;  // operator* is called
-</code></pre>
-
+Rational c <span style="color:#f92672">=</span> a <span style="color:#f92672">*</span> b;  <span style="color:#75715e">// operator* is called
+</span></code></pre></div>
 <p>The rules for C++ allow compilers to optimize such <em>anonymous</em> temporary objects out of existence by constructing the temporary <em>inside the memory allotted for the object</em> <code>c</code>. Thus, if compilers do this optimization, both the temporary inside <code>operator*</code> and the temporary returned by <code>operator*</code> are eliminated, and we only pay for one constructor call - the one to create <code>c</code>.</p>
 
 <p>Further more, we can eliminate the overhead of the call to <code>operator*</code> by declaring this function <code>inline</code>:</p>
-
-<pre><code class="language-cpp">// most efficient way to write a function returning an object
-inline const Rational operator*(const Rational&amp; lhs, const Rational&amp; rhs)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// most efficient way to write a function returning an object
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">const</span> Rational <span style="color:#66d9ef">operator</span><span style="color:#f92672">*</span>(<span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> lhs, <span style="color:#66d9ef">const</span> Rational<span style="color:#f92672">&amp;</span> rhs)
 {
-    return Rational(lhs.numerator() * rhs.numerator(),
-                    lhs.denominator() * rhs.denominator());
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Rational</span>(lhs.numerator() <span style="color:#f92672">*</span> rhs.numerator(),
+                    lhs.denominator() <span style="color:#f92672">*</span> rhs.denominator());
 }
-</code></pre>
+</code></pre></div>
               
             </div>
           </div>

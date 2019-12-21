@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Techniques for requiring or prohibiting heap-based objects
-
-">
+<meta name="description" content="Techniques for requiring or prohibiting heap-based objects">
 
 
-<meta property="og:description" content="Techniques for requiring or prohibiting heap-based objects
-
-">
+<meta property="og:description" content="Techniques for requiring or prohibiting heap-based objects">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects">
 <meta name="twitter:title" content="[MECpp]Item-27 Requiring or Prohibiting Heap Based Objects">
 <meta property="og:url" content="https://nianze.tk/2018/05/requiring-or-prohibiting-heap-based-objects/">
 <meta property="twitter:url" content="https://nianze.tk/2018/05/requiring-or-prohibiting-heap-based-objects/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Techniques for requiring or prohibiting heap-based objects
-
-">
-<meta name="twitter:description" content="Techniques for requiring or prohibiting heap-based objects
-
-">
+<meta property="og:description" content="Techniques for requiring or prohibiting heap-based objects">
+<meta name="twitter:description" content="Techniques for requiring or prohibiting heap-based objects">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Techniques for requiring or prohibiting heap-based objects
+              <p>Techniques for requiring or prohibiting heap-based objects</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -408,7 +403,7 @@ Suffering is optional.</p>
 <li><a href="#3-preventing-base-class-parts-instantiated-on-heap">3. Preventing base class parts instantiated on heap</a></li>
 </ul></li>
 </ul>
-</nav></p>
+</nav>
 
 <h1 id="requiring-heap-based-objects">Requiring Heap-Based Objects</h1>
 
@@ -417,67 +412,61 @@ Suffering is optional.</p>
 <p>The brutle way is to declare the constructors and the destructor <code>private</code>, but this is overkill. Either one of them need to be private to ensure objects only be created on the heap. Since there are usually many constructors but only one destructor per class, a more elegant way is to make the destructor private and the constructors public, prividing privileged pseudo-destructor function (which has access to the real destructor) for clients to call, as suggested in MECpp item 26.</p>
 
 <p>Example:</p>
-
-<pre><code class="language-cpp">class UPNumber { // unlimited precision numbers that should only exist on the heap
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UPNumber</span> { <span style="color:#75715e">// unlimited precision numbers that should only exist on the heap
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     UPNumber();
-    UPNumber(int initValue);
-    UPNumber(double initValue);
-    UPNumber(const UPNumber&amp; rhs);
-    // pseudo-destructor (a const member function, because even const obj. may be destroyed)
-    void destroy() const { delete this; }
+    UPNumber(<span style="color:#66d9ef">int</span> initValue);
+    UPNumber(<span style="color:#66d9ef">double</span> initValue);
+    UPNumber(<span style="color:#66d9ef">const</span> UPNumber<span style="color:#f92672">&amp;</span> rhs);
+    <span style="color:#75715e">// pseudo-destructor (a const member function, because even const obj. may be destroyed)
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">destroy</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">this</span>; }
     ...
-private:
-    ~UPNumber();
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#f92672">~</span>UPNumber();
 };
-</code></pre>
-
+</code></pre></div>
 <p>Clients would program like this:</p>
-
-<pre><code class="language-cpp">UPNumber n; // error! (legal here, but illegal when n's dtor is implicitly invoked later)
-UPNumber *p = new UPNumber; // fine
-...
-delete p; // error! attempt to call private dtor
-p-&gt;destroy(); // fine
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">UPNumber n; <span style="color:#75715e">// error! (legal here, but illegal when n&#39;s dtor is implicitly invoked later)
+</span><span style="color:#75715e"></span>UPNumber <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UPNumber; <span style="color:#75715e">// fine
+</span><span style="color:#75715e"></span>...
+<span style="color:#66d9ef">delete</span> p; <span style="color:#75715e">// error! attempt to call private dtor
+</span><span style="color:#75715e"></span>p<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>destroy(); <span style="color:#75715e">// fine
+</span></code></pre></div>
 <h2 id="2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</h2>
 
 <p>Restricting access to a class&rsquo;s destructor or constructors prevents the creation of not only non-heap objects, but also both inheritance and containment. To work this out:</p>
 
 <ul>
 <li>To be friendly for inheritance, we declare <code>protected</code> for <code>UPNumber</code>&rsquo;s destructor.</li>
-<li>To be friendly for containment, classes that need objects of type <code>UPNumber</code> can be modified to contain pointers to <code>UPNumber</code> object instead:</li>
-</ul>
 
-<pre><code class="language-cpp">class UPNumer {...};  // declare dtor protected
-class NonNegativeUPNumber: public UPNumber {...}; // okay to access protected members
-
-class Asset {
-public:
-    Asset(int initValue);
-    ~Asset();
-    ...
-private:
-    UPNumber *value;
+<li><p>To be friendly for containment, classes that need objects of type <code>UPNumber</code> can be modified to contain pointers to <code>UPNumber</code> object instead:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UPNumer</span> {...};  <span style="color:#75715e">// declare dtor protected
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NonNegativeUPNumber</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> UPNumber {...}; <span style="color:#75715e">// okay to access protected members
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Asset</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+Asset(<span style="color:#66d9ef">int</span> initValue);
+<span style="color:#f92672">~</span>Asset();
+...
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+UPNumber <span style="color:#f92672">*</span>value;
 };
 
-Asset::Asset(int initValue)
-: value(new UPNumber(initValue)) // fine
-{...}
+Asset<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Asset(<span style="color:#66d9ef">int</span> initValue)
+<span style="color:#f92672">:</span> value(<span style="color:#66d9ef">new</span> UPNumber(initValue)) <span style="color:#75715e">// fine
+</span><span style="color:#75715e"></span>{...}
 
-Asset::~Asset()
-{ value-&gt;destroy(); }  // fine
-</code></pre>
+Asset<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Asset()
+{ value<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>destroy(); }  <span style="color:#75715e">// fine
+</span></code></pre></div></li>
+</ul>
 
 <h2 id="3-determining-whether-an-object-is-on-the-heap">3. Determining Whether an Object is On The Heap</h2>
 
 <p>It&rsquo;s hard to tell whether an object is on the heap. For example, given the class definition above, it&rsquo;s ligal to define a non-heap <code>NonNegativeUPNumber</code> object, which will not construct its base <code>UPNumber</code> part on the heap. There is no way to detect whether a constructor is being invoked as the base class part of a heap-based object, which means for the following contexts, it is not possible for the <code>UPNumber</code> constructor to detect the difference:</p>
-
-<pre><code class="language-cpp">NonNegativeUPNumber *n1 = new NonNegativeUPNumber; // on heap
-NonNegativeUPNumber n2; // not on heap
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">NonNegativeUPNumber <span style="color:#f92672">*</span>n1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NonNegativeUPNumber; <span style="color:#75715e">// on heap
+</span><span style="color:#75715e"></span>NonNegativeUPNumber n2; <span style="color:#75715e">// not on heap
+</span></code></pre></div>
 <p>Sadly, there&rsquo;s no portable way to determine whether an object is on the heap, and there isn&rsquo;t even a semi-portable way that works most of the time. Detailed dicussion on this topic could be found at <a href="http://www.aristeia.com/BookErrata/M27Comments.html">Comments on Item 27 of More Effective C++</a>.</p>
 
 <p>We&rsquo;ll have to turn to unportable, implementation-dependent system calls if we absolutely have to tell whether an address is on the heap. That being the case, we&rsquo;d better off trying to redesign the software so we don&rsquo;t need to determine whether an object is on the heap in the first place.</p>
@@ -485,82 +474,74 @@ NonNegativeUPNumber n2; // not on heap
 <h2 id="4-determine-whether-it-s-safe-to-delete-a-pointer">4. Determine whether it&rsquo;s safe to delete a pointer</h2>
 
 <p>To answer this easier question, all we need to do is to create a collection of addresses that have been returned by <code>operator new</code>. One possible solution is to provide an abstract mixin base class that offers derived classes the ability to determine whether a pointer was allocated from <code>operator new</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HeapTracked</span> { <span style="color:#75715e">// mixin class; keeps track of ptrs returned from op. new
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MissingAddress</span>();  <span style="color:#75715e">// exception class
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">virtual</span> <span style="color:#f92672">~</span>HeapTracked() <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 
-<pre><code class="language-cpp">class HeapTracked { // mixin class; keeps track of ptrs returned from op. new
-public:
-    class MissingAddress();  // exception class
-    virtual ~HeapTracked() = 0;
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(size_t size);
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr);
 
-    static void *operator new(size_t size);
-    static void operator delete(void *ptr);
-
-    bool isOnHeap() const;
-private:
-    typedef const void* RawAddress;
-    static list&lt;RawAddress&gt; addresses;
+    <span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">isOnHeap</span>() <span style="color:#66d9ef">const</span>;
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> RawAddress;
+    <span style="color:#66d9ef">static</span> list<span style="color:#f92672">&lt;</span>RawAddress<span style="color:#f92672">&gt;</span> addresses;
 };
-</code></pre>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// mandatory definition of static class member
+</span><span style="color:#75715e"></span>list<span style="color:#f92672">&lt;</span>RawAddress<span style="color:#f92672">&gt;</span> HeapTracked<span style="color:#f92672">:</span><span style="color:#f92672">:</span>address;
+<span style="color:#75715e">// tho being pure virtual, dtor still needs to be defined
+</span><span style="color:#75715e"></span>HEapTracked<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>HeapTracked() {}
 
-<pre><code class="language-cpp">// mandatory definition of static class member
-list&lt;RawAddress&gt; HeapTracked::address;
-// tho being pure virtual, dtor still needs to be defined
-HEapTracked::~HeapTracked() {}
-
-void * HeapTracked::operator new(size_t size)
+<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span> HeapTracked<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(size_t size)
 {
-    void *memPtr = ::operator new(size); // get the memory
-    addresses.push_front(memPtr);
-    return memPtr;
+    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>memPtr <span style="color:#f92672">=</span> <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(size); <span style="color:#75715e">// get the memory
+</span><span style="color:#75715e"></span>    addresses.push_front(memPtr);
+    <span style="color:#66d9ef">return</span> memPtr;
 }
 
-void HeapTracked::operator delete(void *ptr)
+<span style="color:#66d9ef">void</span> HeapTracked<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr)
 {
-    // gracefully handle null pointer
-    if (ptr == 0) return;
-    list&lt;RawAddress&gt;::iterator it = 
+    <span style="color:#75715e">// gracefully handle null pointer
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (ptr <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>;
+    list<span style="color:#f92672">&lt;</span>RawAddress<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it <span style="color:#f92672">=</span> 
         find(addresses.begin(), addresses.end(), ptr);
-    if (it != addresses.end()) {
-        addresses.erase(it);     // remove the entry
-        ::operator delete(ptr);  // deallocate the memory
-    } else {
-        throw MissingAddress();  // ptr wasn't allocated by op. new. throw an exception
-    }
+    <span style="color:#66d9ef">if</span> (it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> addresses.end()) {
+        addresses.erase(it);     <span style="color:#75715e">// remove the entry
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">delete</span>(ptr);  <span style="color:#75715e">// deallocate the memory
+</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">MissingAddress</span>();  <span style="color:#75715e">// ptr wasn&#39;t allocated by op. new. throw an exception
+</span><span style="color:#75715e"></span>    }
 }
 
-bool HeapTracked::isOnHeap() const
+<span style="color:#66d9ef">bool</span> HeapTracked<span style="color:#f92672">:</span><span style="color:#f92672">:</span>isOnHeap() <span style="color:#66d9ef">const</span>
 {
-    // get a pointer to the beginning of the memory occupied by *this
-    const void *rawAddress = dynamic_cast&lt;cosnt void*&gt;(this);
-    list&lt;RawAddress&gt;::iterator it = 
+    <span style="color:#75715e">// get a pointer to the beginning of the memory occupied by *this
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>rawAddress <span style="color:#f92672">=</span> <span style="color:#66d9ef">dynamic_cast</span><span style="color:#f92672">&lt;</span>cosnt <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">this</span>);
+    list<span style="color:#f92672">&lt;</span>RawAddress<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator it <span style="color:#f92672">=</span> 
         find(addresses.begin(), addresses.end(), rawAddress);
-    return it != addresses.end();  // return whether it was found
-}
-</code></pre>
-
+    <span style="color:#66d9ef">return</span> it <span style="color:#f92672">!</span><span style="color:#f92672">=</span> addresses.end();  <span style="color:#75715e">// return whether it was found
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>Note that <code>dynamic_cast</code> is applicable only to pointers to objects that have at least one virtual function, and <code>dynamic_cast</code>ing a pointer to <code>void*</code> (or <code>const void*</code> or <code>volatile void*</code> or <code>const volatile void*</code>) yields a pointer to the beginning of the memory for the object pointed to by the pointer. Here <code>dynamic_cast</code>ing <code>this</code> to <code>const void*</code> gives us a pointer to the beginning of the memory for the current object, which is the pointer previously returned by <code>HeapTracked::operator new</code> as long as the memory for the current object was allocated by <code>HeapTracked::operator new</code> in the first place.</p>
 
 <p>To use this basic class, say we want to be able to determine whether a pointer to an <code>Asset</code> object points to a heap-based object, simply modify <code>Asset</code>&rsquo;s class definition to specify <code>HeapTracked</code> as a base class:</p>
-
-<pre><code class="language-cpp">class Asset: public HeapTracked {
-private:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Asset</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> HeapTracked {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
     UPNumber value;
     ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>And we could query <code>Asset*</code> pointers as follows:</p>
-
-<pre><code class="language-cpp">void inventoryAsset(const Asset *ap)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inventoryAsset</span>(<span style="color:#66d9ef">const</span> Asset <span style="color:#f92672">*</span>ap)
 {
-    if (ap-&gt;isOnHeap()) {
-        as is a heap-based asset -- inventory it as such
+    <span style="color:#66d9ef">if</span> (ap<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>isOnHeap()) {
+        as is a heap<span style="color:#f92672">-</span>based asset <span style="color:#f92672">-</span><span style="color:#f92672">-</span> inventory it as such
     } 
-    else {
-        ap is non-heap-based  asset  -- record it that way
+    <span style="color:#66d9ef">else</span> {
+        ap is non<span style="color:#f92672">-</span>heap<span style="color:#f92672">-</span>based  asset  <span style="color:#f92672">-</span><span style="color:#f92672">-</span> record it that way
     }
 }
-</code></pre>
-
+</code></pre></div>
 <p>Since built-in types such as <code>int</code> and <code>char</code> can&rsquo;t inherit from anything, <code>HeapTracked</code> can&rsquo;t be used with these built-in types. Still, the most common reason for wanting to use a class like <code>HeapTracked</code> is to determine whether it&rsquo;s okay to <code>delete this</code>, and we don&rsquo;t want to do that with a built-in type because such types have no <code>this</code> pointer.</p>
 
 <h1 id="prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</h1>
@@ -576,32 +557,26 @@ private:
 <h2 id="1-preventing-directly-instantiation-on-heap">1. Preventing directly instantiation on heap</h2>
 
 <p>To prevent clients from directly instantiating objects on the heap: we can declare <code>operator new</code> (and possibly <code>operator new[]</code>) as <code>private</code>:</p>
-
-<pre><code class="language-cpp">class UPNumber {
-private:
-    static void *operator new(size_t size);
-    static void operator delete(void *ptr);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UPNumber</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">operator</span> <span style="color:#66d9ef">new</span>(size_t size);
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">delete</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr);
     ...
 };
-</code></pre>
-
-<pre><code class="language-cpp">UPNumber n1;  // okay
-static UPNumber n2;  // okay
-UPNumber *p = new UPNumber; // error! attempt to call private operator new
-</code></pre>
-
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">UPNumber n1;  <span style="color:#75715e">// okay
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> UPNumber n2;  <span style="color:#75715e">// okay
+</span><span style="color:#75715e"></span>UPNumber <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UPNumber; <span style="color:#75715e">// error! attempt to call private operator new
+</span></code></pre></div>
 <p>Declaring <code>operator new</code> private often also prevents <code>UPNumber</code> objects from being instantiated as base class parts of heap-based derived class objects, because <code>operator new</code> and <code>operator delete</code> are inherited, so if these functions aren&rsquo;t declared public in a derived class, that class inherits the private versions declared in its base(s):</p>
-
-<pre><code class="language-cpp">class UPNumber {...}; // as above
-class NonNegativeUPNumber: public UPNumber { // declares no operator new
-    ...
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UPNumber</span> {...}; <span style="color:#75715e">// as above
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NonNegativeUPNumber</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> UPNumber { <span style="color:#75715e">// declares no operator new
+</span><span style="color:#75715e"></span>    ...
 };
 
-NonNegativeUPNumber n1; // okay
-static NonNegativeUPNumber n2; // okay
-NonNegativeUPNumber *p = new NonNegativeUPNumber; // error! attempt to call private operator new
-</code></pre>
-
+NonNegativeUPNumber n1; <span style="color:#75715e">// okay
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> NonNegativeUPNumber n2; <span style="color:#75715e">// okay
+</span><span style="color:#75715e"></span>NonNegativeUPNumber <span style="color:#f92672">*</span>p <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> NonNegativeUPNumber; <span style="color:#75715e">// error! attempt to call private operator new
+</span></code></pre></div>
 <h2 id="2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</h2>
 
 <p>However, if the derived class declares an <code>operator new</code> of its own, which will be called when allocating derived class objects on the heap, it is hard to prevent <code>UPNumber</code> base class parts from winding up there.</p>
@@ -609,19 +584,17 @@ NonNegativeUPNumber *p = new NonNegativeUPNumber; // error! attempt to call priv
 <h2 id="3-preventing-base-class-parts-instantiated-on-heap">3. Preventing base class parts instantiated on heap</h2>
 
 <p>Similarly, the fact that <code>UPNumber</code>&rsquo;s <code>operator new</code> is private has no effect on attempts to allocate objects containing <code>UPNumber</code> objects as members:</p>
-
-<pre><code class="language-cpp">class Asset {
-public:
-    Asset(int initValue);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Asset</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    Asset(<span style="color:#66d9ef">int</span> initValue);
     ...
-private:
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
     UPNumber value;
 };
 
-Asset *pa = new Asset(100);  // fine, calls Asset::operator new or ::operator new,
-                             // not UPNumber::operator new
-</code></pre>
-
+Asset <span style="color:#f92672">*</span>pa <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Asset(<span style="color:#ae81ff">100</span>);  <span style="color:#75715e">// fine, calls Asset::operator new or ::operator new,
+</span><span style="color:#75715e"></span>                             <span style="color:#75715e">// not UPNumber::operator new
+</span></code></pre></div>
 <p>Just as there&rsquo;s no portable way to determine if an address is on the heap, however, there is no portable way to determine that it is not on the heap, so we can&rsquo;t throw an exception in the <code>UPNumber</code> constructors if a to-be-tested <code>UPNumber</code> object being constructed is on the heap. We&rsquo;re out of luck.</p>
               
             </div>

@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.
-
-">
+<meta name="description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.">
 
 
-<meta property="og:description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.
-
-">
+<meta property="og:description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-26 Limiting the Number of Objects of a Class">
 <meta name="twitter:title" content="[MECpp]Item-26 Limiting the Number of Objects of a Class">
 <meta property="og:url" content="https://nianze.tk/2018/04/limiting-the-number-of-objects-of-a-class/">
 <meta property="twitter:url" content="https://nianze.tk/2018/04/limiting-the-number-of-objects-of-a-class/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.
-
-">
-<meta name="twitter:description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.
-
-">
+<meta property="og:description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.">
+<meta name="twitter:description" content="Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.
+              <p>Combining object-counting technique with the pseudo-constructors, we can limit the number of objects of a class.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -402,7 +397,7 @@ Suffering is optional.</p>
 <li><a href="#an-object-counting-base-class">An object-counting base class</a></li>
 </ul></li>
 </ul>
-</nav></p>
+</nav>
 
 <h1 id="allowing-zero-or-one-objects">Allowing zero or one objects</h1>
 
@@ -425,47 +420,41 @@ Suffering is optional.</p>
 </ol>
 
 <p>Example:</p>
-
-<pre><code class="language-cpp">namespace PrintingStuff {
-class Printer {
-public:
-    void submitJob(const PrintJob&amp; job);
-    void reset();
-    void performSelfTest();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">namespace</span> PrintingStuff {
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Printer</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">void</span> submitJob(<span style="color:#66d9ef">const</span> PrintJob<span style="color:#f92672">&amp;</span> job);
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reset</span>();
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">performSelfTest</span>();
     ...
-friend Printer&amp; thePrinter();
-private:
+<span style="color:#66d9ef">friend</span> Printer<span style="color:#f92672">&amp;</span> thePrinter();
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
     Printer();
-    Printer(const Printer&amp; rhs);
+    Printer(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs);
     ...
 };
 
-Printer&amp; thePrinter() // no inline in case of duplication caused by internal linkage
-{
-    static Printer p;
-    return p;
+Printer<span style="color:#f92672">&amp;</span> thePrinter() <span style="color:#75715e">// no inline in case of duplication caused by internal linkage
+</span><span style="color:#75715e"></span>{
+    <span style="color:#66d9ef">static</span> Printer p;
+    <span style="color:#66d9ef">return</span> p;
 }
-} // namespace PrintingStuff
-</code></pre>
-
+} <span style="color:#75715e">// namespace PrintingStuff
+</span></code></pre></div>
 <p>Since the accessor returns a reference to a <code>Printer</code> object, clients may use <code>thePrinter</code> in any context where a <code>Printer</code> object itself is expected:</p>
-
-<pre><code class="language-cpp">using PrintingStuff::thePrinter; 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">using</span> PrintingStuff<span style="color:#f92672">:</span><span style="color:#f92672">:</span>thePrinter; 
 
 thePrinter().reset();
 thePrinter().submitJob(buffer);
-</code></pre>
-
+</code></pre></div>
 <p>However, there&rsquo;s still an inconvenience in this design: we&rsquo;re limited to a single <code>Printer</code> object for each run of the program. As a result, it&rsquo;s not possible to write code like this:</p>
-
-<pre><code class="language-cpp">create Printer object p1;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">create Printer object p1;
 use p1;
 destroy p1;
 create Printer object p2;
 use p2;
 destroy p2;
-</code></pre>
-
+</code></pre></div>
 <p>This design never instantiates more than a single <code>Printer</code> object at a time, but it does use different <code>Printer</code> objects in different parts of the program. It does not violate the constraint that only one printer may exist, but is still illegal with a single function static implementation.</p>
 
 <p>This need for flexibility leads us to the design of object-counting.</p>
@@ -475,60 +464,52 @@ destroy p2;
 <h2 id="object-counting">Object-counting</h2>
 
 <p>The good point of object-counting is that, it provides us with more flexibility than the function static, and makes it easier to generalize the limit number to more than one. However, object-counting alone will not work. For example:</p>
-
-<pre><code class="language-cpp">class Printer {
-public:
-    class TooManyObjects{};  // exception class for use when too many obj. are requested; may also returning null for too-many-object cases
-    Printer();
-    Printer(const Printer&amp; rhs);
-    ~Printer();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Printer</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TooManyObjects</span>{};  <span style="color:#75715e">// exception class for use when too many obj. are requested; may also returning null for too-many-object cases
+</span><span style="color:#75715e"></span>    Printer();
+    Printer(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs);
+    <span style="color:#f92672">~</span>Printer();
     ...
-private:
-    static size_t numObjects;
-    static const size_t maxObjects = 10; // may need enum hack here for old compiler
-};
-</code></pre>
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> size_t numObjects;
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> size_t maxObjects <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// may need enum hack here for old compiler
+</span><span style="color:#75715e"></span>};
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// Obligatory definitions of class statics
+</span><span style="color:#75715e"></span>size_t Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>numObjects <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<span style="color:#66d9ef">const</span> size_t Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>maxObjets;
 
-<pre><code class="language-cpp">// Obligatory definitions of class statics
-size_t Printer::numObjects = 0;
-const size_t Printer::maxObjets;
-
-Printer::Printer()
+Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Printer()
 {
-    if (numObjects &gt;= maxObjects) {
-        throw TooManyObjects();
+    <span style="color:#66d9ef">if</span> (numObjects <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> maxObjects) {
+        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">TooManyObjects</span>();
     }   
     process with normal construction here;
-    ++numObjects;
+    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>numObjects;
 }
 
-Printer::~Printer()
+Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Printer()
 {
     perform normal destruction here;
-    --numObjects;
+    <span style="color:#f92672">-</span><span style="color:#f92672">-</span>numObjects;
 }
 
-Printer::Printer(const Printer&amp; rhs)
+Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Printer(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs)
 {
-    if (numObjects &gt;= maxObjects) {
-        throw TooManyObjects();
+    <span style="color:#66d9ef">if</span> (numObjects <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> maxObjects) {
+        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">TooManyObjects</span>();
     }    
     perform normal copy construction here
-    ++numObjects;
+    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>numObjects;
 }
-</code></pre>
-
+</code></pre></div>
 <p>The problem here is that, in order to set a limit on the number of instantiations,  we should not declare the class constructor <code>public</code>, because that will allow clients to put the class as base class parts of more derived objects, or embedded inside larger objects, which is totally different usage context, and the presence of these different contexts significantly muddies the waters regarding what it means to keep track of the &ldquo;number of objects in existence.&rdquo; For example:</p>
-
-<pre><code class="language-cpp">class ColorPrinter: public Printer {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ColorPrinter</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Printer {
     ...
 }
-</code></pre>
-
-<pre><code class="language-cpp">Printer p;
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Printer p;
 ColorPrinter cp;
-</code></pre>
-
+</code></pre></div>
 <p>From object definition above, there are two <code>Printer</code> objects, one for <code>p</code> and one for the <code>Printer</code> part of <code>cp</code>. This is usually unwanted behavior.</p>
 
 <p>Often we are interested only in allowing objects to exist on their own, and limit the number of those kinds of instantiations. To satisfy such restrictions, we should declare the class constructors <code>private</code>, and (in the absence of <code>friend</code> declarations) classes with private constructors can&rsquo;t be used as base classes, nor can they be embedded inside other objects.</p>
@@ -538,116 +519,108 @@ ColorPrinter cp;
 <p>In fact, private constructors are a general solution for preventing derivation. Instead of returning a reference to a single object (like what <code>thePrinter</code> does), we can declare a pseudo-constructor returning a pointer to a unique object to allow multiple objects.</p>
 
 <p>That is, we combine the object-counting with pseudo-consturctors:</p>
-
-<pre><code class="language-cpp">class Printer {
-public:
-    class TooManyObjects{};  // exception class for use when too many obj. are requested; may also returning null for too-many-object cases
-    // pseudo-constructor
-    static Printer * makePrinter();
-    static Printer * makePrinter(const Printer&amp; rhs);
-    ~Printer();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Printer</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TooManyObjects</span>{};  <span style="color:#75715e">// exception class for use when too many obj. are requested; may also returning null for too-many-object cases
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// pseudo-constructor
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> Printer <span style="color:#f92672">*</span> <span style="color:#a6e22e">makePrinter</span>();
+    <span style="color:#66d9ef">static</span> Printer <span style="color:#f92672">*</span> <span style="color:#a6e22e">makePrinter</span>(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs);
+    <span style="color:#f92672">~</span>Printer();
     ...
-private:
-    static size_t numObjects;
-    static const size_t maxObjects = 10; // may need enum hack here for old compiler
-    Printer();
-    Printer(const Printer&amp; rhs); 
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> size_t numObjects;
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> size_t maxObjects <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>; <span style="color:#75715e">// may need enum hack here for old compiler
+</span><span style="color:#75715e"></span>    Printer();
+    Printer(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs); 
 };
-</code></pre>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// Obligatory definitions of class statics
+</span><span style="color:#75715e"></span>size_t Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>numObjects <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<span style="color:#66d9ef">const</span> size_t Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>maxObjets;
 
-<pre><code class="language-cpp">// Obligatory definitions of class statics
-size_t Printer::numObjects = 0;
-const size_t Printer::maxObjets;
-
-Printer::Printer()
+Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Printer()
 {
-    if (numObjects &gt;= maxObjects) {
-        throw TooManyObjects();
+    <span style="color:#66d9ef">if</span> (numObjects <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> maxObjects) {
+        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">TooManyObjects</span>();
     }
     process with normal construction here;
-    ++numObjects;
+    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>numObjects;
 }
 
-Printer::Printer(const Printer&amp; rhs)
+Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Printer(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs)
 {
-    if (numObjects &gt;= maxObjects) {
-        throw TooManyObjects();
+    <span style="color:#66d9ef">if</span> (numObjects <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> maxObjects) {
+        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">TooManyObjects</span>();
     }    
     perform normal copy construction here
-    ++numObjects;
+    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>numObjects;
 }
 
-Printer::~Printer()
+Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Printer()
 {
     perform normal destruction here;
-    --numObjects;
+    <span style="color:#f92672">-</span><span style="color:#f92672">-</span>numObjects;
 }
 
-Printer * Printer::makePrinter()
-{ return new Printer; }
+Printer <span style="color:#f92672">*</span> Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>makePrinter()
+{ <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Printer; }
 
-Printer * Printer::makePrinter(const Printer&amp; rhs)
-{ return new Printer(rhs); }
-</code></pre>
-
+Printer <span style="color:#f92672">*</span> Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>makePrinter(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs)
+{ <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Printer</span>(rhs); }
+</code></pre></div>
 <h2 id="an-object-counting-base-class">An object-counting base class</h2>
 
 <p>We can split the instance counting ability apart from the <code>Printer</code> class to reuse the limited-number-of-instance functionality.</p>
-
-<pre><code class="language-cpp">template&lt;class BeingCounted&gt;
-class Counted {
-public:
-    class TooManyObjects{}; // for throwing exceptions
-    static size_t objectCount() { return numObjects; }
-protected:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BeingCounted</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Counted</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TooManyObjects</span>{}; <span style="color:#75715e">// for throwing exceptions
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> size_t <span style="color:#a6e22e">objectCount</span>() { <span style="color:#66d9ef">return</span> numObjects; }
+<span style="color:#66d9ef">protected</span><span style="color:#f92672">:</span>
     Counted();
-    Counted(const Counted&amp; rhs);
-    ~Counted() { --numObjects; }
-private:
-    static size_t numObjects;
-    static const size_t maxObjects;
-    void init();  // to avoid ctor code duplication
-};
+    Counted(<span style="color:#66d9ef">const</span> Counted<span style="color:#f92672">&amp;</span> rhs);
+    <span style="color:#f92672">~</span>Counted() { <span style="color:#f92672">-</span><span style="color:#f92672">-</span>numObjects; }
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> size_t numObjects;
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> size_t maxObjects;
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span>();  <span style="color:#75715e">// to avoid ctor code duplication
+</span><span style="color:#75715e"></span>};
 
-template&lt;class BeingCounted&gt;              // defines numObjects and
-size_t Counted&lt;BeingCounted&gt;::numObjects; // automatically init. it to 0
-
-template&lt;class BeingCouted&gt;
-Counted&lt;BeingCounted&gt;::Counted()
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BeingCounted</span><span style="color:#f92672">&gt;</span>              <span style="color:#75715e">// defines numObjects and
+</span><span style="color:#75715e"></span>size_t Counted<span style="color:#f92672">&lt;</span>BeingCounted<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>numObjects; <span style="color:#75715e">// automatically init. it to 0
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BeingCouted</span><span style="color:#f92672">&gt;</span>
+Counted<span style="color:#f92672">&lt;</span>BeingCounted<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Counted()
 { init(); }
 
-template&lt;class BeingCounted&gt;
-void Counted&lt;BeingCounted&gt;::Counted(const Counted&lt;BeingCounted&gt;&amp;)
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BeingCounted</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> Counted<span style="color:#f92672">&lt;</span>BeingCounted<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>Counted(<span style="color:#66d9ef">const</span> Counted<span style="color:#f92672">&lt;</span>BeingCounted<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span>)
 { init(); }
 
-template&lt;class BeingCounted&gt;
-void Counted&lt;BeingCounted&gt;::init()
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BeingCounted</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> Counted<span style="color:#f92672">&lt;</span>BeingCounted<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>init()
 {
-    if (numObjects &gt;= maxObjects) throw TooManyObjects();
-    ++numObjects;
+    <span style="color:#66d9ef">if</span> (numObjects <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> maxObjects) <span style="color:#66d9ef">throw</span> TooManyObjects();
+    <span style="color:#f92672">+</span><span style="color:#f92672">+</span>numObjects;
 }
-</code></pre>
-
+</code></pre></div>
 <p>Now modify the <code>Printer</code> class to use the <code>Counted</code> template:</p>
-
-<pre><code class="language-cpp">class Printer: private Counted&lt;Printer&gt; {
-public:
-    // pseudo-constructors
-    static Printer * makePrinter();
-    static Printer * makePrinter(const Printer&amp; rhs);
-    ~Printer();
-    void submitJob(const PrintJob&amp; job);
-    void reset();
-    void performSelfTest();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Printer</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> Counted<span style="color:#f92672">&lt;</span>Printer<span style="color:#f92672">&gt;</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#75715e">// pseudo-constructors
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> Printer <span style="color:#f92672">*</span> makePrinter();
+    <span style="color:#66d9ef">static</span> Printer <span style="color:#f92672">*</span> <span style="color:#a6e22e">makePrinter</span>(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs);
+    <span style="color:#f92672">~</span>Printer();
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">submitJob</span>(<span style="color:#66d9ef">const</span> PrintJob<span style="color:#f92672">&amp;</span> job);
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reset</span>();
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">performSelfTest</span>();
     ...
-    using Counted&lt;Printer&gt;::objectCount; // make this function public for clients of Printer
-    using Counted&lt;Printer&gt;::TooManyObjects;
-private:
+    <span style="color:#66d9ef">using</span> Counted<span style="color:#f92672">&lt;</span>Printer<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>objectCount; <span style="color:#75715e">// make this function public for clients of Printer
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">using</span> Counted<span style="color:#f92672">&lt;</span>Printer<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>TooManyObjects;
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
     Printer();
-    Printer(const Printer&amp; rhs);
+    Printer(<span style="color:#66d9ef">const</span> Printer<span style="color:#f92672">&amp;</span> rhs);
 };
-</code></pre>
-
+</code></pre></div>
 <p>Note that:</p>
 
 <ol>
@@ -656,13 +629,11 @@ private:
 <li><p>Clients may still want to know how many <code>Printer</code> objects exists, but <code>objectCount</code> becomes <code>private</code> due to the private inheritance. To restore the public accessibility, we employ a <code>using</code> declaration.</p></li>
 
 <li><p>After inheritance, <code>Printer</code> can forget about counting objects, so the <code>Printer</code> constructor now looks like this:</p>
-
-<pre><code class="language-cpp">Printer::Printer()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Printer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Printer()
 {
     proceed with normal object construction;
 }
-</code></pre>
-
+</code></pre></div>
 <p>The benifits:</p>
 
 <ul>
@@ -672,9 +643,8 @@ private:
 </ul></li>
 
 <li><p>Clients of the <code>Printer</code> class are required to initialize <code>maxObjects</code>, or there will be an error during linking for undefined <code>maxObjects</code>:</p>
-
-<pre><code class="language-cpp">const size_t Counted&lt;Printer&gt;::maxObjects = 10;
-</code></pre></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">const</span> size_t Counted<span style="color:#f92672">&lt;</span>Printer<span style="color:#f92672">&gt;</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>maxObjects <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</code></pre></div></li>
 </ol>
               
             </div>

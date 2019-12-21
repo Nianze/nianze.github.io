@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.
-">
+<meta name="description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.">
 
 
-<meta property="og:description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.
-">
+<meta property="og:description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-11 Prevent Exceptions From Leaving Destructors">
 <meta name="twitter:title" content="[MECpp]Item-11 Prevent Exceptions From Leaving Destructors">
 <meta property="og:url" content="https://nianze.tk/2018/04/prevent-exceptions-from-leaving-destructors/">
 <meta property="twitter:url" content="https://nianze.tk/2018/04/prevent-exceptions-from-leaving-destructors/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.
-">
-<meta name="twitter:description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.
-">
+<meta property="og:description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.">
+<meta name="twitter:description" content="Keep exceptions from propagating out of destructors to prevent C&#43;&#43; calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Keep exceptions from propagating out of destructors to prevent C++ calling <code>terminate</code> during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.
-</p>
+              <p>Keep exceptions from propagating out of destructors to prevent C++ calling <code>terminate</code> during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.</p>
 
 <p>Destructor is called in two situations:</p>
 
@@ -403,34 +401,30 @@ Suffering is optional.</p>
 </blockquote>
 
 <p>For example, consider a <code>Session</code> class that will record object creations and destructions:</p>
-
-<pre><code class="language-cpp">class Session {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Session</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     Session();
-    ~Session();
+    <span style="color:#f92672">~</span>Session();
     ...
-private:
-    static void logCreation(Session *objAddr);
-    static void logDestruction(Session *objAddr);
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> logCreation(Session <span style="color:#f92672">*</span>objAddr);
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">logDestruction</span>(Session <span style="color:#f92672">*</span>objAddr);
 };
 
-Session::~Session()
+Session<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Session()
 {
-    logDestruction(this);
+    logDestruction(<span style="color:#66d9ef">this</span>);
 }
-</code></pre>
-
+</code></pre></div>
 <p>Because there&rsquo;s no <code>try...catch</code> statement, any exception inside the destructor will be propagated to the caller of the destructor. Thus once <code>logDestructoin</code> throws an exception during a special case when the destructor itself is called due to some other exception, the <code>terminate</code> function would automatically be invoked. So we prefer this design:</p>
-
-<pre><code class="language-cpp">Session::~Session()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Session<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">~</span>Session()
 {
-    try {
-        logDestruction(this);
+    <span style="color:#66d9ef">try</span> {
+        logDestruction(<span style="color:#66d9ef">this</span>);
     }
-    catch (...) {}  // do nothing!
-}
-</code></pre>
-
+    <span style="color:#66d9ef">catch</span> (...) {}  <span style="color:#75715e">// do nothing!
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>The point here is that the <code>catch</code> block shouldn&rsquo;t hold any statement that has potential of throwing exception, and its only purpose here is to prevent exception thrown from <code>logDestruction</code> from propagating beyond <code>Session</code>&rsquo;s destructor. Another good reason of catching the exception and prevent the propagation is to make sure the destructor will run to completion, so that any leftover cleanup code after the exception-thrown statement is able to run properly, without being interrupted by the excpetion propagation.</p>
               
             </div>

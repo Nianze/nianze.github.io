@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.
-
-">
+<meta name="description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.">
 
 
-<meta property="og:description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.
-
-">
+<meta property="og:description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-1 Distinguish Between Pointers and References">
 <meta name="twitter:title" content="[MECpp]Item-1 Distinguish Between Pointers and References">
 <meta property="og:url" content="https://nianze.tk/2018/03/distinguish-between-pointers-and-references/">
 <meta property="twitter:url" content="https://nianze.tk/2018/03/distinguish-between-pointers-and-references/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.
-
-">
-<meta name="twitter:description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.
-
-">
+<meta property="og:description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.">
+<meta name="twitter:description" content="More effective C&#43;&#43;: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>More effective C++: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.
+              <p>More effective C++: Use references when we already have something to refer to and never want to refer to anything else, or when implementing operators whose syntactic requires us to do so.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -398,51 +393,45 @@ Suffering is optional.</p>
 <li><a href="#no-reassignment-for-reference">No reassignment for reference</a></li>
 <li><a href="#use-reference-for-some-operators">Use reference for some operators</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p>Both pointers and references refer to other objects indirectly, and we should distinguish their differences.</p>
 
 <h1 id="no-null-reference">No null reference</h1>
 
 <p>A reference must <em>always</em> refer to some object, which implies that references must be initialized:</p>
-
-<pre><code class="language-cpp">string&amp; rs; // error! References must be initialized
-string *ps; // valid but risky uninitialized pointer
-string s(&quot;abc&quot;);
-string&amp; rs = s; // fine
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">string<span style="color:#f92672">&amp;</span> rs; <span style="color:#75715e">// error! References must be initialized
+</span><span style="color:#75715e"></span>string <span style="color:#f92672">*</span>ps; <span style="color:#75715e">// valid but risky uninitialized pointer
+</span><span style="color:#75715e"></span>string <span style="color:#a6e22e">s</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">abc</span><span style="color:#e6db74">&#34;</span>);
+string<span style="color:#f92672">&amp;</span> rs <span style="color:#f92672">=</span> s; <span style="color:#75715e">// fine
+</span></code></pre></div>
 <p>Having known this, if we have a variable whose purpose is to refer to another object, but it is possible that there might be no object to refer to, we should make the variable a pointer; on the other hand, if the design requires that the variable must always refer to a non-null object, we choose the reference.</p>
 
 <p>As an implication, reference&rsquo;s never-nullable property save us from the burden of testing the validity before using it:</p>
-
-<pre><code class="language-cpp">void printRefDouble(const double&amp; rd)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printRefDouble</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">&amp;</span> rd)
 {
-    cout &lt;&lt; rd; // no need to test rd.
-}
+    cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> rd; <span style="color:#75715e">// no need to test rd.
+</span><span style="color:#75715e"></span>}
 
-void printPointDouble(const double *pd)
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printPointDouble</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> <span style="color:#f92672">*</span>pd)
 {
-    if (pd) {  // check for null pointer
-        cout &lt;&lt; *p;
+    <span style="color:#66d9ef">if</span> (pd) {  <span style="color:#75715e">// check for null pointer
+</span><span style="color:#75715e"></span>        cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> <span style="color:#f92672">*</span>p;
     }
 }
-</code></pre>
-
+</code></pre></div>
 <h1 id="no-reassignment-for-reference">No reassignment for reference</h1>
 
 <p>Another difference is that we can reassign pointers to refer to different objects, while reference <em>always</em> refers to the one it is initialized:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">string <span style="color:#a6e22e">s1</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Nancy</span><span style="color:#e6db74">&#34;</span>);
+string <span style="color:#a6e22e">s2</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Clancy</span><span style="color:#e6db74">&#34;</span>);
 
-<pre><code class="language-cpp">string s1(&quot;Nancy&quot;);
-string s2(&quot;Clancy&quot;);
-
-string&amp; rs = s1;  // rs refers to s1
-string *ps = s1;  // ps points to s1
-
-rs = s2;   // rs  still refers to s1, but s1's value updates to &quot;Clancy&quot;, equiv. to *ps = s2
-ps = &amp;s2;  // ps now points to s2, s1 remains unchanged
-</code></pre>
-
+string<span style="color:#f92672">&amp;</span> rs <span style="color:#f92672">=</span> s1;  <span style="color:#75715e">// rs refers to s1
+</span><span style="color:#75715e"></span>string <span style="color:#f92672">*</span>ps <span style="color:#f92672">=</span> s1;  <span style="color:#75715e">// ps points to s1
+</span><span style="color:#75715e"></span>
+rs <span style="color:#f92672">=</span> s2;   <span style="color:#75715e">// rs  still refers to s1, but s1&#39;s value updates to &#34;Clancy&#34;, equiv. to *ps = s2
+</span><span style="color:#75715e"></span>ps <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>s2;  <span style="color:#75715e">// ps now points to s2, s1 remains unchanged
+</span></code></pre></div>
 <p>In general, use pointers when</p>
 
 <ul>
@@ -455,16 +444,12 @@ ps = &amp;s2;  // ps now points to s2, s1 remains unchanged
 <h1 id="use-reference-for-some-operators">Use reference for some operators</h1>
 
 <p>Another situation to prefer reference is when we&rsquo;re implementing certain operators such as <code>operator[]</code>, which needs to return something that can be used as the target of an assignment:</p>
-
-<pre><code class="language-cpp">vector&lt;int&gt; v(10);
-v[5] = 10;  // the target of this assignment is the return value of operator[]
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> v(<span style="color:#ae81ff">10</span>);
+v[<span style="color:#ae81ff">5</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;  <span style="color:#75715e">// the target of this assignment is the return value of operator[]
+</span></code></pre></div>
 <p>If <code>operator[]</code> returned a pointer, last statement would be changed to this:</p>
-
-<pre><code class="language-cpp">*v[5] = 10;
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#f92672">*</span>v[<span style="color:#ae81ff">5</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+</code></pre></div>
 <p>This makes <code>v</code> look like a vector of pointers, which it&rsquo;s not. Thus we may prefer using a reference as the return type of <code>operator[]</code> (for an exception, see MECpp-item 30).</p>
               
             </div>

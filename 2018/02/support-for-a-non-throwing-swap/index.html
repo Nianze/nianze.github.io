@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).
-
-">
+<meta name="description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).">
 
 
-<meta property="og:description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).
-
-">
+<meta property="og:description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-25 Consider support for a non-throwing swap">
 <meta name="twitter:title" content="Item-25 Consider support for a non-throwing swap">
 <meta property="og:url" content="https://nianze.tk/2018/02/support-for-a-non-throwing-swap/">
 <meta property="twitter:url" content="https://nianze.tk/2018/02/support-for-a-non-throwing-swap/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).
-
-">
-<meta name="twitter:description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).
-
-">
+<meta property="og:description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).">
+<meta name="twitter:description" content="When std::swap would be inefficient for your type,provide a non-throwing swap member function, a non-member swap calling the member, and possibly a specialized std::swap for the case of classes (not templates).">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>When <code>std::swap</code> would be inefficient for your type,provide a non-throwing <code>swap</code> member function, a non-member <code>swap</code> calling the member, and possibly a specialized <code>std::swap</code> for the case of classes (not templates).
+              <p>When <code>std::swap</code> would be inefficient for your type,provide a non-throwing <code>swap</code> member function, a non-member <code>swap</code> calling the member, and possibly a specialized <code>std::swap</code> for the case of classes (not templates).</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -398,52 +393,46 @@ Suffering is optional.</p>
 <li><a href="#usage">Usage</a></li>
 <li><a href="#summary">Summary</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p><code>swap</code>, since its introduction into STL, is useful for exception-safe programming (item 29) and a common mechanism for coping with the possibility of assignment to self (item 11). Due to its importance, it should be implemented properly, which is exactly what this item explores about.</p>
 
 <h1 id="customization">Customization</h1>
 
 <p>By default, swapping is accomplished via the standard <code>swap</code> algorithm:</p>
-
-<pre><code class="language-cpp">namesapce std {
-    template&lt;typename T&gt;    // typical implementation of std::swap
-    void swap(T&amp; a, T&amp; b)   // swaps a's and b's values
-    {
-        T temp(a);
-        a = b;
-        b = temp;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">namesapce std {
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>    <span style="color:#75715e">// typical implementation of std::swap
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> swap(T<span style="color:#f92672">&amp;</span> a, T<span style="color:#f92672">&amp;</span> b)   <span style="color:#75715e">// swaps a&#39;s and b&#39;s values
+</span><span style="color:#75715e"></span>    {
+        T <span style="color:#a6e22e">temp</span>(a);
+        a <span style="color:#f92672">=</span> b;
+        b <span style="color:#f92672">=</span> temp;
     }
 }
-</code></pre>
-
+</code></pre></div>
 <p>As long as our types support copying (via copy constructor and copy assignment operator), the default <code>swap</code> implementation will work. However, for some types, none of these copies are really necessary. For example: there&rsquo;s a common design manifestation called &ldquo;pimpl idiom&rdquo; (&ldquo;pointer to implementation&rdquo;, item 31) that consisting primarily of a pointer to another type that contains the real data:</p>
-
-<pre><code class="language-cpp">class WidgetImpl {            // class for Widget data
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WidgetImpl</span> {            <span style="color:#75715e">// class for Widget data
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-private:
-    int a, b, c;
-    std::vector&lt;double&gt; v;    // possibly lots of data:
-    ...                       // expensive to copy
-};
-</code></pre>
-
-<pre><code class="language-cpp">class Widget {                    // class using the pimpl idiom
-public:
-    Widget(const Widgtet&amp; rhs);
-    Widget&amp; operator=(const Widget&amp; rhs)  //to copy a Widget,
-    {                             // copy its WidgetImpl object.
-        ...                       // for details on operator=, see item 10, 11, 12
-        *pImpl = *(rhs.pImpl);
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> a, b, c;
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">double</span><span style="color:#f92672">&gt;</span> v;    <span style="color:#75715e">// possibly lots of data:
+</span><span style="color:#75715e"></span>    ...                       <span style="color:#75715e">// expensive to copy
+</span><span style="color:#75715e"></span>};
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {                    <span style="color:#75715e">// class using the pimpl idiom
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    Widget(<span style="color:#66d9ef">const</span> Widgtet<span style="color:#f92672">&amp;</span> rhs);
+    Widget<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> rhs)  <span style="color:#75715e">//to copy a Widget,
+</span><span style="color:#75715e"></span>    {                             <span style="color:#75715e">// copy its WidgetImpl object.
+</span><span style="color:#75715e"></span>        ...                       <span style="color:#75715e">// for details on operator=, see item 10, 11, 12
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">*</span>pImpl <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>(rhs.pImpl);
         ...
     }
     ...
-private:
-    WidgetImpl *pImpl;             // ptr to object with real data
-};
-</code></pre>
-
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    WidgetImpl <span style="color:#f92672">*</span>pImpl;             <span style="color:#75715e">// ptr to object with real data
+</span><span style="color:#75715e"></span>};
+</code></pre></div>
 <p>To swap the value of two <code>Widget</code> objects, all we need to do is swap their <code>pImpl</code> pointers instead of copying three <code>Widget</code>s as well as three underlying <code>WidgetImpl</code> objects. In order to let default <code>swap</code> know this information, we need to specialize <code>std::swap</code> for <code>Widget</code>:</p>
 
 <p>namespace std {
@@ -457,94 +446,81 @@ void swap<Widget>(Widget&amp; a, Widget&amp; b)  // for when T is Widget
 <p>The <code>template&lt;&gt;</code> at the begining says that this is a <em>total template specialization</em> for <code>std::swap</code>, and the <code>&lt;Widget&gt;</code> after the name of the function says that the specialization is for when <code>T</code> is <code>Widget</code>, so compilter knows that when the general <code>swap</code> template is applied to <code>Widget</code>s, this is the implementation to use - although we are not allowed to alter the contents of the <code>std</code> namespace, it is totally fine to specialize standard templates (like <code>swap</code>) for our own types (such as <code>Widget</code>).</p>
 
 <p>However, this implementation won&rsquo;t compile, because we can&rsquo;t access the private <code>pImpl</code> pointers inside <code>a</code> and <code>b</code>. To solve the problem, we declare a public member function called <code>swap</code> that does the actual swapping, then specialize <code>std::swap</code> to call the member function:</p>
-
-<pre><code class="language-cpp">class Widget { // same as above except for the addition of the swap mem func
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> { <span style="color:#75715e">// same as above except for the addition of the swap mem func
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    void swap(Widget&amp; other)
+    <span style="color:#66d9ef">void</span> swap(Widget<span style="color:#f92672">&amp;</span> other)
     {
-        using std::swap;              // use the std::swap
-        swap(pImple, other.pImpl);    // to swap Widgets, swap their pImpl pointers
-    }
+        <span style="color:#66d9ef">using</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>swap;              <span style="color:#75715e">// use the std::swap
+</span><span style="color:#75715e"></span>        swap(pImple, other.pImpl);    <span style="color:#75715e">// to swap Widgets, swap their pImpl pointers
+</span><span style="color:#75715e"></span>    }
     ...
 };
 
-namespace std {
-template&lt;&gt;      // revised version of std::swap
-void swap&lt;Widget&gt;(Widget&amp; a, Widget&amp; b)  
+<span style="color:#66d9ef">namespace</span> std {
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>      <span style="color:#75715e">// revised version of std::swap
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> swap<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&gt;</span>(Widget<span style="color:#f92672">&amp;</span> a, Widget<span style="color:#f92672">&amp;</span> b)  
 {
-    a.swap(b);  // to swap Wiidgets, call their swap mem func
+    a.swap(b);  <span style="color:#75715e">// to swap Wiidgets, call their swap mem func
+</span><span style="color:#75715e"></span>}
 }
-}
-</code></pre>
-
+</code></pre></div>
 <p>This implementation will compile and be consistent with the STL container. However, if the <code>Widget</code> and <code>WidgetImpl</code> were class <em>template</em> instead of classes (so that we could parameterize the type of the data stored in <code>WidgetImpl</code>), things get more complicated:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WidgetImpl</span> {...};
 
-<pre><code class="language-cpp">template&lt;typename T&gt;
-class WidgetImpl {...};
-
-template&lt;typename T&gt;
-class Widget {...};
-</code></pre>
-
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {...};
+</code></pre></div>
 <p>It is still easy to put a <code>swap</code> member function inside <code>Widget</code> the same way as before, but there&rsquo;s a trouble with the specialization for <code>std::swap</code>:</p>
-
-<pre><code class="language-cpp">namespace std {
-template&lt;typename T&gt;
-void swap&lt;Widget&lt;T&gt;&gt;(Widget&lt;T&gt;&amp; a, Widget&lt;T&gt;&amp; b)  // illegal code!
-{
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">namespace</span> std {
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> swap<span style="color:#f92672">&lt;</span>Widget<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>(Widget<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> a, Widget<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> b)  <span style="color:#75715e">// illegal code!
+</span><span style="color:#75715e"></span>{
     a.swap(b);
 }
 }
-</code></pre>
-
+</code></pre></div>
 <p>Apparently we&rsquo;re partially specializing a function template <code>std::swap</code> here, and the problem is that, although C++ allows partial specialization of class templates, it doesn&rsquo;t allow it for function templates (though some compilers may erroneously accept it).</p>
 
 <p>The usual approach to &ldquo;partially specialize&rdquo; a function template is to add an overload like this:</p>
-
-<pre><code class="language-cpp">namespace std {
-    template&lt;typename T&gt;   // an overloading of std::swap
-    void swap(Widget&lt;T&gt;&amp; a, Widget&lt;T&gt;&amp; b)  // note the lack of &quot;&lt;...&gt;&quot;
-    {                                      // after &quot;swap&quot;
-        a.swap(b);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">namespace</span> std {
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>   <span style="color:#75715e">// an overloading of std::swap
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> swap(Widget<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> a, Widget<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> b)  <span style="color:#75715e">// note the lack of &#34;&lt;...&gt;&#34;
+</span><span style="color:#75715e"></span>    {                                      <span style="color:#75715e">// after &#34;swap&#34;
+</span><span style="color:#75715e"></span>        a.swap(b);
     }
 }
-</code></pre>
-
+</code></pre></div>
 <p>However, rather than overloading a common function template, what we do here is overloading a function template <code>std::swap</code> in the special <code>std</code> namesapce, where it&rsquo;s not allowed to add <em>new</em> templates or classes or functions or anything else into it (the contens of <code>std</code> are determined solely by the C++ standardization committee). Even though programs that cross the line will almost certainly compile and run, their behavior is undefined.</p>
 
 <p>Thus in this case, not to declare the non-member function to be a specialization or overloading of <code>std::swap</code>, we just make a normal non-member <code>swap</code> function in <code>Widget</code>-related namespace:</p>
-
-<pre><code class="language-cpp">namespace WidgetStuff {
-    ...  // templatized WidgetImpl, etc.
-    template&lt;typename T&gt; 
-    class Widget {...}; // including the swap member function
-    ...
-    template&lt;typename T&gt;   // non-member swap function
-    void swap(Widget&lt;T&gt;&amp; a, Widget&lt;T&gt;&amp; b)  // not part of the std namespace
-    {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">namespace</span> WidgetStuff {
+    ...  <span style="color:#75715e">// templatized WidgetImpl, etc.
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span> 
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> {...}; <span style="color:#75715e">// including the swap member function
+</span><span style="color:#75715e"></span>    ...
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>   <span style="color:#75715e">// non-member swap function
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> swap(Widget<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> a, Widget<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> b)  <span style="color:#75715e">// not part of the std namespace
+</span><span style="color:#75715e"></span>    {
         a.swap(b);
     }
 }
-
-</code></pre>
-
+</code></pre></div>
 <p>The name lookup rules in C++ (specifically the rules known as <em>argument-dependent lookup</em> or <em>Koenig lookup</em>) will guarantee the Widget-specific version of <code>swap</code> in <code>WidgetStuff</code> will be invoked if any code calls <code>swap</code> on two <code>Widget</code> objects.</p>
 
 <h1 id="usage">Usage</h1>
 
 <p>Let&rsquo;s look from a client&rsquo;s point of view and see how to use the <code>swap</code>. Ideally, we want to call a T-specific version of <code>swap</code> if there is one, but to fall back on the general version in <code>std</code> if there&rsquo;s not. To fulfill this idea:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-void doSomething(T&amp; obj1, T&amp; obj2) 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> doSomething(T<span style="color:#f92672">&amp;</span> obj1, T<span style="color:#f92672">&amp;</span> obj2) 
 {
-    using std::swap;  // make std::swap available in this function
-    ...
-    swap(obj1, obj2);  // call the best swap for obejcts of type T
-    ...
+    <span style="color:#66d9ef">using</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>swap;  <span style="color:#75715e">// make std::swap available in this function
+</span><span style="color:#75715e"></span>    ...
+    swap(obj1, obj2);  <span style="color:#75715e">// call the best swap for obejcts of type T
+</span><span style="color:#75715e"></span>    ...
 }
-</code></pre>
-
+</code></pre></div>
 <p>When compilers see the call to <code>swap</code>, they search for the best <code>swap</code> to invoke - according to C++&rsquo;s name lookup rules, it follows the order below:</p>
 
 <ol>
@@ -558,10 +534,8 @@ void doSomething(T&amp; obj1, T&amp; obj2)
 </ol>
 
 <p>One thing worth noting is to not qualify the call like this:</p>
-
-<pre><code class="language-cpp">std::swap(obj1, obj2);  // the wrong way to call swap
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>swap(obj1, obj2);  <span style="color:#75715e">// the wrong way to call swap
+</span></code></pre></div>
 <p>here we force compilers to consider only the <code>swap</code> in <code>std</code> (including any template specializations), thus eliminating the possibility of getting a more appropriate T-specific version defined elsewhere. Alas, some misguided programmers (or even some standard library) <em>do</em> qualify calls to <code>swap</code> in this way. To make code work as efficiently as possible, we&rsquo;d better totally specialize <code>std::swap</code> for our classes.</p>
 
 <h1 id="summary">Summary</h1>

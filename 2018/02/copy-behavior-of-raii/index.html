@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.
-
-">
+<meta name="description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.">
 
 
-<meta property="og:description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.
-
-">
+<meta property="og:description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-14 Copy behavior in resource-managing classes">
 <meta name="twitter:title" content="Item-14 Copy behavior in resource-managing classes">
 <meta property="og:url" content="https://nianze.tk/2018/02/copy-behavior-of-raii/">
 <meta property="twitter:url" content="https://nianze.tk/2018/02/copy-behavior-of-raii/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.
-
-">
-<meta name="twitter:description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.
-
-">
+<meta property="og:description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.">
+<meta name="twitter:description" content="Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.
+              <p>Copying an RAII object entails copying the resource it manages, so the copying behavior of the resource determines the copying behavior of the RAII object.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -399,7 +394,7 @@ Suffering is optional.</p>
 <li><a href="#3-copy-the-underlying-resource">3. Copy the underlying resource</a></li>
 <li><a href="#4-transfer-owenership-of-the-underlying-resource">4. Transfer owenership of the underlying resource</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p>We can use <code>auto_ptr</code> and <code>tr1::shared_ptr</code> to manage heap-based resources, as introduced in item 13. However, not all resources are heap-based, and for such resources, we need to create our own resource-managing classes to deal with a general question:</p>
 
@@ -412,62 +407,54 @@ Suffering is optional.</p>
 <h1 id="1-prohibit-copying">1. Prohibit copying</h1>
 
 <p>In some cases, it makes no sense to allow RAII objects to be copied, so we should prohibit it. As explained in item 6, we declare the copying operations <code>private</code> without definition. A good example is class <code>Mutex</code>, which is synchronization primitives and comes with two functions <code>lock</code> and <code>unlock</code>:</p>
-
-<pre><code class="language-cpp">void lock(Mutex *pm);   // lock mutex pointed to by pm
-
-void unlock(Mutex *pm); // unlock the mutex
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">lock</span>(Mutex <span style="color:#f92672">*</span>pm);   <span style="color:#75715e">// lock mutex pointed to by pm
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">unlock</span>(Mutex <span style="color:#f92672">*</span>pm); <span style="color:#75715e">// unlock the mutex
+</span></code></pre></div>
 <p>We should not forget to unlock a <code>Mutex</code> we&rsquo;ve locked, and it rarely makes sense to have &ldquo;copies&rdquo; of synchronization privitives, so we can create an uncopyable class to manage the locks:</p>
-
-<pre><code class="language-cpp">class Lock: private Uncopyable { // prohibit copying, see item 6
-public:
-    explicit Lock(Mutex *pm)
-    : mutexPtr(pm)
-    { lock(mutexPtr); }  // acquire resource
-
-    ~Lock() { unlock(mutexPtr); }  // release resource
-
-private:
-    Mutex *mutexPtr;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lock</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">private</span> Uncopyable { <span style="color:#75715e">// prohibit copying, see item 6
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">explicit</span> Lock(Mutex <span style="color:#f92672">*</span>pm)
+    <span style="color:#f92672">:</span> mutexPtr(pm)
+    { lock(mutexPtr); }  <span style="color:#75715e">// acquire resource
+</span><span style="color:#75715e"></span>
+    <span style="color:#f92672">~</span>Lock() { unlock(mutexPtr); }  <span style="color:#75715e">// release resource
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    Mutex <span style="color:#f92672">*</span>mutexPtr;
 };
-</code></pre>
-
+</code></pre></div>
 <p>And we can use <code>Lock</code> in the conventional RAII fashion:</p>
-
-<pre><code class="language-cpp">Mutex m;  // define the mutex
-...
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Mutex m;  <span style="color:#75715e">// define the mutex
+</span><span style="color:#75715e"></span>...
 
 
-{                  // create block to define critical section
-    Lock ml(&amp;m);   // lock the mutex
-    ...            // perform critical section operations
 
-    // Lock ml2(ml);  this is prohibited behavior!
-}                  // automatically unlock mutex at end of block
- 
-</code></pre>
-
+{                  <span style="color:#75715e">// create block to define critical section
+</span><span style="color:#75715e"></span>    Lock <span style="color:#a6e22e">ml</span>(<span style="color:#f92672">&amp;</span>m);   <span style="color:#75715e">// lock the mutex
+</span><span style="color:#75715e"></span>    ...            <span style="color:#75715e">// perform critical section operations
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">// Lock ml2(ml);  this is prohibited behavior!
+</span><span style="color:#75715e"></span>}                  <span style="color:#75715e">// automatically unlock mutex at end of block
+</span><span style="color:#75715e"></span> 
+</code></pre></div>
 <h1 id="2-reference-count-the-underlying-resource">2. Reference-count the underlying resource</h1>
 
 <p>Sometimes it&rsquo;s desirable to hold on to a resource until the last object using it has been destroyed. We could implement reference-counting copying behavior by containing a <code>tr1::shared_ptr</code> data member, but in some cases we may have to customize the behavior when the reference count goes to zero, for the default behavior is to call <code>delete</code>.</p>
 
 <p>The way we customize <code>tr1::shared_ptr</code> is to specify a &ldquo;deleter&rdquo; - a function or function object to be called when the reference count goes to zero (<code>auto_ptr</code> does not give us this privilege), which is an optional second parameter to the <code>tr1::shared_ptr</code> constructor:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Lock</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">explicit</span> Lock(Mutex <span style="color:#f92672">*</span>pm);  <span style="color:#75715e">// init shared_ptr with the Mutex
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> mutexPtr(pm, unlock)     <span style="color:#75715e">// to point to and the unlock func as the deleter
+</span><span style="color:#75715e"></span>    {
+        lock(mutexPtr.get());  <span style="color:#75715e">// see item 15 for info on &#34;get&#34;
+</span><span style="color:#75715e"></span>    }
 
-<pre><code class="language-cpp">class Lock {
-public:
-    explicit Lock(Mutex *pm);  // init shared_ptr with the Mutex
-    : mutexPtr(pm, unlock)     // to point to and the unlock func as the deleter
-    {
-        lock(mutexPtr.get());  // see item 15 for info on &quot;get&quot;
-    }
-
-private:
-    std::tr1::shared_ptr&lt;Mutex&gt; mutexPtr;  // use shared_ptr instead of raw pointer
-};
-</code></pre>
-
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>tr1<span style="color:#f92672">:</span><span style="color:#f92672">:</span>shared_ptr<span style="color:#f92672">&lt;</span>Mutex<span style="color:#f92672">&gt;</span> mutexPtr;  <span style="color:#75715e">// use shared_ptr instead of raw pointer
+</span><span style="color:#75715e"></span>};
+</code></pre></div>
 <p>Since a class&rsquo;s destructor (both user-defined ones and compilter-generated ones) automatically invokes the destructors of the class&rsquo;s non-static data members, there&rsquo;s no need to declare a destructor for class <code>Lock</code> explicitly (item 5). We simply rely on the default compilter-generated behavior, and that&rsquo;s enough.</p>
 
 <h1 id="3-copy-the-underlying-resource">3. Copy the underlying resource</h1>

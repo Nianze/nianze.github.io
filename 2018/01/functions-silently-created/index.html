@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
-">
+<meta name="description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 
 
-<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
-">
+<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-5 What functions C&#43;&#43; silently generates">
 <meta name="twitter:title" content="Item-5 What functions C&#43;&#43; silently generates">
 <meta property="og:url" content="https://nianze.tk/2018/01/functions-silently-created/">
 <meta property="twitter:url" content="https://nianze.tk/2018/01/functions-silently-created/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
-">
-<meta name="twitter:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
-">
+<meta property="og:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
+<meta name="twitter:description" content="Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,34 +385,27 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.
-</p>
+              <p>Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.</p>
 
 <p>All the compiler generated functions will be both <code>public</code> and <code>inline</code> (item 30). An empty class declared like this:</p>
-
-<pre><code class="language-cpp">class Empty{};
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Empty</span>{};
+</code></pre></div>
 <p>is essentially equivalent to:</p>
-
-<pre><code class="language-cpp">class Empty {
-public:
-    Empty() { ... } // default constructor
-    Empty(const Empty&amp; rhs) { ... } // copy constructor
-    ~Empty() { ... }  // destructor
-                      // will be _virtual_ only if inheriting 
-                      // from a base class with virtual destructor
-    Empty&amp; operator=(const Empty&amp; rhs) { ... } // copy assignment operator
-};
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Empty</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    Empty() { ... } <span style="color:#75715e">// default constructor
+</span><span style="color:#75715e"></span>    Empty(<span style="color:#66d9ef">const</span> Empty<span style="color:#f92672">&amp;</span> rhs) { ... } <span style="color:#75715e">// copy constructor
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">~</span>Empty() { ... }  <span style="color:#75715e">// destructor
+</span><span style="color:#75715e"></span>                      <span style="color:#75715e">// will be _virtual_ only if inheriting 
+</span><span style="color:#75715e"></span>                      <span style="color:#75715e">// from a base class with virtual destructor
+</span><span style="color:#75715e"></span>    Empty<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Empty<span style="color:#f92672">&amp;</span> rhs) { ... } <span style="color:#75715e">// copy assignment operator
+</span><span style="color:#75715e"></span>};
+</code></pre></div>
 <p>These functions are generated only if they are needed:</p>
-
-<pre><code class="language-cpp">Empty e1;     // default constructor and destructor generated
-Empty e2(e1); // copy constructor generated
-e2 = e1;      // copy assignment operator generated
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Empty e1;     <span style="color:#75715e">// default constructor and destructor generated
+</span><span style="color:#75715e"></span>Empty <span style="color:#a6e22e">e2</span>(e1); <span style="color:#75715e">// copy constructor generated
+</span><span style="color:#75715e"></span>e2 <span style="color:#f92672">=</span> e1;      <span style="color:#75715e">// copy assignment operator generated
+</span></code></pre></div>
 <p>Basically, the generated default <code>constructor</code> and the <code>destructor</code> will invocate constructors and destructors of base classes and non-static data members, while the <code>copy constructor</code> will simply copy each non-static data member of the source object to the target object.</p>
 
 <blockquote>
@@ -423,30 +415,26 @@ e2 = e1;      // copy assignment operator generated
 </blockquote>
 
 <p>Copy assignment operator behaves generally the same as copy constructor, but the code is only generated when the resulting code is both legal and has a reasonable chance of making sense. For example:</p>
-
-<pre><code class="language-cpp">template&lt;class T&gt;
-class NamedObject {
-public:
-    NamedObject(std::string&amp; name, const T&amp; value);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NamedObject</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    NamedObject(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> name, <span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span> value);
     ...
-private:
-    std::string&amp; nameValue;  // a reference
-    const T objectValue;     // a const
-}
-</code></pre>
-
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string<span style="color:#f92672">&amp;</span> nameValue;  <span style="color:#75715e">// a reference
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> T objectValue;     <span style="color:#75715e">// a const
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>In below situation, implicitly generated copy assignment operator will make no sense for nameValue and illegal for objectValue:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string youngMan(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">child</span><span style="color:#e6db74">&#34;</span>);
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string oldMan(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">adult</span><span style="color:#e6db74">&#34;</span>);
 
-<pre><code class="language-cpp">std::string youngMan(&quot;child&quot;);
-std::string oldMan(&quot;adult&quot;);
+NamedObject<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> p(youngMan, <span style="color:#ae81ff">10</span>);
+NamedObject<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> s(oldMan, <span style="color:#ae81ff">50</span>);
 
-NamedObject&lt;int&gt; p(youngMan, 10);
-NamedObject&lt;int&gt; s(oldMan, 50);
-
-p = s; // nameValue assignment will make no sense!
-       // objectValue assignment will be illegal due to its constness
-</code></pre>
-
+p <span style="color:#f92672">=</span> s; <span style="color:#75715e">// nameValue assignment will make no sense!
+</span><span style="color:#75715e"></span>       <span style="color:#75715e">// objectValue assignment will be illegal due to its constness
+</span></code></pre></div>
 <p>Since p.nameValue and s.nameValue refer to different string object, the assignment will be in a conundrum:</p>
 
 <ol>

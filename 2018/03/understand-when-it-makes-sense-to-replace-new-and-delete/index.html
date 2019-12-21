@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.
-">
+<meta name="description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.">
 
 
-<meta property="og:description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.
-">
+<meta property="og:description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-50 Understand when it makes sense to replace new and delete">
 <meta name="twitter:title" content="Item-50 Understand when it makes sense to replace new and delete">
 <meta property="og:url" content="https://nianze.tk/2018/03/understand-when-it-makes-sense-to-replace-new-and-delete/">
 <meta property="twitter:url" content="https://nianze.tk/2018/03/understand-when-it-makes-sense-to-replace-new-and-delete/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.
-">
-<meta name="twitter:description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.
-">
+<meta property="og:description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.">
+<meta name="twitter:description" content="There are many valid reasons for writing custom versions of new and delete, including improving performance, debugging heap usage errors, and collecting heap usage information.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>There are many valid reasons for writing custom versions of <code>new</code> and <code>delete</code>, including improving performance, debugging heap usage errors, and collecting heap usage information.
-</p>
+              <p>There are many valid reasons for writing custom versions of <code>new</code> and <code>delete</code>, including improving performance, debugging heap usage errors, and collecting heap usage information.</p>
 
 <p>Some most common reasons to replace the compiler-provided versions of <code>operator new</code> and <code>operator delete</code>:</p>
 
@@ -439,27 +437,25 @@ Suffering is optional.</p>
 </ol>
 
 <p>Writing a custom memory manager that almost works is pretty easy, but writing one that works <em>well</em> is a lot harder. For example, here&rsquo;s a quick first pass at a global <code>operator new</code> that facilitates the detection of under- and overruns.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> signature <span style="color:#f92672">=</span> <span style="color:#ae81ff">0xDEADBEEF</span>;
 
-<pre><code class="language-cpp">static const int signature = 0xDEADBEEF;
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> Byte;
 
-typedef unsigned char Byte;
-
-// this code has several flaws
-void* operator new(std::size_t size) throw (std::bad_alloc)
+<span style="color:#75715e">// this code has several flaws
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> <span style="color:#66d9ef">operator</span> <span style="color:#a6e22e">new</span>(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>size_t size) <span style="color:#66d9ef">throw</span> (std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>bad_alloc)
 {
-    using namespace std;
+    <span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
 
-    size_t realSize = size + 2 * sizeof(int); // increase size of request so 2 signatures will also fit inside
-    void *pMem = malloc(realSize); // call malloc to get the actual memory
-    if (!pMem) throw bad_alloc();
-    // write signature into first and last parts of the memory
-    *(static_cast&lt;int*&gt;(pMem)) = signature;
-    *(reinterpret_cast&lt;int*&gt;(static_cast&lt;Byte*&gt;(pMem)+realSize-sizeof(int))) = signature;
-    // return a pointer to the memory just past the first signature
-    return static_cast&lt;Byte*&gt;(pMem) + sizeof(int);
+    size_t realSize <span style="color:#f92672">=</span> size <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>); <span style="color:#75715e">// increase size of request so 2 signatures will also fit inside
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>pMem <span style="color:#f92672">=</span> malloc(realSize); <span style="color:#75715e">// call malloc to get the actual memory
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>pMem) <span style="color:#66d9ef">throw</span> bad_alloc();
+    <span style="color:#75715e">// write signature into first and last parts of the memory
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">*</span>(<span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(pMem)) <span style="color:#f92672">=</span> signature;
+    <span style="color:#f92672">*</span>(<span style="color:#66d9ef">reinterpret_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Byte<span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(pMem)<span style="color:#f92672">+</span>realSize<span style="color:#f92672">-</span><span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>))) <span style="color:#f92672">=</span> signature;
+    <span style="color:#75715e">// return a pointer to the memory just past the first signature
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Byte<span style="color:#f92672">*</span><span style="color:#f92672">&gt;</span>(pMem) <span style="color:#f92672">+</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>);
 }
-</code></pre>
-
+</code></pre></div>
 <p>One obvious shortcoming of this <code>operator new</code> is its failure to adhere to the C++ conventions for <code>operator new</code> - item 51 explains that all <code>operator new</code> should contain a loop calling a new-handling function, but this one above doesn&rsquo;t.</p>
 
 <p>Another subtle issue is <em>alignment</em>: C++ requires that all <code>operator new</code> and <code>malloc</code> return pointers that are suitably aligned for <em>any</em> data type. In this version of <code>operator new</code>, we&rsquo;re returning a pointer we got from malloc <em>offset by the size of an int</em>. If we are running on a manchine where <code>int</code>s were four bytes in size but <code>double</code>s were required to be eight-byte aligned, we&rsquo;d probably return a pointer with improper alignment when <code>operator new</code> is called to get enough memory for a <code>double</code>.</p>

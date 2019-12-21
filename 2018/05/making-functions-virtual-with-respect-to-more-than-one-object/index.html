@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.
-">
+<meta name="description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.">
 
 
-<meta property="og:description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.
-">
+<meta property="og:description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-31 Making Functions Virtual With Respect to More Than One Object">
 <meta name="twitter:title" content="[MECpp]Item-31 Making Functions Virtual With Respect to More Than One Object">
 <meta property="og:url" content="https://nianze.tk/2018/05/making-functions-virtual-with-respect-to-more-than-one-object/">
 <meta property="twitter:url" content="https://nianze.tk/2018/05/making-functions-virtual-with-respect-to-more-than-one-object/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.
-">
-<meta name="twitter:description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.
-">
+<meta property="og:description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.">
+<meta name="twitter:description" content="A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called multiple dispatch, which is not directly supported in C&#43;&#43;. Several resolutions exist, but none is without its disadvantages.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,129 +385,114 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called <em>multiple dispatch</em>, which is not directly supported in C++. Several resolutions exist, but none is without its disadvantages.
-</p>
+              <p>A virtual function call is termed a &ldquo;message dispatch.&rdquo; A call that acts virtual on multiple parameters is called <em>multiple dispatch</em>, which is not directly supported in C++. Several resolutions exist, but none is without its disadvantages.</p>
 
 <p>For example, considering we are writing a video game involving space ships, space stations, and asteroids:</p>
-
-<pre><code class="language-cpp">class GameObject {...};
-class SpaceShip: public GameObject {...};
-class SpaceStation: public GameObject {...};
-class Asteroid: public GameObjecct {...};
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GameObject</span> {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceShip</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GameObject {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceStation</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GameObject {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Asteroid</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GameObjecct {...};
+</code></pre></div>
 <p>When one <code>GameObject</code> collides with another, we call a function depending on <em>both</em> their dynamic types:</p>
-
-<pre><code class="language-cpp">void checkForCollision(GameObject&amp; object1, GameObject&amp; object2)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">checkForCollision</span>(GameObject<span style="color:#f92672">&amp;</span> object1, GameObject<span style="color:#f92672">&amp;</span> object2)
 {
-    if (theyJustCollided(object1, object2)) {
+    <span style="color:#66d9ef">if</span> (theyJustCollided(object1, object2)) {
         processCollision(object1, object2);
     }
-    else {
+    <span style="color:#66d9ef">else</span> {
         ...
     }
 }
-</code></pre>
-
+</code></pre></div>
 <p>Now comes the <em>double dispatch</em>: since collisions betwenn different <code>GameObject</code> effects the environment differently, we want <code>processCollision</code> to act virtual on both <code>object1</code> and <code>object2</code>, but C++ only offers virtual support for one parameter, like <code>object1.processCollision(object2)</code>. We must come up with some approaches ourselves instead of relyin on compilers.</p>
 
 <h1 id="using-virtual-function-and-rtti">Using Virtual Function and RTTI</h1>
 
 <p>We need double dispatch, so we can use virtual functions for first half of what we need, and use chains of <code>if-then-else</code>s for rest half:</p>
-
-<pre><code class="language-cpp">class GameObject {
-public:
-    virtual void collide(GameObject&amp; otherObject) = 0;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GameObject</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> collide(GameObject<span style="color:#f92672">&amp;</span> otherObject) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
     ...
 };
 
-class SpaceShip: public GameObject {
-public:
-    virtual void collide(GameObject&amp; otherObject);
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceShip</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GameObject {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> collide(GameObject<span style="color:#f92672">&amp;</span> otherObject);
     ...
 };
-</code></pre>
-
-<pre><code class="language-cpp">// if colliding with an object of unknown type
-// throw an exception of this type:
-class CollisionWithUnknownObject {
-public:
-    CollisionWithUnknownObject(GameObject&amp; whatWeHit);
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// if colliding with an object of unknown type
+</span><span style="color:#75715e"></span><span style="color:#75715e">// throw an exception of this type:
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CollisionWithUnknownObject</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    CollisionWithUnknownObject(GameObject<span style="color:#f92672">&amp;</span> whatWeHit);
     ...
 };
 
-void SpaceShip::collide(GameObject&amp; otherObject)
+<span style="color:#66d9ef">void</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>collide(GameObject<span style="color:#f92672">&amp;</span> otherObject)
 {
-    const type_info&amp; objectType = typeid(otherObject);
-    if (objectType == typeid(SpaceShip)) {
-        SpaceShip&amp; ss = static_cast&lt;SpaceShip&amp;&gt;(otherObject);
-        process a SpaceShip-SpaceShip collision;
+    <span style="color:#66d9ef">const</span> type_info<span style="color:#f92672">&amp;</span> objectType <span style="color:#f92672">=</span> <span style="color:#66d9ef">typeid</span>(otherObject);
+    <span style="color:#66d9ef">if</span> (objectType <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">typeid</span>(SpaceShip)) {
+        SpaceShip<span style="color:#f92672">&amp;</span> ss <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>SpaceShip<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(otherObject);
+        process a SpaceShip<span style="color:#f92672">-</span>SpaceShip collision;
     }
-    else if (objectType == typeid(SpaceStation)) {
-        SpaceStation&amp; ss = static_cast&lt;SpaceStation&amp;&gt;(otherObject);
-        process a SpaceShip-SpaceStation collision;
+    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (objectType <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">typeid</span>(SpaceStation)) {
+        SpaceStation<span style="color:#f92672">&amp;</span> ss <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>SpaceStation<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(otherObject);
+        process a SpaceShip<span style="color:#f92672">-</span>SpaceStation collision;
     }
-    else if (objectType == typeid(Asteroid)) {
-        Asteroid&amp; a = static_cast&lt;Asteroid&amp;&gt;(otherObject);
-        process a SpaceShip-Asteroid collision;
+    <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (objectType <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">typeid</span>(Asteroid)) {
+        Asteroid<span style="color:#f92672">&amp;</span> a <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span>Asteroid<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(otherObject);
+        process a SpaceShip<span style="color:#f92672">-</span>Asteroid collision;
     }
-    else {
-        throw CollisionWithUnknownObject(otherObject);
+    <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">CollisionWithUnknownObject</span>(otherObject);
     }
 }
-</code></pre>
-
+</code></pre></div>
 <p>The danger in this design: each <code>collide</code> function must be aware of each of its sibling classes, so if a new type of object is added to the game, we must update each RTTI-based <code>if-then-else</code> chain in the proram that might encounter the new object, which in essence is unmaintainable in the long run. We added a final <code>else</code> clause where control winds up if we hit an unnknown object, throwing an exception to callers in the hope that they handle the error better than we can (but since we are running into something we didn&rsquo;t know existed, they almost can&rsquo;t do anything more satisfying.)</p>
 
 <h1 id="using-virtual-functions-only">Using Virtual Functions Only</h1>
 
 <p>We can also implement double-dispatching as two separate virtual function calls:</p>
-
-<pre><code class="language-cpp">// forward declarations
-class SpaceShip;
-class SpaceStation;
-class Asteroid;
-class GameObject {
-public:
-    virtual void collide(GameObject&amp;   otherObject) = 0;
-    virtual void collide(SpaceShip&amp;    otherObject) = 0;
-    virtual void collide(SpaceStation&amp; otherObject) = 0;
-    virtual void collide(Asteroid&amp;     otherObject) = 0;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// forward declarations
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceShip</span>;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceStation</span>;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Asteroid</span>;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GameObject</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> collide(GameObject<span style="color:#f92672">&amp;</span>   otherObject) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collide</span>(SpaceShip<span style="color:#f92672">&amp;</span>    otherObject) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collide</span>(SpaceStation<span style="color:#f92672">&amp;</span> otherObject) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collide</span>(Asteroid<span style="color:#f92672">&amp;</span>     otherObject) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
     ...
 };
 
-class SpaceShip: public GameObject {
-public:
-    virtual void collide(GameObject&amp;   otherObject);
-    virtual void collide(SpaceShip&amp;    otherObject);
-    virtual void collide(SpaceStation&amp; otherObject);
-    virtual void collide(Asteroid&amp;     otherObject);
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceShip</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GameObject {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> collide(GameObject<span style="color:#f92672">&amp;</span>   otherObject);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collide</span>(SpaceShip<span style="color:#f92672">&amp;</span>    otherObject);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collide</span>(SpaceStation<span style="color:#f92672">&amp;</span> otherObject);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">collide</span>(Asteroid<span style="color:#f92672">&amp;</span>     otherObject);
     ...
 };
-</code></pre>
-
-<pre><code class="language-cpp">void SpaceShip::collide(GameObject&amp; otherObject)
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>collide(GameObject<span style="color:#f92672">&amp;</span> otherObject)
 {
-    otherObject.collide(*this);
+    otherObject.collide(<span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>);
 }
-</code></pre>
-
+</code></pre></div>
 <p>Note that this implementation is not a resursive call: being inside a member function of the class <code>Spaceship</code>, the static type of <code>*this</code> is of type <code>SpaceShip</code>, so the call is routed to the <code>collide(SpaceShip&amp;)</code> instead of going back to <code>collide(GameObject&amp;)</code>. All the <code>collide</code> functions are virtual, so finally this call will resolve to the implementation of <code>collide</code> corresponding to the real type of <code>otherObject</code>, where both types are known. So the implementation is simply:</p>
-
-<pre><code class="language-cpp">void SpaceShip::collide(SpaceShip&amp; otherObject)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>collide(SpaceShip<span style="color:#f92672">&amp;</span> otherObject)
 {
-    process a SpaceShip-SpaceShip collision;
+    process a SpaceShip<span style="color:#f92672">-</span>SpaceShip collision;
 }
 
-void SpaceShip::collide(SpaceStation&amp; otherObject) {
-    process a SpaceShip-SpaceStation collision;
+<span style="color:#66d9ef">void</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>collide(SpaceStation<span style="color:#f92672">&amp;</span> otherObject) {
+    process a SpaceShip<span style="color:#f92672">-</span>SpaceStation collision;
 }
 
-void Spaceship::collide(SpaceStation&amp; otherObject) {
-    process a SpaceShip-Asteroid collision;
+<span style="color:#66d9ef">void</span> Spaceship<span style="color:#f92672">:</span><span style="color:#f92672">:</span>collide(SpaceStation<span style="color:#f92672">&amp;</span> otherObject) {
+    process a SpaceShip<span style="color:#f92672">-</span>Asteroid collision;
 }
-</code></pre>
-
+</code></pre></div>
 <p>There&rsquo;s no RTTI, no need to throw unexpected object types. Still, there&rsquo;s the same old flaw: each class must know about its siblings. Even worth, the <em>way</em> in which the code must be updated in the case of adding new classes is difficult to extend: if we add a new class, say <code>class Satellite: public GameObject</code>, to our game, we&rsquo;d have to add a new <code>collide</code> function to each of the existing classes in the program, rather than just another <code>else</code> clause in one function before.</p>
 
 <p>Now let&rsquo;s do a small sum-up:</p>
@@ -522,97 +506,91 @@ void Spaceship::collide(SpaceStation&amp; otherObject) {
 <h1 id="emulating-virtual-function-tables">Emulating Virtual Function Tables</h1>
 
 <p>Actually, we can build our own virtual function tables, similar to how compilers implement virtual functions by creating an array of function pointers (the vtbl) and then indexing into that array when a virtual function is called, except that this customized version support double-dispatching. Moreover, the virtual function tables is more efficient than the RTTI-based code (indexing into an array and following a function pointer vs running through a series of <code>if-then-else</code> tests), and we isolate the use of RTTI to a single location where the array of function pointers is initialized.</p>
-
-<pre><code class="language-cpp">class GameObject {
-public:
-    virtual void collide(GameObject&amp; otherObject) = 0;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GameObject</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> collide(GameObject<span style="color:#f92672">&amp;</span> otherObject) <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
     ...
 };
 
-class SpaceShip: public GameObject {
-public:
-    virtual void collide(GameObject&amp; otherObject);
-    virtual void hitSpaceShip(GameObject&amp; spaceShip);
-    virtual void hitSpaceStation(GameObject&amp; spaceStation);
-    virtual void hitAsteroid(GameObject&amp; asteroid);
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceShip</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GameObject {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> collide(GameObject<span style="color:#f92672">&amp;</span> otherObject);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hitSpaceShip</span>(GameObject<span style="color:#f92672">&amp;</span> spaceShip);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hitSpaceStation</span>(GameObject<span style="color:#f92672">&amp;</span> spaceStation);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hitAsteroid</span>(GameObject<span style="color:#f92672">&amp;</span> asteroid);
     ...
-private:
-    typedef void (SpaceShip::*HitFunctionPtr)(GameObject&amp;);
-    static HitFunctionPtr lookup(const GameObject&amp; whatWeHit);
-    typedef map&lt;string, HitFunctionPtr&gt; HitMap;
-    static HitMap * initializeCollisionMap();
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">void</span> (SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#f92672">*</span>HitFunctionPtr)(GameObject<span style="color:#f92672">&amp;</span>);
+    <span style="color:#66d9ef">static</span> HitFunctionPtr <span style="color:#a6e22e">lookup</span>(<span style="color:#66d9ef">const</span> GameObject<span style="color:#f92672">&amp;</span> whatWeHit);
+    <span style="color:#66d9ef">typedef</span> map<span style="color:#f92672">&lt;</span>string, HitFunctionPtr<span style="color:#f92672">&gt;</span> HitMap;
+    <span style="color:#66d9ef">static</span> HitMap <span style="color:#f92672">*</span> <span style="color:#a6e22e">initializeCollisionMap</span>();
     ...
 };
-</code></pre>
-
-<pre><code class="language-cpp">SpaceShip::HitMap * SpaceShip::initializeCollisionMap()
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>HitMap <span style="color:#f92672">*</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>initializeCollisionMap()
 {
-    HitMap *phm = newHitMap;
-    (*phm)[&quot;SpaceShip&quot;] = &amp;hitSpaceShip;
-    (*phm)[&quot;SpaceStation&quot;] = &amp;hitSpaceStation;
-    (*phm)[&quot;Asteroid&quot;] = &amp;hitAsteroid;
-    return phm;
+    HitMap <span style="color:#f92672">*</span>phm <span style="color:#f92672">=</span> newHitMap;
+    (<span style="color:#f92672">*</span>phm)[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceShip</span><span style="color:#e6db74">&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>hitSpaceShip;
+    (<span style="color:#f92672">*</span>phm)[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceStation</span><span style="color:#e6db74">&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>hitSpaceStation;
+    (<span style="color:#f92672">*</span>phm)[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Asteroid</span><span style="color:#e6db74">&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>hitAsteroid;
+    <span style="color:#66d9ef">return</span> phm;
 }
 
-SpaceShip::HitFunctionPtr SpaceShip::lookup(const GameObject&amp; whatWeHit)
+SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>HitFunctionPtr SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>lookup(<span style="color:#66d9ef">const</span> GameObject<span style="color:#f92672">&amp;</span> whatWeHit)
 {
-    static auto_ptr&lt;HitMap&gt; collisionMap(initializeCollisionMap());
-    HitMap::iterator mapEntry = collisionMap.find(typeid(whatWeHit).name());
-    if (mapEntry == collisionMap-&gt;end()) return 0;
-    return (*mapEntry).second;
+    <span style="color:#66d9ef">static</span> auto_ptr<span style="color:#f92672">&lt;</span>HitMap<span style="color:#f92672">&gt;</span> collisionMap(initializeCollisionMap());
+    HitMap<span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator mapEntry <span style="color:#f92672">=</span> collisionMap.find(<span style="color:#66d9ef">typeid</span>(whatWeHit).name());
+    <span style="color:#66d9ef">if</span> (mapEntry <span style="color:#f92672">=</span><span style="color:#f92672">=</span> collisionMap<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>end()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">return</span> (<span style="color:#f92672">*</span>mapEntry).second;
 }
 
-void SpaceShip::collide(GameObject&amp; otherObject)
+<span style="color:#66d9ef">void</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>collide(GameObject<span style="color:#f92672">&amp;</span> otherObject)
 {
-    HitFunctionPtr hfp = lookup(otherObject);
-    if (hfp) {
-        (this-&gt;*htp)(otherObject);
+    HitFunctionPtr hfp <span style="color:#f92672">=</span> lookup(otherObject);
+    <span style="color:#66d9ef">if</span> (hfp) {
+        (<span style="color:#66d9ef">this</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">*</span>htp)(otherObject);
     }
-    else {
-        throw CollisionWithUnknownObject(otherObject);
+    <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">CollisionWithUnknownObject</span>(otherObject);
     }
 }
 
-// Each of the `dynamic_cast` will throw a `bad_cast` exception if the cast fails
-// they should never fail, though.
-void SpaceShip::hitSpaceShip(GameObject&amp; spaceShip)
+<span style="color:#75715e">// Each of the `dynamic_cast` will throw a `bad_cast` exception if the cast fails
+</span><span style="color:#75715e"></span><span style="color:#75715e">// they should never fail, though.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>hitSpaceShip(GameObject<span style="color:#f92672">&amp;</span> spaceShip)
 {
-    SpaceShip&amp; otherShip = dynamic_cast&lt;SpaceShip&amp;&gt;(spaceShip);
-    process a SpaceShip-SpaceShip collision;
+    SpaceShip<span style="color:#f92672">&amp;</span> otherShip <span style="color:#f92672">=</span> <span style="color:#66d9ef">dynamic_cast</span><span style="color:#f92672">&lt;</span>SpaceShip<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(spaceShip);
+    process a SpaceShip<span style="color:#f92672">-</span>SpaceShip collision;
 }
 
-void SpaceShip::hitSpaceStation(GameObject&amp; spaceStation) {
-    SpaceStation&amp; Station = dynamic_cast&lt;SpaceStation&amp;&gt;(spaceStation)
-    process a SpaceShip-SpaceStation collision;
+<span style="color:#66d9ef">void</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>hitSpaceStation(GameObject<span style="color:#f92672">&amp;</span> spaceStation) {
+    SpaceStation<span style="color:#f92672">&amp;</span> Station <span style="color:#f92672">=</span> <span style="color:#66d9ef">dynamic_cast</span><span style="color:#f92672">&lt;</span>SpaceStation<span style="color:#f92672">&amp;</span><span style="color:#f92672">&gt;</span>(spaceStation)
+    process a SpaceShip<span style="color:#f92672">-</span>SpaceStation collision;
 }
 
-void Spaceship::hitAsteroid(GameObject&amp; asteroid) {
-    Asteroid&amp; theAsteroid = dynamic_cast&lt;Asteroid&gt;(asteroid)
-    process a SpaceShip-Asteroid collision;
+<span style="color:#66d9ef">void</span> Spaceship<span style="color:#f92672">:</span><span style="color:#f92672">:</span>hitAsteroid(GameObject<span style="color:#f92672">&amp;</span> asteroid) {
+    Asteroid<span style="color:#f92672">&amp;</span> theAsteroid <span style="color:#f92672">=</span> <span style="color:#66d9ef">dynamic_cast</span><span style="color:#f92672">&lt;</span>Asteroid<span style="color:#f92672">&gt;</span>(asteroid)
+    process a SpaceShip<span style="color:#f92672">-</span>Asteroid collision;
 }
-</code></pre>
-
+</code></pre></div>
 <p>Note that there&rsquo;s another design which seems doable but is actually error-prone:</p>
-
-<pre><code class="language-cpp">class SpaceShip: public GameObject {
-public:
-    virtual void collide(GameObject&amp; otherObject);
-    virtual void hitSpaceShip(SpaceShip&amp; otherObject);
-    virtual void hitSpaceStation(SpaceStation&amp; otherObject);
-    virtual void hitAsteroid(Asteroid&amp; otherObject);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpaceShip</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GameObject {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> collide(GameObject<span style="color:#f92672">&amp;</span> otherObject);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hitSpaceShip</span>(SpaceShip<span style="color:#f92672">&amp;</span> otherObject);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hitSpaceStation</span>(SpaceStation<span style="color:#f92672">&amp;</span> otherObject);
+    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">hitAsteroid</span>(Asteroid<span style="color:#f92672">&amp;</span> otherObject);
     ...
 };
 
-SpaceShip::HitMap * SpaceShip::initializeCollisionMap()
+SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>HitMap <span style="color:#f92672">*</span> SpaceShip<span style="color:#f92672">:</span><span style="color:#f92672">:</span>initializeCollisionMap()
 {
-    HitMap *phm = newHitMap;
-    (*phm)[&quot;SpaceShip&quot;] = reinterpret_cast&lt;HitFunctionPtr&gt;(&amp;hitSpaceShip);
-    (*phm)[&quot;SpaceStation&quot;] = reinterpret_cast&lt;HitFunctionPtr&gt;(&amp;hitSpaceStation);
-    (*phm)[&quot;Asteroid&quot;] = reinterpret_cast&lt;HitFunctionPtr&gt;(&amp;hitAsteroid);
-    return phm;
+    HitMap <span style="color:#f92672">*</span>phm <span style="color:#f92672">=</span> newHitMap;
+    (<span style="color:#f92672">*</span>phm)[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceShip</span><span style="color:#e6db74">&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">reinterpret_cast</span><span style="color:#f92672">&lt;</span>HitFunctionPtr<span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>hitSpaceShip);
+    (<span style="color:#f92672">*</span>phm)[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceStation</span><span style="color:#e6db74">&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">reinterpret_cast</span><span style="color:#f92672">&lt;</span>HitFunctionPtr<span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>hitSpaceStation);
+    (<span style="color:#f92672">*</span>phm)[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Asteroid</span><span style="color:#e6db74">&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">reinterpret_cast</span><span style="color:#f92672">&lt;</span>HitFunctionPtr<span style="color:#f92672">&gt;</span>(<span style="color:#f92672">&amp;</span>hitAsteroid);
+    <span style="color:#66d9ef">return</span> phm;
 }
-</code></pre>
-
+</code></pre></div>
 <p>Here we tell the compiler that <code>hitSpaceShip</code>, <code>hitSpaceStation</code>, and <code>hitAsteroid</code> are functions expecting a <code>GameObject</code> argument, which is not true. <code>hitSpaceShip</code> expects a <code>SpaceShip</code>, <code>hitSpaceStation</code> expects a <code>SpaceStation</code>, and <code>hitAsteroid</code> expects an <code>Asteroid</code>. All these functions are declared as pass-by-reference, which in fact is implemented by passing a pointer to an object, so ideally compilers will pass the declared type of the parameter(say <code>hitSpaceShip</code> for function <code>hitSpaceShip</code>) in the function being called. However, due to the object layout of classes under an inheritance path, after the cast above, it is possible that the wrong address (say <code>GameObject</code>) is passed into the function, because inside a <code>SpaceShip</code> object there are both a derived class part as well as a base class part, each having a different address (for detailed discussion, refer to <em>More Effective C++</em> Item 31-Initializing Emulated Virtual Function Talbes).</p>
 
 <h2 id="using-non-member-collision-processing-functions">Using Non-Member Collision-Processing Functions</h2>
@@ -620,69 +598,67 @@ SpaceShip::HitMap * SpaceShip::initializeCollisionMap()
 <p>Still, similar to pure virtual functions based approach, there is one remaining problem: because the associative array contains pointers to <em>member functions</em>, once a new type of <code>GameObject</code> is added to the game, every class definition needs to be updated and recompiled, even if that class does not care about the new type of object.</p>
 
 <p>To solve this problem, we change the associative array so that it contains pointers to <em>non-member functions</em>. This update also helps us address a design question before: a collision between objects of types A and B should be handles by neither A nor B (depending on whichever is the left-hand argument to <code>processCollision</code>) but instead in some neutral location outside both classes.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&#34;SpaceShip.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&#34;SpaceStation.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&#34;Asteroid.h&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">namespace</span> {  
 
-<pre><code class="language-cpp">#include &quot;SpaceShip.h&quot;
-#include &quot;SpaceStation.h&quot;
-#include &quot;Asteroid.h&quot;
-
-namespace {  
-
-// primary collision-processing functions
-void shipStation(GameObject&amp; spaceShip, GameObject&amp; spaceStation);
-void shipAsteroid(GameObject&amp; spaceShip, GameObject&amp; asteroid);
-void asteroidStation(GameObject&amp; asteroid, GameObject&amp; spaceStation);
-// secondary collision-processing functions that just implement symmetry
-void stationShip(GameObject&amp; spaceStation, GameObject&amp; spaceShip)
+<span style="color:#75715e">// primary collision-processing functions
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">shipStation</span>(GameObject<span style="color:#f92672">&amp;</span> spaceShip, GameObject<span style="color:#f92672">&amp;</span> spaceStation);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">shipAsteroid</span>(GameObject<span style="color:#f92672">&amp;</span> spaceShip, GameObject<span style="color:#f92672">&amp;</span> asteroid);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">asteroidStation</span>(GameObject<span style="color:#f92672">&amp;</span> asteroid, GameObject<span style="color:#f92672">&amp;</span> spaceStation);
+<span style="color:#75715e">// secondary collision-processing functions that just implement symmetry
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">stationShip</span>(GameObject<span style="color:#f92672">&amp;</span> spaceStation, GameObject<span style="color:#f92672">&amp;</span> spaceShip)
 { shipStation(spaceShip, spaceStation); }
-void asteroidShip(GameObject&amp; asteroid, GameObject&amp; spaceShip)
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">asteroidShip</span>(GameObject<span style="color:#f92672">&amp;</span> asteroid, GameObject<span style="color:#f92672">&amp;</span> spaceShip)
 { shipAsteroid(spaceShip, asteroid); }
-void stationAsteroid(GameObject&amp; spaceStation, GameObject&amp; asteroid)
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">stationAsteroid</span>(GameObject<span style="color:#f92672">&amp;</span> spaceStation, GameObject<span style="color:#f92672">&amp;</span> asteroid)
 { asteroidStation(asteroid, spaceStation); }
 
 ...
 
-typedef void (*HitFunctionPtr)(GameObject&amp;, GameObject&amp;);
-typedef map&lt; pair&lt;string, string&gt;, HitFunctionPtr &gt; HitMap;
+<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>HitFunctionPtr)(GameObject<span style="color:#f92672">&amp;</span>, GameObject<span style="color:#f92672">&amp;</span>);
+<span style="color:#66d9ef">typedef</span> map<span style="color:#f92672">&lt;</span> pair<span style="color:#f92672">&lt;</span>string, string<span style="color:#f92672">&gt;</span>, HitFunctionPtr <span style="color:#f92672">&gt;</span> HitMap;
 
-pair&lt;string, string&gt; makeStringPair(const char *s1, const char *s2);
-HitMap * initializeCollisionMap(const string&amp; class1, const string&amp; class2);
-HitFunctionPtr lookup(const string&amp; class1, const string&amp; class2);
+pair<span style="color:#f92672">&lt;</span>string, string<span style="color:#f92672">&gt;</span> makeStringPair(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>s1, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>s2);
+HitMap <span style="color:#f92672">*</span> <span style="color:#a6e22e">initializeCollisionMap</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> class1, <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> class2);
+HitFunctionPtr <span style="color:#a6e22e">lookup</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> class1, <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> class2);
 
-} // end of unnamed namespace
-
-void processCollision(GameObject&amp; object1, GameObject&amp; object2)
+} <span style="color:#75715e">// end of unnamed namespace
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">processCollision</span>(GameObject<span style="color:#f92672">&amp;</span> object1, GameObject<span style="color:#f92672">&amp;</span> object2)
 {
-    HitFunctionPtr phf = lookup(typeid(object1).name(), 
-                                typeid(object2).name());
-    if (phf) phf(object1, object2);
-    else throw UnknownCollision(object1, object2);
+    HitFunctionPtr phf <span style="color:#f92672">=</span> lookup(<span style="color:#66d9ef">typeid</span>(object1).name(), 
+                                <span style="color:#66d9ef">typeid</span>(object2).name());
+    <span style="color:#66d9ef">if</span> (phf) phf(object1, object2);
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">throw</span> UnknownCollision(object1, object2);
 }
 
-namespace {
+<span style="color:#66d9ef">namespace</span> {
 
-pair&lt;string, string&gt; makeStringPair(const char *s1, const char *s2)
-{ return pair&lt;stirng, string&gt;(s1, s2); }
+pair<span style="color:#f92672">&lt;</span>string, string<span style="color:#f92672">&gt;</span> makeStringPair(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>s1, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>s2)
+{ <span style="color:#66d9ef">return</span> pair<span style="color:#f92672">&lt;</span>stirng, string<span style="color:#f92672">&gt;</span>(s1, s2); }
 
-HitMap * initializeCollisionMap()
+HitMap <span style="color:#f92672">*</span> <span style="color:#a6e22e">initializeCollisionMap</span>()
 {
-    HitMap *phm = new HitMap;
-    (*phm)[makeStringPair(&quot;Spaceship&quot;, &quot;Asteroid&quot;)] = &amp;shipAsteroid;
-    (*phm)[makeStringPair(&quot;Spaceship&quot;, &quot;SpaceStation&quot;)] = &amp;shipStation;
+    HitMap <span style="color:#f92672">*</span>phm <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HitMap;
+    (<span style="color:#f92672">*</span>phm)[makeStringPair(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Spaceship</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Asteroid</span><span style="color:#e6db74">&#34;</span>)] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>shipAsteroid;
+    (<span style="color:#f92672">*</span>phm)[makeStringPair(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Spaceship</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceStation</span><span style="color:#e6db74">&#34;</span>)] <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>shipStation;
     ...
-    return phm;
+    <span style="color:#66d9ef">return</span> phm;
 }
 
-HitFunctionPtr lookup(const string&amp; class1, const string&amp; class2)
+HitFunctionPtr <span style="color:#a6e22e">lookup</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> class1, <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> class2)
 {
-    static auto_ptr&lt;HitMap&gt; collisionMap(initializeCollisionMap());
-    HitMap::iterator mapEntry = collisionMap-&gt;find(make_pair(class1, class2));
-    if (mapEntry == collisionMap-&gt;end()) return 0;
-    return (*mapEntry).second;
+    <span style="color:#66d9ef">static</span> auto_ptr<span style="color:#f92672">&lt;</span>HitMap<span style="color:#f92672">&gt;</span> collisionMap(initializeCollisionMap());
+    HitMap<span style="color:#f92672">:</span><span style="color:#f92672">:</span>iterator mapEntry <span style="color:#f92672">=</span> collisionMap<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>find(make_pair(class1, class2));
+    <span style="color:#66d9ef">if</span> (mapEntry <span style="color:#f92672">=</span><span style="color:#f92672">=</span> collisionMap<span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span>end()) <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">return</span> (<span style="color:#f92672">*</span>mapEntry).second;
 }
 
-} // end namespace
-</code></pre>
-
+} <span style="color:#75715e">// end namespace
+</span></code></pre></div>
 <p>Note that <code>makeStringPair</code>, <code>initializeColllisionMap</code>, and <code>lookup</code> were declared inside an unnamed namespace, therefore each must also be implemented within the same namespace.</p>
 
 <p>Now we&rsquo;ve solved the problem: if there are new classes to the hierarchy, it requires only the addition of more map insertions in <code>initializeCollisionMap</code> and the declarations of the new collision-processing functions in the unnamed namespace associated with the implementation of <code>processCollision</code>.</p>
@@ -694,63 +670,53 @@ HitFunctionPtr lookup(const string&amp; class1, const string&amp; class2)
 <h2 id="modifying-emulated-virtual-function-talbes-dynamically">Modifying Emulated Virtual Function Talbes Dynamically</h2>
 
 <p>If we&rsquo;d like to add, remove, or change collision-processing functions as the game proceeds, the static <code>collisionMap</code> will not meet this requirement. In this case, we can turn the concept of a static map into a class that offers member functions allowing us to modify the contents of the map dynamically:</p>
-
-<pre><code class="language-cpp">class CollisionMap {
-public:
-    typedef void (*HitFunctionPtr)(GameObject&amp;, GameObject&amp;);
-    void addEntry(const string&amp; type1,
-                  const String&amp; type2,
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CollisionMap</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">void</span> (<span style="color:#f92672">*</span>HitFunctionPtr)(GameObject<span style="color:#f92672">&amp;</span>, GameObject<span style="color:#f92672">&amp;</span>);
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addEntry</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> type1,
+                  <span style="color:#66d9ef">const</span> String<span style="color:#f92672">&amp;</span> type2,
                   HitFunctionPtr collisionFunction,
-                  bool symmetric = true);
-    void removeEntry(const string&amp; type1, const string&amp; type2);
-    HitFunctionPtr lookup(const string&amp; type1, const string&amp; type2)
-    // return a reference to the one and only map
-    static CollisionMap&amp; theCollisionMap();
-private:
-    // private to prevent the creation of multiple maps
-    CollisionMap();
-    CollisionMap(const CollisionMap&amp;);
+                  <span style="color:#66d9ef">bool</span> symmetric <span style="color:#f92672">=</span> true);
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeEntry</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> type1, <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> type2);
+    HitFunctionPtr <span style="color:#a6e22e">lookup</span>(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> type1, <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> type2)
+    <span style="color:#75715e">// return a reference to the one and only map
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">static</span> CollisionMap<span style="color:#f92672">&amp;</span> theCollisionMap();
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#75715e">// private to prevent the creation of multiple maps
+</span><span style="color:#75715e"></span>    CollisionMap();
+    CollisionMap(<span style="color:#66d9ef">const</span> CollisionMap<span style="color:#f92672">&amp;</span>);
 };
-</code></pre>
-
+</code></pre></div>
 <p>Clients wishing to add an entry to the map simply do the following step:</p>
-
-<pre><code class="language-cpp">void shipAsteroid(GameObject&amp; spaceShip, GameObject&amp; asteroid);
-CollisionMap::theCollisionMap().addEntry(&quot;SpaceShip&quot;, &quot;Asteroid&quot;, &amp;shipAsteroid);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">shipAsteroid</span>(GameObject<span style="color:#f92672">&amp;</span> spaceShip, GameObject<span style="color:#f92672">&amp;</span> asteroid);
+CollisionMap<span style="color:#f92672">:</span><span style="color:#f92672">:</span>theCollisionMap().addEntry(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceShip</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Asteroid</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>shipAsteroid);
+</code></pre></div>
 <p>We must take care to ensure that these map entries are added to the map before any collisions occurs. One way is to have constructors in <code>GameObject</code> subclasses check to make sure the appropriate mappings had been added each time an object was created, but then we have to pay a small performance penalty at runtime. An alternative would be to create a <code>RegisterCollisionFunction</code> class:</p>
-
-<pre><code class="language-cpp">class RegisterCollisionFunction {
-public:
-    RegisterCollisionFunction(const string&amp; type1,
-                              const string&amp; type2,
-                              CollisionMap::HitFunctionPtr collisionFunction,
-                              bool symmetric = true)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RegisterCollisionFunction</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    RegisterCollisionFunction(<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> type1,
+                              <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> type2,
+                              CollisionMap<span style="color:#f92672">:</span><span style="color:#f92672">:</span>HitFunctionPtr collisionFunction,
+                              <span style="color:#66d9ef">bool</span> symmetric <span style="color:#f92672">=</span> true)
     {
-        CollisionMap::theCollisionMap().addEntry(type1, type2, collisionFunction, symmetric);
+        CollisionMap<span style="color:#f92672">:</span><span style="color:#f92672">:</span>theCollisionMap().addEntry(type1, type2, collisionFunction, symmetric);
     }
 };
-</code></pre>
-
+</code></pre></div>
 <p>Clients then use global objects of this type to automatically register the functions before <code>main</code> is invoked to insure the map is initialized properly before any collision occurs:</p>
-
-<pre><code class="language-cpp">RegisterCollisionFunction cf1(&quot;SpaceShip&quot;, &quot;Asteroid&quot;, &amp;shipAsteroid);
-RegisterCollisionFunction cf2(&quot;SpaceShip&quot;, 'SpaceStation', &amp;shipStation);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">RegisterCollisionFunction <span style="color:#a6e22e">cf1</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceShip</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Asteroid</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>shipAsteroid);
+RegisterCollisionFunction <span style="color:#a6e22e">cf2</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceShip</span><span style="color:#e6db74">&#34;</span>, <span style="color:#960050;background-color:#1e0010">&#39;</span>SpaceStation<span style="color:#960050;background-color:#1e0010">&#39;</span>, <span style="color:#f92672">&amp;</span>shipStation);
 ...
 
-int main(int argc, char * argv[])
+<span style="color:#66d9ef">int</span> main(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> argv[])
 {
     ...
 }
-</code></pre>
-
+</code></pre></div>
 <p>If, later, a new derived <code>class Satellite: public GameObject {...};</code> is added, and one or more new collision-processing functions are written (say, <code>void satelliteShip(GameObject&amp;, GameObject&amp;)</code>, and <code>void satelliteAsteroid(GameObject&amp;,GameObject&amp;)</code>, etc), we can simply add them to the map without disturbing existing code:</p>
-
-<pre><code class="language-cpp">RegisterCollisionFunction cf4(&quot;Satellite&quot;, &quot;SpaceShip&quot;, &amp;satelliteShip);
-RegisterCollisionFunction cf5(&quot;Satellite&quot;, &quot;Asteroid&quot;, &amp;satelliteAsteroid);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">RegisterCollisionFunction <span style="color:#a6e22e">cf4</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Satellite</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">SpaceShip</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>satelliteShip);
+RegisterCollisionFunction <span style="color:#a6e22e">cf5</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Satellite</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Asteroid</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">&amp;</span>satelliteAsteroid);
+</code></pre></div>
 <p>Overall, this makes it easy to provide data for a map-based implementation, but it doesn&rsquo;t change the fact that there&rsquo;s no perfect way to implement multiple dispatch.</p>
               
             </div>

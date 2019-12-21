@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.
-">
+<meta name="description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.">
 
 
-<meta property="og:description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.
-">
+<meta property="og:description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-12 Copy all parts of an object">
 <meta name="twitter:title" content="Item-12 Copy all parts of an object">
 <meta property="og:url" content="https://nianze.tk/2018/01/copy-all-parts-of-an-object/">
 <meta property="twitter:url" content="https://nianze.tk/2018/01/copy-all-parts-of-an-object/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.
-">
-<meta name="twitter:description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.
-">
+<meta property="og:description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.">
+<meta name="twitter:description" content="Be sure to copy all of an object&rsquo;s data members and all of its base class parts.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Be sure to copy all of an object&rsquo;s data members and all of its base class parts.
-</p>
+              <p>Be sure to copy all of an object&rsquo;s data members and all of its base class parts.</p>
 
 <p>In a well-designed object-oriented system that encapsulate the internal parts of objects, there should only be two copying function:</p>
 
@@ -397,66 +395,60 @@ Suffering is optional.</p>
 </ol>
 
 <p>As item 5 introduced, we may create our own versions of copy function. The thing is, while the compiler-generated ones copy all the data of the object being copied as expected, the manually defined copy functions may be implemented in the wrong way, the partial-copied way:</p>
-
-<pre><code class="language-cpp">class Customer {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Customer</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    Customer(const Customer&amp; rhs);
-    Customer&amp; operator=(const Customer&amp; rhs);
-private:
-    std::string name;
-    //int age; potential new data memberf
-};
+    Customer(<span style="color:#66d9ef">const</span> Customer<span style="color:#f92672">&amp;</span> rhs);
+    Customer<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Customer<span style="color:#f92672">&amp;</span> rhs);
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>string name;
+    <span style="color:#75715e">//int age; potential new data memberf
+</span><span style="color:#75715e"></span>};
 
-Customer::Customer(const Customer&amp; rhs)
-:name(rhs.name){}    // copy rhs's data
-
-Customer&amp; Customer::operator=(const Customer&amp; rhs)
+Customer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>Customer(<span style="color:#66d9ef">const</span> Customer<span style="color:#f92672">&amp;</span> rhs)
+<span style="color:#f92672">:</span>name(rhs.name){}    <span style="color:#75715e">// copy rhs&#39;s data
+</span><span style="color:#75715e"></span>
+Customer<span style="color:#f92672">&amp;</span> Customer<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> Customer<span style="color:#f92672">&amp;</span> rhs)
 {
-    name = rhs.name; // copy rhs's data
-    return *this;    // item 10
-}
-</code></pre>
-
+    name <span style="color:#f92672">=</span> rhs.name; <span style="color:#75715e">// copy rhs&#39;s data
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;    <span style="color:#75715e">// item 10
+</span><span style="color:#75715e"></span>}
+</code></pre></div>
 <p>Everything is fine here, unless there&rsquo;s more data members, such as the <code>age</code>, added into the <code>Customer</code> class. Interesting thing is that even if there&rsquo;s new data member added, compiler will most likely not complain about potential partial-copy problem if we don&rsquo;t add the data member to the copying functions and all the constructors. So we have to rely on ourselves.</p>
 
 <p>A more subtle way to get into the problem comes from inheritance:</p>
-
-<pre><code class="language-cpp">class PriorityCustomer: public Customer {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PriorityCustomer</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Customer {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     ...
-    PriorityCustomer(const PriorityCustomer&amp; rhs);
-    PriorityCustomer&amp; operator=(const PriorityCustomer&amp; rhs);
-private:
-    int priority;
+    PriorityCustomer(<span style="color:#66d9ef">const</span> PriorityCustomer<span style="color:#f92672">&amp;</span> rhs);
+    PriorityCustomer<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> PriorityCustomer<span style="color:#f92672">&amp;</span> rhs);
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> priority;
 };
 
-PriorityCustomer::PriorityCustomer(const PriorityCustomer&amp; rhs) 
-: priority(rhs.priority) {}
+PriorityCustomer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>PriorityCustomer(<span style="color:#66d9ef">const</span> PriorityCustomer<span style="color:#f92672">&amp;</span> rhs) 
+<span style="color:#f92672">:</span> priority(rhs.priority) {}
 
-PriorityCustomer&amp; 
-PriorityCustomer::operator=(const PriorityCustomer&amp; rhs)
+PriorityCustomer<span style="color:#f92672">&amp;</span> 
+PriorityCustomer<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> PriorityCustomer<span style="color:#f92672">&amp;</span> rhs)
 {
-    priority = rhs.priority;
-    return *this;
+    priority <span style="color:#f92672">=</span> rhs.priority;
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
 }
-</code></pre>
-
+</code></pre></div>
 <p>The problem here is that derived class <code>PriorityCustomer</code> also contains inherited data members (<code>Customer.name</code>) but the copying functions only cover its newly added data member (<code>PriorityCustomer.priority</code>), ending up with a partial-copy problem. In order to take care of the base class parts, which are typically private (item 22), we need to invoke the corresponding base class functions and implement the derived class&rsquo;s copying function in this way:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">PriorityCustomer<span style="color:#f92672">:</span><span style="color:#f92672">:</span>PriorityCustomer(<span style="color:#66d9ef">const</span> PriorityCustomer<span style="color:#f92672">&amp;</span> rhs) 
+<span style="color:#f92672">:</span> Cutomer(rhs),          <span style="color:#75715e">// invoke vase class copy ctor
+</span><span style="color:#75715e"></span>priority(rhs.priority) {}
 
-<pre><code class="language-cpp">PriorityCustomer::PriorityCustomer(const PriorityCustomer&amp; rhs) 
-: Cutomer(rhs),          // invoke vase class copy ctor
-priority(rhs.priority) {}
-
-PriorityCustomer&amp; 
-PriorityCustomer::operator=(const PriorityCustomer&amp; rhs)
+PriorityCustomer<span style="color:#f92672">&amp;</span> 
+PriorityCustomer<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(<span style="color:#66d9ef">const</span> PriorityCustomer<span style="color:#f92672">&amp;</span> rhs)
 {
-    Customer::operator=(rhs);  // assign base class part
-    priority = rhs.priority;
-    return *this;
+    Customer<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(rhs);  <span style="color:#75715e">// assign base class part
+</span><span style="color:#75715e"></span>    priority <span style="color:#f92672">=</span> rhs.priority;
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">this</span>;
 }
-</code></pre>
-
+</code></pre></div>
 <p>Sometimes you may find the copy constructor and copy assignment operator share a lot of code bodies, so a good way to eliminate the duplication is to create a third (private) member function that both copying functions call. Don&rsquo;t let one copying function call the other, since it makes no sense:</p>
 
 <ol>

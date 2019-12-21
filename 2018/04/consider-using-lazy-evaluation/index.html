@@ -7,26 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="The best computations are those we never perform at all.
-
-">
+<meta name="description" content="The best computations are those we never perform at all.">
 
 
-<meta property="og:description" content="The best computations are those we never perform at all.
-
-">
+<meta property="og:description" content="The best computations are those we never perform at all.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[MECpp]Item-17 Consider Using Lazy Evaluation">
 <meta name="twitter:title" content="[MECpp]Item-17 Consider Using Lazy Evaluation">
 <meta property="og:url" content="https://nianze.tk/2018/04/consider-using-lazy-evaluation/">
 <meta property="twitter:url" content="https://nianze.tk/2018/04/consider-using-lazy-evaluation/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="The best computations are those we never perform at all.
-
-">
-<meta name="twitter:description" content="The best computations are those we never perform at all.
-
-">
+<meta property="og:description" content="The best computations are those we never perform at all.">
+<meta name="twitter:description" content="The best computations are those we never perform at all.">
 <meta property="og:locale" content="en-us">
 
   
@@ -100,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -390,7 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>The best computations are those we never perform at all.
+              <p>The best computations are those we never perform at all.</p>
 
 <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
@@ -399,63 +394,57 @@ Suffering is optional.</p>
 <li><a href="#lazy-fetching">Lazy Fetching</a></li>
 <li><a href="#lazy-expression-evaluation">Lazy Expression Evaluation</a></li>
 </ul>
-</nav></p>
+</nav>
 
 <p>Lazy evaluation is applicable in an enormous variety of application areas.</p>
 
 <h1 id="reference-counting">Reference Counting</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">String</span> {...};
 
-<pre><code class="language-cpp">class String {...};
+String s1 <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Hello</span><span style="color:#e6db74">&#34;</span>;
 
-String s1 = &quot;Hello&quot;;
-
-String s2 = s1;  // call String copy ctor
-</code></pre>
-
+String s2 <span style="color:#f92672">=</span> s1;  <span style="color:#75715e">// call String copy ctor
+</span></code></pre></div>
 <p>The lazy approach: instead of giving <code>s2</code> a copy of <code>s1</code>&rsquo;s value, we have <code>s2</code> share <code>s1</code>&rsquo;s value to save the cost of a call to <code>new</code> and the expense of copying anything, until any one is modified (i.e., <code>s2.convertToUpperCase();</code> will change only <code>s2</code>&rsquo;s value by making a private copy of shared value before modification). Refer to MECpp item 29 for implementation details.</p>
 
 <h1 id="distinguishing-reads-from-writes">Distinguishing Reads from Writes</h1>
-
-<pre><code class="language-cpp">cout &lt;&lt; s[2];  // read
-s[2] = 'x';    // write
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">cout <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> s[<span style="color:#ae81ff">2</span>];  <span style="color:#75715e">// read
+</span><span style="color:#75715e"></span>s[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">x</span><span style="color:#e6db74">&#39;</span>;    <span style="color:#75715e">// write
+</span></code></pre></div>
 <p>For <code>operator[]</code>, we&rsquo;d like to distinguish the read call from the write so that a reference-counted string reading is cheap. In order to determine whether <code>operator[]</code> has been called in a read or in a write context, we use lazy evaluation and proxy classes as described in MECpp item 30.</p>
 
 <h1 id="lazy-fetching">Lazy Fetching</h1>
-
-<pre><code class="language-cpp">class LargeObject {
-public:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LargeObject</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
     LargeObject(ObjectID id);
 
-    const string&amp; field1() const;
-    int field2() const;
-    double field3() const;
-    const string&amp; field4() const;
+    <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> field1() <span style="color:#66d9ef">const</span>;
+    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">field2</span>() <span style="color:#66d9ef">const</span>;
+    <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">field3</span>() <span style="color:#66d9ef">const</span>;
+    <span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> field4() <span style="color:#66d9ef">const</span>;
     ...
-private:
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
     ObjectID oid;
-    mutable string *field1Value;
-    mutable int *field2Value;
-    mutable double *field3Value;
-    mutable string *field4Value;
+    <span style="color:#66d9ef">mutable</span> string <span style="color:#f92672">*</span>field1Value;
+    <span style="color:#66d9ef">mutable</span> <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>field2Value;
+    <span style="color:#66d9ef">mutable</span> <span style="color:#66d9ef">double</span> <span style="color:#f92672">*</span>field3Value;
+    <span style="color:#66d9ef">mutable</span> string <span style="color:#f92672">*</span>field4Value;
     ...    
 };
 
-LargeObject::LargeObject(ObjectID id)
-: oid(id), field1Value(0), field2Value(0), field3Value(0), field4Value(0)...
+LargeObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>LargeObject(ObjectID id)
+<span style="color:#f92672">:</span> oid(id), field1Value(<span style="color:#ae81ff">0</span>), field2Value(<span style="color:#ae81ff">0</span>), field3Value(<span style="color:#ae81ff">0</span>), field4Value(<span style="color:#ae81ff">0</span>)...
 {}
 
-const string&amp; LargeObject::field1() const
+<span style="color:#66d9ef">const</span> string<span style="color:#f92672">&amp;</span> LargeObject<span style="color:#f92672">:</span><span style="color:#f92672">:</span>field1() <span style="color:#66d9ef">const</span>
 {
-    if (field1Value == 0) {
-        read the data for field 1 from the database
+    <span style="color:#66d9ef">if</span> (field1Value <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) {
+        read the data <span style="color:#66d9ef">for</span> field <span style="color:#ae81ff">1</span> from the database
         and make field1Value point to it;
     }
-    return *field1Value;
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>field1Value;
 }
-</code></pre>
-
+</code></pre></div>
 <p>Because <code>LargeObject</code> instances are big, getting all the data at once is a costly database operation. The lazy approach to this problem is to create only a skeleton of an object, without reading any data from disk when a <code>LargeObject</code> instance is created. Each field in the object is represented as a pointer to the necessary data, initialized as null pointers, which signify fields that have not yet been read from the database.</p>
 
 <p>Since null pointers may need to be initialized to point to real data from inside any member function, including <code>const</code> member functions like <code>field1</code>, we declare the pointer fields <code>mutable</code> to tell compilers that they can be modified inside any member function.</p>
@@ -463,24 +452,20 @@ const string&amp; LargeObject::field1() const
 <p>As an alternative, we can replace pointers with smart pointers (MECpp item 28), which does not need to be declared as <code>mutable</code>.</p>
 
 <h1 id="lazy-expression-evaluation">Lazy Expression Evaluation</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Matrix</span> { ... };
 
-<pre><code class="language-cpp">template&lt;class T&gt;
-class Matrix { ... };
-
-Matrix&lt;int&gt; m1(1000, 1000);  // a 1000 by 1000 matrix
-Matrix&lt;int&gt; m2(1000, 1000);  // a 1000 by 1000 matrix
-...
-Matrix&lt;int&gt; m3 = m1 + m2;
-</code></pre>
-
+Matrix<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> m1(<span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">1000</span>);  <span style="color:#75715e">// a 1000 by 1000 matrix
+</span><span style="color:#75715e"></span>Matrix<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> m2(<span style="color:#ae81ff">1000</span>, <span style="color:#ae81ff">1000</span>);  <span style="color:#75715e">// a 1000 by 1000 matrix
+</span><span style="color:#75715e"></span>...
+Matrix<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> m3 <span style="color:#f92672">=</span> m1 <span style="color:#f92672">+</span> m2;
+</code></pre></div>
 <p>Instead of compute and return the sum of <code>m1</code> and <code>m2</code> (which cost 1,000,000 additions and corresponding memory allocation), lazy evaluation sets up a data structure inside <code>m3</code> indicating that <code>m3</code>&rsquo;s value is the sum of <code>m1</code> and <code>m2</code> (which may just consisting of two pointers to each of <code>m1</code> and <code>m2</code> and an enum indicating the additional operation). In most scenarios, we need only <em>part</em> of a computation (i.e., <code>cout &lt;&lt; m3[4];</code> instead of <code>cout &lt;&lt; m3;</code>), so laziness generally pays off.</p>
 
 <p>However, due to these dependencies between values, there are extra maintainence to notice: when one of the matrices on which <code>m3</code> is dependent is to be modified, we have to make sure the correctness:</p>
-
-<pre><code class="language-cpp">m3 = m1 + m2;
-m1 = m4; // m3 is the sum of m2 and the old value of m1
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">m3 <span style="color:#f92672">=</span> m1 <span style="color:#f92672">+</span> m2;
+m1 <span style="color:#f92672">=</span> m4; <span style="color:#75715e">// m3 is the sum of m2 and the old value of m1
+</span></code></pre></div>
 <p>Inside the <code>Matrix&lt;int&gt;</code> assignment opertaor, we might compute <code>m3</code>&rsquo;s value prior to changing <code>m1</code> or we may take a copy of the old value of <code>m1</code> and make <code>m3</code> dependent on that.</p>
 
 <p>Those extra mentainence efforts often ends up saving significant amounts of time and space during program runs, which is a payoff that justifies the lazy evaluation.</p>

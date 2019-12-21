@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.
-">
+<meta name="description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.">
 
 
-<meta property="og:description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.
-">
+<meta property="og:description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Item-45 Use member function templates to accept all compatible types">
 <meta name="twitter:title" content="Item-45 Use member function templates to accept all compatible types">
 <meta property="og:url" content="https://nianze.tk/2018/03/use-member-function-templates-to-accept-all-compatible-types/">
 <meta property="twitter:url" content="https://nianze.tk/2018/03/use-member-function-templates-to-accept-all-compatible-types/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.
-">
-<meta name="twitter:description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.
-">
+<meta property="og:description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.">
+<meta name="twitter:description" content="In order to implicitly convert all compatible types for a template class, we neet not a constructor function but a constructor template - member functoin templates that generate member functions of a class.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,88 +385,77 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>In order to implicitly convert all compatible types for a template class, we neet not a constructor <em>function</em> but a constructor <em>template</em> - <em>member functoin templates</em> that generate member functions of a class.
-</p>
+              <p>In order to implicitly convert all compatible types for a template class, we neet not a constructor <em>function</em> but a constructor <em>template</em> - <em>member functoin templates</em> that generate member functions of a class.</p>
 
 <p>Implicit conversion is a big convenient advantage offered by pointers: derived class pointers convert into base class pointers implicitly, pointers to non-<code>const</code> objects convert into pointers to <code>const</code> implicitly, etc. For a three-level hierarchy, following code makes perfect sense:</p>
-
-<pre><code class="language-cpp">class Top {...};
-class Middle: public Top {...};
-class Bottom: public Middle {...};
-Top *pt1 = new Middle;  // convert Middle* -&gt; Top*
-Top *pt2 = new Bottom;  // convert Bottom* -&gt; Top*
-const Top *pct = pt1;   // convert Top* -&gt; const Top*
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Top</span> {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Middle</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Top {...};
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bottom</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> Middle {...};
+Top <span style="color:#f92672">*</span>pt1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Middle;  <span style="color:#75715e">// convert Middle* -&gt; Top*
+</span><span style="color:#75715e"></span>Top <span style="color:#f92672">*</span>pt2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bottom;  <span style="color:#75715e">// convert Bottom* -&gt; Top*
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> Top <span style="color:#f92672">*</span>pct <span style="color:#f92672">=</span> pt1;   <span style="color:#75715e">// convert Top* -&gt; const Top*
+</span></code></pre></div>
 <p>In the world of template, we&rsquo;d really like to emulate such conversions for our user-defined smart pointer classes:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-class SmartPtr {
-public:
-    explicit SmartPtr(T *realPtr) // initialized by built-in pointers
-    ...
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SmartPtr</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">explicit</span> SmartPtr(T <span style="color:#f92672">*</span>realPtr) <span style="color:#75715e">// initialized by built-in pointers
+</span><span style="color:#75715e"></span>    ...
 };
 
-SmartPtr&lt;Top&gt; pt1 = SmartPtr&lt;Middle&gt;(new Middle);  // convert SmartPtr&lt;Middle&gt; -&gt; SmartPtr&lt;Top&gt;
-SmartPtr&lt;Top&gt; pt2 = SmartPtr&lt;Bottom&gt;(new Bottom);  // convert SmartPtr&lt;Bottom&gt; -&gt; SmartPtr&lt;Top&gt;
-SmartPtr&lt;const Top&gt; pct = pt1;  // convert SmartPtr&lt;Top&gt; -&gt; SmartPtr&lt;const Top&gt;
-</code></pre>
-
+SmartPtr<span style="color:#f92672">&lt;</span>Top<span style="color:#f92672">&gt;</span> pt1 <span style="color:#f92672">=</span> SmartPtr<span style="color:#f92672">&lt;</span>Middle<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> Middle);  <span style="color:#75715e">// convert SmartPtr&lt;Middle&gt; -&gt; SmartPtr&lt;Top&gt;
+</span><span style="color:#75715e"></span>SmartPtr<span style="color:#f92672">&lt;</span>Top<span style="color:#f92672">&gt;</span> pt2 <span style="color:#f92672">=</span> SmartPtr<span style="color:#f92672">&lt;</span>Bottom<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> Bottom);  <span style="color:#75715e">// convert SmartPtr&lt;Bottom&gt; -&gt; SmartPtr&lt;Top&gt;
+</span><span style="color:#75715e"></span>SmartPtr<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> Top<span style="color:#f92672">&gt;</span> pct <span style="color:#f92672">=</span> pt1;  <span style="color:#75715e">// convert SmartPtr&lt;Top&gt; -&gt; SmartPtr&lt;const Top&gt;
+</span></code></pre></div>
 <p>However, there&rsquo;s no inherent relationship among different instantiations of the same template, so compilers view <code>SmartPtr&lt;Middle&gt;</code> and <code>SmartPtr&lt;Top&gt;</code> as completely different classes. We need to write smart pointer constructors that is not only able to construct <code>SmartPtr&lt;Top&gt;</code> from <code>SmartPtr&lt;Middle&gt;</code>, but also capable to convert any compatible types in the hierarchy (we may extend the hierarchy in the future and add <code>class BelowBottom: public Bottom</code>). In principle, such constructors are countless.</p>
 
 <p>Considering the fact that a template can be instantiated to generate an unlimited number of functions, what we need here is not a constructor <em>function</em>, but a constructor <em>template</em>, the <em>member function templates</em> (also known as <em>member templates</em>) that generate member functions of a class:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-class SmartPtr {
-public:
-    template&lt;typename U&gt;  // member template for a &quot;generalized copy constructor&quot;
-    SmartPtr(const SmartPtr&lt;U&gt;&amp; other);  // not declared as &quot;explicit&quot; for implicit conversion
-    ...
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SmartPtr</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> U<span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// member template for a &#34;generalized copy constructor&#34;
+</span><span style="color:#75715e"></span>    SmartPtr(<span style="color:#66d9ef">const</span> SmartPtr<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> other);  <span style="color:#75715e">// not declared as &#34;explicit&#34; for implicit conversion
+</span><span style="color:#75715e"></span>    ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>Constructors like this - ones that create one object from anothe object whose type is a different instantiation of the same template (e.g., create a <code>SmartPtr&lt;T&gt;</code> from a <code>SmartPtr&lt;U&gt;</code>) - are known as <em>generalized copy constructors</em>.</p>
 
 <p>However, this member template will generate more member functions than we need: as declared, it is possible to create a <code>SmartPtr&lt;Bottom&gt;</code> from a <code>SmartPtr&lt;Top&gt;</code>, which is contrary to the meaning of public inheritance (item 32). We need to restrict the conversions to those we want:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-class SmartPtr {
-public:
-    template&lt;typename U&gt;
-    SmartPtr(const SmartPtr&lt;U&gt;&amp; other)  // initialize this held ptr with other's held ptr
-    : heldPtr(other.get()) {...}
-    T* get() const { return heldPtr; }
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SmartPtr</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> U<span style="color:#f92672">&gt;</span>
+    SmartPtr(<span style="color:#66d9ef">const</span> SmartPtr<span style="color:#f92672">&lt;</span>U<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> other)  <span style="color:#75715e">// initialize this held ptr with other&#39;s held ptr
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">:</span> heldPtr(other.get()) {...}
+    T<span style="color:#f92672">*</span> <span style="color:#a6e22e">get</span>() <span style="color:#66d9ef">const</span> { <span style="color:#66d9ef">return</span> heldPtr; }
     ...
-private:         
-    T *heldPtr; // built-in ptr held by the smartPtr
-};
-</code></pre>
-
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>         
+    T <span style="color:#f92672">*</span>heldPtr; <span style="color:#75715e">// built-in ptr held by the smartPtr
+</span><span style="color:#75715e"></span>};
+</code></pre></div>
 <p>Since we initialize <code>SmartPtr&lt;T&gt;</code>&rsquo;s data member of type <code>T*</code> with the pointer of type <code>U*</code> held by <code>SmartPtr&lt;U&gt;</code>, the code above will compile only if there is an implicit conversion from a <code>U*</code> pointer to a <code>T*</code> pointer, and this is exactly what we want.</p>
 
 <p>Apart from constructors, we can also apply member function tmeplates to assignment. A good example is from TR1&rsquo;s <code>shared_ptr</code> (item 13):</p>
-
-<pre><code class="language-cpp">template&lt;class T&gt; class shared_ptr {
-public:
-    shared_ptr(shared_ptr const&amp; r);  // &quot;normal&quot; copy constructor
-    template&lt;class Y&gt;
-      explicit shared_ptr(Y * p);  // generalized copy constructor from any compatible built-in pointer
-    template&lt;class Y&gt;
-      shared_ptr(shared_ptr&lt;Y&gt; const&amp; r);  // from compatible shared_ptr
-    template&lt;class Y&gt;
-      explicit shared_ptr(weak_ptr&lt;Y&gt; const&amp; r);  // from compatible weak_ptr
-    template&lt;class Y&gt;
-      explicit shared_ptr(auto_ptr&lt;Y&gt;&amp; r);  // from compatible auto_ptr
-
-    shared_ptr&amp; operator=(shared_ptr const&amp; r); // &quot;normal&quot; copy assignment
-    template&lt;class Y&gt;
-      shared_ptr&amp; operator=(shared_ptr&lt;Y&gt; const&amp; r);  // generalized copy assign from any compatible shared_ptr
-    template&lt;class Y&gt;
-      shared_ptr&amp; operator=(auto_ptr&lt;Y&gt;&amp; r);  // assign from any compatible auto_ptr
-    ...
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">shared_ptr</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    shared_ptr(shared_ptr <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span> r);  <span style="color:#75715e">// &#34;normal&#34; copy constructor
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Y</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#66d9ef">explicit</span> shared_ptr(Y <span style="color:#f92672">*</span> p);  <span style="color:#75715e">// generalized copy constructor from any compatible built-in pointer
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Y</span><span style="color:#f92672">&gt;</span>
+      shared_ptr(shared_ptr<span style="color:#f92672">&lt;</span>Y<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span> r);  <span style="color:#75715e">// from compatible shared_ptr
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Y</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#66d9ef">explicit</span> shared_ptr(weak_ptr<span style="color:#f92672">&lt;</span>Y<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span> r);  <span style="color:#75715e">// from compatible weak_ptr
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Y</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#66d9ef">explicit</span> shared_ptr(auto_ptr<span style="color:#f92672">&lt;</span>Y<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> r);  <span style="color:#75715e">// from compatible auto_ptr
+</span><span style="color:#75715e"></span>
+    shared_ptr<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(shared_ptr <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span> r); <span style="color:#75715e">// &#34;normal&#34; copy assignment
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Y</span><span style="color:#f92672">&gt;</span>
+      shared_ptr<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(shared_ptr<span style="color:#f92672">&lt;</span>Y<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">const</span><span style="color:#f92672">&amp;</span> r);  <span style="color:#75715e">// generalized copy assign from any compatible shared_ptr
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Y</span><span style="color:#f92672">&gt;</span>
+      shared_ptr<span style="color:#f92672">&amp;</span> <span style="color:#66d9ef">operator</span><span style="color:#f92672">=</span>(auto_ptr<span style="color:#f92672">&lt;</span>Y<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span> r);  <span style="color:#75715e">// assign from any compatible auto_ptr
+</span><span style="color:#75715e"></span>    ...
 };
-</code></pre>
-
+</code></pre></div>
 <p>Note that</p>
 
 <ul>

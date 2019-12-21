@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
+<meta name="description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
 
 
-<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
+<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-6 Use the Explicitly Typed Initializer Idiom when auto deduces undesired types">
 <meta name="twitter:title" content="[EMCpp]Item-6 Use the Explicitly Typed Initializer Idiom when auto deduces undesired types">
 <meta property="og:url" content="https://nianze.tk/2018/07/use-the-explicitly-typed-initializer-idiom-when-auto-deduces-undesired-types/">
 <meta property="twitter:url" content="https://nianze.tk/2018/07/use-the-explicitly-typed-initializer-idiom-when-auto-deduces-undesired-types/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
-<meta name="twitter:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.
-">
+<meta property="og:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
+<meta name="twitter:description" content="“Invisible” proxy types can cause auto to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force auto to deduce what we want.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,31 +385,24 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>“Invisible” proxy types can cause <code>auto</code> to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force <code>auto</code> to deduce what we want.
-</p>
+              <p>“Invisible” proxy types can cause <code>auto</code> to deduce the undesired type for an initializing expression, so we can adopt explicitly typed initializer idiom to force <code>auto</code> to deduce what we want.</p>
 
 <p>Some proxy classe are designed to be apparent to clients, such as <code>std::shared_ptr</code>, and <code>std::unique_ptr</code>. Other proxy classes are designed to at more or less invisibly, such as <code>std::vector&lt;bool&gt;::reference</code>, and <code>std::bitset::reference</code>.</p>
 
 <p>For example, suppose we have a function that takes a <code>Widget</code> and returns a <code>std::vector&lt;bool&gt;</code>, where each bool indicates whether the <code>Widget</code> offers a particular feature:</p>
-
-<pre><code class="language-cpp">std::vector&lt;bool&gt; features(const Widget&amp; w);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span> features(<span style="color:#66d9ef">const</span> Widget<span style="color:#f92672">&amp;</span> w);
+</code></pre></div>
 <p>Now we want to check the value of bit 5, which indicates whether the <code>Widget</code> has high priority:</p>
-
-<pre><code class="language-cpp">Widget w;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">Widget w;
 ...
-bool highPriority = features(w)[5];  // is w high priority ?
-...
-processWidget(w, highPriority);  // process w in accord with its priority
-</code></pre>
-
+<span style="color:#66d9ef">bool</span> highPriority <span style="color:#f92672">=</span> features(w)[<span style="color:#ae81ff">5</span>];  <span style="color:#75715e">// is w high priority ?
+</span><span style="color:#75715e"></span>...
+processWidget(w, highPriority);  <span style="color:#75715e">// process w in accord with its priority
+</span></code></pre></div>
 <p>However, if we change the explicit type for <code>highPriority</code> with <code>auto</code>:</p>
-
-<pre><code class="language-cpp">auto highPriority = features(w)[5];
-processWidget(w, highPriority);  // undefined behavior! 
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> highPriority <span style="color:#f92672">=</span> features(w)[<span style="color:#ae81ff">5</span>];
+processWidget(w, highPriority);  <span style="color:#75715e">// undefined behavior! 
+</span></code></pre></div>
 <p>The undefined behavior is caused by the fact that <code>highPriority</code> contains dangling pointer. And here is what happened:</p>
 
 <ul>
@@ -421,10 +413,8 @@ processWidget(w, highPriority);  // undefined behavior!
 </ul>
 
 <p>Now is the time we adopt the explicitly typed initializer idiom: we declare a variable with <code>auto</code>, but casting the initialization expression to the type we want <code>auto</code> to deduce:</p>
-
-<pre><code class="language-cpp">auto highPriority = static_cast&lt;bool&gt;(features(w)[5]);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> highPriority <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span><span style="color:#f92672">&gt;</span>(features(w)[<span style="color:#ae81ff">5</span>]);
+</code></pre></div>
 <p>At this time, the <code>std::vector&lt;bool&gt;::reference</code> object returned from <code>std::vector&lt;bool&gt;::operator[]</code> executes the conversion to <code>bool</code> it supports, and as part of that conversion, the still-valid pointer to <em>temp</em> (the <code>std::vector&lt;bool&gt;</code> object returned from <code>features</code>) is dereferenced, and the index 5 is then applied to the bits pointed to by the ponter, and the <code>bool</code> value that emerges is used to initialize <code>highPriority</code> - therefore, undefined behavior is avoided.</p>
 <div class="footnotes">
 
@@ -461,7 +451,7 @@ processWidget(w, highPriority);  // undefined behavior!
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://nianze.tk/2018/07/distinguish-betwenn--and--when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://nianze.tk/2018/07/distinguish-betwenn-and-when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -554,7 +544,7 @@ processWidget(w, highPriority);  // undefined behavior!
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://nianze.tk/2018/07/distinguish-betwenn--and--when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://nianze.tk/2018/07/distinguish-betwenn-and-when-creating-objects/" data-tooltip="[EMCpp]Item-7 Distinguish Betwenn () and {} When Creating Objects">
               
                   <i class="fas fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>

@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="DFS, BFS and Union-find comparison.
-">
+<meta name="description" content="DFS, BFS and Union-find comparison.">
 
 
-<meta property="og:description" content="DFS, BFS and Union-find comparison.
-">
+<meta property="og:description" content="DFS, BFS and Union-find comparison.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Valid tree">
 <meta name="twitter:title" content="Valid tree">
 <meta property="og:url" content="https://nianze.tk/2016/10/valid-tree/">
 <meta property="twitter:url" content="https://nianze.tk/2016/10/valid-tree/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="DFS, BFS and Union-find comparison.
-">
-<meta name="twitter:description" content="DFS, BFS and Union-find comparison.
-">
+<meta property="og:description" content="DFS, BFS and Union-find comparison.">
+<meta name="twitter:description" content="DFS, BFS and Union-find comparison.">
 <meta property="og:locale" content="en-us">
 
   
@@ -94,14 +90,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -384,8 +383,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>DFS, BFS and Union-find comparison.
-</p>
+              <p>DFS, BFS and Union-find comparison.</p>
 
 <h3 id="judge-if-the-given-graph-is-a-tree">Judge if the given graph is a tree</h3>
 
@@ -397,111 +395,103 @@ Suffering is optional.</p>
 </ol>
 
 <h4 id="dfs">DFS:</h4>
-
-<pre><code class="language-java">    // time: O(max(E,n)) space: O(n) for adjacency list
-    public boolean validTree(int n, int[][] edges) {
-        int[] visited = new int[n];
-        List&lt;List&lt;Integer&gt;&gt; adjList = new ArrayList&lt;&gt;();
-        for (int i = 0; i &lt; n; i++) {
-            adjList.add(new ArrayList&lt;Integer&gt;());
-        }
-        for (int[] e : edges) {
-            adjList.get(e[0]).add(e[1]);
-            adjList.get(e[1]).add(e[0]);
-        }
-        if (hasCycle(-1, 0, visited, edges)) { return false; } // cycle case
-        for (int i : visited) { if (i == 0) { return false; } } // not single connected components
-        return true;
-    }
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">// time: O(max(E,n)) space: O(n) for adjacency list
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> visited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> adjList <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hasCycle<span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> visited<span style="color:#f92672">,</span> edges<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// cycle case
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> visited<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// not single connected components
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
     
-    private boolean hasCycle(int prev, int cur, int[] visited, List&lt;List&lt;Integer&gt;&gt; adjList) {
-        visited[cur] = 1; // 1 means current vertex is being visited
-        for (Integer succ : adjList.get(cur)) {
-            if (succ == prev) continue; // exclude curr's prev node
-            if (visited[succ] == 1) { return true; } // has cycle
-            if (visited[succ] == 0) {
-                if (hasCycle(cur, succ, visited, adjList)) { return true; }
-            } 
-        }
-        visited[cur] = 2; // complete visiting
-        return false;
-    }
-</code></pre>
-
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasCycle</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> prev<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> cur<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> visited<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> adjList<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        visited<span style="color:#f92672">[</span>cur<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> <span style="color:#75715e">// 1 means current vertex is being visited
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer succ <span style="color:#f92672">:</span> adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>succ <span style="color:#f92672">=</span><span style="color:#f92672">=</span> prev<span style="color:#f92672">)</span> <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span> <span style="color:#75715e">// exclude curr&#39;s prev node
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>succ<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// has cycle
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>succ<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hasCycle<span style="color:#f92672">(</span>cur<span style="color:#f92672">,</span> succ<span style="color:#f92672">,</span> visited<span style="color:#f92672">,</span> adjList<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> 
+        <span style="color:#f92672">}</span>
+        visited<span style="color:#f92672">[</span>cur<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span> <span style="color:#75715e">// complete visiting
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span></code></pre></div>
 <h4 id="bfs">BFS:</h4>
-
-<pre><code class="language-java">    // O(max(E,n)), space: O(n) for adjacency list
-    public boolean validTree(int n, int[][] edges) {
-        int[] visited = new int[n];
-        List&lt;List&lt;Integer&gt;&gt; adjList = new ArrayList&lt;&gt;();
-        for (int i = 0; i &lt; n; i++) {
-            adjList.add(new ArrayList&lt;Integer&gt;());
-        }
-        for (int[] e : edges) {
-            adjList.get(e[0]).add(e[1]);
-            adjList.get(e[1]).add(e[0]);
-        }
-        Deque&lt;Integer&gt; queue = new ArrayDeque&lt;&gt;();
-        queue.addLast(0);
-        visited[0] = 1; // mark curr node as being visited
-        while (!queue.isEmpty()) {
-            int cur = queue.removeFirst();
-            for (Integer succ : adjList.get(cur)) {
-                if (visited[succ] == 1) { return false; } // has cycle
-                if (visited[succ] == 0) {
-                    visited[succ] = 1;
-                    queue.addLast(succ);
-                }
-            }
-            visited[cur] = 2; // compete visiting
-        }
-        for (int i : visited) { if (i == 0) { return false; } } // not single connected components
-        return true;        
-    }
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">// O(max(E,n)), space: O(n) for adjacency list
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> visited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> adjList <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        Deque<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> queue <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayDeque<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        queue<span style="color:#f92672">.</span><span style="color:#a6e22e">addLast</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        visited<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> <span style="color:#75715e">// mark curr node as being visited
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>queue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> cur <span style="color:#f92672">=</span> queue<span style="color:#f92672">.</span><span style="color:#a6e22e">removeFirst</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer succ <span style="color:#f92672">:</span> adjList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>cur<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>succ<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// has cycle
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>succ<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    visited<span style="color:#f92672">[</span>succ<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+                    queue<span style="color:#f92672">.</span><span style="color:#a6e22e">addLast</span><span style="color:#f92672">(</span>succ<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            visited<span style="color:#f92672">[</span>cur<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span> <span style="color:#75715e">// compete visiting
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> visited<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// not single connected components
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>        
+    <span style="color:#f92672">}</span></code></pre></div>
 <h4 id="union-find">Union-find:</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#75715e">// time: O(E), space: O(n) for union-find set
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UnionFind</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> parent<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> rank<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">    // time: O(E), space: O(n) for union-find set
-    class UnionFind {
-        int[] parent;
-        int[] rank;
-        int count;
-
-        UionFind(int n) {
-            parent = new int[n];
-            rank = new int[n];
-            count = n;
-            for (int i = 0; i &lt; n; i++) { parent[i] = i; } // initially each node's paren is itself
-        }
-        int find(int x) {
-            if (x != parent[x]) {
-                x = find(parent[x]); // path compression
-            }
-            return parent[x];
-        }
-        boolean union(int x, int y) {
-            int X = find(x), Y = find(y);
-            if (X == Y) { return false; }
-            if (rank[Y] &lt; rank[X]) { parent[Y] = X; } // Y is lower
-            else if (rank[X] &lt; rank[Y]) { parent[X] = Y;} // X is lower
-            else {  // rank of X, Y is the same
-                parent[Y] = X;
-                rank[X]++;
-            }
-            count--;
-            return true;
-        }
-    }    
-    public boolean validTree(int n, int[][] edges) {
-        UnionFind uf = new UnionFind(n);
-        for (int[] edge : edges) {
-            int x = edge[0], y = edge[1];
-            if (!uf.union(x, y)) { return false; } // has cycle
-        }
-        return uf.count == 1;
-    }
-</code></pre>
+        UionFind<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            rank <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            count <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> parent<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// initially each node&#39;s paren is itself
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">!</span><span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                x <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>parent<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// path compression
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span> parent<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> X <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>x<span style="color:#f92672">)</span><span style="color:#f92672">,</span> Y <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>y<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>X <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Y<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rank<span style="color:#f92672">[</span>Y<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> rank<span style="color:#f92672">[</span>X<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> parent<span style="color:#f92672">[</span>Y<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> X<span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// Y is lower
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rank<span style="color:#f92672">[</span>X<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> rank<span style="color:#f92672">[</span>Y<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> parent<span style="color:#f92672">[</span>X<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Y<span style="color:#f92672">;</span><span style="color:#f92672">}</span> <span style="color:#75715e">// X is lower
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// rank of X, Y is the same
+</span><span style="color:#75715e"></span>                parent<span style="color:#f92672">[</span>Y<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> X<span style="color:#f92672">;</span>
+                rank<span style="color:#f92672">[</span>X<span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        UnionFind uf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UnionFind<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edge <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> edge<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> y <span style="color:#f92672">=</span> edge<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>uf<span style="color:#f92672">.</span><span style="color:#a6e22e">union</span><span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> y<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span> <span style="color:#75715e">// has cycle
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> uf<span style="color:#f92672">.</span><span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span></code></pre></div>
               
             </div>
           </div>

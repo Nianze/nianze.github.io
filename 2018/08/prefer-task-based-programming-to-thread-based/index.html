@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.
-">
+<meta name="description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.">
 
 
-<meta property="og:description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.
-">
+<meta property="og:description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based">
 <meta name="twitter:title" content="[EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based">
 <meta property="og:url" content="https://nianze.tk/2018/08/prefer-task-based-programming-to-thread-based/">
 <meta property="twitter:url" content="https://nianze.tk/2018/08/prefer-task-based-programming-to-thread-based/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.
-">
-<meta name="twitter:description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.
-">
+<meta property="og:description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.">
+<meta name="twitter:description" content="Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via std::async with the default launch policy handles most of the issues for us.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via <code>std::async</code> with the default launch policy handles most of the issues for us.
-</p>
+              <p>Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via <code>std::async</code> with the default launch policy handles most of the issues for us.</p>
 
 <p>In concurrent C++ software, there are three meansings for <em>threads</em>:</p>
 
@@ -398,11 +396,9 @@ Suffering is optional.</p>
 </ol>
 
 <p>Since software threads are a limited resource, a <code>std::system_error</code> exception may be thrown if we try to create more of them than the system can provide, even if the function we want to run can&rsquo;t throw:</p>
-
-<pre><code class="language-cpp">int doAsyncWork() noexcept;
-std::thread t(doAsyncWork);  // throws if no more threads are available
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">doAsyncWork</span>() <span style="color:#66d9ef">noexcept</span>;
+std<span style="color:#f92672">:</span><span style="color:#f92672">:</span><span style="color:#66d9ef">thread</span> t(doAsyncWork);  <span style="color:#75715e">// throws if no more threads are available
+</span></code></pre></div>
 <p>This limitation leads to follow-up problems we need to deal with:</p>
 
 <ol>
@@ -411,10 +407,8 @@ std::thread t(doAsyncWork);  // throws if no more threads are available
 </ol>
 
 <p>Using <code>std::async</code> free us from all these problems by dumping them on somebody else who is responsible to implement the C++ Standard Library:</p>
-
-<pre><code class="language-cpp">auto fut = std::async(doAsyncWork);
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">auto</span> fut <span style="color:#f92672">=</span> std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>async(doAsyncWork);
+</code></pre></div>
 <p>The implementer of C++ Statndard Library solves the &ldquo;out-of-threads&rdquo; problem by providing no guarantee that there will be a new software thread: it permits the OS scheduler to arrange for the specified function (<code>doAsyncWork</code>) to be run on the thread requesting <code>doAsyncWork</code>&rsquo;s result (i.e., on the thread calling <code>get</code> or <code>wait</code> on <code>fut</code>), and reasonable schedulers take advantage of that freedom if the system is oversubscribed or is out of threads. Since runtime scheduler manages the threads from all processes, it is likely to comprehend the whole picture better and be more capable to solve the load-balancing issues than we do<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>.</p>
 
 <h4 id="edge-cases">Edge Cases</h4>

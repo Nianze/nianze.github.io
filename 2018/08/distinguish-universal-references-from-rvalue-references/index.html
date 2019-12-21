@@ -7,22 +7,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="author" content="刀心の水">
 <meta name="keywords" content=", visual, music, technology">
-<meta name="description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.
-">
+<meta name="description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.">
 
 
-<meta property="og:description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.
-">
+<meta property="og:description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[EMCpp]Item-24 Distinguish Universal References From Rvalue References">
 <meta name="twitter:title" content="[EMCpp]Item-24 Distinguish Universal References From Rvalue References">
 <meta property="og:url" content="https://nianze.tk/2018/08/distinguish-universal-references-from-rvalue-references/">
 <meta property="twitter:url" content="https://nianze.tk/2018/08/distinguish-universal-references-from-rvalue-references/">
 <meta property="og:site_name" content="刀心水敲字の地方">
-<meta property="og:description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.
-">
-<meta name="twitter:description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.
-">
+<meta property="og:description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.">
+<meta name="twitter:description" content="If a function template parameter has type T&amp;&amp; for a deduced type T, or if an object is declared using auto&amp;&amp;, the parameter or object is a universal reference.">
 <meta property="og:locale" content="en-us">
 
   
@@ -96,14 +92,17 @@
 
     
       
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-71584380-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-71584380-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
 
     
@@ -386,8 +385,7 @@ Suffering is optional.</p>
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>If a function template parameter has type <code>T&amp;&amp;</code> for a deduced type <code>T</code>, or if an object is declared using <code>auto&amp;&amp;</code>, the parameter or object is a <em>universal reference</em>.
-</p>
+              <p>If a function template parameter has type <code>T&amp;&amp;</code> for a deduced type <code>T</code>, or if an object is declared using <code>auto&amp;&amp;</code>, the parameter or object is a <em>universal reference</em>.</p>
 
 <p><code>T&amp;&amp;</code> has two different meanings: one is for rvalue reference, another is for universal reference. Universal references are called &ldquo;universal&rdquo;, because they can bind to virtually <em>anything</em>:</p>
 
@@ -398,54 +396,50 @@ Suffering is optional.</p>
 </ul>
 
 <p>Universal refenrences must company with a special form (i.e., the form of &ldquo;<code>T&amp;&amp;</code>&rdquo;) after the occurrence of <em>type deduction</em>, and typically arise in two contexts: the most common case is function template parameters, while another context is <code>auto</code> declarations:</p>
-
-<pre><code class="language-cpp">template&lt;typename T&gt;
-void f(T&amp;&amp; param);  // param is a universal reference
-auto&amp;&amp; var2 = var1;  // var2 is a universal reference
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> f(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// param is a universal reference
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> var2 <span style="color:#f92672">=</span> var1;  <span style="color:#75715e">// var2 is a universal reference
+</span><span style="color:#75715e"></span>
 Widget w;
-f(w);  // lvalue passed to f; param's type is Widget&amp;, act as an lvalue ref.
-f(std::move(w));  // rvalue passed to f; param's type is Widget&amp;&amp;, act as an rvalue ref.
-</code></pre>
-
+f(w);  <span style="color:#75715e">// lvalue passed to f; param&#39;s type is Widget&amp;, act as an lvalue ref.
+</span><span style="color:#75715e"></span>f(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>move(w));  <span style="color:#75715e">// rvalue passed to f; param&#39;s type is Widget&amp;&amp;, act as an rvalue ref.
+</span></code></pre></div>
 <p>If there&rsquo;s no type deduction, or if the type deduction form is incorrect (not in form of &ldquo;T&amp;&amp;&ldquo;), then there&rsquo;s no universal references:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">f</span>(Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// no type deduction; param is an rvalue reference
+</span><span style="color:#75715e"></span>Widget<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> var1 <span style="color:#f92672">=</span> Widget(); <span style="color:#75715e">// no type deduction; param is an rvalue reference
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> f(std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>vector<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param);  <span style="color:#75715e">// not in precise form of T&amp;&amp;, param here is an rvalue ref.
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T<span style="color:#f92672">&gt;</span>
+<span style="color:#66d9ef">void</span> f(<span style="color:#66d9ef">const</span> T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> param); <span style="color:#75715e">// not in precise form of T&amp;&amp;, param here is an rvalue ref.
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> allocator<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// from C++ standards
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">vector</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">void</span> push_back(T<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> x);  <span style="color:#75715e">// no type deduction here; x is rvalue reference;
+</span><span style="color:#75715e"></span>    ...   <span style="color:#75715e">// a particular vector instantiation must have occurred prior to any call to this function
+</span><span style="color:#75715e"></span>}
 
-<pre><code class="language-cpp">void f(Widget&amp;&amp; param);  // no type deduction; param is an rvalue reference
-Widget&amp;&amp; var1 = Widget(); // no type deduction; param is an rvalue reference
+<span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">typename</span> T, <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Allocator</span> <span style="color:#f92672">=</span> allocator<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span>  <span style="color:#75715e">// from C++ standards
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">vector</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">template</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010">.</span><span style="color:#960050;background-color:#1e0010"> </span><span style="color:#a6e22e">Args</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#66d9ef">void</span> emplace_back(Args<span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... args);  <span style="color:#75715e">// universal reference! because:
+</span><span style="color:#75715e"></span>    ...  <span style="color:#75715e">// 1. in correct form of &#34;T&amp;&amp;&#34;; 2. type parameter Args must be deduced each time emplace_back is called
+</span><span style="color:#75715e"></span>}
 
-template&lt;typename T&gt;
-void f(std::vector&lt;T&gt;&amp;&amp; param);  // not in precise form of T&amp;&amp;, param here is an rvalue ref.
-
-template&lt;typename T&gt;
-void f(const T&amp;&amp; param); // not in precise form of T&amp;&amp;, param here is an rvalue ref.
-
-template&lt;typename T, class Allocator = allocator&lt;T&gt;&gt;  // from C++ standards
-class vector {
-public:
-    void push_back(T&amp;&amp; x);  // no type deduction here; x is rvalue reference;
-    ...   // a particular vector instantiation must have occurred prior to any call to this function
-}
-
-template&lt;typename T, class Allocator = allocator&lt;T&gt;&gt;  // from C++ standards
-class vector {
-public:
-    template&lt;class... Args&gt;
-    void emplace_back(Args&amp;&amp;... args);  // universal reference! because:
-    ...  // 1. in correct form of &quot;T&amp;&amp;&quot;; 2. type parameter Args must be deduced each time emplace_back is called
-}
-
-// this function can time pretty much any function execution. more information is in EMCpp item 30
-auto timeFuncInvocation =    // C++14
-    [] (auto&amp;&amp; func, auto&amp;&amp;... param)  // func is a universal reference that can be bound to any callable object, lvaue or rvalue
-    {   // param is zero or more universal references (i.e., a universal reference parameter pack) that can be bound to any number of objects of arbitrary types
-        // start timer;
-        std::forward&lt;decltype(func)&gt;(func)(  // invoke func on params
-            std::forward&lt;decltype(params)&gt;(params)...
+<span style="color:#75715e">// this function can time pretty much any function execution. more information is in EMCpp item 30
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> timeFuncInvocation <span style="color:#f92672">=</span>    <span style="color:#75715e">// C++14
+</span><span style="color:#75715e"></span>    [] (<span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> func, <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>... param)  <span style="color:#75715e">// func is a universal reference that can be bound to any callable object, lvaue or rvalue
+</span><span style="color:#75715e"></span>    {   <span style="color:#75715e">// param is zero or more universal references (i.e., a universal reference parameter pack) that can be bound to any number of objects of arbitrary types
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// start timer;
+</span><span style="color:#75715e"></span>        std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">decltype</span>(func)<span style="color:#f92672">&gt;</span>(func)(  <span style="color:#75715e">// invoke func on params
+</span><span style="color:#75715e"></span>            std<span style="color:#f92672">:</span><span style="color:#f92672">:</span>forward<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">decltype</span>(params)<span style="color:#f92672">&gt;</span>(params)...
         );
-        // stop timer and record elapsed time;
-    };
-</code></pre>
-
+        <span style="color:#75715e">// stop timer and record elapsed time;
+</span><span style="color:#75715e"></span>    };
+</code></pre></div>
 <p>In fact, the foundation of univeral references is a lie (an &ldquo;abstraction&rdquo;), with underlying truth being known as <em>reference collapsing</em> discussed in EMCpp Item 28. Distinguishing between rvalue references and universal references will help us read source code more accurately.</p>
               
             </div>
