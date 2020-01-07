@@ -1,7 +1,8 @@
 ---
 title: "Nianze (Nzo) Liu"
 date: 2017-12-23
-coverImage: /images/see.JPG
+type: "about"
+featured_image: /images/see.JPG
 showTags: false
 showPagination: false
 showSocial: false

@@ -1,9 +1,10 @@
 #!/bin/bash
+# run the following in scripts dir
 
 HOMEDIR=$(dirname $(pwd))
 IMGPATH=images/$(date +'%Y/%m/%d')
 IMGDIR=$HOMEDIR/static/$IMGPATH
-POSTDIR=$HOMEDIR/content/post/$(date +'%Y/%m')
+POSTDIR=$HOMEDIR/content/posts/$(date +'%Y/%m')
 POSTNAME=$(date +'%Y-%m-%d')-weekly.md
 POST=$POSTDIR/$POSTNAME
 
@@ -12,7 +13,7 @@ mkdir thumbnail
 find . -type f -exec cp {} ./thumbnail \;
 sips -Z 1200 thumbnail/*
 cd $HOMEDIR
-hugo new --kind weekly post/$(date +'%Y/%m')/$POSTNAME
+hugo new --kind weekly posts/$(date +'%Y/%m')/$POSTNAME
 
 d1=$(date -jf "%Y-%m-%d %H:%M" "2019-05-04 00:00" +%s)
 d2=$(date +%s)
