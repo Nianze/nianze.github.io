@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>music on Nzo&#39;s Blog</title>
+    <link>http://nianze.tk/en/tags/music/</link>
+    <description>Recent content in music on Nzo&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>daoxinzhishui@gmail.com (刀心水)</managingEditor>
+    <webMaster>daoxinzhishui@gmail.com (刀心水)</webMaster>
+    <copyright>©{year}, All Rights Reserved</copyright>
+    <lastBuildDate>Sun, 16 Dec 2018 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="http://nianze.tk/en/tags/music/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+      
+      <item>
+        <title>Trade Beats</title>
+        <link>http://nianze.tk/en/posts/2018/12/use-trading-market-data-to-create-beat-sounds/</link>
+        <pubDate>Sun, 16 Dec 2018 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2018/12/use-trading-market-data-to-create-beat-sounds/</guid>
+        <description>&lt;p&gt;What would it sound like if trading market data speaks?&lt;/p&gt;
+&lt;h1 id=&#34;a-little-background&#34;&gt;A little background&lt;/h1&gt;
+&lt;p&gt;This little project tries to do one thing for fun: to transform the trading market history data into some sords of sound.&lt;/p&gt;
+&lt;p&gt;The techniques involve some basic use of web audio API and D3.js. All the ticker names are collected from &lt;a href=&#34;https://dumbstockapi.com/&#34;&gt;dumb stock api&lt;/a&gt;, while all the trading history data comes from &lt;a href=&#34;https://www.alphavantage.co/&#34;&gt;ALPHA VANTAGE&lt;/a&gt;. Since support for web audio API is different by different browsers, it is highly suggested to try this demo with Chrome.&lt;/p&gt;
+&lt;div&gt;
+    &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;http://nianze.tk/css/trading-audio/techan.css&#34; /&gt;
+    &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;http://nianze.tk/css/trading-audio/awesomplete.css&#34; /&gt;
+    &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;http://nianze.tk/css/trading-audio/style.css&#34; /&gt;
+    &lt;link rel=&#34;stylesheet&#34; href=&#34;https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css&#34;&gt;
+    &lt;script src=&#34;http://d3js.org/d3.v4.min.js&#34;&gt;&lt;/script&gt;
+    &lt;script src=&#34;http://nianze.tk/js/trading-audio/techan.min.js&#34;&gt;&lt;/script&gt;
+    &lt;script src=&#34;http://nianze.tk/js/trading-audio/awesomplete.min.js&#34;&gt;&lt;/script&gt;
+    &lt;script src=&#34;http://nianze.tk/js/trading-audio/main.js&#34; type=&#34;module&#34;&gt;&lt;/script&gt;
+    &lt;div&gt;-&lt;/div&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;section id=&#34;combobox&#34;&gt;
+            &lt;label id=&#34;exchange-combobox&#34;&gt;
+                &lt;input id=&#34;exchange-input&#34; placeholder=&#34;Select an exchange&#34; class=&#34;dropdown-input&#34; /&gt;
+                &lt;button id=&#34;exchange-btn&#34; class=&#34;dropdown-btn&#34; type=&#34;button&#34;&gt;&lt;span class=&#34;caret&#34;&gt;&lt;/span&gt;&lt;/button&gt;
+            &lt;/label&gt;
+            &lt;label id=&#34;ticker-combobox&#34;&gt;
+                &lt;input id=&#34;ticker-input&#34; placeholder=&#34;Enter a ticker name&#34; class=&#34;dropdown-input&#34; /&gt;
+                &lt;button id=&#34;ticker-btn&#34; class=&#34;dropdown-btn&#34; type=&#34;button&#34;&gt;&lt;span class=&#34;caret&#34;&gt;&lt;/span&gt;&lt;/button&gt;
+            &lt;/label&gt;
+            &lt;button id=&#34;togglePlay&#34; hidden&gt;&lt;i class=&#34;fa fa-play&#34;&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/section&gt;
+&lt;div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Feel free to choose any company interesting to you by typing/selecting corresponding stock exchange name as well as company security ticker (e.g.: NASDAQ for exchange and FB as ticker to listen to how Facebook sounds like.)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div id=&#34;demo&#34;&gt;
+    &lt;div id=&#34;chart&#34; hidden&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;Currently the mapping from market data to sound is naive:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Each beat stands for one day of the security price in the past, ordered by the security&#39;s trading history.&lt;/li&gt;
+&lt;li&gt;Sound frequency: the higher the daily close price, the higher the frequency.&lt;/li&gt;
+&lt;li&gt;Waveform: if the daily open price is lower than close price, a beat of triangle wave sound is generated, otherwise the sine wave.&lt;/li&gt;
+&lt;li&gt;Duration between each two beats are determined by the earlier day&#39;s market volume: larger market volume comes with shorter duration.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Apart from the chart for market data, each beat is also visualized to show their waveform and frequency domain distribution.&lt;/p&gt;
+&lt;div id=&#34;demo&#34;&gt;
+    &lt;canvas id=&#34;proceduralCanvas&#34; hidden&gt;&lt;/canvas&gt;
+&lt;/div&gt;
+&lt;p&gt;Of course, listening to only one security ticker at a time isn&#39;t that much fun. Some good way to extend this project might be to map multiple securities into different sounds, and play them simultaneously, in the hope of creating some sort of &amp;ldquo;symphony&amp;rdquo;.&lt;/p&gt;</description>
+      </item>
+      
+      <item>
+        <title>A simple archive for music generation</title>
+        <link>http://nianze.tk/en/notes/2018/05/music-generation-archive/</link>
+        <pubDate>Thu, 31 May 2018 16:07:41 -0400</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/notes/2018/05/music-generation-archive/</guid>
+        <description>&lt;p&gt;A random collection of recent works on music generation.&lt;/p&gt;
+&lt;!-- toc --&gt;
+&lt;h1 id=&#34;papers&#34;&gt;Papers&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Melody Generation for Pop Music via Word Representation of Musical Properties&lt;/strong&gt; (2017.10) [&lt;a href=&#34;https://arxiv.org/abs/1710.11549&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/mil-tokyo/NeuralMelody&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Generating Nontrivial Melodies for Music as a Service&lt;/strong&gt; (2017.10) [&lt;a href=&#34;https://arxiv.org/abs/1710.02280&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://composing.ai&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MuseGAN: Symbolic-domain Music Generation and Accompaniment with Multi-track Sequential Generative Adversarial Networks&lt;/strong&gt; (2017.9) [&lt;a href=&#34;https://arxiv.org/abs/1709.06298&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://salu133445.github.io/musegan/&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Similarity Embedding Network for Unsupervised Sequential Pattern Learning by Playing Music Puzzle Games&lt;/strong&gt; （2017.9）[&lt;a href=&#34;https://arxiv.org/abs/1709.04384&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://remyhuang.github.io/DJnet&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A Tutorial on Deep Learning for Music Information Retrieval&lt;/strong&gt; (2017.9) [&lt;a href=&#34;https://arxiv.org/abs/1709.04396&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Deep Learning Techniques for Music Generation - A Survey&lt;/strong&gt; (2017.9) [&lt;a href=&#34;https://arxiv.org/abs/1709.01620&#34;&gt;arXiv&lt;/a&gt;] (论文综述)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Neural Translation of Musical Style&lt;/strong&gt; (2017.8) [&lt;a href=&#34;https://arxiv.org/abs/1708.03535&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;http://imanmalik.com/cs/2017/06/05/neural-style.html&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GLSR-VAE: Geodesic Latent Space Regularization for Variational AutoEncoder Architectures&lt;/strong&gt; (2017.7) [&lt;a href=&#34;https://arxiv.org/abs/1707.04588&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Learning and Evaluating Musical Features with Deep Autoencoders&lt;/strong&gt; (2017.6) [&lt;a href=&#34;https://arxiv.org/abs/1706.04486&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Objective-Reinforced Generative Adversarial Networks (ORGAN) for Sequence Generation Models&lt;/strong&gt; (2017.5) [&lt;a href=&#34;https://arxiv.org/abs/1705.10843&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/gablg1/ORGAN&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MidiNet: A Convolutional Generative Adversarial Network for Symbolic-domain Music Generation using 1D and 2D Conditions&lt;/strong&gt; - &lt;strong&gt;ISMIR 2017&lt;/strong&gt; (2017.3) [&lt;a href=&#34;https://arxiv.org/abs/1703.10847&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://richardyang40148.github.io/TheBlog/midinet_arxiv_demo.html&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Automatic Conversion of Pop Music into Chiptunes for 8-bit Pixel Art&lt;/strong&gt; - &lt;strong&gt;ICASSP 2017&lt;/strong&gt; (2017.2) [&lt;a href=&#34;http://mac.citi.sinica.edu.tw/~yang/pub/su17icassp_8bit.pdf&#34;&gt;Paper&lt;/a&gt;] [&lt;a href=&#34;https://github.com/LemonATsu/pop-to-8bit&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;https://lemonatsu.github.io&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DeepBach: a Steerable Model for Bach Chorales Generation&lt;/strong&gt; (2016.12) [&lt;a href=&#34;https://arxiv.org/abs/1612.01010&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/Ghadjeres/DeepBach&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;C-RNN-GAN: Continuous Recurrent Neural Networks with Adversarial Training&lt;/strong&gt; (2016.11) [&lt;a href=&#34;https://arxiv.org/abs/1611.09904&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/olofmogren/c-rnn-gan&#34;&gt;Code&lt;/a&gt;] 🌟&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tuning Recurrent Neural Networks with Reinforcement Learning - ICLR 2017&lt;/strong&gt; (2016.11) [&lt;a href=&#34;https://arxiv.org/abs/1611.02796&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://magenta.tensorflow.org/2016/11/09/tuning-recurrent-networks-with-reinforcement-learning&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/tensorflow/magenta/tree/master/magenta/models/rl_tuner&#34;&gt;Code&lt;/a&gt;] 🌟&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient&lt;/strong&gt; - &lt;strong&gt;AAAI 2017&lt;/strong&gt; (2016.9) [&lt;a href=&#34;http://www.aaai.org/ocs/index.php/AAAI/AAAI17/paper/download/14344/14489&#34;&gt;Paper&lt;/a&gt;] [&lt;a href=&#34;https://github.com/LantaoYu/SeqGAN&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Song From PI: A Musically Plausible Network for Pop Music Generation&lt;/strong&gt; - &lt;strong&gt;ICLR 2017&lt;/strong&gt; [&lt;a href=&#34;https://arxiv.org/abs/1611.03477&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;http://www.theregister.co.uk/2016/11/11/ai_pop_music_maker/&#34;&gt;Reports&lt;/a&gt;]🌟&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Text-based LSTM networks for Automatic Music Composition&lt;/strong&gt; (2016.4) [&lt;a href=&#34;https://arxiv.org/abs/1604.05358#&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://keunwoochoi.wordpress.com/2016/02/23/lstmetallica/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/keunwoochoi/LSTMetallica&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Music Transcription Modelling and Composition Using Deep Learning&lt;/strong&gt; (2016.4) [&lt;a href=&#34;https://arxiv.org/abs/1604.08723&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/IraKorshunova/folk-rnn&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Composing A Melody with Long-short Term Memory (LSTM) Recurrent Neural Networks&lt;/strong&gt; (2016.2) [&lt;a href=&#34;http://konstilackner.github.io/LSTM-RNN-Melody-Composer-Website/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/konstilackner/LSTM-RNN-Melody-Composer&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;http://konstilackner.github.io/LSTM-RNN-Melody-Composer-Website/Thesis_final01.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Neural Adaptive Sequential Monte Carlo - NIPS 2015&lt;/strong&gt; (2015) [&lt;a href=&#34;http://papers.nips.cc/paper/5961-neural-adaptive-sequential-monte-carlo.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A Recurrent Latent Variable Model for Sequential Data - NIPS 2015&lt;/strong&gt; (2015) [&lt;a href=&#34;http://papers.nips.cc/paper/5653-a-recurrent-latent-variable-model-for-sequential-data.pdf&#34;&gt;Paper&lt;/a&gt;] [&lt;a href=&#34;https://github.com/jych/nips2015_vrnn&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI Methods in Algorithmic Composition: A Comprehensive Survey&lt;/strong&gt; (2013) [&lt;a href=&#34;http://www.jair.org/media/3908/live-3908-7454-jair.pdf&#34;&gt;Paper&lt;/a&gt;] 🌟&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Modeling Temporal Dependencies in High-dimensional Sequences: Application to Polyphonic Music Generation and Transcription&lt;/strong&gt; (2012) [&lt;a href=&#34;https://arxiv.org/abs/1206.6392&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Towards Adaptive Music Generation By Reinforcement Learning of Musical Tension&lt;/strong&gt; (2010) [&lt;a href=&#34;https://ccrma.stanford.edu/~slegroux/affect/pubs/SMC2010.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A First Look at Music Composition using LSTM Recurrent Neural Networks&lt;/strong&gt; (2002) [&lt;a href=&#34;http://www.iro.umontreal.ca/~eckdoug/blues/index.html&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;http://www.iro.umontreal.ca/~eckdoug/blues/IDSIA-07-02.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;projects&#34;&gt;Projects&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Google Magenta&lt;/strong&gt; [&lt;a href=&#34;https://magenta.tensorflow.org/welcome-to-magenta&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/tensorflow/magenta&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Deep Jazz&lt;/strong&gt;  [&lt;a href=&#34;https://deepjazz.io/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://deepjazz.io/&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BachBot&lt;/strong&gt; [&lt;a href=&#34;http://bachbot.com/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/feynmanliang/bachbot/&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;WaveNet&lt;/strong&gt; [&lt;a href=&#34;https://deepmind.com/blog/wavenet-generative-model-raw-audio/&#34;&gt;Web&lt;/a&gt;][&lt;a href=&#34;https://github.com/ibab/tensorflow-wavenet&#34;&gt;Code&lt;/a&gt;] (not fully)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GRUV&lt;/strong&gt; [&lt;a href=&#34;https://github.com/MattVitelli/GRUV&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Kulitta&lt;/strong&gt; [&lt;a href=&#34;https://github.com/donya/Kulitta&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;applications&#34;&gt;Applications&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;AIVA&lt;/strong&gt;[&lt;a href=&#34;http://aiva.ai&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Google A.I. Duet&lt;/strong&gt; [&lt;a href=&#34;https://aiexperiments.withgoogle.com/ai-duet&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;The Infinite Drum Machine&lt;/strong&gt; [&lt;a href=&#34;https://aiexperiments.withgoogle.com/drum-machine&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Amper Music&lt;/strong&gt; [&lt;a href=&#34;https://www.ampermusic.com/app#/&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Intelligent Music System&lt;/strong&gt; [&lt;a href=&#34;http://120.52.72.53/www.intelligentmusicsystems.com/c3pr90ntc0td/vid/tempo_shifting.mp4&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Unwind&lt;/strong&gt; [&lt;a href=&#34;http://unwind.ai&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tidalcycles&lt;/strong&gt; [&lt;a href=&#34;https://tidalcycles.org&#34;&gt;Link&lt;/a&gt;] [&lt;a href=&#34;https://www.youtube.com/watch?v=xoa3OT8ncX0&#34;&gt;Video&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Jukedeck&lt;/strong&gt; [&lt;a href=&#34;https://www.jukedeck.com/&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;conferencesworkshops&#34;&gt;Conferences&amp;amp;Workshops&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ACM MM&lt;/strong&gt; - ACM MultiMedia [&lt;a href=&#34;http://www.acmmm.org/2017&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ISMIR&lt;/strong&gt; - The International Society of Music Information Retrieval [&lt;a href=&#34;http://www.ismir.net/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ICASSP&lt;/strong&gt; - Conference on Acoustics, Speech and Signal Processing [&lt;a href=&#34;http://www.ieee-icassp2017.org/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DLM&lt;/strong&gt; - Deep Learning for Music Workshop [&lt;a href=&#34;http://dorienherremans.com/dlm2017/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CSMC&lt;/strong&gt; - Conference on Computer Simulation of Musical  Creativity [&lt;a href=&#34;https://csmc2016.wordpress.com/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CCRMA&lt;/strong&gt; - Center for Computer Research in Music and Acoustics (Stanford University) [&lt;a href=&#34;https://ccrma.stanford.edu/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ICMC&lt;/strong&gt; - Internatonal Computer Music Conference [&lt;a href=&#34;http://www.icmc2017.com/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;http://www.icmc2017.com/cn/page1.html&#34;&gt;Lists&lt;/a&gt;]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;blogs&#34;&gt;Blogs&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Neural Nets for Generating Music&lt;/strong&gt; [&lt;a href=&#34;https://medium.com/@kcimc/neural-nets-for-generating-music-f46dffac21c0&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Generative Music with JavaScript &amp;amp; Web Audio&lt;/strong&gt; [&lt;a href=&#34;https://teropa.info/generative-music-slides/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;The Current State Of AI: Artificial Intelligence In Music, Movies &amp;amp; More&lt;/strong&gt; (2017.7) [&lt;a href=&#34;http://www.hypebot.com/hypebot/2017/07/ai-today-the-current-state-of-artificial-intelligence.html&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Composing Music With Recurrent Neural Networks&lt;/strong&gt; (2015.8) [&lt;a href=&#34;http://www.hexahedria.com/2015/08/03/composing-music-with-recurrent-neural-networks/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/hexahedria/biaxial-rnn-music-composition&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Analyzing deep learning tools for music generation&lt;/strong&gt; [&lt;a href=&#34;http://www.asimovinstitute.org/analyzing-deep-learning-tools-music/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;COORD&lt;/strong&gt; [&lt;a href=&#34;http://www.coord.fm/home/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;How evolved LSTMS improvise on a melogy you specify&lt;/strong&gt;[&lt;a href=&#34;https://www.sentient.ai/sentient-labs/ea/lstm-music/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI makes pop music in the style of any composer&lt;/strong&gt;[&lt;a href=&#34;http://www.flow-machines.com/ai-makes-pop-music/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Richard Yang&#39;s Blog&lt;/strong&gt;[&lt;a href=&#34;https://richardyang40148.github.io/TheBlog/index.html&#34;&gt;Blog&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Thousands of bird sounds visualized using machine learning&lt;/strong&gt;[&lt;a href=&#34;https://experiments.withgoogle.com/bird-sounds&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Music AI: Loop-in-the-Human&lt;/strong&gt;[&lt;a href=&#34;https://medium.com/@jayhardesty/music-ai-loop-in-the-human-1a15681e573e&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
+&lt;/ul&gt;</description>
+      </item>
+      
+      <item>
+        <title>一个大坑</title>
+        <link>http://nianze.tk/en/posts/2018/04/a-big-step/</link>
+        <pubDate>Wed, 25 Apr 2018 21:44:06 -0400</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2018/04/a-big-step/</guid>
+        <description>&lt;p&gt;我有一个大胆的想法。&lt;/p&gt;
+&lt;p&gt;之前跟组里印度裔小哥闲聊，聊到过自己想用midi结合AI做些有趣的项目。今天他给我发来一个&lt;a href=&#34;https://richardyang40148.github.io/TheBlog/&#34;&gt;链接&lt;/a&gt;，我看了下博主的&lt;a href=&#34;https://richardyang40148.github.io/&#34;&gt;经历&lt;/a&gt;，突然有了一个大胆的想法。&lt;/p&gt;
+&lt;p&gt;其实之前也一直有过类似的想法，那就是如果能找到合适的项目，我是很愿意全心投入到这个项目中去的。最近也就是业余时间练练琴的时候会有这种激情的感觉，所以也一直在考虑怎么样才能把自己的激情全部调动出来。这也是一直以来我想结合音乐和AI来搞点创作的原因。毕竟感觉会很有趣。&lt;/p&gt;
+&lt;p&gt;所以，当我看了博主小哥发表的几篇论文后，我突然意识到，其实读个phd，有大把时间全力投入到自己喜欢的事情中去，会是件很令人激动的事情。&lt;/p&gt;
+&lt;p&gt;于是马上开始了搜索，发现除了小哥所在的Georgia Tech有相关学院，近在咫尺的NYU恰恰就有一个Music Technology的项目。而且里面的硕士和博士项目都恰恰是自己很感兴趣的内容。&lt;/p&gt;
+&lt;p&gt;硕士项目以授课为主，会学习很多我感兴趣的课题，但和继续工作相比不太好权衡利弊，毕竟已经有了一个ECE的硕士学位了，那些课程里面的内容我用课余时间自学其实也是可行的；但如果我能申请到phd的项目，还是很值得考虑的。全力投入自己的研究，结合AI和音乐，是很值得探索一番的事业。&lt;/p&gt;
+&lt;p&gt;看了下申请要求。别的基本问题不大，尤其是有工作经验并已经身处技术领域，某种程度可能都over qualified了。问题还是在于学术背景太薄弱。申请的时候需要交3篇writing sample。申请截止日期是在12月份。时间很紧。需要补的很多。&lt;/p&gt;
+&lt;p&gt;考虑到本来自己也有做相关小项目的想法，那么不妨就以写出三篇论文为目标，争取赶在申请截止日前做出点小成果。当然最近也可以开始reach out，问问看相关学院有没有旁听的课程或者part-time的项目，先跟NYU相关负责人打好交道吧。&lt;/p&gt;</description>
+      </item>
+      
+      <item>
+        <title>[米津玄师]Lemon</title>
+        <link>http://nianze.tk/en/posts/2018/04/lemon/</link>
+        <pubDate>Sun, 22 Apr 2018 14:10:15 -0400</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2018/04/lemon/</guid>
+        <description>&lt;p&gt;Unnatural里每次片尾曲神插入时都让人心头一颤。。。不愧是除了生孩子什么都会的ハチ&lt;br /&gt;
+谨以此曲献给米津玄師。嗯，以及石原里美🙂&lt;/p&gt;
+&lt;p&gt;这次算是目前乐器练习方面的一个小小总结吧。之前一直想过把平时练习的钢琴和吉他给利用起来，正巧发现这次这首《Lemon》的伴奏不难，加上每次看到Unnatural的片尾都会被感动，所以就化感动为动力，努力做出了这次的cover。由于吉他和launchpad都是第一次录音，所以在准备的时候踩了不少坑，相信以后再cover别的曲目应该会更从容些。&lt;/p&gt;
+&lt;p&gt;即便是很简单的伴奏旋律和钢琴和声，我依然练了好久。电吉他按弦还稍显生疏，有时候还是按不准或者消音不干净；钢琴识谱依然还很慢。以后应该多在这些方面加强练习。另外这次重新捡起了好久没玩过的launchpad，发现用好了ableton可以实现之前一直想尝试的一些偏电子的曲风。所以以后有时间也可以多花些功夫在ableton上面。&lt;/p&gt;
+&lt;p&gt;主旋律方面，这次加入了很多颤音vibrato来尽量模仿原曲中人声的感觉。然后就发现，一旦注意力在颤音上，吐音基本就没精力控制了。中间有一个音还试了一下喉音，不过效果一般般吧。另外一点就是，我发现目前的音色还有待提高，低音部分发声有点扁，没有木头的那种厚重感。反而是在剪辑视频的时候感觉吉他的声音更出彩些。哎，所以吉他这么受欢迎果然是有道理的。弦乐在很多时候的表现力确实是强些的。这可能也是为什么，3天前的那个深夜，我处理完主旋律的音频后，一个冲动就在reverb上下单买了个二手soprano sax。现代流行曲目还是多些金属质感的音色会更合适。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;iframe src=&#34;//player.bilibili.com/player.html?aid=22439655&amp;cid=37181204&amp;page=1&#34; scrolling=&#34;no&#34; height=&#34;415&#34; width=&#34;544&#34; border=&#34;0&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34;&gt; &lt;/iframe&gt;</description>
+      </item>
+      
+      <item>
+        <title>Vocaloid调教初始：空奏列车</title>
+        <link>http://nianze.tk/en/posts/2018/04/kuusou-ressha/</link>
+        <pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2018/04/kuusou-ressha/</guid>
+        <description>&lt;p&gt;首次尝试调教星尘。&lt;/p&gt;
+&lt;p&gt;一直想试下作些流行曲玩玩，所以就选了蜜柑星的这首空奏列车试了下。 发现果然调教是挺麻烦的事情，很多细节需要仔细去抠，而且网上的相关讨论资源比较杂，会有很多坑需要自己去踩了才知道。再加上Vocaloid editor没有原生mac版本，和DAW交互也不太方便。&lt;/p&gt;
+&lt;p&gt;看到有帖子介绍说piapro studio插件可以跟logic pro联动，但是几经尝试没有发现可以成功安装的版本（目前只是纯玩玩还不太想买正版），所以只好先用Wine移植版本的Vocaloid4 editor凑合用了。&lt;/p&gt;
+&lt;p&gt;本次除了尝试调教，也尝试了下作词翻译。大体上是按照原歌词的意思在编，不过也加入了一些自己的想法。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;iframe src=&#34;//player.bilibili.com/player.html?aid=21509629&amp;cid=35407666&amp;page=1&#34; scrolling=&#34;no&#34; border=&#34;0&#34; height=&#34;415&#34; width=&#34;544&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34;&gt; &lt;/iframe&gt;
+&lt;pre&gt;&lt;code&gt;海上 黎明 地平线
+风平浪静
+
+来吧 向前直线穿越
+这变幻莫测的未来
+
+昨天今天明天
+该怀揣怎样心愿
+才不忘曾经伤感
+心中惴惴不安
+
+世上一切早已有了定数 
+总是在 疲于应付
+就像 永不停止向前 的世界航班
+从不等人闲
+逾时离站
+
+然而此刻依然向明天急赶
+定能通向梦终点站
+开始奔走 就无法停止向前
+恍惚间回现 空奏和弦
+
+不只今天全力冲线
+明天后天就是今天
+心中所想未来画面
+越来越清晰可见
+
+回首过去那些冒险
+至今为止的暧昧伤感
+再也不能哭泣离线 
+是时候告别说再见
+
+不存在唯一答案
+弹奏出来吧啊 
+属于自己的和弦
+每个不曾翩翩起舞的瞬间
+都是对生命辜负誓言
+
+明日之空已展现
+化成风吧 吹向那地平线另一边
+曾经祈愿 的那个夏天海边 扬帆出航前
+再续前缘 
+
+化成风吧 我的歌声 yeah... wow...
+如此坚持 我就是我 别样的歌 不一样的颜色
+
+心中幻境 如此渴望 yeah... wow...
+终点站的倒计时针 也逐渐来到 最后的时刻
+
+世上一切早已有了定数
+总是在 疲于应付
+就像 这不停向前的 时代列车般
+从不等人闲
+逾时离站
+
+然而此刻依然要向明天急赶
+定能通向梦终点站
+开始奔走 就无法停止向前
+恍惚间回现 空奏和弦
+&lt;/code&gt;&lt;/pre&gt;</description>
+      </item>
+      
+      <item>
+        <title>紫羅蘭永恆花園</title>
+        <link>http://nianze.tk/en/posts/2018/01/violet-snow/</link>
+        <pubDate>Sun, 21 Jan 2018 23:25:09 -0500</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2018/01/violet-snow/</guid>
+        <description>&lt;p&gt;想いを綴る、愛を知るために。&lt;/p&gt;
+&lt;p&gt;感情を持たない一人の少女がいた。&lt;/p&gt;
+&lt;p&gt;彼女の名は、ヴァイオレット・エヴァーガーデン。&lt;/p&gt;
+&lt;p&gt;戦火の中で、大切な人から告げられた言葉の意味を探している。&lt;/p&gt;
+&lt;p&gt;戦争が終わり、彼女が出会った仕事は誰かの想いを言葉にして届けること。&lt;/p&gt;
+&lt;p&gt;――戦争で生き延びた、たった一人の兄弟への手紙&lt;br /&gt;
+――都会で働き始めた娘から故郷の両親への手紙&lt;br /&gt;
+――飾らないありのままの恋心をつづった手紙&lt;br /&gt;
+――去りゆく者から残される者への最期の手紙&lt;/p&gt;
+&lt;p&gt;手紙に込められたいくつもの想いは、ヴァイオレットの心に愛を刻んでいく。&lt;/p&gt;
+&lt;p&gt;これは、感情を持たない一人の少女が愛を知るまでの物語。&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/QLvFbf-3Q8A&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;P.S.:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;拍完才发现糊焦了，明明选的对焦点在手办的脸上，实际焦平面却大概在钢琴的C1键位置，宾得的对焦和视频真是无力吐槽，真该灭门上大法。。。不过好在反正也没啥可看的，就这样了吧。&lt;/li&gt;
+&lt;li&gt;这次尝试用了Logic Pro来录制音轨和简单后期，耽误了不少时间，不过基本熟悉了现在新的工作流程，之后录制起来应该会比之前用录音笔的方案方便不少。&lt;/li&gt;
+&lt;li&gt;这次加入了哨笛收尾，感觉空灵的音色跟单簧管丝绸质感的音质还挺互补的，算是个不错的尝试吧。&lt;/li&gt;
+&lt;/ol&gt;</description>
+      </item>
+      
+      <item>
+        <title>Coco(寻梦环游记)随想</title>
+        <link>http://nianze.tk/en/posts/2018/01/coco/</link>
+        <pubDate>Wed, 03 Jan 2018 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2018/01/coco/</guid>
+        <description>&lt;p&gt;观看Coco之后的一些随想。&lt;/p&gt;
+&lt;p&gt;昨晚在纽约看了去年底就在国内引起热议的Pixar新动画 &lt;em&gt;Coco&lt;/em&gt; 。外面天气很冻人，里面电影很动人。&lt;/p&gt;
+&lt;p&gt;虽然不至于哭出来，但是能理解为什么很多人看完会想哭了。可能是因为被影片勾起了已故至亲的温暖回忆；可能是因为被主人公Miguel执着追求梦想的勇气打动心里充满了&amp;quot;seize the moment&amp;quot;的正能量；可能是心中还残留着些许被那根名为“为你着想”的“爱”的绳索束缚的痕迹所以自然代入了片中Miguel的叛逆行为；可能是因为最后Happy Ending的相互谅解大团圆结局让观众在那个瞬间有了宽恕一切的温暖仁慈；就算内心麻木不仁，可能全片动听的音乐，流畅的节奏和绚丽的画面也足够过把眼瘾值回票价了。不论能不能拿奥斯卡最佳动画奖，该片肯定是完成度很高的佳作无疑。&lt;/p&gt;
+&lt;p&gt;片中对于死后世界的设定取材自墨西哥的传统节日亡灵节。我理解的片中对死后世界的构想是源于生者为了安慰在世时的灵魂所虚构的一种传统，考究这份传统的起源和发展将会是件很有趣的事情。虽然并不相信这份虚构的传统，但不得不承认，不管是否有死后需要依靠在世者的记忆才能存在的虚构世界，对活着的人来说，有亲人支持的现世生活总是比独行的世界更有温度的。每天放学下班回家，与家人互动会是件很让人感到有安全感的事情，如此一来平日里学习工作的劳累也会在互动中被稀释很多吧。只是任何事情都有两面，在享受亲情的热度带来的温暖的同时，也得掌握好这份温度的微妙距离和火候，否则就会被烫到了——Miguel自制的琴被Grandma砸了的时候我是真心疼，也就很能够理解他出走时的心情了。本片能在中国引起这么多共鸣和热议，我相信中国传统中相似的家庭观念是很重要的一个因素，&lt;a href=&#34;https://www.zhihu.com/question/57177072&#34;&gt;知乎&lt;/a&gt;上也有很多对此相关的讨论了。&lt;/p&gt;
+&lt;figure &gt;
+  
+    
+    &lt;img data-src=&#34;http://nianze.tk/images/2018/2018-01/2018-01-03/festival.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:xlink=&#39;http://www.w3.org/1999/xlink&#39; width=&#39;24pt&#39; height=&#39;24pt&#39; viewBox=&#39;0 0 24 24&#39; version=&#39;1.1&#39;%3E%3Cg id=&#39;surface1035795&#39;%3E%3Cpath style=&#39; stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;&#39; d=&#39;M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 &#39;/%3E%3C/g%3E%3C/svg%3E%0A&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
+    
+  
+  &lt;figcaption&gt;
+    &lt;strong&gt;墨西哥亡灵节&lt;/strong&gt;:
+    
+  &lt;/figcaption&gt;
+  
+&lt;/figure&gt;
+&lt;p&gt;回归本片，&lt;em&gt;Coco&lt;/em&gt; 以一种豁达的角度阐述了墨西哥传统文化对于死亡的理解。这其实是个蛮沉重的话题，稍加深入便进入到虚无主义的领域了。对于人生，结合最近纽约冻人的天气，我可以大致做这么一个比喻吧：人生是一场残酷的跋涉，每个人都在名为孤独的寒风中被时间裹挟着走向死亡。如果希望旅途中不被这寒风冻死，那么眼下有至少两种解决方案：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;和人抱团靠理解与默契贴近心与心的距离来相互取暖&lt;/li&gt;
+&lt;li&gt;不停脚步靠信念与追求磨砺肉与灵的强度来自我发热&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;作为一个“耐寒”的人，目前相比起掌握火候的技巧，我会将磨砺自己的优先级靠前，在自由状态下追求自己想做的事。我同意温暖的人生是值得追求的，但还不会加入抱团取暖后被篝火吸引决定驻足的人群；愈发习惯了寒风的凌冽，现在便只想着远方的征途。但我倒确实是佩服那些拥有足够的精力，能够在不停前进的同时，还温暖他人，既享受温度，又可以不被火焰烫伤的人；而那些偶然中巧遇小伙伴一起前往相同目的地的幸运者就更加值得祝福了。&lt;/p&gt;
+&lt;p&gt;当片中开创家族鞋业的曾祖母在亡灵国度的聚光灯中重新开嗓，体会了久违的作为歌手时自己的追求与荣光，想起自己跟曾祖父一起合唱的岁月，又想起自己为了忘记曾祖父的离别，独自一人抚养 &lt;em&gt;Coco&lt;/em&gt; 长大而不得不作出抉择放弃歌唱的事业，她是否因此感到了一丝惋惜，才在最后宽恕了没能回家的曾祖父，并在手执花瓣时决定不再添加任何条件的献上自己的祝福呢？&lt;/p&gt;
+&lt;figure &gt;
+  
+    
+    &lt;img data-src=&#34;http://nianze.tk/images/2018/2018-01/2018-01-03/flower.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:xlink=&#39;http://www.w3.org/1999/xlink&#39; width=&#39;24pt&#39; height=&#39;24pt&#39; viewBox=&#39;0 0 24 24&#39; version=&#39;1.1&#39;%3E%3Cg id=&#39;surface1035795&#39;%3E%3Cpath style=&#39; stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;&#39; d=&#39;M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 &#39;/%3E%3C/g%3E%3C/svg%3E%0A&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
+    
+  
+&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;P.S.:片头的预告有对称狂魔 &lt;a href=&#34;https://en.wikipedia.org/wiki/Wes_Anderson&#34;&gt;Wes Anderson&lt;/a&gt; 的新片 &lt;a href=&#34;https://en.wikipedia.org/wiki/Isle_of_Dogs_(film)&#34;&gt;Isle of Dogs&lt;/a&gt;,看的第一眼就让我想到了&lt;a href=&#34;https://en.wikipedia.org/wiki/Fantastic_Mr._Fox_(film)&#34;&gt;Fantastic Mr.Fox(了不起的狐狸爸爸)&lt;/a&gt;。他也导演了另一部包揽2014年奥斯卡四项大奖的作品 &lt;a href=&#34;https://en.wikipedia.org/wiki/The_Grand_Budapest_Hotel&#34;&gt;The Grand Budapest Hotel(布达佩斯大饭店)&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;figure &gt;
+  
+    
+    &lt;img data-src=&#34;http://nianze.tk/images/2018/2018-01/2018-01-03/dog.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:xlink=&#39;http://www.w3.org/1999/xlink&#39; width=&#39;24pt&#39; height=&#39;24pt&#39; viewBox=&#39;0 0 24 24&#39; version=&#39;1.1&#39;%3E%3Cg id=&#39;surface1035795&#39;%3E%3Cpath style=&#39; stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;&#39; d=&#39;M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 &#39;/%3E%3C/g%3E%3C/svg%3E%0A&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
+    
+  
+  &lt;figcaption&gt;
+    &lt;strong&gt;Isle of Dogs&lt;/strong&gt;:
+    
+  &lt;/figcaption&gt;
+  
+&lt;/figure&gt;&lt;br /&gt;
+&lt;figure &gt;
+  
+    
+    &lt;img data-src=&#34;http://nianze.tk/images/2018/2018-01/2018-01-03/fox.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:xlink=&#39;http://www.w3.org/1999/xlink&#39; width=&#39;24pt&#39; height=&#39;24pt&#39; viewBox=&#39;0 0 24 24&#39; version=&#39;1.1&#39;%3E%3Cg id=&#39;surface1035795&#39;%3E%3Cpath style=&#39; stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;&#39; d=&#39;M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 &#39;/%3E%3C/g%3E%3C/svg%3E%0A&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
+    
+  
+  &lt;figcaption&gt;
+    &lt;strong&gt;Fantastic Mr.Fox&lt;/strong&gt;:
+    
+  &lt;/figcaption&gt;
+  
+&lt;/figure&gt;&lt;br /&gt;
+&lt;figure &gt;
+  
+    
+    &lt;img data-src=&#34;http://nianze.tk/images/2018/2018-01/2018-01-03/hotel.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:xlink=&#39;http://www.w3.org/1999/xlink&#39; width=&#39;24pt&#39; height=&#39;24pt&#39; viewBox=&#39;0 0 24 24&#39; version=&#39;1.1&#39;%3E%3Cg id=&#39;surface1035795&#39;%3E%3Cpath style=&#39; stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;&#39; d=&#39;M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 &#39;/%3E%3C/g%3E%3C/svg%3E%0A&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
+    
+  
+  &lt;figcaption&gt;
+    &lt;strong&gt;The Grand Budapest Hotel&lt;/strong&gt;:
+    
+  &lt;/figcaption&gt;
+  
+&lt;/figure&gt;&lt;/p&gt;</description>
+      </item>
+      
+      <item>
+        <title>Spirited away</title>
+        <link>http://nianze.tk/en/posts/2016/spirited-away/</link>
+        <pubDate>Mon, 15 Feb 2016 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2016/spirited-away/</guid>
+        <description>&lt;p&gt;东风夜放花千树，更吹落、星如雨。&lt;br /&gt;
+宝马雕车香满路。凤箫声动，玉壶光转，一夜鱼龙舞。&lt;/p&gt;
+&lt;p&gt;This music is from &lt;a href=&#34;http://www.imdb.com/title/tt0245429/&#34;&gt;Spirited Away&lt;/a&gt; (千と千尋の神隠し), which is a 2001 Japanese animated fantasy film written and directed by Hayao Miyazaki and produced by &lt;a href=&#34;http://www.ghibli.jp/&#34;&gt;Studio Ghibli&lt;/a&gt;. The melody is peaceful and elegant, which is written by Youmi Kimura (木村 弓), a Japanese singer and lyre performer.&lt;/p&gt;
+&lt;p&gt;Actually, I choose this one because this is chosen as the library&#39;s closing-door music when I&#39;m a undergrad.&lt;/p&gt;
+&lt;p&gt;Everytime the music is on, we know it is 10:00pm and it is time to go back to dorm. At that time I always prefer to stay as late as possible in the library until the guard cruising around to drive me away. If the assignment is still not yet finished and deadline is approaching, I might even decided to go to the lab building around,  finishing the remaining part.&lt;/p&gt;
+&lt;p&gt;Sometimes when I stepping out of the library building, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Big_Dipper&#34;&gt;Big Dipper&lt;/a&gt; lied right ahead of me on the sky, and I would wear my headphones, turn on the music, and ride my bycicle back to the dorm. On the way, thinking about everything, past and future, I could only felt the wind.&lt;/p&gt;
+&lt;p&gt;And all those days are spirited away:&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/PzILtO6viiw&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</description>
+      </item>
+      
+      <item>
+        <title>New semester is coming</title>
+        <link>http://nianze.tk/en/posts/2016/new-semester/</link>
+        <pubDate>Mon, 25 Jan 2016 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2016/new-semester/</guid>
+        <description>&lt;p&gt;As the new semester approaches, I finished two more clarinet covers&lt;/p&gt;
+&lt;h2 id=&#34;hello-especially&#34;&gt;Hello especially&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;http://nianze.tk/images/2016/2016-01-25/2016-01-25-pig.png&#34; alt=&#34;Pig&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The music is from ED of&lt;br /&gt;
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Silver_Spoon_(manga)&#34;&gt;Silver Spoon&lt;/a&gt;, which&lt;br /&gt;
+is full of pastorale and optimism. Every time&lt;br /&gt;
+I hear the song, I recall the happy daily life of Yuugo Hachiken in his&lt;br /&gt;
+agricultural school. May you also enjoy this happiness as I do.&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/sUkafIknbPc&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;heading&#34;&gt;つないだ手&lt;/h2&gt;
+&lt;p&gt;Another ED from Fullmetal Alchemist FA, also from Japanese manga artist&lt;br /&gt;
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Hiromu_Arakawa&#34;&gt;Hiromu Arakawa(荒川 弘)&lt;/a&gt;. Below&lt;br /&gt;
+is her self-portray of bespectacled cow.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://nianze.tk/images/2016/2016-01-25/2016-01-25-cow.png&#34; alt=&#34;Cow&#34; /&gt;&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/1hCsGN3_7N4&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I have to say Hiromi&#39;s manga is always my type. I can find an optimism from&lt;br /&gt;
+every person in her manga, which makes me think about the good side of life.&lt;/p&gt;
+&lt;p&gt;And then you&#39;ll know that:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Take it easy, and all is well.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;http://nianze.tk/images/2016/2016-01-25/2016-01-25-fight.jpg&#34; alt=&#34;Fight&#34; /&gt;&lt;/p&gt;</description>
+      </item>
+      
+      <item>
+        <title>填个去年的坑</title>
+        <link>http://nianze.tk/en/posts/2016/return-of-monkey-king/</link>
+        <pubDate>Fri, 08 Jan 2016 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2016/return-of-monkey-king/</guid>
+        <description>&lt;p&gt;简单尝试下中文歌曲的翻录（既然是中文歌了我就用中文来写好啦）&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;填上去年的坑&lt;/h2&gt;
+&lt;p&gt;其实去年，大概是我在录&lt;a href=&#34;https://youtu.be/OUc6z6D0jeI?list=PLWP-hWF5CaxuFF1KokTfmaXLn2Iv2QIRj&#34;&gt;Jenga&lt;/a&gt;这首的时候，我就考虑过趁《大圣归来》还在上映人气正高把ED这首《从前的我》录出来，但是无奈当时还并不清楚如何扒谱，又嫌盲吹出来的效果不好还容易出错，所以最后只得做罢了。最近知道怎么利用musescore扒谱了，想想还是把去年的这个坑填上吧。顺便也把前段时间特别火的琅琊榜插曲《红颜旧》给扒了下，所以同时发了两首出来。&lt;/p&gt;
+&lt;p&gt;既然现在自己掌握扒谱流程了，之后的曲子就不会都这么简单只有一个声部了，到时候会多加入些声部让单簧管的声音不至于太单薄。&lt;/p&gt;
+&lt;h3 id=&#34;heading1&#34;&gt;从前的我&lt;/h3&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/X_zKaqeRAe4&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;heading2&#34;&gt;红颜旧-琅琊榜插曲&lt;/h3&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/IINa-x83zPM&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</description>
+      </item>
+      
+      <item>
+        <title>New year cover - Aesthetic</title>
+        <link>http://nianze.tk/en/posts/2016/aesthetic/</link>
+        <pubDate>Fri, 01 Jan 2016 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2016/aesthetic/</guid>
+        <description>&lt;p&gt;My new year&#39;s first cover is for Hiroyuki Sawano!&lt;/p&gt;
+&lt;h2 id=&#34;another-beautiful-piece-from-hiroyuki-sawanohttpwwwsawanohiroyukicom&#34;&gt;Another beautiful piece from &lt;a href=&#34;http://www.sawanohiroyuki.com/&#34;&gt;Hiroyuki Sawano&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;I have to admit that I&#39;m a big fan of Hiroyuki Sawano. Every time I listen to his music, my heart is always filled with strength.&lt;/p&gt;
+&lt;p&gt;This &lt;em&gt;Aesthetic&lt;/em&gt; is from his original album &lt;a href=&#34;http://www.sawanohiroyuki.com/works-original.html&#34;&gt;Musica&lt;/a&gt; released in 2009-07-15.&lt;/p&gt;
+&lt;h3 id=&#34;aesthetic&#34;&gt;Aesthetic&lt;/h3&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/niKDxuHvPfY&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Longing for you day and in dream&lt;br /&gt;
+盼望著你白天與夜夢中&lt;/p&gt;
+&lt;p&gt;I&#39;m hoping you are here and leading my way&lt;br /&gt;
+我期盼你在身邊牽引著我向前&lt;/p&gt;
+&lt;p&gt;You steers my road anytime I need&lt;br /&gt;
+你總在我需要時引領著我&lt;/p&gt;
+&lt;p&gt;If you walk away，I will follow you&lt;br /&gt;
+如果你離開了，我將會跟隨著你&lt;/p&gt;
+&lt;p&gt;Trying my life with your sacred gifts you gave to me&lt;br /&gt;
+盡我一生攜帶直著你贈予我的神聖禮物&lt;/p&gt;
+&lt;p&gt;I won&#39;t vain and succeed it as your precious soul&lt;br /&gt;
+我向你高貴的靈魂看齊即使功成名就也不驕傲自負&lt;/p&gt;
+&lt;p&gt;Holding your hand&lt;br /&gt;
+緊握著你的手&lt;/p&gt;
+&lt;p&gt;And I&#39;m walking through the all of the world&lt;br /&gt;
+在黯淡的天空中&lt;/p&gt;
+&lt;p&gt;Carrying your wish like the Venus in the dim sky&lt;br /&gt;
+緊擁著你如金星般閃耀的夢想將足跡遍佈整個世界&lt;/p&gt;</description>
+      </item>
+      
+      <item>
+        <title>End of my first semester in Cornell</title>
+        <link>http://nianze.tk/en/posts/2015/end-of-semester/</link>
+        <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2015/end-of-semester/</guid>
+        <description>&lt;p&gt;A mark on the end of my first semester in Cornell.&lt;/p&gt;
+&lt;h2 id=&#34;finally&#34;&gt;Finally&amp;hellip;&lt;/h2&gt;
+&lt;p&gt;After a busy semester, finally I have some time to try some new pieces of music:&lt;/p&gt;
+&lt;h3 id=&#34;heading&#34;&gt;運命と恋心&lt;/h3&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/8ZVSWYU10H8&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Hope this winter be a productive one!&lt;/p&gt;
+&lt;p&gt;BTW, the cover image is credit to pixiv user 駒＠ついった:&lt;/p&gt;
+&lt;script src=&#34;http://source.pixiv.net/source/embed.js&#34; data-id=&#34;43731455_4caeca1d1a29caec94dd37ded1c92ad0&#34; data-size=&#34;large&#34; data-border=&#34;off&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;noscript&gt;&lt;p&gt;&lt;a href=&#34;http://www.pixiv.net/member_illust.php?mode=medium&amp;amp;illust_id=43731455&#34; target=&#34;_blank&#34;&gt;呪縛&lt;/a&gt; by &lt;a href=&#34;http://www.pixiv.net/member.php?id=23122&#34; target=&#34;_blank&#34;&gt;駒＠ついった&lt;/a&gt; on &lt;a href=&#34;http://www.pixiv.net/&#34; target=&#34;_blank&#34;&gt;pixiv&lt;/a&gt;&lt;/p&gt;&lt;/noscript&gt;</description>
+      </item>
+      
+      <item>
+        <title>Halloween celebration</title>
+        <link>http://nianze.tk/en/posts/2015/halloween-celebration/</link>
+        <pubDate>Sun, 01 Nov 2015 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2015/halloween-celebration/</guid>
+        <description>&lt;p&gt;A small piece of music to celebrating the Halloween.&lt;/p&gt;
+&lt;h2 id=&#34;celebrating-the-halloween&#34;&gt;Celebrating the Halloween!&lt;/h2&gt;
+&lt;p&gt;To celebrate the Halloween, I picked this piece of music, with some photos I took recently in the campus. Hope the magic fantasy style able to match with those old buildings in Cornell.&lt;/p&gt;
+&lt;p&gt;Hope you enjoy!&lt;/p&gt;
+&lt;h3 id=&#34;its-only-the-fairytale&#34;&gt;It&#39;s only the fairytale&lt;/h3&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/5xun7KD3q7k&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</description>
+      </item>
+      
+      <item>
+        <title>Early collection of clarinet cover</title>
+        <link>http://nianze.tk/en/posts/2015/clarinet-cover-collection/</link>
+        <pubDate>Tue, 28 Jul 2015 00:00:00 +0000</pubDate>
+        <author>daoxinzhishui@gmail.com (刀心水)</author>
+        <guid>http://nianze.tk/en/posts/2015/clarinet-cover-collection/</guid>
+        <description>&lt;p&gt;Some of my early clarinet cover is collected here in this article.&lt;/p&gt;
+&lt;!-- toc --&gt;
+&lt;h1 id=&#34;why-i-launched-the-clarinet-cover-project&#34;&gt;Why I launched the clarinet cover project&lt;/h1&gt;
+&lt;p&gt;In the summer of 2015, I started recording my clarinet cover inspired by &lt;a href=&#34;https://www.youtube.com/user/linnaes&#34;&gt;ShonHayashi&lt;/a&gt; when I accidentally found his Youtube channel. At that time, actually, I haven&#39;t touched my clarinet for a long time, partially due to my old opinion that clarinet is such a classical instrument that it is never a good fit for performing mordern style music.&lt;/p&gt;
+&lt;p&gt;And I changed my opinion since I heard ShonHayashi&#39;s clarinet cover on Vocaloid then.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Whoa! He plays the clarinet so well, why not to have a try muself just like him?&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In my mind, clarinet is not as expressive as violin or piano: the voice character of clarinet feels like silk, so it is hard to handle music with too strong emotions - maybe that&#39;s why it is hard to see clarinet in Rock music :). However, it&#39;s worth a try for music with elegant and sweet styles. Especially a good fit to imitate human voice&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;So, since I happen to know how to play this instrument, why not to have fun with it, and play some music that once touched me?&lt;/p&gt;
+&lt;figure&gt;
+  &lt;a href=&#34;http://orig03.deviantart.net/3ac1/f/2012/078/d/6/listen_to_the_clarinet_by_sherrae78-d4t912s.jpg&#34;&gt;&lt;img src=&#34;http://orig03.deviantart.net/3ac1/f/2012/078/d/6/listen_to_the_clarinet_by_sherrae78-d4t912s.jpg&#34;&gt;&lt;/a&gt;
+  &lt;figcaption&gt;&lt;a href=&#34;http://sherrae78.deviantart.com/art/Listen-to-the-Clarinet-290994868&#34; title=&#34;Listen to the Clarinet, on DeviantArt&#34;&gt;Listen to the Clarinet by sherrae78, on DeviantArt&lt;/a&gt;.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h1 id=&#34;my-early-covers-in-summer-of-2015&#34;&gt;My early covers in summer of 2015&lt;/h1&gt;
+&lt;p&gt;At that moment, I did not know how to transcribe a sheet on my own, so I simply picked some of my favorite covers from ShonHayashi. All of these clarinet sheets below are transcribed by &lt;a href=&#34;https://www.youtube.com/user/linnaes&#34;&gt;him&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;地球最後の告白を&lt;/h2&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/Eh8NIP1-akg&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;let-it-go&#34;&gt;Let it go&lt;/h2&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/7ktLwr_nCuY&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;jenga-&#34;&gt;Jenga (ジェンガ)&lt;/h2&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/OUc6z6D0jeI&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;vogel-im-kfig&#34;&gt;Vogel im Käfig&lt;/h2&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/gdtaa--NLl8&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;odds--ends&#34;&gt;ODDS &amp;amp; ENDS&lt;/h2&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/Ce1CVU7w9hM&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Reference from what Mozart wrote to &lt;a href=&#34;https://en.wikipedia.org/wiki/Anton_Stadler&#34;&gt;Stadler&lt;/a&gt; &amp;ldquo;Never should I have thought that a clarinet could be capable of imitating the human voice as it was imitated by you.&amp;rdquo;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
+      </item>
+      
+    
+  </channel>
+</rss>
