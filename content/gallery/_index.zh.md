@@ -1,5 +1,5 @@
 +++
-title = "影象"
+title = "影像"
 tags = ["index"]
 description = "时光の印刻"
 +++
