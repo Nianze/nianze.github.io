@@ -5,6 +5,7 @@ categories:
 - thoughts
 tags:
 - camera
+- chinese
 slug: the fist post in CHH
 autoThumbnailImage: false
 thumbnailImagePosition: right

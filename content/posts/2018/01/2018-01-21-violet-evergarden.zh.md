@@ -8,6 +8,7 @@ categories:
 tags:
 - music
 - clarinet
+- chinese
 slug: violet snow
 autoThumbnailImage: false
 thumbnailImagePosition: right

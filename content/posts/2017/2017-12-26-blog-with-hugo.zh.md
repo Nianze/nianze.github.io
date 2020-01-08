@@ -6,6 +6,7 @@ categories:
 tags:
 - technique
 - hugo
+- chinese
 slug: personal site with hugo
 autoThumbnailImage: false
 thumbnailImagePosition: top

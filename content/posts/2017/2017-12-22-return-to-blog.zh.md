@@ -5,6 +5,7 @@ categories:
 - thoughts
 tags:
 - photography
+- chinese
 slug: return to my blog
 autoThumbnailImage: false
 thumbnailImagePosition: right

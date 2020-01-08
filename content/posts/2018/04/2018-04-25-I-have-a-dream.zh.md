@@ -5,6 +5,7 @@ categories:
 - thoughts
 tags:
 - music
+- chinese
 slug: a big step
 thumbnailImagePosition: right
 featured_image: 2018/2018-04/2018-04-25-nyu-phd.jpg

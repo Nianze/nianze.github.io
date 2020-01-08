@@ -6,6 +6,7 @@ categories:
 tags:
 - technique
 - plan
+- chinese
 slug: 2018 roadmap
 autoThumbnailImage: false
 thumbnailImagePosition: right

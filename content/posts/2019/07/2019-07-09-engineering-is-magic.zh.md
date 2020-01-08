@@ -6,6 +6,7 @@ categories:
 tags:
 - code
 - generative art
+- chinese
 slug: engineering-is-magic
 thumbnailImagePosition: right
 featured_image: 2019/07/09/thumbnail/sicp.jpg

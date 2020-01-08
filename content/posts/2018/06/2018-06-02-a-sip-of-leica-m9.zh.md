@@ -8,6 +8,7 @@ categories:
 tags:
 - camera
 - leica
+- chinese
 slug: a sip of leica m9
 thumbnailImagePosition: center
 featured_image: 2018/2018-06/02/title-image-1.jpg

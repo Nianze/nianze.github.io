@@ -5,6 +5,7 @@ categories:
 - thoughts
 tags:
 - death
+- chinese
 slug: a simple calculation
 autoThumbnailImage: true
 thumbnailImagePosition: right

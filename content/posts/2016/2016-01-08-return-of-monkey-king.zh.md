@@ -8,6 +8,7 @@ categories:
 tags:
 - clarinet
 - music
+- chinese
 slug: return of monkey king
 autoThumbnailImage: false
 thumbnailImagePosition: right

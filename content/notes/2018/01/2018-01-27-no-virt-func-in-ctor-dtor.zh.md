@@ -8,6 +8,7 @@ categories:
 tags:
 - technique
 - cpp
+- chinese
 slug: no virtual func in ctor dtor
 autoThumbnailImage: false
 thumbnailImagePosition: right

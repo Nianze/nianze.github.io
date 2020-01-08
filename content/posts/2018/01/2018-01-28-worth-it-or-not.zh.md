@@ -5,6 +5,7 @@ categories:
 - thoughts
 tags:
 - meaning
+- chinese
 slug: worth it or not
 thumbnailImagePosition: right
 featured_image: 2018/2018-01/2018-01-28/2018-01-28.jpg

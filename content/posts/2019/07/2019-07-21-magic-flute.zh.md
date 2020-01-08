@@ -6,6 +6,7 @@ categories:
 tags:
 - mozart
 - generative art
+- chinese
 slug: the magic flute
 autoThumbnailImage: true
 thumbnailImagePosition: right

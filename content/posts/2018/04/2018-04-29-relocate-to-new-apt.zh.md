@@ -5,6 +5,7 @@ categories:
 - thoughts
 tags:
 - relocate
+- chinese
 slug: relocation to m2
 thumbnailImagePosition: right
 featured_image: 2018/2018-04/2018-04-29/internal.jpeg

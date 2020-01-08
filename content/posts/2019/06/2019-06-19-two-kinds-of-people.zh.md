@@ -7,6 +7,7 @@ tags:
 - meaning
 - death
 - nyu
+- chinese
 slug: two-kinds-of-people
 autoThumbnailImage: true
 thumbnailImagePosition: right
