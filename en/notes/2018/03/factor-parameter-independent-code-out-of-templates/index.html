@@ -685,7 +685,7 @@
 <meta property="og:url" content="http://nianze.tk/en/notes/2018/03/factor-parameter-independent-code-out-of-templates/">
 <meta property="og:type" content="article">
 
-<meta name="generator" content="Hugo 0.61.0" />
+<meta name="generator" content="Hugo 0.60.1" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/en/notes/2018/03/factor-parameter-independent-code-out-of-templates/">
@@ -996,7 +996,7 @@ if (!doNotTrack) {
       <p>Templates generate multiple classes and multiple functions, so any template code not dependent on a template parameter (either non-type template parameters or type parameters) causes bloat: eliminate bloat due to non-type template parameters by replacing template parameters with function parameters or class data members; reduce bloat caused from type parameters by sharing implementations for instantiation types with identical binary representations.</p>
 <!-- toc -->
 <p>When writing templates, since there's only one copy of the template source code, we have to analyze it carefully to avoid the implicit replication that may take place when a template is instantiated multiple times.</p>
-<h1 id="bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</h1>
+<h1 id="bloat-due-to-nontype-template-parameters">Bloat due to non-type template parameters</h1>
 <p>For example, suppose we'd like to write a template for fixed-size square matrices that support matrix inversion:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1161,7 +1161,7 @@ if (!doNotTrack) {
 <h2 id="efficiency-concerns">Efficiency concerns</h2>
 <p>In terms of efficiency, it is possible that the version of <code>invert</code> with the matrix sizes hardwired into them generates better code than the shared version whose size is passed as a function parameter or is stored in the object: in the size-specific versions, the sizes would be compile-time constants, hence eligible for optimizations such as constant propagation (they'll be folded into the generated instructions as imeediate operands), which can't be done in the size-independent version.</p>
 <p>On the other side, the size-independent version decreases the size of executable by having only one version of <code>invert</code> for multiple matrix sizes, and this could reduce the program's working set size and improve locality of reference in the instruction cache, which may in term compensating for any lost optimizations in size-specific versions of <code>invert</code>. The only way to tell which version is better one is to try them both and observe the behavior on the particular platform and on representative data sets.</p>
-<h2 id="other-trade-offs">Other trade-offs</h2>
+<h2 id="other-tradeoffs">Other trade-offs</h2>
 <p>Speaking of size of objects, we should observe that there's an extra size of a pointer in each <code>SquareMatrix</code> object, because, as the derived class, <code>SquareMatrix</code> could get to the data by alternative designs such as having the base class store a <code>protected</code> pointer to the matrix data. However, this new design also has some disadvantages:</p>
 <ol>
 <li>it may lead to the loss of encapsulation described in item 22</li>
@@ -1571,12 +1571,12 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc ">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</a>
+    <li><a href="#bloat-due-to-nontype-template-parameters">Bloat due to non-type template parameters</a>
       <ul>
         <li><a href="#replace-with-function-parameters">Replace with function parameters</a></li>
         <li><a href="#replace-with-class-data-members">Replace with class data members</a></li>
         <li><a href="#efficiency-concerns">Efficiency concerns</a></li>
-        <li><a href="#other-trade-offs">Other trade-offs</a></li>
+        <li><a href="#other-tradeoffs">Other trade-offs</a></li>
       </ul>
     </li>
     <li><a href="#bloat-due-to-type-parameters">Bloat due to type parameters</a></li>

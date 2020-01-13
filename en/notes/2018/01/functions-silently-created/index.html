@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Item-5 What functions C&#43;&#43; silently generates – Nzo&#39;s Blog</title>
+    <title>Item-6 Disallow unwanted compiler-generated functions – Nzo&#39;s Blog</title>
     
 
 
@@ -676,16 +676,16 @@
 
     <meta name="description" content="" />
 <meta name="keywords" content="">
-<meta name="created" content="2018-01-23T18:42:07-0500">
-<meta name="modified" content="2018-01-23T18:42:07-0500">
+<meta name="created" content="2018-01-24T16:18:59-0500">
+<meta name="modified" content="2018-01-24T16:18:59-0500">
 
 
 <meta property="og:site_name" content="Nzo&#39;s Blog">
-<meta property="og:title" content="Item-5 What functions C&#43;&#43; silently generates">
+<meta property="og:title" content="Item-6 Disallow unwanted compiler-generated functions">
 <meta property="og:url" content="http://nianze.tk/en/notes/2018/01/functions-silently-created/">
 <meta property="og:type" content="article">
 
-<meta name="generator" content="Hugo 0.61.0" />
+<meta name="generator" content="Hugo 0.60.1" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/en/notes/2018/01/functions-silently-created/">
@@ -698,11 +698,11 @@
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "headline": "Item-5 What functions C++ silently generates",
-    "datePublished": "2018-01-23T18:42:07-05:00",
-    "dateModified": "2018-01-23T18:42:07-05:00",
+    "headline": "Item-6 Disallow unwanted compiler-generated functions",
+    "datePublished": "2018-01-24T16:18:59-05:00",
+    "dateModified": "2018-01-24T16:18:59-05:00",
     "url" : "http://nianze.tk/en/notes/2018/01/functions-silently-created/",
-    "description": "\u003cp\u003eCompilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.\u003c/p\u003e",
+    "description": "\u003cp\u003eDeclare unwanted member functions \u003cem\u003eprivate\u003c/em\u003e without implementations to disallow functionality automatically provided by compilers.\u003c/p\u003e",
     "keywords": ["technique","cpp"],
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -949,7 +949,7 @@ if (!doNotTrack) {
   
   <li  class="is-active" >    
     
-      <a href="http://nianze.tk/en/notes/2018/01/functions-silently-created/">Item-5 What functions C&#43;&#43; silently generates</a>
+      <a href="http://nianze.tk/en/notes/2018/01/functions-silently-created/">Item-6 Disallow unwanted compiler-generated functions</a>
         
   </li>
   
@@ -958,11 +958,11 @@ if (!doNotTrack) {
 </nav>
   
   <div class="single">
-    <h2 class="single__title">Item-5 What functions C&#43;&#43; silently generates</h2>
+    <h2 class="single__title">Item-6 Disallow unwanted compiler-generated functions</h2>
     <div class="single__meta">
       
 <div class="single__infos">
-  <span class="single__info" title="Written At">📅&nbsp;Jan 23, 2018 </span>  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  <span class="single__info" title="Written At">📅&nbsp;Jan 24, 2018 </span>  &middot; <span class="single__info" title="Reading Time"> ☕ 2 min read </span>
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
@@ -993,17 +993,10 @@ if (!doNotTrack) {
     </div>    
     <article class="single__contents">
       
-      <p>Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.</p>
-<p>All the compiler generated functions will be both <code>public</code> and <code>inline</code> (item 30). An empty class declared like this:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Empty</span><span class="p">{</span><span class="p">}</span><span class="p">;</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>is essentially equivalent to:</p>
+      <p>Declare unwanted member functions <em>private</em> without implementations to disallow functionality automatically provided by compilers.</p>
+<p>If we want to prevent functions such as copy constructor being generated in order to maintain the object uniqueness, explicitly declare the copy constructor and the copy assignment operator <em>private</em>, so that the client of the class will not be able to copy the object.</p>
+<p>To make it foolproof, declare member functions <em>private</em> and deliberately not implemente them so that member and friend functions will not be able to copy the object, either.</p>
+<p>Another possible solution to prevent copying is to inherit from a well-designed base class such as this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1014,21 +1007,19 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span><span class="lnt">7
 </span><span class="lnt">8
-</span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Empty</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">Empty</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span> <span class="p">}</span> <span class="c1">// default constructor
-</span><span class="c1"></span>    <span class="n">Empty</span><span class="p">(</span><span class="k">const</span> <span class="n">Empty</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span> <span class="p">}</span> <span class="c1">// copy constructor
-</span><span class="c1"></span>    <span class="o">~</span><span class="n">Empty</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span> <span class="p">}</span>  <span class="c1">// destructor
-</span><span class="c1"></span>                      <span class="c1">// will be _virtual_ only if inheriting 
-</span><span class="c1"></span>                      <span class="c1">// from a base class with virtual destructor
-</span><span class="c1"></span>    <span class="n">Empty</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Empty</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="p">{</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span> <span class="p">}</span> <span class="c1">// copy assignment operator
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Uncopyable</span> <span class="p">{</span>
+<span class="k">protected</span><span class="o">:</span>
+    <span class="n">Uncopyable</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span>    <span class="c1">// allow construction of derived objects
+</span><span class="c1"></span>    <span class="o">~</span><span class="n">Uncopyable</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span>   <span class="c1">// allow destruction of derived objects
+</span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+    <span class="n">Uncopyable</span><span class="p">(</span><span class="k">const</span> <span class="n">Uncopyable</span><span class="o">&amp;</span><span class="p">)</span><span class="p">;</span>            <span class="c1">// prevent copying
+</span><span class="c1"></span>    <span class="n">Uncopyable</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Uncopyable</span><span class="o">&amp;</span><span class="p">)</span><span class="p">;</span> <span class="c1">// prevent copying
 </span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>These functions are generated only if they are needed:</p>
+</div><p>To inherit from the base class, simply:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1036,45 +1027,12 @@ if (!doNotTrack) {
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Empty</span> <span class="n">e1</span><span class="p">;</span>     <span class="c1">// default constructor and destructor generated
-</span><span class="c1"></span><span class="n">Empty</span> <span class="nf">e2</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span><span class="p">;</span> <span class="c1">// copy constructor generated
-</span><span class="c1"></span><span class="n">e2</span> <span class="o">=</span> <span class="n">e1</span><span class="p">;</span>      <span class="c1">// copy assignment operator generated
-</span></code></pre></td></tr></table>
-</div>
-</div><p>Basically, the generated default <code>constructor</code> and the <code>destructor</code> will invocate constructors and destructors of base classes and non-static data members, while the <code>copy constructor</code> will simply copy each non-static data member of the source object to the target object.</p>
-<blockquote>
-<p>specifically,</p>
-</blockquote>
-<ol>
-<li>for data member of user-defined type, call the data member's copy constructor with source object's corresponding member's value as argument</li>
-<li>for data member of built-in type, directly copy the corresponding source data member's bits</li>
-</ol>
-<p>Copy assignment operator behaves generally the same as copy constructor, but the code is only generated when the resulting code is both legal and has a reasonable chance of making sense. For example:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
-<span class="k">class</span> <span class="nc">NamedObject</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">NamedObject</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">nameValue</span><span class="p">;</span>  <span class="c1">// a reference
-</span><span class="c1"></span>    <span class="k">const</span> <span class="n">T</span> <span class="n">objectValue</span><span class="p">;</span>     <span class="c1">// a const
-</span><span class="c1"></span><span class="p">}</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">HomeForSale</span><span class="o">:</span> <span class="k">private</span> <span class="n">Uncopyable</span> <span class="p">{</span>
+<span class="p">.</span><span class="p">.</span><span class="p">.</span> <span class="c1">// no copy ctor or copy assign. operator declaration
+</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>In below situation, implicitly generated copy assignment operator will make no sense for nameValue and illegal for objectValue:</p>
+</div><p>This will be the same effect as the following design:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1087,23 +1045,23 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">youngMan</span><span class="p">(</span><span class="sa"></span><span class="s">&#34;</span><span class="s">child</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">oldMan</span><span class="p">(</span><span class="sa"></span><span class="s">&#34;</span><span class="s">adult</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span>
-
-<span class="n">NamedObject</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">(</span><span class="n">youngMan</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="p">;</span>
-<span class="n">NamedObject</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">(</span><span class="n">oldMan</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span><span class="p">;</span>
-
-<span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span> <span class="c1">// nameValue assignment will make no sense!
-</span><span class="c1"></span>       <span class="c1">// objectValue assignment will be illegal due to its constness
-</span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">HomeForSale</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="p">.</span><span class="p">.</span><span class="p">.</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="p">.</span><span class="p">.</span><span class="p">.</span>
+<span class="n">HomeForSale</span><span class="p">(</span><span class="k">const</span> <span class="n">HomeForSale</span><span class="o">&amp;</span><span class="p">)</span><span class="p">;</span>
+<span class="n">HomeForSale</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">HomeForSale</span><span class="o">&amp;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></td></tr></table>
 </div>
-</div><p>Since p.nameValue and s.nameValue refer to different string object, the assignment will be in a conundrum:</p>
+</div><p>There are some subtleties about the implementation and use of <code>Uncopyable</code>:</p>
 <ol>
-<li>should compiler choose to let p.nameValue refer to new string object? (actually C++ does not allow reference referring to different one)?</li>
-<li>should compiler choose to change the string content &ldquo;child&rdquo; to &ldquo;adult&rdquo;? (this will affect other objects that hold pointers or references to original string &ldquo;child&rdquo;)</li>
+<li>inheritance from <code>Uncopyable</code> needn't be public (item 32 and 39)</li>
+<li><code>Uncopyable</code> destructor needn't be <em>virtual</em> (item 7: the base class is not designed to be used polymorphically)</li>
+<li>it's eligible for the empty bass class optimization described in item 39, but use of this technique could lead to multiple inheritance (item 40), which will sometimes in turn disable the empty base class optimization (item 39)</li>
+<li>Boost (item 55) provides a similar class named <code>noncopyable</code></li>
 </ol>
-<p>Neither will be sensible, so C++ refuses to compile the code. In this situation, a copy assignment operator must be defined manually.</p>
-<p>Finally, derived classes will not be able to have generated implicit copy assignment operators if base classes declare the copy assignment operator <em>private</em>, for derived copy assignment operators are supposed to handle base class parts, but they don't have the right to invoke the base member functions in this situation.</p>
     </article>
     
     
@@ -1118,6 +1076,10 @@ if (!doNotTrack) {
       <hr class="hr-dots"/>
     </h1>
     <ul class="related-ul">
+        
+        <li>
+          <a href="/en/notes/2018/01/functions-silently-created/" class="related__link">Item-5 What functions C&#43;&#43; silently generates</a>
+        </li>
         
         <li>
           <a href="/en/notes/2018/01/initialize-before-use/" class="related__link">Item-4 Initialize objects before they&#39;re used</a>
@@ -1135,27 +1097,23 @@ if (!doNotTrack) {
           <a href="/en/notes/2018/01/tips-on-iostream/" class="related__link">Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;</a>
         </li>
         
-        <li>
-          <a href="/en/notes/2018/01/start-of-effective-cpp-series/" class="related__link">Item-1 Prefer consts, enums and inlines to #defines</a>
-        </li>
-        
     </ul>
     
   </section>
     <div class="grow"></div>
 <nav class="pagination-single">
   
-    <a href="http://nianze.tk/en/notes/2018/01/initialize-before-use/" class="pagination-single__left">
+    <a href="http://nianze.tk/en/notes/2018/01/functions-silently-created/" class="pagination-single__left">
       <div class="pagination-single__icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path fill="currentColor" d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"/></svg>
       </div>
-      <div class="pagination-single__left-title">Item-4 Initialize objects before they&#39;re used</div>      
+      <div class="pagination-single__left-title">Item-5 What functions C&#43;&#43; silently generates</div>      
     </a>
   
   <div class="grow"></div>
   
-    <a href="http://nianze.tk/en/notes/2018/01/functions-silently-created/" class="pagination-single__right">      
-      <div class="pagination-single__right-title">Item-6 Disallow unwanted compiler-generated functions</div>
+    <a href="http://nianze.tk/en/notes/2018/01/virtual-dtor-in-polymorphic-base-class/" class="pagination-single__right">      
+      <div class="pagination-single__right-title">Item-7 Declare destructor virtual in polymorphic base classes</div>
       <div class="pagination-single__icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path fill="currentColor" d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42.39.39 1.02.39 1.41 0l6.59-6.59c.39-.39.39-1.02 0-1.41l-6.58-6.6c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
       </div>
