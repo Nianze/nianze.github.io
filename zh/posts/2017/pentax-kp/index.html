@@ -106,7 +106,8 @@
               tocElem.querySelectorAll('a').forEach(function (elem) {
                 elem.classList.remove('active');
               });
-              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active');
+              tocElem.querySelector('a[href="#' + id + '"]') ? 
+              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active') : null;
 
               tableOfContentsElem.querySelectorAll('ul > li').forEach(function (liElem) {
                 liElem.querySelectorAll('ul').forEach(function (ulElem) {
@@ -115,12 +116,13 @@
               });
 
               var curElem = tableOfContentsElem.querySelector(`[href="#${id}"]`);
-              if (curElem.nextElementSibling) {
+              if (curElem && curElem.nextElementSibling) {
                 curElem.nextElementSibling.style.display = 'block';
               }
+              getParents(curElem, 'ul') ? 
               getParents(curElem, 'ul').forEach(function (elem) {
                 elem.style.display = 'block';
-              }); 
+              }) : null; 
             }
           }
         }) : null;
@@ -147,7 +149,8 @@
               tocElem.querySelectorAll('a').forEach(function (elem) {
                 elem.classList.remove('active');
               });
-              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active');
+              tocElem.querySelector('a[href="#' + id + '"]') ? 
+              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active') : null;
 
               tableOfContentsElem.querySelectorAll('ul > li').forEach(function (liElem) {
                 liElem.querySelectorAll('ul').forEach(function (ulElem) {
@@ -156,12 +159,13 @@
               });
 
               var curElem = tableOfContentsElem.querySelector(`[href="#${id}"]`);
-              if (curElem.nextElementSibling) {
+              if (curElem && curElem.nextElementSibling) {
                 curElem.nextElementSibling.style.display = 'block';
               }
+              getParents(curElem, 'ul') ? 
               getParents(curElem, 'ul').forEach(function (elem) {
                 elem.style.display = 'block';
-              });
+              }) : null;
             }
           }
         }) : null;
@@ -323,7 +327,7 @@
         if (utterances) {
           utterances.contentWindow.postMessage({
             type: 'set-theme',
-            theme: selectedThemeVariant === "dark" || selectedThemeVariant === "hacker" ? 'photon-dark' : 'github-light',
+            theme: selectedThemeVariant === "dark" || selectedThemeVariant === "hacker" ? 'photon-dark' : selectedThemeVariant === 'kimbie' ? 'github-dark-orange' : 'github-light',
           }, 'https://utteranc.es');
         }
       });
@@ -337,20 +341,25 @@
     var siteBaseURL = JSON.parse("\"http://nianze.tk/\"");
     var siteBaseChecker = /\/\w+\//i;
     var isSlug = siteBaseChecker.test(siteBaseURL);
+    var isThemeSite = location.origin.includes('themes.gohugo.io');
+
     
-    
-        var hasLangPostfix = location.pathname.includes("/zh");
-        if (hasLangPostfix) {
-          if (isSlug) {
-            baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0] + "zh";
-          } else {
-            baseurl = location.origin + "/zh";
-          }
+        if (isThemeSite) {
+          baseurl = "http:\/\/nianze.tk\/\/zh";
         } else {
-          if (isSlug) {
-            baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0];
+          var hasLangPostfix = location.pathname.includes("/zh");
+          if (hasLangPostfix) {
+            if (isSlug) {
+              baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0] + "zh";
+            } else {
+              baseurl = location.origin + "/zh";
+            }
           } else {
-            baseurl = location.origin;
+            if (isSlug) {
+              baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0];
+            } else {
+              baseurl = location.origin;
+            }
           }
         }
     
@@ -509,11 +518,17 @@
     }
 
     function generateHighlightedText(text, regions) {
-      if(!regions) return text;
-      
+      if (!regions) {
+        return text;
+      }
+
       var content = '', nextUnhighlightedRegionStartingIndex = 0;
 
       regions.forEach(function(region) {
+        if (region[0] === region[1]) {
+          return null;
+        }
+        
         content += '' +
           text.substring(nextUnhighlightedRegionStartingIndex, region[0]) +
           '<span class="search__highlight">' +
@@ -685,15 +700,29 @@
 <meta property="og:url" content="http://nianze.tk/zh/posts/2017/pentax-kp/">
 <meta property="og:type" content="article">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/zh/posts/2017/pentax-kp/">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-<link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />
 <link rel="manifest" href="/manifest.json">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+
     <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -759,19 +788,21 @@ if (!doNotTrack) {
         }        
     </script>    
     
-    <div id="body">
+    <div id="container">
         
-        <div class="container wrapper">
+        <div class="wrapper">
             <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar__brand">
     
     <a href="/zh/" title="主页" rel="home" class="navbar__logo-link">
-      <img data-src="/logo.png" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' width='48px' height='48px'%3E%3Cpath fill='%2337474f' d='M24.648,4l0.29,0.002c0.52,0.008,1.23,0.109,1.857,0.198c0.314,0.045,0.616,0.088,0.883,0.119 c0.164,0.024,0.715,0.227,1.043,0.348C29.468,4.941,32,6.875,32,6.875L31,5c0,0,1.563,0.445,2.125,0.875C34.247,6.733,34.354,7,35,7 h0.375L35,6c0.375,0.19,1.78,1.289,1.968,1.541L37,7.583l0.036,0.039c1.411,1.495,2.095,2.462,2.595,3.169 c0.339,0.48,0.945,0.822,1.243,1.21C41.225,12.454,42,14,42,14v-0.998c0,0,0.776,1.029,1.25,2.373C44,17.5,44,19,44,19 s-0.25-0.625-1-0.875C43,19,44,21,44,24.002v6c-0.74,0.57-0.989,1.443-1.214,2.386c-0.328,1.372-0.605,2.294-1.444,2.593L41,35.002 l-0.08,0.277c-0.533,0.662-0.994,1.351-1.439,2.018c-1.446,2.163-2.495,3.705-4.481,3.705c-1.041,0-2.044,0.167-2.441,0.559 C32.128,41.987,32,42.662,32,43.002c-1.012,0.377-2.167,1-8,1c-5,0-9.4-1.756-12.262-4.545c-0.965-0.785-2.272-1.669-2.857-2.273 C6.976,35.593,6.047,33.058,6,33.002c1.184,0.985,5.245,4.636,7.091,4.636l0,0C13.301,37.416,12,35.684,12,35.002 C13.429,37.162,17.405,40,23,40c4.125,0,3.892-0.73,6-1c4.875-0.625,7.492-5.439,8.214-6.816c0.05-0.096,0.202-1.02,0.24-1.092 c0.368-0.376,0.463-1.167,0.607-2.371C38.17,27.815,39,26.75,39,25.625S38,24,38,24s0-3-0.625-5.375 C37.25,18.151,36.738,16.409,34,13v1.002c-2.125-1.127-3.668-2.545-4.125-2.752C28.435,10.599,26.831,10,25,10c-4,0-4.625,1-8,2 c0,0,1.25,0,2,0c0,0-1.867,1.445-3,2.125c-1.875,1.125-4,5.034-4,7.875c0,3-2.485,4-4,4c-2.453,0-4-2-4-4 c0-1.133,0.45-2.5,0.886-3.425c0.411-0.873,0.799-1.697,0.795-2.581c0.031-0.106,0.274-0.383,0.435-0.566 c0.466-0.531,1.083-1.234,1.224-2.252c1.106-0.927,3.13-3.015,3.155-3.041c0.162-0.171,0.324-0.304,0.511-0.457 c0.324-0.265,0.728-0.594,1.221-1.205l0.423-0.525c0.798-0.428,2.222-1.035,2.776-1.271c0.342-0.146,0.602-0.258,0.716-0.313 L19.75,5.75C19.966,5.75,20,5.238,20,5c0-0.227,0.106-0.198,0.324-0.273C22.139,4.099,22.799,4,24.648,4L24.648,4'/%3E%3C/svg%3E" alt="Home" class="lazyload navbar__logo">
+      <img src="/logo.png" alt="Home" class="navbar__logo">
     </a>
     
-    <a href="/zh/" title="主页" rel="home" class="navbar__title-link">
-      <h6 class="navbar__title">刀心水</h6>
-    </a>    
+    
+      <a href="/zh/" title="主页" rel="home" class="navbar__title-link">
+        <h6 class="navbar__title">刀心水</h6>
+      </a>
+    
   </div>
   
   
@@ -921,7 +952,7 @@ if (!doNotTrack) {
             
 
 
-<script src="/js/enquire.min.72cb9edeb1ca1b92f5bf9df8d31a1ecd1e423d0b5e0f48a2a208b020dd5053fa.js"></script>
+<script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <main class="main-main">
   
@@ -933,24 +964,24 @@ if (!doNotTrack) {
   
   
   
-  <li >    
+  <li >
     
-      <a href="http://nianze.tk/zh/">刀心水の胡言乱语</a>
-        
+      <a href="http://nianze.tk/zh/" class="capitalize">刀心水の胡言乱语</a>
+    
   </li>
   
   
-  <li >    
+  <li >
     
-      <a href="http://nianze.tk/zh/posts/">胡言乱语</a>
-        
+      <a href="http://nianze.tk/zh/posts/" class="capitalize">胡言乱语</a>
+    
   </li>
   
   
-  <li  class="is-active" >    
+  <li  class="is-active" >
     
-      <a href="http://nianze.tk/zh/posts/2017/pentax-kp/">宾得KP实测心得</a>
-        
+      <span>宾得KP实测心得</span>
+    
   </li>
   
   </ol>
@@ -962,7 +993,7 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <span class="single__info" title="创建日期">📅&nbsp;2017年05月08日 </span>  &middot; <span class="single__info" title="阅读时长"> ☕ 5 分钟 </span>
+  <time class="single__info" title="创建日期">📅&nbsp;2017年05月08日 </time>  &middot; <span class="single__info" title="阅读时长"> ☕ 5 分钟 </span>
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> 阅读
   </span>
@@ -1008,11 +1039,11 @@ if (!doNotTrack) {
 <h1 id="heading">前言</h1>
 <p>其实之前发K70那个帖子的时候已经说得很明白了，现在之所以还没灭宾得的门的原因很简单，就只是比较喜欢手头的那几个limited镜头，希望能时不时拿出来玩玩。既然最近宾得出了这个一定程度上是专门为了跟limited头搭配的机子，我想自己自然是迟早会买来玩玩的。</p>
 <p>理性的来讲，其实刚上市就买这么高溢价的机身是绝对绝对不明智的选择，而且我又并不急着想用到KP比K70多出来的那么一丁点的性能，所以手持K70等KP降价才是最佳购买策略。不过一想到最近办的那张信用卡搞活动可以在美亚上打九折，又想到我玩宾得其实玩的也就是个“情怀”，为“情怀”买单，那还是早买早享受吧——谁叫理光这次拿捏像我这类的目标用户的心理拿捏的这么准确呢？复古银色亮骚机身，既然看对眼了，也就只剩下掏出钞票买买买了。。。所以现在的我也更能够理解为何在日本市场奇葩的K-S1能卖那么火了——“K字母”系列的机型看来就是纯粹面向有个性需求的爱好者准备的机型，很多在主流摄影圈不能理解的设计其实恰恰是为了迎合这部分消费者的需求，正如ks1的亮瞎眼跑马灯以及kp那握感并不好的可更换手柄。</p>
-<h1 id="heading1">开箱</h1>
+<h1 id="heading-1">开箱</h1>
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/8-2t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/8-2t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
   <figcaption>
@@ -1024,7 +1055,7 @@ if (!doNotTrack) {
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/8-3t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/8-3t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
   <figcaption>
@@ -1033,25 +1064,25 @@ if (!doNotTrack) {
   </figcaption>
   
 </figure></p>
-<h1 id="heading2">外观</h1>
+<h1 id="heading-2">外观</h1>
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/1-1t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/1-1t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/1-2t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/1-2t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/1-3t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/1-3t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure></p>
@@ -1059,42 +1090,42 @@ if (!doNotTrack) {
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/2-2t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/2-2t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/2-3t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/2-3t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/2-4t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/2-4t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/2-6t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/2-6t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/2-7t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/2-7t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/2-8t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/2-8t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure></p>
@@ -1102,28 +1133,28 @@ if (!doNotTrack) {
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/3-1t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/3-1t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/3-2t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/3-2t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/3-3t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/3-3t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/3-4t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/3-4t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure></p>
@@ -1131,47 +1162,47 @@ if (!doNotTrack) {
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/4-1t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/4-1t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/4-2t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/4-2t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/4-3t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/4-3t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/4-4t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/4-4t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure></p>
 <p>↑搭配三阳10mm f2.8。镜头太大和比有些不协调。</p>
-<h2 id="heading3">机身细节</h2>
+<h2 id="heading-3">机身细节</h2>
 <ul>
 <li>底部</li>
 </ul>
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/5-1t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/5-1t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/5-2t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/5-2t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure></p>
@@ -1182,7 +1213,7 @@ if (!doNotTrack) {
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/5-3t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/5-3t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
   <figcaption>
@@ -1194,7 +1225,7 @@ if (!doNotTrack) {
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/5-4t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/5-4t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
   <figcaption>
@@ -1209,7 +1240,7 @@ if (!doNotTrack) {
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/5-5t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/5-5t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
   <figcaption>
@@ -1221,7 +1252,7 @@ if (!doNotTrack) {
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/5-7t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/5-7t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
   <figcaption>
@@ -1236,45 +1267,45 @@ if (!doNotTrack) {
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/6-1t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/6-1t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/6-2t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/6-2t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/6-3t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/6-3t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/6-4t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/6-4t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/6-5t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/6-5t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure></p>
 <p>机身上默认安装的是小号手柄，握感和GR类似，不过手持起来比GR沉很多；中号手柄握感我觉得跟小号没啥区别；大号手柄则因为前方有比较明显的着力点，装上之后手感更像传统单反，但是依然没有k5或者K70那种手柄来的舒服。这种设计明显是为了颜值而牺牲了握感。但可能是GR握习惯了，我一般用小号手柄。</p>
-<h1 id="heading4">使用感受</h1>
+<h1 id="heading-4">使用感受</h1>
 <p>用下来发觉最大的问题在可靠性上，首当其冲的便是脆弱的电池——前段时间去了阿拉斯加，在室外零下30°环境下相机很容易被冻没电，白天大概能坚持几十分钟，晚上可能就十几分钟，长时间曝光的话拍不了几张就自动关机。我只能不停地轮流更换手头的3块电池——每次揣两块在大衣的内兜里，等温度上来恢复电力之后再接着用（来回换电池实在太麻烦了，尤其是自拍的时候突然没电了特别火大）。本来还想测试下相机里面的星轨和延时摄影功能的，但是极地寒冷室外条件下，放十几分钟没拍几张就自动断电，根本行不通。所以最后也没能拍成星轨和延时摄影。需要提高的另一个方面就是手机app——有时候会莫名其妙的无法同步画面，且手机无法遥控释放快门，逼得最后我只能用延时自拍模式连拍10张来搞定旅行合影照。</p>
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/8-1t.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/8-1t.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
   <figcaption>
@@ -1284,64 +1315,64 @@ if (!doNotTrack) {
   
 </figure>
 <p>可以看出来，在恶劣环境下可靠性主要还是被电池拖累太多。风光照当然可以拍，画质出众高感在aps-c里也是位列前茅，只是没了GPS少了追星功能还是挺可惜的。极地环境下靠三防机身倒是可以顶住阿拉斯加白天雪地里雪洒机身上的不利情况，这点还是不错的。如果就像<a href="https://youtu.be/Rnu4JsmmOW8">宣传片</a>里展示的那样，拿kp配个20-40，在旅游时去拍拍扫街照，这机子还是很能胜任的。</p>
-<h1 id="heading5">样片</h1>
+<h1 id="heading-5">样片</h1>
 <p><figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-0.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-0.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-1.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-1.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-2.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-2.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-6.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-6.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-4.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-4.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-3.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-3.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-5.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-5.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure><br />
 <figure >
   
     
-    <img data-src="/images/2017/2017-05-08-pentax-kp/7-7.jpg"  data-caption="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload" width="" height=""/>
+    <img data-src="/images/2017/2017-05-08-pentax-kp/7-7.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
     
   
 </figure></p>
-<h1 id="heading6">总结</h1>
+<h1 id="heading-6">总结</h1>
 <p>和自家APS-C机身比，KP有着亮骚的优点（我从K70换KP的主要原因）以及相对以往机身可感知但仍不堪重用的对焦改进，但续航是硬伤。相比佳能尼康同价位机器，优点有</p>
 <ol>
 <li>对标同级别机身(主要是APS-C机身)时强悍的高感（参见<a href="https://www.dpreview.com/reviews/pentax-kp-review">dpreview</a>的评价，尤其是用raw拍摄时）</li>
@@ -1356,7 +1387,7 @@ if (!doNotTrack) {
 <li>发行价较贵，性价比较低</li>
 </ol>
 <p>此外就是外观和可更换手柄见仁见智，有人喜欢有人讨厌。但总的来说，这是有着很不错的画质，足够性能的相机，配上几枚limited镜头，够把玩很久，是那种适合悠闲的慢摄流在心情好的空暇时品玩的东西。如果作为摄影爱好者想在APS-C相机中找一台亮骚好玩的，那在富士的X系列外，宾得这款KP也可算是值得考虑的对象吧。</p>
-<h2 id="heading7">参考</h2>
+<h2 id="heading-7">参考</h2>
 <p><a href="https://www.dpreview.com/reviews/pentax-kp-review">dpreview</a><br />
 <a href="http://pentaxfans.net/thread-159858-1-1.html">PNETAX KP-開箱實測&amp;心得&amp;實拍</a><br />
 <a href="https://www.mobile01.com/newsdetail/21324/pentax-kp-iso-819200">感光度直衝80萬！五軸防手震加持 Pentax KP</a></p>
@@ -1364,7 +1395,7 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>严谨来说，数码后背(Digital camera back)一般是针对中大画幅相机系统推出的代替胶片的成像单元，功能比较单一，就是为了成像，所以是不带快门、反光板、五棱镜这些结构的。本文标题和第一段调侃中用到了“后背”一词，指的是“APS-C画幅数码相机机身”，但行文时为了阐述这个机身相对于limited镜头群是处在相机系统后端的位置，所以顺口用了“后背”一词来强调镜头与机身的前后关系，以凸显kp在一众后端机身中的特殊定位。下面评论区有人提到了所以为了避免误导新人以及混淆是非之嫌特在此注解声明下。<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>严谨来说，数码后背(Digital camera back)一般是针对中大画幅相机系统推出的代替胶片的成像单元，功能比较单一，就是为了成像，所以是不带快门、反光板、五棱镜这些结构的。本文标题和第一段调侃中用到了“后背”一词，指的是“APS-C画幅数码相机机身”，但行文时为了阐述这个机身相对于limited镜头群是处在相机系统后端的位置，所以顺口用了“后背”一词来强调镜头与机身的前后关系，以凸显kp在一众后端机身中的特殊定位。下面评论区有人提到了所以为了避免误导新人以及混淆是非之嫌特在此注解声明下。 <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -1416,9 +1447,34 @@ if (!doNotTrack) {
 </nav>
     
   
-    <script src="https://utteranc.es/client.js" repo="Nianze/personal-site-comments" issue-term="pathname" theme="photon-dark" label="✨comment 💬" crossorigin="anonymous" async>
-</script>
+    <div id="utterances"></div>
 <noscript>Please enable JavaScript to view the <a href="https://github.com/utterance">comments powered by utterances.</a></noscript>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    
+    var owner = JSON.parse("\"Nianze\"");
+    
+    var repo = JSON.parse("\"personal-site-comments\"");
+    
+    var label = JSON.parse("\"✨comment 💬\"");
+    var localTheme = localStorage.getItem('theme');
+    var utterTheme = localTheme === "dark" || localTheme === "hacker" ? 'photon-dark' : localTheme === 'kimbie' ? 'github-dark-orange' : 'github-light'
+    var myScript = document.createElement('script');
+    myScript.setAttribute('src', 'https://utteranc.es/client.js');
+    myScript.setAttribute('repo', `${owner}/${repo}`);
+    myScript.setAttribute('label', `${label}`);
+    myScript.setAttribute('issue-term', 'pathname');
+    myScript.setAttribute('theme', utterTheme);
+    myScript.setAttribute('crossorigin', 'anonymous');
+    myScript.setAttribute('async', '');
+
+    myScript.onload = function() {
+    }
+
+    document.getElementById('utterances').appendChild(myScript);
+  });
+</script>
+
   
 
     <div class="modal micromodal-slide" id="modal" aria-hidden="true">
@@ -1470,7 +1526,7 @@ if (!doNotTrack) {
 
 <script defer src="/js/swipe.min.08ff2be1b74347bad9e267f732f1388d271b2f9d97b6a8a87bd6a510f17c5ad2.js"></script>
 
-<script defer src="/js/micromodal.min.eccf91b079f1c2d57b73785e0208ccda9df4502df02e22cc9ce28d6b63acd1a5.js"></script>
+<script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
 <script defer src="/js/helper/fadeinout.min.js"></script>
 
@@ -1510,6 +1566,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  var modal = document.getElementById('modal');
   var singleContentsElem = document.querySelector('.single__contents');
   var swipeWrapElem = document.querySelector('.swipe-wrap');
   var mySwipeElem = document.getElementById('mySwipe');
@@ -1526,9 +1583,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var mySwipe = null;
   var keydownFunction = function (e) {
     if (e.key === 'ArrowRight') {
-      mySwipe.next();
+      if (modal && modal.classList.contains('is-open')) {
+        mySwipe.next();
+      }
     } else if (e.key === 'ArrowLeft') {
-      mySwipe.prev();
+      if (modal && modal.classList.contains('is-open')) {
+        mySwipe.prev();
+      }
     }
   }
 
@@ -1757,17 +1818,17 @@ document.addEventListener('DOMContentLoaded', function () {
     <nav id="TableOfContents">
   <ul>
     <li><a href="#heading">前言</a></li>
-    <li><a href="#heading1">开箱</a></li>
-    <li><a href="#heading2">外观</a>
+    <li><a href="#heading-1">开箱</a></li>
+    <li><a href="#heading-2">外观</a>
       <ul>
-        <li><a href="#heading3">机身细节</a></li>
+        <li><a href="#heading-3">机身细节</a></li>
       </ul>
     </li>
-    <li><a href="#heading4">使用感受</a></li>
-    <li><a href="#heading5">样片</a></li>
-    <li><a href="#heading6">总结</a>
+    <li><a href="#heading-4">使用感受</a></li>
+    <li><a href="#heading-5">样片</a></li>
+    <li><a href="#heading-6">总结</a>
       <ul>
-        <li><a href="#heading7">参考</a></li>
+        <li><a href="#heading-7">参考</a></li>
       </ul>
     </li>
   </ul>
@@ -1809,7 +1870,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-<script defer src="/js/enquire.min.72cb9edeb1ca1b92f5bf9df8d31a1ecd1e423d0b5e0f48a2a208b020dd5053fa.js"></script>
+<script defer src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <script defer src="/js/clipboard.min.1626706afc88d95ebe1173b553ec732c6dc82a576989315fdf5e7779af738a44.js"></script>
 
@@ -1929,9 +1990,10 @@ document.addEventListener('DOMContentLoaded', function () {
             curElem.nextElementSibling.style.display = 'block';
           }
           if (curElem) {
+            getParents(curElem, 'ul') ? 
             getParents(curElem, 'ul').forEach(function (elem) {
               elem.style.display = 'block';
-            });
+            }) : null;
           }
         });
       });

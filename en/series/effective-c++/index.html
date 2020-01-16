@@ -106,7 +106,8 @@
               tocElem.querySelectorAll('a').forEach(function (elem) {
                 elem.classList.remove('active');
               });
-              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active');
+              tocElem.querySelector('a[href="#' + id + '"]') ? 
+              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active') : null;
 
               tableOfContentsElem.querySelectorAll('ul > li').forEach(function (liElem) {
                 liElem.querySelectorAll('ul').forEach(function (ulElem) {
@@ -115,12 +116,13 @@
               });
 
               var curElem = tableOfContentsElem.querySelector(`[href="#${id}"]`);
-              if (curElem.nextElementSibling) {
+              if (curElem && curElem.nextElementSibling) {
                 curElem.nextElementSibling.style.display = 'block';
               }
+              getParents(curElem, 'ul') ? 
               getParents(curElem, 'ul').forEach(function (elem) {
                 elem.style.display = 'block';
-              }); 
+              }) : null; 
             }
           }
         }) : null;
@@ -147,7 +149,8 @@
               tocElem.querySelectorAll('a').forEach(function (elem) {
                 elem.classList.remove('active');
               });
-              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active');
+              tocElem.querySelector('a[href="#' + id + '"]') ? 
+              tocElem.querySelector('a[href="#' + id + '"]').classList.add('active') : null;
 
               tableOfContentsElem.querySelectorAll('ul > li').forEach(function (liElem) {
                 liElem.querySelectorAll('ul').forEach(function (ulElem) {
@@ -156,12 +159,13 @@
               });
 
               var curElem = tableOfContentsElem.querySelector(`[href="#${id}"]`);
-              if (curElem.nextElementSibling) {
+              if (curElem && curElem.nextElementSibling) {
                 curElem.nextElementSibling.style.display = 'block';
               }
+              getParents(curElem, 'ul') ? 
               getParents(curElem, 'ul').forEach(function (elem) {
                 elem.style.display = 'block';
-              });
+              }) : null;
             }
           }
         }) : null;
@@ -323,7 +327,7 @@
         if (utterances) {
           utterances.contentWindow.postMessage({
             type: 'set-theme',
-            theme: selectedThemeVariant === "dark" || selectedThemeVariant === "hacker" ? 'photon-dark' : 'github-light',
+            theme: selectedThemeVariant === "dark" || selectedThemeVariant === "hacker" ? 'photon-dark' : selectedThemeVariant === 'kimbie' ? 'github-dark-orange' : 'github-light',
           }, 'https://utteranc.es');
         }
       });
@@ -337,20 +341,25 @@
     var siteBaseURL = JSON.parse("\"http://nianze.tk/\"");
     var siteBaseChecker = /\/\w+\//i;
     var isSlug = siteBaseChecker.test(siteBaseURL);
+    var isThemeSite = location.origin.includes('themes.gohugo.io');
+
     
-    
-        var hasLangPostfix = location.pathname.includes("/en");
-        if (hasLangPostfix) {
-          if (isSlug) {
-            baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0] + "en";
-          } else {
-            baseurl = location.origin + "/en";
-          }
+        if (isThemeSite) {
+          baseurl = "http:\/\/nianze.tk\/\/en";
         } else {
-          if (isSlug) {
-            baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0];
+          var hasLangPostfix = location.pathname.includes("/en");
+          if (hasLangPostfix) {
+            if (isSlug) {
+              baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0] + "en";
+            } else {
+              baseurl = location.origin + "/en";
+            }
           } else {
-            baseurl = location.origin;
+            if (isSlug) {
+              baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0];
+            } else {
+              baseurl = location.origin;
+            }
           }
         }
     
@@ -509,11 +518,17 @@
     }
 
     function generateHighlightedText(text, regions) {
-      if(!regions) return text;
-      
+      if (!regions) {
+        return text;
+      }
+
       var content = '', nextUnhighlightedRegionStartingIndex = 0;
 
       regions.forEach(function(region) {
+        if (region[0] === region[1]) {
+          return null;
+        }
+        
         content += '' +
           text.substring(nextUnhighlightedRegionStartingIndex, region[0]) +
           '<span class="search__highlight">' +
@@ -686,15 +701,29 @@
 <meta property="og:url" content="http://nianze.tk/en/series/effective-c&#43;&#43;/">
 <meta property="og:type" content="website">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/en/series/effective-c&#43;&#43;/">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-<link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />
 <link rel="manifest" href="/manifest.json">
+
+  <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-icon-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+
     <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -757,19 +786,21 @@ if (!doNotTrack) {
         }        
     </script>    
     
-    <div id="body">
+    <div id="container">
         
-        <div class="container wrapper">
+        <div class="wrapper">
             <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar__brand">
     
     <a href="/en/" title="Home" rel="home" class="navbar__logo-link">
-      <img data-src="/logo.png" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' width='48px' height='48px'%3E%3Cpath fill='%2337474f' d='M24.648,4l0.29,0.002c0.52,0.008,1.23,0.109,1.857,0.198c0.314,0.045,0.616,0.088,0.883,0.119 c0.164,0.024,0.715,0.227,1.043,0.348C29.468,4.941,32,6.875,32,6.875L31,5c0,0,1.563,0.445,2.125,0.875C34.247,6.733,34.354,7,35,7 h0.375L35,6c0.375,0.19,1.78,1.289,1.968,1.541L37,7.583l0.036,0.039c1.411,1.495,2.095,2.462,2.595,3.169 c0.339,0.48,0.945,0.822,1.243,1.21C41.225,12.454,42,14,42,14v-0.998c0,0,0.776,1.029,1.25,2.373C44,17.5,44,19,44,19 s-0.25-0.625-1-0.875C43,19,44,21,44,24.002v6c-0.74,0.57-0.989,1.443-1.214,2.386c-0.328,1.372-0.605,2.294-1.444,2.593L41,35.002 l-0.08,0.277c-0.533,0.662-0.994,1.351-1.439,2.018c-1.446,2.163-2.495,3.705-4.481,3.705c-1.041,0-2.044,0.167-2.441,0.559 C32.128,41.987,32,42.662,32,43.002c-1.012,0.377-2.167,1-8,1c-5,0-9.4-1.756-12.262-4.545c-0.965-0.785-2.272-1.669-2.857-2.273 C6.976,35.593,6.047,33.058,6,33.002c1.184,0.985,5.245,4.636,7.091,4.636l0,0C13.301,37.416,12,35.684,12,35.002 C13.429,37.162,17.405,40,23,40c4.125,0,3.892-0.73,6-1c4.875-0.625,7.492-5.439,8.214-6.816c0.05-0.096,0.202-1.02,0.24-1.092 c0.368-0.376,0.463-1.167,0.607-2.371C38.17,27.815,39,26.75,39,25.625S38,24,38,24s0-3-0.625-5.375 C37.25,18.151,36.738,16.409,34,13v1.002c-2.125-1.127-3.668-2.545-4.125-2.752C28.435,10.599,26.831,10,25,10c-4,0-4.625,1-8,2 c0,0,1.25,0,2,0c0,0-1.867,1.445-3,2.125c-1.875,1.125-4,5.034-4,7.875c0,3-2.485,4-4,4c-2.453,0-4-2-4-4 c0-1.133,0.45-2.5,0.886-3.425c0.411-0.873,0.799-1.697,0.795-2.581c0.031-0.106,0.274-0.383,0.435-0.566 c0.466-0.531,1.083-1.234,1.224-2.252c1.106-0.927,3.13-3.015,3.155-3.041c0.162-0.171,0.324-0.304,0.511-0.457 c0.324-0.265,0.728-0.594,1.221-1.205l0.423-0.525c0.798-0.428,2.222-1.035,2.776-1.271c0.342-0.146,0.602-0.258,0.716-0.313 L19.75,5.75C19.966,5.75,20,5.238,20,5c0-0.227,0.106-0.198,0.324-0.273C22.139,4.099,22.799,4,24.648,4L24.648,4'/%3E%3C/svg%3E" alt="Home" class="lazyload navbar__logo">
+      <img src="/logo.png" alt="Home" class="navbar__logo">
     </a>
     
-    <a href="/en/" title="Home" rel="home" class="navbar__title-link">
-      <h6 class="navbar__title">Nzo</h6>
-    </a>    
+    
+      <a href="/en/" title="Home" rel="home" class="navbar__title-link">
+        <h6 class="navbar__title">Nzo</h6>
+      </a>
+    
   </div>
   
   
@@ -919,7 +950,7 @@ if (!doNotTrack) {
             
 
 
-<script src="/js/enquire.min.72cb9edeb1ca1b92f5bf9df8d31a1ecd1e423d0b5e0f48a2a208b020dd5053fa.js"></script>
+<script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <main class="main-main">
   <nav class="breadcrumb" aria-label="breadcrumbs">
@@ -930,24 +961,24 @@ if (!doNotTrack) {
   
   
   
-  <li >    
+  <li >
     
-      <a href="http://nianze.tk/en/">Nzo&#39;s Blog</a>
-        
+      <a href="http://nianze.tk/en/" class="capitalize">Nzo&#39;s Blog</a>
+    
   </li>
   
   
-  <li >    
+  <li >
     
-      <a href="http://nianze.tk/en/series/">Series</a>
-        
+      <a href="http://nianze.tk/en/series/" class="capitalize">Series</a>
+    
   </li>
   
   
-  <li  class="is-active" >    
+  <li  class="is-active" >
     
-      <a href="http://nianze.tk/en/series/effective-c&#43;&#43;/">effective c&#43;&#43;</a>
-        
+      <span>effective c&#43;&#43;</span>
+    
   </li>
   
   </ol>
@@ -955,7 +986,7 @@ if (!doNotTrack) {
 </nav>
   <article class="list">
     <header class="list__header">
-      <h5 class="list__header--title h5">effective c&#43;&#43;</h5>
+      <h5 class="list__header--title capitalize h5">effective c&#43;&#43;</h5>
     </header>
     
     <div class="list__header--desc p2">
@@ -968,7 +999,7 @@ if (!doNotTrack) {
   <article class="summary-card">
   <header>
     <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/'> [EMCpp]Item-40 Use std::atomic for Concurrency, volatile for Special Memory</a> </h5>
-    <h6 class="subtitle caption"><span title="Written At">📅Oct 30, 2018 </span>  <span title="Reading Time"> &middot; ☕ 3 min read</span></h6>
+    <h6 class="subtitle caption"><time title="Written At">📅Oct 30, 2018 </time>  <span title="Reading Time"> &middot; ☕ 3 min read</span></h6>
   </header>
   
   <div class="summary-card__content">
@@ -980,7 +1011,7 @@ if (!doNotTrack) {
     
     <div class="summary-card__image-wrapper">
       <a href="http://nianze.tk/en/notes/2018/10/use-stdatomic-for-concurrency-volatile-for-special-memory/">
-        <img data-src="/images/2018/2018-10/30.gif" alt="2018/2018-10/30.gif" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload summary-card__image"/>
+        <img data-src="/images/2018/2018-10/30.gif" alt="2018/2018-10/30.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image"/>
       </a>
     </div>
     
@@ -993,7 +1024,7 @@ if (!doNotTrack) {
   <article class="summary-card">
   <header>
     <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/10/consider-void-futures-for-one-shot-event-communication/'> [EMCpp]Item-39 Consider Void Futures for One-Shot Event Communication</a> </h5>
-    <h6 class="subtitle caption"><span title="Written At">📅Oct 11, 2018 </span>  <span title="Reading Time"> &middot; ☕ 3 min read</span></h6>
+    <h6 class="subtitle caption"><time title="Written At">📅Oct 11, 2018 </time>  <span title="Reading Time"> &middot; ☕ 3 min read</span></h6>
   </header>
   
   <div class="summary-card__content">
@@ -1005,7 +1036,7 @@ if (!doNotTrack) {
     
     <div class="summary-card__image-wrapper">
       <a href="http://nianze.tk/en/notes/2018/10/consider-void-futures-for-one-shot-event-communication/">
-        <img data-src="/images/2018/10/11.gif" alt="2018/10/11.gif" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload summary-card__image"/>
+        <img data-src="/images/2018/10/11.gif" alt="2018/10/11.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image"/>
       </a>
     </div>
     
@@ -1018,7 +1049,7 @@ if (!doNotTrack) {
   <article class="summary-card">
   <header>
     <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/10/be-aware-of-varying-thread-handle-destructor-behavior/'> [EMCpp]Item-38 Be Aware of Varying Thread Handle Destructor Behavior</a> </h5>
-    <h6 class="subtitle caption"><span title="Written At">📅Oct 9, 2018 </span>  <span title="Reading Time"> &middot; ☕ 2 min read</span></h6>
+    <h6 class="subtitle caption"><time title="Written At">📅Oct 9, 2018 </time>  <span title="Reading Time"> &middot; ☕ 2 min read</span></h6>
   </header>
   
   <div class="summary-card__content">
@@ -1030,7 +1061,7 @@ if (!doNotTrack) {
     
     <div class="summary-card__image-wrapper">
       <a href="http://nianze.tk/en/notes/2018/10/be-aware-of-varying-thread-handle-destructor-behavior/">
-        <img data-src="/images/2018/2018-10/09.gif" alt="2018/2018-10/09.gif" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload summary-card__image"/>
+        <img data-src="/images/2018/2018-10/09.gif" alt="2018/2018-10/09.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image"/>
       </a>
     </div>
     
@@ -1043,7 +1074,7 @@ if (!doNotTrack) {
   <article class="summary-card">
   <header>
     <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/10/make-stdthreads-unjoinable-on-all-paths/'> [EMCpp]Item-37 Make std::threads Unjoinable on All Paths</a> </h5>
-    <h6 class="subtitle caption"><span title="Written At">📅Oct 2, 2018 </span>  <span title="Reading Time"> &middot; ☕ 3 min read</span></h6>
+    <h6 class="subtitle caption"><time title="Written At">📅Oct 2, 2018 </time>  <span title="Reading Time"> &middot; ☕ 3 min read</span></h6>
   </header>
   
   <div class="summary-card__content">
@@ -1055,7 +1086,7 @@ if (!doNotTrack) {
     
     <div class="summary-card__image-wrapper">
       <a href="http://nianze.tk/en/notes/2018/10/make-stdthreads-unjoinable-on-all-paths/">
-        <img data-src="/images/2018/2018-10/02.gif" alt="2018/2018-10/02.gif" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload summary-card__image"/>
+        <img data-src="/images/2018/2018-10/02.gif" alt="2018/2018-10/02.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image"/>
       </a>
     </div>
     
@@ -1068,7 +1099,7 @@ if (!doNotTrack) {
   <article class="summary-card">
   <header>
     <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/'> [EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential</a> </h5>
-    <h6 class="subtitle caption"><span title="Written At">📅Oct 1, 2018 </span>  <span title="Reading Time"> &middot; ☕ 4 min read</span></h6>
+    <h6 class="subtitle caption"><time title="Written At">📅Oct 1, 2018 </time>  <span title="Reading Time"> &middot; ☕ 4 min read</span></h6>
   </header>
   
   <div class="summary-card__content">
@@ -1080,57 +1111,7 @@ if (!doNotTrack) {
     
     <div class="summary-card__image-wrapper">
       <a href="http://nianze.tk/en/notes/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/">
-        <img data-src="/images/2018/2018-10/01.gif" alt="2018/2018-10/01.gif" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload summary-card__image"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-      
-      
-  <article class="summary-card">
-  <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/08/prefer-task-based-programming-to-thread-based/'> [EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based</a> </h5>
-    <h6 class="subtitle caption"><span title="Written At">📅Aug 28, 2018 </span>  <span title="Reading Time"> &middot; ☕ 3 min read</span></h6>
-  </header>
-  
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>Thread-based programming calls for manual management of thread exhaustion, oversubscription, load balancing, and adaptation to new platforms, while task-based programming via <code>std::async</code> with the default launch policy handles most of the issues for us.</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="http://nianze.tk/en/notes/2018/08/prefer-task-based-programming-to-thread-based/">
-        <img data-src="/images/2018/2018-08/28.gif" alt="2018/2018-08/28.gif" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload summary-card__image"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-      
-      
-  <article class="summary-card">
-  <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/08/prefer-lambdas-to-stdbind/'> [EMCpp]Item-34 Prefer Lambdas to std::bind</a> </h5>
-    <h6 class="subtitle caption"><span title="Written At">📅Aug 24, 2018 </span>  <span title="Reading Time"> &middot; ☕ 4 min read</span></h6>
-  </header>
-  
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>Lambdas are more readable, more expressive, and may be more efficient than using <code>std::bind</code>.</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="http://nianze.tk/en/notes/2018/08/prefer-lambdas-to-stdbind/">
-        <img data-src="/images/2018/2018-08/24.gif" alt="2018/2018-08/24.gif" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24pt' height='24pt' viewBox='0 0 24 24' version='1.1'%3E%3Cg id='surface1035795'%3E%3Cpath style=' stroke:none;fill-rule:nonzero;fill:rgb(80%25,80%25,80%25);fill-opacity:1;' d='M 4 4 C 2.90625 4 2 4.90625 2 6 L 2 18 C 2 19.09375 2.90625 20 4 20 L 20 20 C 21.09375 20 22 19.09375 22 18 L 22 6 C 22 4.90625 21.09375 4 20 4 Z M 4 6 L 20 6 L 20 18 L 4 18 Z M 4 6 '/%3E%3C/g%3E%3C/svg%3E%0A" class="lazyload summary-card__image"/>
+        <img data-src="/images/2018/2018-10/01.gif" alt="2018/2018-10/01.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image"/>
       </a>
     </div>
     
@@ -1225,13 +1206,34 @@ if (!doNotTrack) {
     
       
       
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
         <li class="disabled"><a name="">&hellip;</a></li>
       
     
       
       
         <li
-        ><a href="/en/series/effective-c&#43;&#43;/page/19/">19</a></li>
+        ><a href="/en/series/effective-c&#43;&#43;/page/26/">26</a></li>
       
     
   </ul>
@@ -1664,7 +1666,7 @@ if (!doNotTrack) {
   });
 </script>
 
-<script defer src="/js/enquire.min.72cb9edeb1ca1b92f5bf9df8d31a1ecd1e423d0b5e0f48a2a208b020dd5053fa.js"></script>
+<script defer src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <script defer src="/js/lazysizes.min.31dd6a2d3a1ec0f78a8df007535cf23f03aeb5c70f026e6d6a19dac3b3acc340.js"></script>
 
