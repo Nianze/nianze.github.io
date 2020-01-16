@@ -16,7 +16,7 @@ featured_image: 2020/01/16/jewel.jpg
 
 {{< img src="/images/2020/01/16/pray.jpg" title="pray" caption="Pray by wlop">}}
 
-工作午休时随意翻看知乎，有个关于[wlop](https://www.deviantart.com/wlop)的问题：[为什么wlop非常火？](https://www.zhihu.com/question/322883061),顺藤摸瓜找到一篇wlop的[专访](http://chokstick.com/chok-interview/2013/10/wlop-interview-by-chokstick/),才发现原来wlop是全职程序员，靠代码养活自己，业余时间靠网络自学的插画。上次知道这样“不务正业”的程序员，还是去年年中“乐队的夏天”最火的时候知道了刺猬主唱子健。
+工作午休时随意翻看知乎，有个关于[wlop](https://www.deviantart.com/wlop)的问题：[为什么wlop非常火？](https://www.zhihu.com/question/322883061),顺藤摸瓜找到一篇wlop的[专访](http://chokstick.com/chok-interview/2013/10/wlop-interview-by-chokstick/),才发现原来wlop是全职程序员，靠代码养活自己，业余时间靠网络自学的插画。上次知道这样“不务正业”的程序员，还是去年年中“乐队的夏天”最火的时候知道的刺猬主唱子健。
 
 今天Terminal首页的Quote of the day这么写道：
 
