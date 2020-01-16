@@ -4,9 +4,8 @@ date: 2019-06-19T17:47:31-04:00
 categories:
 - thoughts 
 tags:
-- meaning
+- ritual
 - death
-- nyu
 - chinese
 slug: two-kinds-of-people
 autoThumbnailImage: true

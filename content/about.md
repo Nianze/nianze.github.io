@@ -17,6 +17,7 @@ comments: false
 
 # [Work Experience](https://drive.google.com/file/d/1uNEZZE2rUJP2sUzg5x-zMvOvMyvzuAhY/view?usp=sharing)
 
+{{< box >}}
 <div class='display-card experience-card'>
     <h3 class='company'>Bloomberg L.P. <small class='dates'>May 2017 - Today</small></h3>
     <h6 class='description'>
@@ -25,7 +26,9 @@ comments: false
         Building Trader Access Manager service that manages user privileges for Bloomberg terminal clients
     </h6>
 </div>
+{{< /box >}}
 
+{{< box >}}
 <div class='display-card experience-card'>
     <h3 class='company'>Oracle Corp.<small class='dates'>May 2016 - Aug. 2016</small></h3>
     <h6 class='description'>
@@ -33,9 +36,11 @@ comments: false
         Virtualizing static fields in 3rd-party Java library during runtime to improve memory efficiency in Weblogic Server
     </h6>
 </div>
+{{< /box >}}
 
 # Skills
 
+{{< box >}}
 <div class='display-card skills'>
     <h3 class='skill-category'>Programming</h3>
     <span class='tooltip--top' data-tooltip='My primary programming language.'>C++</span>
@@ -43,7 +48,9 @@ comments: false
     <span>Python</span>
     <span class='texthtml' style="font-family: 'CMU Serif', cmr10, LMRoman10-Regular, 'Latin Modern Math', 'Nimbus Roman No9 L', 'Times New Roman', Times, serif;">L<span style="text-transform: uppercase; font-size: 0.75em; vertical-align: 0.25em; margin-left: -0.36em; margin-right: -0.15em; line-height: 1ex;">a</span>T<span style="text-transform: uppercase; vertical-align: -0.5ex; margin-left: -0.1667em; margin-right: -0.125em; line-height: 1ex;">e</span>X</span>
 </div>
+{{< /box >}}
 
+{{< box >}}
 <div class='display-card skills'>
     <h3 class='skill-category'>Tools</h3>
     <span>CMake</span>
@@ -51,15 +58,18 @@ comments: false
     <span class='tooltip--top' data-tooltip='No bias. They all are great editors.'>VSCode, Emacs, Vim</span>
     <span class='tooltip--top' data-tooltip="Tool I used to built this website">Hugo Static Site Generator</span>
 </div>
+{{< /box >}}
 
 # Education
 
+{{< box >}}
 - **New York University**
 | Master of Music - _Music Technology_
 - **Cornell University**
 | Master of Engineering - _Electrical and Computer Engineering_
 - **Southeast University**
 | Bachelor of Engineering - _Electronic Science & Technology_
+{{< /box >}}
 
 I still remember the excitement when I saw Microsoft Kinect being able to detecte human skeleton, which made me decide to take advantage of this interesting hardware to build a [robot](https://youtu.be/Y7ey0uSVP0o), or specifically a vending-machine-like robot with kinect as its eyes. Teamed up with two of my classmates, we took part in the China National Kinect for Windows Application Development Contest, in which we've got 1st prize among all 151 teams selected nationwide. We also took the robot to Microsoft Imagine Cup, where we've got 2nd prize.
 
