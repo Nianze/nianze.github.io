@@ -1,18 +1,13 @@
 ---
 title: "创作欲望本质是什么？"
 date: 2018-07-13
-series:
-- effective c++
 categories:
 - thoughts
 tags:
 - meaning
+- chinese
 slug: the source of creative desire
-autoThumbnailImage: true
-thumbnailImagePosition: center
 featured_image: 2018/2018-07/13.jpg
-coverImage: /images/2018/2018-07/13.jpg
-metaAlignment: center
 ---
 
 创作欲望的产生也许多种多样，但我觉得最强烈的创作欲，或者说根植创作欲望最深处的动力，来自于深陷内心的恐惧。
