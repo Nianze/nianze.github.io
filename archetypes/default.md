@@ -8,7 +8,7 @@ categories:
 tags:
 - t
 slug: "{{ replace .TranslationBaseName "-" " " | title }}"
-featured_image: /images/thumb.JPG
+featured_image: {{  replace .Date "-" "/" }}.JPG
 draft: true
 ---
 
