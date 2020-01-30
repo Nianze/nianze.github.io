@@ -1,6 +1,6 @@
 ---
 title: "DSP Review"
-date: 2020-01-25T12:58:10-05:00
+date: 2020-01-30T12:58:10-05:00
 categories:
 - music
 tags:
@@ -10,7 +10,13 @@ featured_image: 2020/01/25/nyquist.png
 draft: true
 ---
 
-test
+Intuitive ways to understand key concepts in digital signal processing such as aliasing, DFT, Convolution, Filters, Z-Transform, etc.
 <!--more-->
 
-test
+# Aliasing in sampling
+
+> Waves at frequencies 
+
+# DFT
+
+# 
