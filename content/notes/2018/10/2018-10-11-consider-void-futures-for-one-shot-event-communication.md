@@ -11,7 +11,7 @@ tags:
 slug: Consider Void Futures for One Shot Event Communication
 autoThumbnailImage: true
 thumbnailImagePosition: right
-featured_image: 2018/10/11.gif
+featured_image: 2018/2018-10/11.gif
 ---
 
 Using `std::promise`s and futures is useful skill to create one-shot communication between a detecting task and reacting task.
