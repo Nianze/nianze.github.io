@@ -104,10 +104,13 @@ $$ x[n] \rightarrow w[n] \cdot x[n] $$
 Since in naturally occurring signals, pure tones at exactly $mf_s/N$ hardly happen, we are unlikely to tell apart analysis and non-analysis frequencies. The overall benefits of windowing outweigh the drawbacks
 
 Key properties when designing/choosing a window:
+
 1. Width of the **main lobe**(in Hz or bins): how far does energy smear out locally
 2. Hight of the **side lobe**(in dB): how loud is the leakage from distant frequencies
 
-######  STFT (short-time Fourier transform)
+{{< img src="/images/2020/01/30/window_design.png" width=70% >}}
+
+##### STFT (short-time Fourier transform)
 
 # Convolution
 
@@ -115,9 +118,9 @@ Key properties when designing/choosing a window:
 
 # Filters
 
-# FIR filters
+## FIR filters
 
-# IIR filters
+## IIR filters
 
 ## Filter analysis
 
