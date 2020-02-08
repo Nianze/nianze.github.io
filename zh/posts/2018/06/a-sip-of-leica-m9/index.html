@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" dir="ltr">
 
-<head>
+<head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -78,8 +78,18 @@
   }
   
 
-
   document.addEventListener('DOMContentLoaded', function () {
+    
+    var summaryContainer = document.querySelector('.summary__container');
+    var searchResult = document.querySelector('.search-result');
+    var searchResultCloseBtn = document.querySelector('.search-result__close');
+    searchResultCloseBtn ? searchResultCloseBtn.addEventListener('click', function (e) {
+      searchResult.setAttribute('data-display', 'none');
+      summaryContainer.setAttribute('data-display', 'block');
+    }) : null;
+    
+
+
     
     document.querySelectorAll('.tab') ? 
     document.querySelectorAll('.tab').forEach(function(elem, idx) {
@@ -203,6 +213,9 @@
     var notAllowedTitleIds = null;
 
     
+    var tocFolding = JSON.parse("null");
+
+    
     singleContentsElem && singleContentsElem.querySelectorAll(".tab") ?
     singleContentsElem.querySelectorAll(".tab").forEach(function (elem) {
       elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
@@ -272,14 +285,18 @@
                   tocElem.querySelector('a[href="#' + id + '"]') ?
                     tocElem.querySelector('a[href="#' + id + '"]').classList.add('active') : null;
 
-                  tableOfContentsElem.querySelectorAll('ul') ? 
-                  tableOfContentsElem.querySelectorAll('ul').forEach(function (rootUl) {
-                    rootUl.querySelectorAll('li').forEach(function (liElem) {
-                      liElem.querySelectorAll('ul').forEach(function (ulElem) {
-                        ulElem.style.display = 'none';
-                      });
-                    });
-                  }) : null;
+                  if (false === tocFolding) {
+                    
+                  } else {
+                    tableOfContentsElem.querySelectorAll('ul') ?
+                      tableOfContentsElem.querySelectorAll('ul').forEach(function (rootUl) {
+                        rootUl.querySelectorAll('li').forEach(function (liElem) {
+                          liElem.querySelectorAll('ul').forEach(function (ulElem) {
+                            ulElem.style.display = 'none';
+                          });
+                        });
+                      }) : null;
+                  }
 
                   var curElem = tableOfContentsElem.querySelector("[href='#" + id + "']");
                   if (curElem && curElem.nextElementSibling) {
@@ -338,14 +355,18 @@
                   tocElem.querySelector('a[href="#' + id + '"]') ?
                     tocElem.querySelector('a[href="#' + id + '"]').classList.add('active') : null;
 
-                  tableOfContentsElem.querySelectorAll('ul') ? 
-                  tableOfContentsElem.querySelectorAll('ul').forEach(function (rootUl) {
-                    rootUl.querySelectorAll('li').forEach(function (liElem) {
-                      liElem.querySelectorAll('ul').forEach(function (ulElem) {
-                        ulElem.style.display = 'none';
-                      });
-                    });
-                  }) : null;
+                  if (false === tocFolding) {
+                    
+                  } else {
+                    tableOfContentsElem.querySelectorAll('ul') ?
+                      tableOfContentsElem.querySelectorAll('ul').forEach(function (rootUl) {
+                        rootUl.querySelectorAll('li').forEach(function (liElem) {
+                          liElem.querySelectorAll('ul').forEach(function (ulElem) {
+                            ulElem.style.display = 'none';
+                          });
+                        });
+                      }) : null;
+                  }
 
                   var curElem = tableOfContentsElem.querySelector("[href='#" + id + "']");
                   if (curElem && curElem.nextElementSibling) {
@@ -370,12 +391,16 @@
         }
 
         if (tableOfContentsElem && document.documentElement.scrollTop < 250) {
-          tableOfContentsElem.querySelector('ul') ?
-          tableOfContentsElem.querySelector('ul').querySelectorAll('li').forEach(function (liElem) {
-            liElem.querySelectorAll('ul').forEach(function (ulElem) {
-              ulElem.style.display = 'none';
-            });
-          }) : null;
+          if (false === tocFolding) {
+
+          } else {
+            tableOfContentsElem.querySelector('ul') ?
+              tableOfContentsElem.querySelector('ul').querySelectorAll('li').forEach(function (liElem) {
+                liElem.querySelectorAll('ul').forEach(function (ulElem) {
+                  ulElem.style.display = 'none';
+                });
+              }) : null;
+          }
         }
       }
       lastScrollTop = st <= 0 ? 0 : st;
@@ -394,80 +419,6 @@
       } else {
         navbarBurgerElem.classList.add('is-active');
         navbarMenuElem.classList.add('is-active');
-      }
-    }) : null;
-  
-
-
-  
-    var mobileSearchInputElem = document.querySelector('#search-mobile');
-    var mobileSearchClassElem = document.querySelector('.mobile-search');
-    var mobileSearchBtnElem = document.querySelector('#mobileSearchBtn');
-    var mobileSearchCloseBtnElem = document.querySelector('#search-mobile-close');
-    var mobileSearchContainer = document.querySelector('#search-mobile-container');
-    var mobileSearchResultsElem = document.querySelector('#search-mobile-results');
-    var htmlElem = document.querySelector('html');
-
-    if (mobileSearchClassElem) {
-      mobileSearchClassElem.style.display = 'none';
-    }
-
-    mobileSearchBtnElem ? 
-    mobileSearchBtnElem.addEventListener('click', function () {
-      if (mobileSearchContainer) {
-        mobileSearchContainer.style.display = 'block';
-      }
-
-      if (mobileSearchInputElem) {
-        mobileSearchInputElem.focus();
-      }
-
-      if (htmlElem) {
-        htmlElem.style.overflowY = 'hidden';
-      }
-    }) : null;
-
-    mobileSearchCloseBtnElem ? 
-    mobileSearchCloseBtnElem.addEventListener('click', function() {
-      if (mobileSearchContainer) {
-        mobileSearchContainer.style.display = 'none';
-      }
-
-      if (mobileSearchInputElem) {
-        mobileSearchInputElem.value = '';
-      }
-      
-      if (mobileSearchResultsElem) {
-        while (mobileSearchResultsElem.firstChild) {
-          mobileSearchResultsElem.removeChild(mobileSearchResultsElem.firstChild);
-        }
-      }
-
-      if (htmlElem) {
-        htmlElem.style.overflowY = 'visible';
-      }
-    }) : null;
-
-    mobileSearchInputElem ? 
-    mobileSearchInputElem.addEventListener('keydown', function(e) {
-      var keyCode = e.which || e.keyCode;
-      if (e.key === 'Escape' || keyCode === 27) {
-        if (mobileSearchContainer) {
-          mobileSearchContainer.style.display = 'none';
-        }
-        
-        if (mobileSearchInputElem) {
-          mobileSearchInputElem.value = '';
-        }
-
-        if (mobileSearchResultsElem) {
-          while (mobileSearchResultsElem.firstChild) {
-            mobileSearchResultsElem.removeChild(mobileSearchResultsElem.firstChild);
-          }
-        }
-        if (htmlElem) {
-          htmlElem.style.overflowY = 'visible';
-        }
       }
     }) : null;
   
@@ -537,59 +488,29 @@
 
 
   
-    var baseurl = null;
     
-    var siteBaseURL = JSON.parse("\"http://nianze.tk/\"");
-    var siteBaseChecker = /\/\w+\//i;
-    var isSlug = siteBaseChecker.test(siteBaseURL);
-    var isThemeSite = location.origin.includes('themes.gohugo.io');
-
-    
-        if (isThemeSite) {
-          baseurl = "http:\/\/nianze.tk\/\/zh";
-        } else {
-          var hasLangPostfix = location.pathname.includes("/zh");
-          if (hasLangPostfix) {
-            if (isSlug) {
-              baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0] + "zh";
-            } else {
-              baseurl = location.origin + "/zh";
-            }
-          } else {
-            if (isSlug) {
-              baseurl = location.origin + siteBaseURL.match(siteBaseChecker)[0];
-            } else {
-              baseurl = location.origin;
-            }
-          }
-        }
-    
-
+    var permalink = JSON.parse("\"http://nianze.tk/zh/posts/2018/06/a-sip-of-leica-m9/\"");
     var searchResults = null;
     var searchMenu = null;
     var searchText = null;
     
     
     var enableSearchHighlight = JSON.parse("true");
+    
+    var searchResultPosition = JSON.parse("null");
+    
+    var sectionType = JSON.parse("\"posts\"");
 
     var fuse = null;
 
-    function endsWith(str, suffix) {
-      return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
-
-    function initFuse() {
-      if (!endsWith(baseurl, "/")) {
-        baseurl = baseurl + '/';
-      };
-
+    (function initFuse() {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', baseurl + "index.json");
+      xhr.open('GET', permalink + "index.json");
       xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
       xhr.onload = function () {
         if (xhr.status === 200) {
           fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-            keys: ['title', 'description', 'content'],
+            keys: sectionType.includes('publication') ? ['title', 'description', 'content'] : ['title', 'abstract'],
             includeMatches: enableSearchHighlight,
             shouldSort: true,
             threshold: 0.4,
@@ -598,35 +519,126 @@
             maxPatternLength: 32,
             minMatchCharLength: 1,
           });
+          window.fuse = fuse;
         }
         else {
           console.error('[' + xhr.status + ']Error:', xhr.statusText);
         }
       };
       xhr.send();
+    })();
+
+    function makeLi(ulElem, obj) {
+      var li = document.createElement('li');
+      li.className = 'search-result__item';
+      
+      var a = document.createElement('a');
+      a.innerHTML = obj.title;
+      a.setAttribute('class', 'search-result__item--title');
+      a.setAttribute('href', obj.permalink);
+
+      var descDiv = document.createElement('div');
+      descDiv.setAttribute('class', 'search-result__item--desc');
+      if (obj.description) {
+        descDiv.innerHTML = obj.description;
+      } else if (obj.content) {
+        descDiv.innerHTML = obj.content.substring(0, 225);
+      }
+      
+      li.appendChild(a);
+      li.appendChild(descDiv);
+      ulElem.appendChild(li);
     }
 
-    function renderSearchResults(results) { 
+    function makeHighlightLi(ulElem, obj) {
+      var li = document.createElement('li');
+      li.className = 'search-result__item';
+      var descDiv = null;
+
+      var a = document.createElement('a');
+      a.innerHTML = obj.item.title;
+      a.setAttribute('class', 'search-result__item--title');
+      a.setAttribute('href', obj.item.uri);
+
+      if (obj.matches && obj.matches.length) {
+        for (var i = 0; i < obj.matches.length; i++) {
+          if ('title' === obj.matches[i].key) {
+            a = document.createElement('a');
+            a.innerHTML = generateHighlightedText(obj.matches[i].value, obj.matches[i].indices);
+            a.setAttribute('class', 'search-result__item--title');
+            a.setAttribute('href', obj.item.uri);
+          }
+          
+          if ('description' === obj.matches[i].key) {
+            descDiv = document.createElement('div');
+            descDiv.setAttribute('class', 'search-result__item--desc');
+            descDiv.innerHTML = generateHighlightedText(obj.item.description, obj.matches[i].indices);
+          } else if ('content' === obj.matches[i].key) {
+            if (!descDiv) {
+              descDiv = document.createElement('div');
+              descDiv.setAttribute('class', 'search-result__item--desc');
+              descDiv.innerHTML = generateHighlightedText(obj.item.content.substring(0, 150), obj.matches[i].indices);
+            }
+          } else {
+            if (obj.item.description) {
+              descDiv = document.createElement('div');
+              descDiv.setAttribute('class', 'search-result__item--desc');
+              descDiv.innerHTML = obj.item.description;
+            } else {
+              descDiv = document.createElement('div');
+              descDiv.setAttribute('class', 'search-result__item--desc');
+              descDiv.innerHTML = obj.item.content.substring(0, 150);
+            }
+          }
+        }
+
+        li.appendChild(a);
+        if (descDiv) {
+          li.appendChild(descDiv);
+        }
+        if (li) {
+          ulElem.appendChild(li);
+        }
+      }
+    }
+
+    function renderSearchResultsSide(searchText, results) {
       searchResults = document.getElementById('search-results');
       searchMenu = document.getElementById('search-menu');
       searchResults.setAttribute('class', 'dropdown is-active');
+      
+      var ul = document.createElement('ul');
+      ul.setAttribute('class', 'dropdown-content search-content');
 
-      var content = document.createElement('div');
-      content.setAttribute('class', 'dropdown-content search-content');
-
-      if (results.length > 0) {
+      if (results.length) {
         results.forEach(function (result) {
-          var item = document.createElement('a');
-          item.setAttribute('href', result.uri);
-          item.setAttribute('class', 'dropdown-item');
-          item.innerHTML = '<div class="menu-item"><div class="menu-item__title">📄 ' + result.title + '</div><div class="menu-item__desc">' + (result.description ? result.description : result.content) + '</div></div>';
-          content.appendChild(item);
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.setAttribute('href', result.uri);
+          a.setAttribute('class', 'dropdown-item');
+          a.appendChild(li);
+
+          var titleDiv = document.createElement('div');
+          titleDiv.innerHTML = result.title;
+          titleDiv.setAttribute('class', 'menu-item__title');
+
+          var descDiv = document.createElement('div');
+          descDiv.setAttribute('class', 'menu-item__desc');
+          if (result.description) {
+            descDiv.innerHTML = result.description;
+          } else if (result.content) {
+            descDiv.innerHTML = result.content.substring(0, 150);
+          }
+
+          li.appendChild(titleDiv);
+          li.appendChild(descDiv);
+          ul.appendChild(a);
         });
       } else {
-        var item = document.createElement('span');
-        item.setAttribute('class', 'dropdown-item');
-        item.innerText = 'No results found';
-        content.appendChild(item);
+        var li = document.createElement('li');
+        li.setAttribute('class', 'dropdown-item');
+        li.innerText = 'No results found';
+        ul.appendChild(li);
       }
 
       while (searchMenu.hasChildNodes()) {
@@ -634,30 +646,73 @@
           searchMenu.lastChild
         );
       }
-      searchMenu.appendChild(content);
+      
+      searchMenu.appendChild(ul);
     }
 
-    function renderSearchHighlightResults(results) {      
+    function renderSearchHighlightResultsSide(searchText, results) {
       searchResults = document.getElementById('search-results');
       searchMenu = document.getElementById('search-menu');
       searchResults.setAttribute('class', 'dropdown is-active');
 
-      var content = document.createElement('div');
-      content.setAttribute('class', 'dropdown-content search-content');
+      var ul = document.createElement('ul');
+      ul.setAttribute('class', 'dropdown-content search-content');
 
-      if (results.length > 0) {
+      if (results.length) {
         results.forEach(function (result) {
-          var item = document.createElement('a');
-          item.setAttribute('href', result.item.uri);
-          item.setAttribute('class', 'dropdown-item');
-          item.innerHTML = '<div class="menu-item"><div class="menu-item__title">📄 ' + generateHighlightedText(result.item.title, result.matches[0].indices) + '</div><div class="menu-item__desc">' + (result.matches[1] ? generateHighlightedText(result.item.description, result.matches[1].indices) : result.matches[2] ? generateHighlightedText(result.item.content, result.matches[2].indices) : '') + '</div></div>';
-          content.appendChild(item);
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          var descDiv = null;
+
+          a.setAttribute('href', result.item.uri);
+          a.setAttribute('class', 'dropdown-item');
+          a.appendChild(li);
+
+          var titleDiv = document.createElement('div');
+          titleDiv.innerHTML = result.item.title;
+          titleDiv.setAttribute('class', 'menu-item__title');
+          
+          if (result.matches && result.matches.length) {
+            for (var i = 0; i < result.matches.length; i++) {
+              if ('title' === result.matches[i].key) {
+                titleDiv.innerHTML = generateHighlightedText(result.matches[i].value, result.matches[i].indices);
+              }
+
+              if ('description' === result.matches[i].key) {
+                descDiv = document.createElement('div');
+                descDiv.setAttribute('class', 'menu-item__desc');
+                descDiv.innerHTML = generateHighlightedText(result.item.description, result.matches[i].indices);
+              } else if ('content' === result.matches[i].key) {
+                if (!descDiv) {
+                  descDiv = document.createElement('div');
+                  descDiv.setAttribute('class', 'menu-item__desc');
+                  descDiv.innerHTML = generateHighlightedText(result.item.content.substring(0, 150), result.matches[i].indices);
+                }
+              } else {
+                if (result.item.description) {
+                  descDiv = document.createElement('div');
+                  descDiv.setAttribute('class', 'menu-item__desc');
+                  descDiv.innerHTML = result.item.description;
+                } else {
+                  descDiv = document.createElement('div');
+                  descDiv.setAttribute('class', 'menu-item__desc');
+                  descDiv.innerHTML = result.item.content.substring(0, 150);
+                }
+              }
+            }
+            
+            li.appendChild(titleDiv);
+            if (descDiv) {
+              li.appendChild(descDiv);
+            }
+            ul.appendChild(a);
+          }
         });
       } else {
-        var item = document.createElement('span');
-        item.setAttribute('class', 'dropdown-item');
-        item.innerText = 'No results found';
-        content.appendChild(item);
+        var li = document.createElement('li');
+        li.setAttribute('class', 'dropdown-item');
+        li.innerText = 'No results found';
+        ul.appendChild(li);
       }
 
       while (searchMenu.hasChildNodes()) {
@@ -665,10 +720,10 @@
           searchMenu.lastChild
         );
       }
-      searchMenu.appendChild(content);
+      searchMenu.appendChild(ul);
     }
 
-    function renderSearchResultsMobile(results) {
+    function renderSearchResultsMobile(searchText, results) {
       searchResults = document.getElementById('search-mobile-results');
 
       var content = document.createElement('div');
@@ -693,29 +748,72 @@
       searchResults.appendChild(content);      
     }
 
-    function renderSearchHighlightResultsMobile(results) {
+    function renderSearchHighlightResultsMobile(searchText, results) {
       searchResults = document.getElementById('search-mobile-results');
 
-      var content = document.createElement('div');
-      content.setAttribute('class', 'mobile-search__content');
+      var ul = document.createElement('div');
+      ul.setAttribute('class', 'mobile-search__content');
 
-      if (results.length > 0) {
+      if (results.length) {
         results.forEach(function (result) {
-          var item = document.createElement('a');
-          item.setAttribute('href', result.item.uri);
-          item.innerHTML = '<div class="mobile-search__item"><div class="mobile-search__item--title">📄 ' + generateHighlightedText(result.item.title, result.matches[0].indices) + '</div><div class="mobile-search__item--desc">' + (result.matches[1] ? generateHighlightedText(result.item.description, result.matches[1].indices) : result.matches[2] ? generateHighlightedText(result.item.content, result.matches[2].indices) : '') + '</div></div>';
-          content.appendChild(item);
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          var descDiv = null;
+
+          a.setAttribute('href', result.item.uri);
+          a.appendChild(li);
+          li.setAttribute('class', 'mobile-search__item');
+
+          var titleDiv = document.createElement('div');
+          titleDiv.innerHTML = result.item.title;
+          titleDiv.setAttribute('class', 'mobile-search__item--title');
+          
+          if (result.matches && result.matches.length) {
+            for (var i = 0; i < result.matches.length; i++) {
+              if ('title' === result.matches[i].key) {
+                titleDiv.innerHTML = generateHighlightedText(result.matches[i].value, result.matches[i].indices);
+              }
+
+              if ('description' === result.matches[i].key) {
+                descDiv = document.createElement('div');
+                descDiv.setAttribute('class', 'mobile-search__item--desc');
+                descDiv.innerHTML = generateHighlightedText(result.item.description, result.matches[i].indices);
+              } else if ('content' === result.matches[i].key) {
+                if (!descDiv) {
+                  descDiv = document.createElement('div');
+                  descDiv.setAttribute('class', 'mobile-search__item--desc');
+                  descDiv.innerHTML = generateHighlightedText(result.item.content.substring(0, 150), result.matches[i].indices);
+                }
+              } else {
+                if (result.item.description) {
+                  descDiv = document.createElement('div');
+                  descDiv.setAttribute('class', 'mobile-search__item--desc');
+                  descDiv.innerHTML = result.item.description;
+                } else {
+                  descDiv = document.createElement('div');
+                  descDiv.setAttribute('class', 'mobile-search__item--desc');
+                  descDiv.innerHTML = result.item.content.substring(0, 150);
+                }
+              }
+            }
+            
+            li.appendChild(titleDiv);
+            if (descDiv) {
+              li.appendChild(descDiv);
+            }
+            ul.appendChild(a);
+          }
         });
       } else {
         var item = document.createElement('span');
-        content.appendChild(item);
+        ul.appendChild(item);
       }
 
       let wrap = document.getElementById('search-mobile-results');
       while (wrap.firstChild) {
         wrap.removeChild(wrap.firstChild)
       }
-      searchResults.appendChild(content);
+      searchResults.appendChild(ul);
     }
 
     function generateHighlightedText(text, regions) {
@@ -744,28 +842,41 @@
       return content;
     };
 
-    initFuse();
-
     var searchElem = document.getElementById('search');
     var searchMobile = document.getElementById('search-mobile');
+    var searchResultsContainer = document.getElementById('search-results');
 
-    searchElem ? 
+    searchElem ?
     searchElem.addEventListener('input', function(e) {
-      if (!e.target.value) {
-        document.getElementById('search-results').setAttribute('class', 'dropdown');
-        return null;
-      }
-
-      if (window.innerWidth < 770) {
+      if (!e.target.value | window.innerWidth < 770) {
+        searchResultsContainer ? searchResultsContainer.setAttribute('class', 'dropdown') : null;
+        searchResult ? searchResult.setAttribute('data-display', 'none') : null;
+        summaryContainer ? summaryContainer.setAttribute('data-display', 'block') : null;
         return null;
       }
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-      if (enableSearchHighlight) {
-        renderSearchHighlightResults(results);
+
+      if (searchResultPosition === "main") {
+        if (enableSearchHighlight) {
+          renderSearchHighlightResultsMain(searchText, results);
+        } else {
+          renderSearchResultsMain(searchText, results);
+        }
       } else {
-        renderSearchResults(results);
+        if (enableSearchHighlight) {
+          renderSearchHighlightResultsSide(searchText, results);
+        } else {
+          renderSearchResultsSide(searchText, results);
+        }
+        
+        var dropdownItems = searchResultsContainer.querySelectorAll('.dropdown-item');
+        dropdownItems ? dropdownItems.forEach(function(item) {
+          item.addEventListener('mousedown', function(e) {
+            e.target.click();
+          });
+        }) : null;
       }
     }) : null;
 
@@ -774,9 +885,7 @@
       if (window.innerWidth < 770) {
         return null;
       }
-      setTimeout(function () {
-        document.getElementById('search-results').setAttribute('class', 'dropdown');
-      }, 100);
+      searchResultsContainer ? searchResultsContainer.setAttribute('class', 'dropdown') : null;
     }) : null;
 
     searchElem ? 
@@ -785,28 +894,34 @@
         return null;
       }
       if (!e.target.value) {
-        document.getElementById('search-results').setAttribute('class', 'dropdown');
+        searchResultsContainer ? searchResultsContainer.setAttribute('class', 'dropdown') : null;
         return null;
       }
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-      if (enableSearchHighlight) {
-        renderSearchHighlightResults(results);
-      } else {
-        renderSearchResults(results);
+
+      if (searchResultPosition === "main") {
+        if (enableSearchHighlight) {
+          renderSearchHighlightResultsMain(searchText, results);
+        } else {
+          renderSearchResultsMain(searchText, results);
+        }
+      } else{
+        if (enableSearchHighlight) {
+          renderSearchHighlightResultsSide(searchText, results);
+        } else {
+          renderSearchResultsSide(searchText, results);
+        }
+
+        var dropdownItems = searchResultsContainer.querySelectorAll('.dropdown-item');
+        dropdownItems ? dropdownItems.forEach(function (item) {
+          item.addEventListener('mousedown', function (e) {
+            e.target.click();
+          });
+        }) : null;
       }
     }) : null;
-    
-    function indexInParent(node) {
-      var children = node.parentNode.childNodes;
-      var num = 0;
-      for (var i = 0; i < children.length; i++) {
-        if (children[i] == node) return num;
-        if (children[i].nodeType == 1) num++;
-      }
-      return -1;
-    }
 
     var searchMenuElem = document.getElementById("search-menu");
     var activeItem = document.querySelector('#search-menu .dropdown-item.is-active');
@@ -820,8 +935,17 @@
         return null;
       }
 
+      if (e.key === 'Escape') {
+        searchResult ? searchResult.setAttribute('data-display', 'none') : null;
+        summaryContainer ? summaryContainer.setAttribute('data-display', 'block') : null;
+      }
+
       var items = document.querySelectorAll('#search-menu .dropdown-item');
       var keyCode = e.which || e.keyCode;
+
+      if (!items || !items.length) {
+        return null;
+      }
       
       if (e.key === 'ArrowDown' || keyCode === 40) {
         if (activeIndex === null) {
@@ -856,9 +980,8 @@
           document.querySelector(".search-content").scrollTop = overflowedPixel + items[activeIndex].getBoundingClientRect().height;
         }
       } else if (e.key === 'Enter' || keyCode === 13) {
-        var currentItemLink = items[activeIndex].getAttribute('href');
-        if (currentItemLink) {
-          location.href = currentItemLink;
+        if (items[activeIndex] && items[activeIndex].getAttribute('href')) {
+          location.href = items[activeIndex].getAttribute('href');
         }
       } else if (e.key === 'Escape' || keyCode === 27) {
         e.target.value = null;
@@ -880,13 +1003,134 @@
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-      renderSearchResultsMobile(results);
+      renderSearchResultsMobile(searchText, results);
       if (enableSearchHighlight) {
-        renderSearchHighlightResultsMobile(results);
+        renderSearchHighlightResultsMobile(searchText, results);
       } else {
-        renderSearchResultsMobile(results);
+        renderSearchResultsMobile(searchText, results);
       }
     }) : null;
+  
+
+
+  
+    var mobileSearchInputElem = document.querySelector('#search-mobile');
+    var mobileSearchClassElem = document.querySelector('.mobile-search');
+    var mobileSearchBtnElem = document.querySelector('#mobileSearchBtn');
+    var mobileSearchCloseBtnElem = document.querySelector('#search-mobile-close');
+    var mobileSearchContainer = document.querySelector('#search-mobile-container');
+    var mobileSearchResultsElem = document.querySelector('#search-mobile-results');
+    var htmlElem = document.querySelector('html');
+
+    if (mobileSearchClassElem) {
+      mobileSearchClassElem.style.display = 'none';
+    }
+
+    mobileSearchBtnElem ? 
+    mobileSearchBtnElem.addEventListener('click', function () {
+      if (mobileSearchContainer) {
+        mobileSearchContainer.style.display = 'block';
+      }
+
+      if (mobileSearchInputElem) {
+        mobileSearchInputElem.focus();
+      }
+
+      if (htmlElem) {
+        htmlElem.style.overflowY = 'hidden';
+      }
+    }) : null;
+
+    mobileSearchCloseBtnElem ? 
+    mobileSearchCloseBtnElem.addEventListener('click', function() {
+      if (mobileSearchContainer) {
+        mobileSearchContainer.style.display = 'none';
+      }
+
+      if (mobileSearchInputElem) {
+        mobileSearchInputElem.value = '';
+      }
+      
+      if (mobileSearchResultsElem) {
+        while (mobileSearchResultsElem.firstChild) {
+          mobileSearchResultsElem.removeChild(mobileSearchResultsElem.firstChild);
+        }
+      }
+
+      if (htmlElem) {
+        htmlElem.style.overflowY = 'visible';
+      }
+    }) : null;
+
+    mobileSearchInputElem ?
+    mobileSearchInputElem.addEventListener('keydown', function(e) {
+      var keyCode = e.which || e.keyCode;
+      if (e.key === 'Escape' || keyCode === 27) {
+        if (mobileSearchContainer) {
+          mobileSearchContainer.style.display = 'none';
+        }
+        
+        if (mobileSearchInputElem) {
+          mobileSearchInputElem.value = '';
+        }
+
+        if (mobileSearchResultsElem) {
+          while (mobileSearchResultsElem.firstChild) {
+            mobileSearchResultsElem.removeChild(mobileSearchResultsElem.firstChild);
+          }
+        }
+        if (htmlElem) {
+          htmlElem.style.overflowY = 'visible';
+        }
+      }
+    }) : null;
+  
+
+
+  
+    function renderSearchResultsMain(searchText, results) {
+      var searchBody = document.querySelector('.search-result__body');
+      var originUl = searchBody.querySelector('ul');
+      var ul = document.createElement('ul');
+      
+      if (!searchText) {
+        searchResult ? searchResult.setAttribute('data-display', 'none') : null;
+        summaryContainer ? summaryContainer.setAttribute('data-display', 'block') : null;
+      } else if (results) {
+        if (results && results.length) {
+          results.forEach(function (result) {
+            makeLi(ul, result);
+          });
+
+          searchResult ? searchResult.setAttribute('data-display', 'block') : null;
+          summaryContainer ? summaryContainer.setAttribute('data-display', 'none') : null;
+        }
+      }
+
+      originUl.parentNode.replaceChild(ul, originUl);
+    }
+
+    function renderSearchHighlightResultsMain(searchText, results) {
+      var searchBody = document.querySelector('.search-result__body');
+      var originUl = searchBody.querySelector('ul');
+      var ul = document.createElement('ul');
+
+      if (!searchText) {
+        searchResult ? searchResult.setAttribute('data-display', 'none') : null;
+        summaryContainer ? summaryContainer.setAttribute('data-display', 'block') : null;
+      } else if (results) {
+        if (results && results.length) {
+          results.forEach(function (result) {
+            makeHighlightLi(ul, result);
+          });
+
+          searchResult ? searchResult.setAttribute('data-display', 'block') : null;
+          summaryContainer ? summaryContainer.setAttribute('data-display', 'none') : null;
+        }
+      }
+
+      originUl.parentNode.replaceChild(ul, originUl);
+    }
   
   });
 </script>    
@@ -901,6 +1145,9 @@
 <meta name="keywords" content="">
 <meta name="created" content="2018-06-02T21:39:34-0400">
 <meta name="modified" content="2018-06-02T21:39:34-0400">
+<meta property="article:published_time" content="2018-06-02T21:39:34-0400">
+
+<meta name="author" content="刀心水">
 
 
 <meta property="og:site_name" content="刀心水の胡言乱语">
@@ -909,8 +1156,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-
-<meta name="generator" content="Hugo 0.61.0" />
+<meta name="generator" content="Hugo 0.60.1" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/zh/posts/2018/06/a-sip-of-leica-m9/">
@@ -1171,7 +1417,7 @@ if (!doNotTrack) {
 
 <main class="single__main main-main">
   
-  <nav class="breadcrumb" aria-label="breadcrumbs">
+    <nav class="breadcrumb" aria-label="breadcrumbs">
   <ol>
     
   
@@ -1213,39 +1459,28 @@ if (!doNotTrack) {
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> 阅读
   </span>
 </div>
-      <div class="single__tags caption">
+      
+<div class="single__tags caption">
 
   
     🏷️
   
   
-  <li>
-    <a href="/zh/tags/camera" class="single__tag" title="camera">
-      #camera
-    </a>
-  </li>
-    
+    <li><a href="http://nianze.tk/zh/tags/camera/" class="single__tag" title="camera">#camera</a></li>
+  
 
   
   
-  <li>
-    <a href="/zh/tags/leica" class="single__tag" title="leica">
-      #leica
-    </a>
-  </li>
-    
+    <li><a href="http://nianze.tk/zh/tags/leica/" class="single__tag" title="leica">#leica</a></li>
+  
 
   
   
-  <li>
-    <a href="/zh/tags/chinese" class="single__tag" title="chinese">
-      #chinese
-    </a>
-  </li>
-    
+    <li><a href="http://nianze.tk/zh/tags/chinese/" class="single__tag" title="chinese">#chinese</a></li>
+  
 
 </div>
-    </div>    
+    </div>
     <article class="single__contents" data-dir="ltr">
       
       <p>他们说徕卡调教过的那块柯达CCD自带德味，我不信，心想用卡西欧自拍神器理论上也能后期出那味道来。</p>
@@ -1269,7 +1504,7 @@ if (!doNotTrack) {
     
   
 </figure>
-<h1 id="heading-1">开箱（伪）</h1>
+<h1 id="heading1">开箱（伪）</h1>
 <p><figure >
   
     
@@ -1319,7 +1554,7 @@ if (!doNotTrack) {
   
 </figure></p>
 <p>徕卡的盒子很大，分了三层，上层是说明书，小册子里会送Lightroom正版软件注册号。相机在中间那层，底层是充电器，电池，肩带等配件。</p>
-<h1 id="heading-2">外观</h1>
+<h1 id="heading2">外观</h1>
 <p><figure >
   
     
@@ -1430,7 +1665,7 @@ if (!doNotTrack) {
   </figcaption>
   
 </figure></p>
-<h2 id="heading-3">镜头</h2>
+<h2 id="heading3">镜头</h2>
 <figure >
   
     
@@ -1492,7 +1727,7 @@ if (!doNotTrack) {
   </figcaption>
   
 </figure>
-<h2 id="heading-4">机身对比</h2>
+<h2 id="heading4">机身对比</h2>
 <p>这是目前我手上唯一一台全画幅数码相机。让我们来对比下它跟APS-C画幅相机的大小。</p>
 <h3 id="kp">对比单反宾得KP</h3>
 <p>首先跟小巧的宾得残幅单反KP装上同样小巧的饼干头DA15 F/4做个对比。</p>
@@ -1692,7 +1927,7 @@ if (!doNotTrack) {
   </figcaption>
   
 </figure></p>
-<h1 id="heading-5">直出样片</h1>
+<h1 id="heading5">直出样片</h1>
 <p>由于黄斑手动对焦这是第一次体验，估焦的手感也还没培养出来，所以造成这次旅拍很多抓拍的片子没对焦到主体上。主要看下徕卡调教的直出颜色吧。可以明显看到的是，徕卡对蓝色的渲染有独特的理解，会有明显偏色，但是却很讨好眼睛（原片见<a href="https://www.flickr.com/photos/129774362@N07/">Flickr</a>）。</p>
 <p><figure >
   
@@ -1792,7 +2027,7 @@ if (!doNotTrack) {
     
   
 </figure></p>
-<h1 id="heading-6">初步使用感受</h1>
+<h1 id="heading6">初步使用感受</h1>
 <p>旁轴相机特殊的取景方式限制了其在长焦端的表现。由于没有自动对焦，很多需要连拍的场合都不再适用。如果是以摄影为职业，靠相机吃饭的话，那么徕卡确实会引入很多限制。但是在人文摄影这个领域，或者对像我这种偏爱慢拍，每次快门只爱按一次的用户来说，徕卡的优点则相当突出，以至于完全可以忽略其弱势领域。</p>
 <ul>
 <li>
@@ -1827,7 +2062,7 @@ if (!doNotTrack) {
   
 </figure>
 <p>其实拍摄人文为主的照片这些黑点并不会造成太多影响，再加上后期很容易可以处理坏点，所以我应该暂时不会自费更换新的传感器（lazy evaluation&hellip;算是职业习惯了），优先体验镜头吧(翻译下：其实就是穷)。</p>
-<h1 id="heading-7">附言：后续感受</h1>
+<h1 id="heading7">附言：后续感受</h1>
 <h3 id="1-ccd-vs-cmos">1. CCD vs CMOS</h3>
 <p>其实说到底，等到2018年才买M9，还是因为觉得M240/M10价格虚高。与之相比，M9就亲民了很多，成了我尝鲜的首选。当然最有争议的还是那块CCD——成像很有特色值得玩味，却有短寿的风险，是问题的祸源。本着用坏前能拍一张是一张的心态，我只能趁换传感器之前多拍点片子物尽其用了吧，苦笑。</p>
 <p>简单总结的话，如果没有特殊的CCD情节，而又有那个预算，直接上M10其实是更实在而保险的策略。喜欢玩“刺激”点，或者预算没那么高，那M9也不会让人失望，还是挺好玩的。</p>
@@ -1853,6 +2088,7 @@ if (!doNotTrack) {
     
     
     
+
     <section class="related">
     
     
@@ -1892,21 +2128,21 @@ if (!doNotTrack) {
 <nav class="pagination-single">
   
     
-    <a href="http://nianze.tk/zh/posts/2018/07/the-source-of-creative-desire/" class="pagination-single__right">
-      <div class="pagination-single__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path fill="currentColor" d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42.39.39 1.02.39 1.41 0l6.59-6.59c.39-.39.39-1.02 0-1.41l-6.58-6.6c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
-      </div>
-      <div class="pagination-single__right-title">创作欲望本质是什么？</div>
-    </a>
+      <a href="http://nianze.tk/zh/posts/2018/06/a-simple-calculation/" class="pagination-single__left">
+        <div class="pagination-single__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path fill="currentColor" d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"/></svg>
+        </div>
+        <div class="pagination-single__left-title">一个油腻中年大叔在儿童节的胡思乱想</div>      
+      </a>
     
     <div class="grow"></div>
     
-    <a href="http://nianze.tk/zh/posts/2018/06/a-simple-calculation/" class="pagination-single__left">
-      <div class="pagination-single__left-title">一个油腻中年大叔在儿童节的胡思乱想</div>
-      <div class="pagination-single__icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path fill="currentColor" d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"/></svg>
-      </div>
-    </a>
+      <a href="http://nianze.tk/zh/posts/2018/07/the-source-of-creative-desire/" class="pagination-single__right">      
+        <div class="pagination-single__right-title">创作欲望本质是什么？</div>
+        <div class="pagination-single__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path fill="currentColor" d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42.39.39 1.02.39 1.41 0l6.59-6.59c.39-.39.39-1.02 0-1.41l-6.58-6.6c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
+        </div>
+      </a>
     
   
 </nav>
@@ -2291,15 +2527,15 @@ document.addEventListener('DOMContentLoaded', function () {
       </label>
     
   </div>
-  <div class="toc " data-dir="ltr">
+  <div class="toc " data-dir="ltr" data-folding="false">
     <nav id="TableOfContents">
   <ul>
     <li><a href="#heading">前言：为什么是徕卡</a></li>
-    <li><a href="#heading-1">开箱（伪）</a></li>
-    <li><a href="#heading-2">外观</a>
+    <li><a href="#heading1">开箱（伪）</a></li>
+    <li><a href="#heading2">外观</a>
       <ul>
-        <li><a href="#heading-3">镜头</a></li>
-        <li><a href="#heading-4">机身对比</a>
+        <li><a href="#heading3">镜头</a></li>
+        <li><a href="#heading4">机身对比</a>
           <ul>
             <li><a href="#kp">对比单反宾得KP</a></li>
             <li><a href="#grii">对比卡片机GRii</a></li>
@@ -2307,9 +2543,9 @@ document.addEventListener('DOMContentLoaded', function () {
         </li>
       </ul>
     </li>
-    <li><a href="#heading-5">直出样片</a></li>
-    <li><a href="#heading-6">初步使用感受</a></li>
-    <li><a href="#heading-7">附言：后续感受</a>
+    <li><a href="#heading5">直出样片</a></li>
+    <li><a href="#heading6">初步使用感受</a></li>
+    <li><a href="#heading7">附言：后续感受</a>
       <ul>
         <li>
           <ul>
@@ -2469,22 +2705,29 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     
+    
     var enableToc = JSON.parse("true");
     var toc = JSON.parse("null");
     var hideToc = JSON.parse("false");
     var tocFlexbox = document.querySelector('.toc__flexbox');
     var tocFlexboxOuter = document.querySelector('.toc__flexbox--outer');
+    var tocFolding = JSON.parse("null");
     
     if ((enableToc || toc) && document.querySelector('.toc')) {
       var tableOfContentsElem = document.querySelector('.toc').querySelector('#TableOfContents');
-      tableOfContentsElem.querySelectorAll('ul') ?
-      tableOfContentsElem.querySelectorAll('ul').forEach(function (rootUl) {
-        rootUl.querySelectorAll('li').forEach(function (liElem) {
-          liElem.querySelectorAll('ul').forEach(function (ulElem) {
-            ulElem.style.display = 'none';
-          });
-        });
-      }) : null;
+
+      if (false === tocFolding) {
+
+      } else {
+        tableOfContentsElem.querySelectorAll('ul') ?
+          tableOfContentsElem.querySelectorAll('ul').forEach(function (rootUl) {
+            rootUl.querySelectorAll('li').forEach(function (liElem) {
+              liElem.querySelectorAll('ul').forEach(function (ulElem) {
+                ulElem.style.display = 'none';
+              });
+            });
+          }) : null;
+      }
 
       if (tableOfContentsElem) {
         if (tableOfContentsElem.querySelectorAll('a').length > 0) {
@@ -2605,6 +2848,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var text, clip = new ClipboardJS('.anchor');
     var headers = singleContentsElem.querySelectorAll("h1, h2, h3, h4");
 
+    
+    var languagedir = JSON.parse("\"ltr\"");
+
     headers ? 
     headers.forEach(function (elem) {
       var url = encodeURI(document.location.origin + document.location.pathname);
@@ -2618,10 +2864,15 @@ document.addEventListener('DOMContentLoaded', function () {
       var newElemInner = document.createElement('span');
       newElemInner.style.fontSize = '1rem';
       newElemInner.style.position = 'absolute';
-      newElemInner.style.right = '-2rem';
       newElemInner.style.top = '50%';
       newElemInner.style.transform = 'translateY(-50%)';
       newElemInner.innerText = "🔗";
+
+      if (languagedir === "rtl") {
+        newElemInner.style.left = '-2rem';
+      } else {
+        newElemInner.style.right = '-2rem';
+      }
 
       newElemOuter.append(newElemInner);
       elem.append(newElemOuter);
