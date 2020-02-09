@@ -20,7 +20,7 @@ featured_image: 2020/02/01/pose.JPG
 - 中国城的中超里面想买什么也基本都能买到
 - Down town那片的Pho Saigon Noodle House也是分量足味道好
 
-{{< youtube kMzCgHVQ2kI >}}
+{{< youtube m62JzWm-vlQ >}}
 
 {{< img src="/images/2020/02/01/sunset.JPG" >}}
 {{< img src="/images/2020/02/01/colorful_cloud.JPG" >}}
