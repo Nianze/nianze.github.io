@@ -3,7 +3,7 @@
 
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>扫描仪，胶卷和小众软件 – 刀心水の胡言乱语</title>
     
@@ -214,11 +214,19 @@
 
     
     var tocFolding = JSON.parse("null");
+    
+    var tocLevels = JSON.parse("null");
+    
+    if (tocLevels) {
+      tocLevels = tocLevels.toString();
+    } else {
+      tocLevels = "h1, h2, h3, h4, h5, h6";
+    }
 
     
     singleContentsElem && singleContentsElem.querySelectorAll(".tab") ?
     singleContentsElem.querySelectorAll(".tab").forEach(function (elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -227,7 +235,7 @@
 
     
     expandContents ? expandContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -236,7 +244,7 @@
 
     
     boxContents ? boxContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -266,8 +274,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -336,8 +344,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -857,7 +865,7 @@
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-
+      
       if (searchResultPosition === "main") {
         if (enableSearchHighlight) {
           renderSearchHighlightResultsMain(searchText, results);
@@ -1156,7 +1164,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/zh/posts/2020/01/2020-01-18-delta-hp5-and-vuescan/">
@@ -1202,6 +1210,7 @@
 </script>
 
     
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1215,7 +1224,7 @@ if (!doNotTrack) {
 }
 </script>
 
-
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1226,6 +1235,9 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
 
 
 
@@ -1417,7 +1429,8 @@ if (!doNotTrack) {
 
 <main class="single__main main-main">
   
-    <nav class="breadcrumb" aria-label="breadcrumbs">
+    <nav class="breadcrumb hide" aria-label="breadcrumbs">
+  <script>document.querySelector('.breadcrumb').classList.remove('hide')</script>
   <ol>
     
   
@@ -1449,7 +1462,11 @@ if (!doNotTrack) {
   
 </nav>
   
-  <div class="single">
+  <noscript>
+    Please enable Javascript to view the contents
+  </noscript>
+  <div class="single hide">
+    <script>document.querySelector('.single').classList.remove('hide')</script>
     <h2 class="single__title">扫描仪，胶卷和小众软件</h2>
     <div class="single__meta">
       
@@ -1518,7 +1535,7 @@ if (!doNotTrack) {
 </figure>
 <p>尼康自带的Nikon Scan并不支持最新的Mac OS，想要安装还得用虚拟机在老系统中安装。迫不得已只得去找第三方软件，于是就发现了论坛里谈论比较多的<a href="https://www.silverfast.com/">SilverFast</a>和<a href="https://www.hamrick.com/">VueScan</a>。</p>
 <p>先下载了SilverFast，界面让我想起了之前Pentax自带的Digital Camera Utility，上个世纪的画风。连上扫描仪开机后，SilverFast总是报错说loader有问题，可能是SA-21的驱动问题。我懒得折腾又试了试VueScan，直接就能扫描了。一次最多6张，黑白照片扫起来还算快。</p>
-<h2 id="heading1">成片</h2>
+<h2 id="heading-1">成片</h2>
 <p>用扫描仪比之前自己用数码相机抵着纸筒靠在白色屏幕上翻拍省事多了，出来的效果也不错（见下)，很期待之后彩色负片扫出来的效果。以下照片都是扫描仪以JPG格式扫出来后缩图得到的。</p>
 <h3 id="ilford-delta-100">Ilford Delta 100</h3>
 <p><figure >
@@ -1700,7 +1717,7 @@ if (!doNotTrack) {
   </figcaption>
   
 </figure></p>
-<h2 id="heading2">小众硬核软件</h2>
+<h2 id="heading-2">小众硬核软件</h2>
 <p>还想说下VueScan。根据官网的说法：</p>
 <blockquote>
 <p>Hamrick Software was founded in 1991 by Ed Hamrick. Our first product was VuePrint, an easy to use JPEG viewer for Windows that for many years was the recommended image viewer for AOL, with more than 100,000 users. In 1998, the company first released VueScan, a program for scanning with flatbed and film scanners with more than 600,000 users all over the world.<br />
@@ -1715,6 +1732,54 @@ Hamrick Software is a father and son team: Ed Hamrick and his son David Hamrick.
 <li>工程师的内核是解决问题。</li>
 </ol>
     </article>
+    <script>
+  'use strict';
+  
+  function wrap(el, wrapper) {
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+  }
+
+  (function () {
+    var singleContentsElem = document.querySelector('.single__contents');
+    singleContentsElem ? 
+    singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
+      var dataLang = elem.getAttribute('data-lang');
+      var dataLangWrapper = document.createElement('div');
+      var code = null;
+      var codeTitle = null;
+
+      if (dataLang && dataLang.includes(':')) {
+        code = dataLang.split(':')[0];
+        codeTitle = dataLang.split(':')[1];
+
+        dataLangWrapper.className = 'language-' + code;
+        dataLangWrapper.setAttribute('data-lang', codeTitle);
+
+        elem.className = 'language-' + code;
+        elem.setAttribute('data-lang', codeTitle);
+        elem.setAttribute('id', codeTitle);
+      } else if (!dataLang) {
+        dataLangWrapper.setAttribute('data-lang', 'Code');
+        dataLangWrapper.className = 'language-code';
+      }
+
+      if (!dataLang || codeTitle) {
+        wrap(elem.parentNode, dataLangWrapper);
+      }
+
+    }) : null;
+  })();
+
+  var langCodeElem = document.querySelectorAll('.language-code');
+  langCodeElem ? langCodeElem.forEach(function (elem) {
+    var newElem = document.createElement('span');
+    newElem.className = 'copy-to-clipboard';
+    newElem.setAttribute('title', 'Copy to clipboard');
+    elem.append(newElem);
+  }) : null;
+  
+</script>
     
     
     
@@ -2147,7 +2212,8 @@ document.addEventListener('DOMContentLoaded', function () {
   
 
 
-<section class="sidebar">
+<section class="sidebar hide">
+  <script>document.querySelector('.sidebar').classList.remove('hide')</script>
   <div class="toc__flexbox" data-position="fixed">
     <h6 class="toc__title">目录</h6>
     
@@ -2163,13 +2229,13 @@ document.addEventListener('DOMContentLoaded', function () {
     <li>
       <ul>
         <li><a href="#heading">扫描仪</a></li>
-        <li><a href="#heading1">成片</a>
+        <li><a href="#heading-1">成片</a>
           <ul>
             <li><a href="#ilford-delta-100">Ilford Delta 100</a></li>
             <li><a href="#ilford-hp5-plus-400">Ilford HP5 Plus 400</a></li>
           </ul>
         </li>
-        <li><a href="#heading2">小众硬核软件</a></li>
+        <li><a href="#heading-2">小众硬核软件</a></li>
       </ul>
     </li>
   </ul>
@@ -2275,34 +2341,6 @@ document.addEventListener('DOMContentLoaded', function () {
   window.onload = function() {
     var navbar = document.querySelector('.navbar');
     var singleContentsElem = document.querySelector('.single__contents');
-
-    
-    function wrap(el, wrapper) {
-      el.parentNode.insertBefore(wrapper, el);
-      wrapper.appendChild(el);
-    }
-
-    (function () {
-      singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
-        var dataLang = elem.getAttribute('data-lang');
-        if (!dataLang) {
-          var dataLangWrapper = document.createElement('div');
-          dataLangWrapper.setAttribute('data-lang', 'Code');
-          dataLangWrapper.className = 'language-code';
-          wrap(elem.parentNode, dataLangWrapper);
-        }
-      });
-    })();
-
-    var langCodeElem = document.querySelectorAll('.language-code');
-    langCodeElem ? langCodeElem.forEach(function (elem) {
-      var newElem = document.createElement('span');
-      newElem.className = 'copy-to-clipboard';
-      newElem.setAttribute('title', 'Copy to clipboard');
-      elem.append(newElem);
-    }) : null;
-    
-
 
     
     
@@ -2524,6 +2562,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var clipInit = false;
     var preChromaElem = document.querySelectorAll('pre.chroma');
     var langCodeElem = document.querySelectorAll('.language-code');
+    var dolorCodeElem = document.querySelectorAll('div.language-\\$');
+    var gtCodeElem = document.querySelectorAll('div.language-\\>');
+
     var makeClipboard = function(elem) {
       var code = elem,
         text = elem.textContent;
@@ -2584,6 +2625,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    var makeSymbolClipboard = function(elem) {
+      var clipboardSpan = document.createElement('span');
+      clipboardSpan.setAttribute('class', 'copy-to-clipboard');
+      clipboardSpan.setAttribute('title', 'Copy to clipboard');
+      elem.parentNode.parentNode.insertBefore(clipboardSpan, elem.parentNode.nextElementSibling);
+    }
+
     preChromaElem ? 
     preChromaElem.forEach(function(elem) {
       elem.querySelectorAll('code').forEach(function(codeElem) {
@@ -2596,6 +2644,41 @@ document.addEventListener('DOMContentLoaded', function () {
       elem.querySelectorAll('code').forEach(function (codeElem) {
         makeClipboard(codeElem);
       });
+    }) : null;
+
+    dolorCodeElem ? 
+    dolorCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+    
+
+
+    
+    dolorCodeElem ?
+    dolorCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '$<br/>';
+      }) : null;
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '><br/>';
+      }) : null;
     }) : null;
     
 
@@ -2921,6 +3004,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <hr />
 
+    <div class="basicflex">
+        
+    </div>
+
     <div class="footer__poweredby">
         
   <div class="busuanzi">
@@ -2959,11 +3046,13 @@ document.addEventListener('DOMContentLoaded', function () {
         
 
         
+        
     </div> 
 </footer>
         </div>
         
-<div class="wrapper__right" dir="ltr">
+<div class="wrapper__right hide" dir="ltr">
+  <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>
 

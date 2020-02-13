@@ -3,7 +3,7 @@
 
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Item-43 Know how to access names in templatized base classes – Nzo&#39;s Blog</title>
     
@@ -214,11 +214,19 @@
 
     
     var tocFolding = JSON.parse("null");
+    
+    var tocLevels = JSON.parse("null");
+    
+    if (tocLevels) {
+      tocLevels = tocLevels.toString();
+    } else {
+      tocLevels = "h1, h2, h3, h4, h5, h6";
+    }
 
     
     singleContentsElem && singleContentsElem.querySelectorAll(".tab") ?
     singleContentsElem.querySelectorAll(".tab").forEach(function (elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -227,7 +235,7 @@
 
     
     expandContents ? expandContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -236,7 +244,7 @@
 
     
     boxContents ? boxContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -266,8 +274,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -336,8 +344,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -857,7 +865,7 @@
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-
+      
       if (searchResultPosition === "main") {
         if (enableSearchHighlight) {
           renderSearchHighlightResultsMain(searchText, results);
@@ -1156,7 +1164,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/en/notes/2018/03/know-how-to-access-names-in-templatized-base-classes/">
@@ -1202,6 +1210,7 @@
 </script>
 
     
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1215,7 +1224,7 @@ if (!doNotTrack) {
 }
 </script>
 
-
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1226,6 +1235,9 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
 
 
 
@@ -1417,7 +1429,8 @@ if (!doNotTrack) {
 
 <main class="single__main main-main">
   
-    <nav class="breadcrumb" aria-label="breadcrumbs">
+    <nav class="breadcrumb hide" aria-label="breadcrumbs">
+  <script>document.querySelector('.breadcrumb').classList.remove('hide')</script>
   <ol>
     
   
@@ -1449,7 +1462,11 @@ if (!doNotTrack) {
   
 </nav>
   
-  <div class="single">
+  <noscript>
+    Please enable Javascript to view the contents
+  </noscript>
+  <div class="single hide">
+    <script>document.querySelector('.single').classList.remove('hide')</script>
     <h2 class="single__title">Item-43 Know how to access names in templatized base classes</h2>
     <div class="single__meta">
       
@@ -1616,7 +1633,7 @@ if (!doNotTrack) {
 </div><p>This syntax is known as a <em>total template specialization</em>: the template <code>MsgSender</code> is specialized for the type <code>CompanyZ</code>, and the specialization is <em>total</em> - once the type parameter has been defined to be <code>CompanyZ</code>, no other aspect of the template's parameters can vary.</p>
 <p>Since base class templates may be specialized and that such specializations may not offer the same interface as the general template, C++ generally  refuses to look in templatized base classes for inherited names. That's why we say inheritance stops working in Template C++ wolrd.</p>
 <p>To force C++ to look in templatized base classes, there are three ways:</p>
-<h2 id="1-call-with-this">1. Call with &ldquo;this-&gt;&rdquo;</h2>
+<h2 id="1-call-with-this-">1. Call with &ldquo;this-&gt;&rdquo;</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -1740,11 +1757,59 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Note that there's difference between the problem solved in this item from that in item 33: here, the problem is that compilers don't search base class scopes unless we explicitly specify it; in item 33, it is due to the derived class names that hide base class names.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Note that there's difference between the problem solved in this item from that in item 33: here, the problem is that compilers don't search base class scopes unless we explicitly specify it; in item 33, it is due to the derived class names that hide base class names. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
     </article>
+    <script>
+  'use strict';
+  
+  function wrap(el, wrapper) {
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+  }
+
+  (function () {
+    var singleContentsElem = document.querySelector('.single__contents');
+    singleContentsElem ? 
+    singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
+      var dataLang = elem.getAttribute('data-lang');
+      var dataLangWrapper = document.createElement('div');
+      var code = null;
+      var codeTitle = null;
+
+      if (dataLang && dataLang.includes(':')) {
+        code = dataLang.split(':')[0];
+        codeTitle = dataLang.split(':')[1];
+
+        dataLangWrapper.className = 'language-' + code;
+        dataLangWrapper.setAttribute('data-lang', codeTitle);
+
+        elem.className = 'language-' + code;
+        elem.setAttribute('data-lang', codeTitle);
+        elem.setAttribute('id', codeTitle);
+      } else if (!dataLang) {
+        dataLangWrapper.setAttribute('data-lang', 'Code');
+        dataLangWrapper.className = 'language-code';
+      }
+
+      if (!dataLang || codeTitle) {
+        wrap(elem.parentNode, dataLangWrapper);
+      }
+
+    }) : null;
+  })();
+
+  var langCodeElem = document.querySelectorAll('.language-code');
+  langCodeElem ? langCodeElem.forEach(function (elem) {
+    var newElem = document.createElement('span');
+    newElem.className = 'copy-to-clipboard';
+    newElem.setAttribute('title', 'Copy to clipboard');
+    elem.append(newElem);
+  }) : null;
+  
+</script>
     
     
     
@@ -2177,7 +2242,8 @@ document.addEventListener('DOMContentLoaded', function () {
   
 
 
-<section class="sidebar">
+<section class="sidebar hide">
+  <script>document.querySelector('.sidebar').classList.remove('hide')</script>
   <div class="toc__flexbox" data-position="fixed">
     <h6 class="toc__title">What&#39;s on this Page</h6>
     
@@ -2192,8 +2258,8 @@ document.addEventListener('DOMContentLoaded', function () {
   <ul>
     <li><a href="#case-study">Case Study</a>
       <ul>
-        <li><a href="#1-call-with-this">1. Call with this-></a></li>
-        <li><a href="#2-employ-a-using-declaration">2. Employ a using declaration</a></li>
+        <li><a href="#1-call-with-this-">1. Call with &ldquo;this->&rdquo;</a></li>
+        <li><a href="#2-employ-a-using-declaration">2. Employ a &ldquo;using&rdquo; declaration</a></li>
         <li><a href="#3-explicitly-specify-the-base-class-qualification">3. Explicitly specify the base class qualification</a></li>
       </ul>
     </li>
@@ -2301,34 +2367,6 @@ document.addEventListener('DOMContentLoaded', function () {
   window.onload = function() {
     var navbar = document.querySelector('.navbar');
     var singleContentsElem = document.querySelector('.single__contents');
-
-    
-    function wrap(el, wrapper) {
-      el.parentNode.insertBefore(wrapper, el);
-      wrapper.appendChild(el);
-    }
-
-    (function () {
-      singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
-        var dataLang = elem.getAttribute('data-lang');
-        if (!dataLang) {
-          var dataLangWrapper = document.createElement('div');
-          dataLangWrapper.setAttribute('data-lang', 'Code');
-          dataLangWrapper.className = 'language-code';
-          wrap(elem.parentNode, dataLangWrapper);
-        }
-      });
-    })();
-
-    var langCodeElem = document.querySelectorAll('.language-code');
-    langCodeElem ? langCodeElem.forEach(function (elem) {
-      var newElem = document.createElement('span');
-      newElem.className = 'copy-to-clipboard';
-      newElem.setAttribute('title', 'Copy to clipboard');
-      elem.append(newElem);
-    }) : null;
-    
-
 
     
     
@@ -2550,6 +2588,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var clipInit = false;
     var preChromaElem = document.querySelectorAll('pre.chroma');
     var langCodeElem = document.querySelectorAll('.language-code');
+    var dolorCodeElem = document.querySelectorAll('div.language-\\$');
+    var gtCodeElem = document.querySelectorAll('div.language-\\>');
+
     var makeClipboard = function(elem) {
       var code = elem,
         text = elem.textContent;
@@ -2610,6 +2651,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    var makeSymbolClipboard = function(elem) {
+      var clipboardSpan = document.createElement('span');
+      clipboardSpan.setAttribute('class', 'copy-to-clipboard');
+      clipboardSpan.setAttribute('title', 'Copy to clipboard');
+      elem.parentNode.parentNode.insertBefore(clipboardSpan, elem.parentNode.nextElementSibling);
+    }
+
     preChromaElem ? 
     preChromaElem.forEach(function(elem) {
       elem.querySelectorAll('code').forEach(function(codeElem) {
@@ -2622,6 +2670,41 @@ document.addEventListener('DOMContentLoaded', function () {
       elem.querySelectorAll('code').forEach(function (codeElem) {
         makeClipboard(codeElem);
       });
+    }) : null;
+
+    dolorCodeElem ? 
+    dolorCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+    
+
+
+    
+    dolorCodeElem ?
+    dolorCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '$<br/>';
+      }) : null;
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '><br/>';
+      }) : null;
     }) : null;
     
 
@@ -2947,6 +3030,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <hr />
 
+    <div class="basicflex">
+        
+    </div>
+
     <div class="footer__poweredby">
         
   <div class="busuanzi">
@@ -2985,11 +3072,13 @@ document.addEventListener('DOMContentLoaded', function () {
         
 
         
+        
     </div> 
 </footer>
         </div>
         
-<div class="wrapper__right" dir="ltr">
+<div class="wrapper__right hide" dir="ltr">
+  <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>
 

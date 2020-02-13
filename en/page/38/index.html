@@ -3,7 +3,7 @@
 
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Nzo&#39;s Blog</title>
     
@@ -214,11 +214,19 @@
 
     
     var tocFolding = JSON.parse("null");
+    
+    var tocLevels = JSON.parse("null");
+    
+    if (tocLevels) {
+      tocLevels = tocLevels.toString();
+    } else {
+      tocLevels = "h1, h2, h3, h4, h5, h6";
+    }
 
     
     singleContentsElem && singleContentsElem.querySelectorAll(".tab") ?
     singleContentsElem.querySelectorAll(".tab").forEach(function (elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -227,7 +235,7 @@
 
     
     expandContents ? expandContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -236,7 +244,7 @@
 
     
     boxContents ? boxContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -266,8 +274,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -336,8 +344,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -857,7 +865,7 @@
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-
+      
       if (searchResultPosition === "main") {
         if (enableSearchHighlight) {
           renderSearchHighlightResultsMain(searchText, results);
@@ -1143,8 +1151,6 @@
     
 <link rel="alternate" type="application/rss&#43;xml" title="RSS" href="http://nianze.tk/en/index.xml">
 
-<link rel="alternate" type="application/json" title="JSON" href="http://nianze.tk/en/index.json">
-
 <meta name="description" content="Nzo&#39;s Blog" />
 <meta name="keywords" content="">
 <meta name="created" content="2020-02-08T16:21:46-0500">
@@ -1160,7 +1166,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/en/">
@@ -1203,6 +1209,7 @@
 </script>
 
     
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1216,7 +1223,7 @@ if (!doNotTrack) {
 }
 </script>
 
-
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1227,6 +1234,9 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
 
 
 
@@ -1421,7 +1431,6 @@ if (!doNotTrack) {
 </header>
 
             
-
 <main class="main inner" data-sidebar-position="">
     <div class="list__main lm">
         <div class="summary__container" data-display="block">
@@ -1750,6 +1759,7 @@ if (!doNotTrack) {
 
     
 <section class="bio" data-dir="ltr">
+  
   <hr class="hr-slash bio-hr"/>
   <div class="bio__photo-wrapper">
     
@@ -1758,6 +1768,7 @@ if (!doNotTrack) {
       <img src="https://s.gravatar.com/avatar/704c00a27651e66e68eef7969ae1ae19?s=200" alt="Nzo" class="bio__photo"/>
     
   </div>
+  
   <hr class="hr-slash bio-hr"/>
   <div class="bio__name">
     Nzo
@@ -2447,6 +2458,10 @@ if (!doNotTrack) {
 
     <hr />
 
+    <div class="basicflex">
+        
+    </div>
+
     <div class="footer__poweredby">
         
   <div class="busuanzi">
@@ -2485,11 +2500,13 @@ if (!doNotTrack) {
         
 
         
+        
     </div> 
 </footer>
         </div>
         
-<div class="wrapper__right" dir="ltr">
+<div class="wrapper__right hide" dir="ltr">
+  <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>
 

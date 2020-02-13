@@ -3,7 +3,7 @@
 
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>胶片初体验 – 刀心水の胡言乱语</title>
     
@@ -214,11 +214,19 @@
 
     
     var tocFolding = JSON.parse("null");
+    
+    var tocLevels = JSON.parse("null");
+    
+    if (tocLevels) {
+      tocLevels = tocLevels.toString();
+    } else {
+      tocLevels = "h1, h2, h3, h4, h5, h6";
+    }
 
     
     singleContentsElem && singleContentsElem.querySelectorAll(".tab") ?
     singleContentsElem.querySelectorAll(".tab").forEach(function (elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -227,7 +235,7 @@
 
     
     expandContents ? expandContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -236,7 +244,7 @@
 
     
     boxContents ? boxContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -266,8 +274,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -336,8 +344,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -857,7 +865,7 @@
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-
+      
       if (searchResultPosition === "main") {
         if (enableSearchHighlight) {
           renderSearchHighlightResultsMain(searchText, results);
@@ -1156,7 +1164,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/zh/posts/2019/12/first-film-development/">
@@ -1202,6 +1210,7 @@
 </script>
 
     
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1215,7 +1224,7 @@ if (!doNotTrack) {
 }
 </script>
 
-
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1226,6 +1235,9 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
 
 
 
@@ -1417,7 +1429,8 @@ if (!doNotTrack) {
 
 <main class="single__main main-main">
   
-    <nav class="breadcrumb" aria-label="breadcrumbs">
+    <nav class="breadcrumb hide" aria-label="breadcrumbs">
+  <script>document.querySelector('.breadcrumb').classList.remove('hide')</script>
   <ol>
     
   
@@ -1449,7 +1462,11 @@ if (!doNotTrack) {
   
 </nav>
   
-  <div class="single">
+  <noscript>
+    Please enable Javascript to view the contents
+  </noscript>
+  <div class="single hide">
+    <script>document.querySelector('.single').classList.remove('hide')</script>
     <h2 class="single__title">胶片初体验</h2>
     <div class="single__meta">
       
@@ -1502,20 +1519,68 @@ if (!doNotTrack) {
 <li>量具：Paterson 32-oz Beaker &amp; Kalt Plastic Graduate 2 oz - 50 cc</li>
 <li>附件：Paterson film squeegee</li>
 </ul>
-<h1 id="heading1">洗片</h1>
+<h1 id="heading-1">洗片</h1>
 <ul>
 <li>显影：照着Mattias Burling的<a href="https://youtu.be/kp8cACHz_Og">这个视频</a>。由于没买停显液，目前显影后直接用自来水冲。</li>
 <li>定影：按1:4比例，将140ml定影液稀释到700ml，定影时间大概5分钟，每分钟搅拌10秒。目前配好的第一瓶定影液回收在阴凉处准备之后复用。（定影液的味道确实不好闻）</li>
 </ul>
-<h1 id="heading2">扫描</h1>
+<h1 id="heading-2">扫描</h1>
 <p>还没买扫描仪，只能靠翻拍：iPad的白色屏幕作背光，负片放在屏幕上，然后用A7Rii和55 1.8定焦头抵在纸筒上一张一张拍，拍完后再进Photoshop裁剪，镜像翻转，反色。</p>
-<h1 id="heading3">成片</h1>
+<h1 id="heading-3">成片</h1>
 <p>如今天的<a href="http://nianze.tk/zh/gallery/film/2019/12/21/2019-12-21-weekly-visual-project/">gallery post</a>所示，洗出来的效果意外的比自己料想的好一些。</p>
-<h1 id="heading4">感想</h1>
+<h1 id="heading-4">感想</h1>
 <p>值得一提的是，第一卷Ilford Delta 100的24张照片里，有三张没开镜头盖就摁了快门，犯了旁轴摄影最容易犯的错。每次摁快门之前，由于对阳光十六法则的应用还不太熟悉，一般得先用手机app测光，然后调整光圈和快门速度，然后手动对焦，最后摁下快门。整套动作下来最少也已经过去五秒了，想要抓拍就只能提前取好背景对好焦，等主体走进相框；想要用平时iPhone抓拍的即兴拍摄手法，就得先熟练人肉测光和人肉测距这两项技能。</p>
 <p>从拍片到洗胶片，整个过程充满了期待和忐忑，和使用数码相机拍后立即可以回看的对比非常强烈，单纯从体验层面上讲，出片的滞后性引入了强烈的不确定性，带来更多的挑战和别样的趣味。这还只是黑白，之后要是继续尝试彩色负片、正片，相信也别有风味(加上扫描仪和后期还有更多玩法)。另一方面，拍片时由于一卷胶片数量有限，摁下快门会更谨慎，取景时也更斟酌，加上每次拍完后还得像扣动扳机一样拨动一次进片拨杆，摄影时候的仪式感明显很多。</p>
 <p>好玩。</p>
     </article>
+    <script>
+  'use strict';
+  
+  function wrap(el, wrapper) {
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+  }
+
+  (function () {
+    var singleContentsElem = document.querySelector('.single__contents');
+    singleContentsElem ? 
+    singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
+      var dataLang = elem.getAttribute('data-lang');
+      var dataLangWrapper = document.createElement('div');
+      var code = null;
+      var codeTitle = null;
+
+      if (dataLang && dataLang.includes(':')) {
+        code = dataLang.split(':')[0];
+        codeTitle = dataLang.split(':')[1];
+
+        dataLangWrapper.className = 'language-' + code;
+        dataLangWrapper.setAttribute('data-lang', codeTitle);
+
+        elem.className = 'language-' + code;
+        elem.setAttribute('data-lang', codeTitle);
+        elem.setAttribute('id', codeTitle);
+      } else if (!dataLang) {
+        dataLangWrapper.setAttribute('data-lang', 'Code');
+        dataLangWrapper.className = 'language-code';
+      }
+
+      if (!dataLang || codeTitle) {
+        wrap(elem.parentNode, dataLangWrapper);
+      }
+
+    }) : null;
+  })();
+
+  var langCodeElem = document.querySelectorAll('.language-code');
+  langCodeElem ? langCodeElem.forEach(function (elem) {
+    var newElem = document.createElement('span');
+    newElem.className = 'copy-to-clipboard';
+    newElem.setAttribute('title', 'Copy to clipboard');
+    elem.append(newElem);
+  }) : null;
+  
+</script>
     
     
     
@@ -1948,7 +2013,8 @@ document.addEventListener('DOMContentLoaded', function () {
   
 
 
-<section class="sidebar">
+<section class="sidebar hide">
+  <script>document.querySelector('.sidebar').classList.remove('hide')</script>
   <div class="toc__flexbox" data-position="fixed">
     <h6 class="toc__title">目录</h6>
     
@@ -1962,10 +2028,10 @@ document.addEventListener('DOMContentLoaded', function () {
     <nav id="TableOfContents">
   <ul>
     <li><a href="#heading">器材</a></li>
-    <li><a href="#heading1">洗片</a></li>
-    <li><a href="#heading2">扫描</a></li>
-    <li><a href="#heading3">成片</a></li>
-    <li><a href="#heading4">感想</a></li>
+    <li><a href="#heading-1">洗片</a></li>
+    <li><a href="#heading-2">扫描</a></li>
+    <li><a href="#heading-3">成片</a></li>
+    <li><a href="#heading-4">感想</a></li>
   </ul>
 </nav>
   </div>
@@ -2069,34 +2135,6 @@ document.addEventListener('DOMContentLoaded', function () {
   window.onload = function() {
     var navbar = document.querySelector('.navbar');
     var singleContentsElem = document.querySelector('.single__contents');
-
-    
-    function wrap(el, wrapper) {
-      el.parentNode.insertBefore(wrapper, el);
-      wrapper.appendChild(el);
-    }
-
-    (function () {
-      singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
-        var dataLang = elem.getAttribute('data-lang');
-        if (!dataLang) {
-          var dataLangWrapper = document.createElement('div');
-          dataLangWrapper.setAttribute('data-lang', 'Code');
-          dataLangWrapper.className = 'language-code';
-          wrap(elem.parentNode, dataLangWrapper);
-        }
-      });
-    })();
-
-    var langCodeElem = document.querySelectorAll('.language-code');
-    langCodeElem ? langCodeElem.forEach(function (elem) {
-      var newElem = document.createElement('span');
-      newElem.className = 'copy-to-clipboard';
-      newElem.setAttribute('title', 'Copy to clipboard');
-      elem.append(newElem);
-    }) : null;
-    
-
 
     
     
@@ -2318,6 +2356,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var clipInit = false;
     var preChromaElem = document.querySelectorAll('pre.chroma');
     var langCodeElem = document.querySelectorAll('.language-code');
+    var dolorCodeElem = document.querySelectorAll('div.language-\\$');
+    var gtCodeElem = document.querySelectorAll('div.language-\\>');
+
     var makeClipboard = function(elem) {
       var code = elem,
         text = elem.textContent;
@@ -2378,6 +2419,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    var makeSymbolClipboard = function(elem) {
+      var clipboardSpan = document.createElement('span');
+      clipboardSpan.setAttribute('class', 'copy-to-clipboard');
+      clipboardSpan.setAttribute('title', 'Copy to clipboard');
+      elem.parentNode.parentNode.insertBefore(clipboardSpan, elem.parentNode.nextElementSibling);
+    }
+
     preChromaElem ? 
     preChromaElem.forEach(function(elem) {
       elem.querySelectorAll('code').forEach(function(codeElem) {
@@ -2390,6 +2438,41 @@ document.addEventListener('DOMContentLoaded', function () {
       elem.querySelectorAll('code').forEach(function (codeElem) {
         makeClipboard(codeElem);
       });
+    }) : null;
+
+    dolorCodeElem ? 
+    dolorCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+    
+
+
+    
+    dolorCodeElem ?
+    dolorCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '$<br/>';
+      }) : null;
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '><br/>';
+      }) : null;
     }) : null;
     
 
@@ -2715,6 +2798,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <hr />
 
+    <div class="basicflex">
+        
+    </div>
+
     <div class="footer__poweredby">
         
   <div class="busuanzi">
@@ -2753,11 +2840,13 @@ document.addEventListener('DOMContentLoaded', function () {
         
 
         
+        
     </div> 
 </footer>
         </div>
         
-<div class="wrapper__right" dir="ltr">
+<div class="wrapper__right hide" dir="ltr">
+  <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>
 

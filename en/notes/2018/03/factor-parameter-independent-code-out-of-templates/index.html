@@ -3,7 +3,7 @@
 
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Item-44 Factor parameter-independent code out of templates – Nzo&#39;s Blog</title>
     
@@ -214,11 +214,19 @@
 
     
     var tocFolding = JSON.parse("null");
+    
+    var tocLevels = JSON.parse("null");
+    
+    if (tocLevels) {
+      tocLevels = tocLevels.toString();
+    } else {
+      tocLevels = "h1, h2, h3, h4, h5, h6";
+    }
 
     
     singleContentsElem && singleContentsElem.querySelectorAll(".tab") ?
     singleContentsElem.querySelectorAll(".tab").forEach(function (elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -227,7 +235,7 @@
 
     
     expandContents ? expandContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -236,7 +244,7 @@
 
     
     boxContents ? boxContents.forEach(function(elem) {
-      elem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (element) {
+      elem.querySelectorAll(tocLevels).forEach(function (element) {
         notAllowedTitleIds = Array.isArray(notAllowedTitleIds) ?
           notAllowedTitleIds.concat(element.getAttribute('id')) :
           [element.getAttribute('id')];
@@ -266,8 +274,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -336,8 +344,8 @@
         }
 
         if (singleContentsElem) {
-          if (singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").length > 0) {
-            singleContentsElem.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function (elem) {
+          if (singleContentsElem.querySelectorAll(tocLevels).length > 0) {
+            singleContentsElem.querySelectorAll(tocLevels).forEach(function (elem) {
               if (toggleTocElem && !toggleTocElem.checked) {
                 return null;
               }
@@ -857,7 +865,7 @@
 
       searchText = e.target.value;
       var results = fuse.search(e.target.value);
-
+      
       if (searchResultPosition === "main") {
         if (enableSearchHighlight) {
           renderSearchHighlightResultsMain(searchText, results);
@@ -1156,7 +1164,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/en/notes/2018/03/factor-parameter-independent-code-out-of-templates/">
@@ -1202,6 +1210,7 @@
 </script>
 
     
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1215,7 +1224,7 @@ if (!doNotTrack) {
 }
 </script>
 
-
+  
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -1226,6 +1235,9 @@ if (!doNotTrack) {
 }
 </script>
 <script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
 
 
 
@@ -1417,7 +1429,8 @@ if (!doNotTrack) {
 
 <main class="single__main main-main">
   
-    <nav class="breadcrumb" aria-label="breadcrumbs">
+    <nav class="breadcrumb hide" aria-label="breadcrumbs">
+  <script>document.querySelector('.breadcrumb').classList.remove('hide')</script>
   <ol>
     
   
@@ -1449,7 +1462,11 @@ if (!doNotTrack) {
   
 </nav>
   
-  <div class="single">
+  <noscript>
+    Please enable Javascript to view the contents
+  </noscript>
+  <div class="single hide">
+    <script>document.querySelector('.single').classList.remove('hide')</script>
     <h2 class="single__title">Item-44 Factor parameter-independent code out of templates</h2>
     <div class="single__meta">
       
@@ -1481,7 +1498,7 @@ if (!doNotTrack) {
       <p>Templates generate multiple classes and multiple functions, so any template code not dependent on a template parameter (either non-type template parameters or type parameters) causes bloat: eliminate bloat due to non-type template parameters by replacing template parameters with function parameters or class data members; reduce bloat caused from type parameters by sharing implementations for instantiation types with identical binary representations.</p>
 <!-- toc -->
 <p>When writing templates, since there's only one copy of the template source code, we have to analyze it carefully to avoid the implicit replication that may take place when a template is instantiated multiple times.</p>
-<h1 id="bloat-due-to-nontype-template-parameters">Bloat due to non-type template parameters</h1>
+<h1 id="bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</h1>
 <p>For example, suppose we'd like to write a template for fixed-size square matrices that support matrix inversion:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1646,7 +1663,7 @@ if (!doNotTrack) {
 <h2 id="efficiency-concerns">Efficiency concerns</h2>
 <p>In terms of efficiency, it is possible that the version of <code>invert</code> with the matrix sizes hardwired into them generates better code than the shared version whose size is passed as a function parameter or is stored in the object: in the size-specific versions, the sizes would be compile-time constants, hence eligible for optimizations such as constant propagation (they'll be folded into the generated instructions as imeediate operands), which can't be done in the size-independent version.</p>
 <p>On the other side, the size-independent version decreases the size of executable by having only one version of <code>invert</code> for multiple matrix sizes, and this could reduce the program's working set size and improve locality of reference in the instruction cache, which may in term compensating for any lost optimizations in size-specific versions of <code>invert</code>. The only way to tell which version is better one is to try them both and observe the behavior on the particular platform and on representative data sets.</p>
-<h2 id="other-tradeoffs">Other trade-offs</h2>
+<h2 id="other-trade-offs">Other trade-offs</h2>
 <p>Speaking of size of objects, we should observe that there's an extra size of a pointer in each <code>SquareMatrix</code> object, because, as the derived class, <code>SquareMatrix</code> could get to the data by alternative designs such as having the base class store a <code>protected</code> pointer to the matrix data. However, this new design also has some disadvantages:</p>
 <ol>
 <li>it may lead to the loss of encapsulation described in item 22</li>
@@ -1657,6 +1674,54 @@ if (!doNotTrack) {
 <p>On many platforms, <code>int</code> and <code>long</code> have the same binary representation, so the member functions for <code>vector&lt;int&gt;</code> and <code>vector&lt;long&gt;</code> would likely be identical. Some linkers will merge identical function implementations, but some will not, and that means that some templates instantiated on both <code>int</code> and <code>long</code> could cause code bloat in some environments.</p>
 <p>Similarly, on most platforms, all pointer types have the same binary representation, so templates holding pointer types (e.g., <code>list&lt;int*&gt;</code>, <code>list&lt;const int*&gt;</code>, <code>list&lt;SquareMatrix&lt;long, 3&gt;*&gt;</code>, etc.) should be able to use a single underlying implementation for each member function. Typically, this is achieved by implementing member functions that work with strongly typed pointers (i.e., <code>T*</code> pointers) by having them call functions that work with untyped pointers (i.e., <code>void*</code> pointers), which is how some of standart C++ library do for templates like <code>vector</code>, <code>deque</code>, and <code>list</code>.</p>
     </article>
+    <script>
+  'use strict';
+  
+  function wrap(el, wrapper) {
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+  }
+
+  (function () {
+    var singleContentsElem = document.querySelector('.single__contents');
+    singleContentsElem ? 
+    singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
+      var dataLang = elem.getAttribute('data-lang');
+      var dataLangWrapper = document.createElement('div');
+      var code = null;
+      var codeTitle = null;
+
+      if (dataLang && dataLang.includes(':')) {
+        code = dataLang.split(':')[0];
+        codeTitle = dataLang.split(':')[1];
+
+        dataLangWrapper.className = 'language-' + code;
+        dataLangWrapper.setAttribute('data-lang', codeTitle);
+
+        elem.className = 'language-' + code;
+        elem.setAttribute('data-lang', codeTitle);
+        elem.setAttribute('id', codeTitle);
+      } else if (!dataLang) {
+        dataLangWrapper.setAttribute('data-lang', 'Code');
+        dataLangWrapper.className = 'language-code';
+      }
+
+      if (!dataLang || codeTitle) {
+        wrap(elem.parentNode, dataLangWrapper);
+      }
+
+    }) : null;
+  })();
+
+  var langCodeElem = document.querySelectorAll('.language-code');
+  langCodeElem ? langCodeElem.forEach(function (elem) {
+    var newElem = document.createElement('span');
+    newElem.className = 'copy-to-clipboard';
+    newElem.setAttribute('title', 'Copy to clipboard');
+    elem.append(newElem);
+  }) : null;
+  
+</script>
     
     
     
@@ -2089,7 +2154,8 @@ document.addEventListener('DOMContentLoaded', function () {
   
 
 
-<section class="sidebar">
+<section class="sidebar hide">
+  <script>document.querySelector('.sidebar').classList.remove('hide')</script>
   <div class="toc__flexbox" data-position="fixed">
     <h6 class="toc__title">What&#39;s on this Page</h6>
     
@@ -2102,12 +2168,12 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc " data-dir="ltr" data-folding="false">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#bloat-due-to-nontype-template-parameters">Bloat due to non-type template parameters</a>
+    <li><a href="#bloat-due-to-non-type-template-parameters">Bloat due to non-type template parameters</a>
       <ul>
         <li><a href="#replace-with-function-parameters">Replace with function parameters</a></li>
         <li><a href="#replace-with-class-data-members">Replace with class data members</a></li>
         <li><a href="#efficiency-concerns">Efficiency concerns</a></li>
-        <li><a href="#other-tradeoffs">Other trade-offs</a></li>
+        <li><a href="#other-trade-offs">Other trade-offs</a></li>
       </ul>
     </li>
     <li><a href="#bloat-due-to-type-parameters">Bloat due to type parameters</a></li>
@@ -2214,34 +2280,6 @@ document.addEventListener('DOMContentLoaded', function () {
   window.onload = function() {
     var navbar = document.querySelector('.navbar');
     var singleContentsElem = document.querySelector('.single__contents');
-
-    
-    function wrap(el, wrapper) {
-      el.parentNode.insertBefore(wrapper, el);
-      wrapper.appendChild(el);
-    }
-
-    (function () {
-      singleContentsElem.querySelectorAll('pre > code').forEach(function(elem) {
-        var dataLang = elem.getAttribute('data-lang');
-        if (!dataLang) {
-          var dataLangWrapper = document.createElement('div');
-          dataLangWrapper.setAttribute('data-lang', 'Code');
-          dataLangWrapper.className = 'language-code';
-          wrap(elem.parentNode, dataLangWrapper);
-        }
-      });
-    })();
-
-    var langCodeElem = document.querySelectorAll('.language-code');
-    langCodeElem ? langCodeElem.forEach(function (elem) {
-      var newElem = document.createElement('span');
-      newElem.className = 'copy-to-clipboard';
-      newElem.setAttribute('title', 'Copy to clipboard');
-      elem.append(newElem);
-    }) : null;
-    
-
 
     
     
@@ -2463,6 +2501,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var clipInit = false;
     var preChromaElem = document.querySelectorAll('pre.chroma');
     var langCodeElem = document.querySelectorAll('.language-code');
+    var dolorCodeElem = document.querySelectorAll('div.language-\\$');
+    var gtCodeElem = document.querySelectorAll('div.language-\\>');
+
     var makeClipboard = function(elem) {
       var code = elem,
         text = elem.textContent;
@@ -2523,6 +2564,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    var makeSymbolClipboard = function(elem) {
+      var clipboardSpan = document.createElement('span');
+      clipboardSpan.setAttribute('class', 'copy-to-clipboard');
+      clipboardSpan.setAttribute('title', 'Copy to clipboard');
+      elem.parentNode.parentNode.insertBefore(clipboardSpan, elem.parentNode.nextElementSibling);
+    }
+
     preChromaElem ? 
     preChromaElem.forEach(function(elem) {
       elem.querySelectorAll('code').forEach(function(codeElem) {
@@ -2535,6 +2583,41 @@ document.addEventListener('DOMContentLoaded', function () {
       elem.querySelectorAll('code').forEach(function (codeElem) {
         makeClipboard(codeElem);
       });
+    }) : null;
+
+    dolorCodeElem ? 
+    dolorCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+    
+
+
+    
+    dolorCodeElem ?
+    dolorCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '$<br/>';
+      }) : null;
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+      lnts ? 
+      lnts.forEach(function(lnt) {
+        lnt.innerHTML = '><br/>';
+      }) : null;
     }) : null;
     
 
@@ -2860,6 +2943,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <hr />
 
+    <div class="basicflex">
+        
+    </div>
+
     <div class="footer__poweredby">
         
   <div class="busuanzi">
@@ -2898,11 +2985,13 @@ document.addEventListener('DOMContentLoaded', function () {
         
 
         
+        
     </div> 
 </footer>
         </div>
         
-<div class="wrapper__right" dir="ltr">
+<div class="wrapper__right hide" dir="ltr">
+  <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>
 
