@@ -1,18 +1,14 @@
 ---
 title: "{{ replace .TranslationBaseName "-" " " | title }}"
 date: {{ .Date }}
+series:
+- weekly
 categories:
 - visual
-- weekly
 tags:
-- street
-- photography
+- street photography
 slug: "{{ replace .TranslationBaseName "-" " " | title }} Visual Project"
-autoThumbnailImage: true
-thumbnailImagePosition: right
-thumbnailImage: /images/thumb.JPG
-coverImage: /images/cover.JPG
-metaAlignment: center
+featured_image: /images/thumb.JPG
 ---
 
 <!--more-->
