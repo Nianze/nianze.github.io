@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" 
+  xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+  xmlns:dc="http://purl.org/dc/elements/1.1/" 
+  xmlns:atom="http://www.w3.org/2005/Atom" 
+  xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" 
+  xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
     <title>music on Nzo&#39;s Blog</title>
     <link>http://nianze.tk/en/categories/music/</link>
@@ -15,478 +20,36 @@
     
     
     
+
       
       <item>
         <title>DSP Review</title>
         <link>http://nianze.tk/en/notes/2020/01/2020-01-30-dsp-review/</link>
         <pubDate>Thu, 30 Jan 2020 12:58:10 -0500</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Thu, 30 Jan 2020 12:58:10 -0500</atom:modified>
         <guid>http://nianze.tk/en/notes/2020/01/2020-01-30-dsp-review/</guid>
-        <description>&lt;p&gt;A quick review of key concepts in digital signal processing such as aliasing, DFT, convolution, FIR/IIR filters, etc.&lt;/p&gt;
-&lt;h1 id=&#34;aliasing&#34;&gt;Aliasing&lt;/h1&gt;
-&lt;p&gt;Waves at frequencies $f$ and $(f + k \cdot f_s)$ look identical when sampled at rate $f_s$.&lt;/p&gt;
-&lt;p&gt;If a signal $x$ has frequency content only within the $range \pm B$ Hz, then the sampling rate must be at least $f_s = 2B$ to avoid aliasing.&lt;/p&gt;
-&lt;p&gt;$f_s/2$ is called the &lt;span style=&#34;color: #abd282&#34;&gt;&lt;strong&gt;Nyquist frequency&lt;/strong&gt;&lt;/span&gt; (for sampling rate $f_s$)&lt;/p&gt;
-&lt;h1 id=&#34;fourier-transform&#34;&gt;Fourier transform&lt;/h1&gt;
-&lt;h2 id=&#34;dft-discrete-fourier-transform&#34;&gt;DFT (Discrete Fourier transform)&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Intuition: cross-correlate the signal against cosine and sine waves of different frequencies.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;$$ X[m] = \sum_{n=0}^{N-1} x[n] \cdot (cos(2 \pi \cdot m \cdot n / N) - j \cdot sin(2 \pi \cdot m \cdot n / N)), m \in [0, N-1] $$&lt;/p&gt;
-&lt;p&gt;With Euler&#39;s formula:&lt;/p&gt;
-&lt;p&gt;$$ X[m] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j2 \pi \cdot m \cdot n / N} $$&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/freq_m.png&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;blockquote&gt;
-&lt;p&gt;$m^{th}$ analysis frequency has exactly $m$ cycles over the duration of the signal $N$, and $f_m = m \cdot f_s / N$ HZ. The gap between $f_m$ and $f_{m+1}$ is called the &lt;span style=&#34;color: #abd282&#34;&gt;bin spacing&lt;/span&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h3 id=&#34;dft-symmetry&#34;&gt;DFT symmetry&lt;/h3&gt;
-&lt;p&gt;For real valued $x[n]$,&lt;/p&gt;
-&lt;p&gt;$$e^{-j \cdot 2 \pi \cdot (N-m) \cdot / N} = e^{+j \cdot 2 \pi \cdot m \cdot m / N}$$&lt;/p&gt;
-&lt;p&gt;In other words, $X[m] = X^{*}[N-m]$, or frequencies $N/2+1, &amp;hellip;, N-1$ are conjugates of $N/2-1, &amp;hellip;, 1$ (identical real parts, reverded-signed imaginary parts)&lt;/p&gt;
-&lt;h3 id=&#34;dft-properties&#34;&gt;DFT properties&lt;/h3&gt;
-&lt;h4 id=&#34;shifting&#34;&gt;Shifting&lt;/h4&gt;
-&lt;p&gt;If $x_2[n] = x_1[n-D]$, then $X_2[m] = X_1[m] \cdot e^{-j2 \pi \cdot m \cdot D/N}$&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Derivation:&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol&gt;
-&lt;li&gt;$|X_1[m]| = |X_2[m]|$&lt;/li&gt;
-&lt;li&gt;for $x(t) = cos(2 \pi \cdot f_0 \cdot t - \varphi)$, phase offset in the DFT is $e^{-j \varphi}$&lt;/li&gt;
-&lt;li&gt;if $D &amp;lt; N$, then $D/N$ is the proportion of entire signal being delayed, and $X_2[m]$ rotates $m$ times by angle $-2 \pi \cdot D/N$&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h4 id=&#34;linearity&#34;&gt;Linearity&lt;/h4&gt;
-&lt;p&gt;$$ \sum_{n} (c_1 \cdot x_1[n] + c_2 \cdot x_2[n]) \cdot e^{-j2 \pi \cdot m \cdot n / N} = c_1 \cdot X_1[m] + c_2 \cdot X_2[m] $$&lt;/p&gt;
-&lt;p&gt;In other words, scale and sum in time domain is equivalent to scale and sum in frequency domain&lt;/p&gt;
-&lt;h4 id=&#34;combining-linearity-and-shifting&#34;&gt;Combining linearity and shifting&lt;/h4&gt;
-&lt;p&gt;$$ x[n]= \sum_k A_k e^{-2 \pi \cdot k \cdot n/N - \varphi_k} \Rightarrow X[m] = A_m e^{-j \varphi_m} $$&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;when $k = m$, $e^{j2 \pi \cdot (k-m) \cdot n/N} = e^0 = 1$, thus&lt;br /&gt;
-$$X[m] = A_m e^{-j \varphi_k}$$&lt;/li&gt;
-&lt;li&gt;when $k$ ≠ $m$, the summation over all $n$ cancels out, thus&lt;br /&gt;
-$$X[m] = 0$$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;idft-inverse-dft&#34;&gt;IDFT (Inverse DFT)&lt;/h2&gt;
-&lt;p&gt;$$ x[n] = 1/N \cdot \sum_m X[m] \cdot e^{+j2 \pi \cdot m \cdot n/N} $$&lt;/p&gt;
-&lt;p&gt;For each term $X[m] \cdot e^{+j2 \pi \cdot m \cdot n/N} = A \cdot e^{j(j \pi \cdot m \cdot n/N + \theta)}$, which is a complex sinusoid with amplitude $A$, phase $\theta$, and frequency $mf_s/N$ [Hz] (or $m$ [cycles per signal duration]). In other words, every signal can be expressed as a weighted sum of sinusoids&lt;/p&gt;
-&lt;h3 id=&#34;spectral-leakage&#34;&gt;Spectral leakage&lt;/h3&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/leakage.png&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If a digital signal $x[n]$ has energy at frequencies which are not integer multiples of $f_s/N$, then this energy will leak (spread) across multiple DFT frequency bands $X[m]$&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/no_cancel_out.png&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;blockquote&gt;
-&lt;p&gt;This is caused because such frequencies don&#39;t have the whole number of cycles during sampling duration, so comparing to an &lt;strong&gt;analisis frequency&lt;/strong&gt; won&#39;t cancel out.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;In this situation, $X[m]$ measures not just energy associated with the $m^{th}$ analysis frequency, but has contributions from every other non-analysis frequency.&lt;/p&gt;
-&lt;h3 id=&#34;leakage-compensation&#34;&gt;Leakage compensation&lt;/h3&gt;
-&lt;h4 id=&#34;strategy-1-have-large-n&#34;&gt;Strategy #1: Have large N&lt;/h4&gt;
-&lt;p&gt;Long signals, high sampling rate $\Rightarrow$ more analysis frequencies, smaller gaps between them&lt;/p&gt;
-&lt;h4 id=&#34;strategy-2-windowing&#34;&gt;Strategy #2: Windowing&lt;/h4&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Intuition: force continuity at the edges, eliminate fractional cycles&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Before taking the DFT, Multiply $x[n]$ by a &lt;strong&gt;window&lt;/strong&gt;, which tapers the ends of the signal to (near) 0:&lt;br /&gt;
-$$ x[n] \rightarrow w[n] \cdot x[n] $$&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Result&lt;/strong&gt;: leakage concentrates on nearby frequencies, and is reduced for distant frequencies; at the same time, analysis frequencies leak to their neighbors as well:&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/leakage_compensation.png&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;p&gt;Since in naturally occurring signals, pure tones at exactly $mf_s/N$ hardly happen, we are unlikely to tell apart analysis and non-analysis frequencies. The overall benefits of windowing outweigh the drawbacks&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Key properties when designing/choosing a window:&lt;/strong&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Width of the &lt;strong&gt;main lobe&lt;/strong&gt;(in Hz or bins): how far does energy smear out locally&lt;/li&gt;
-&lt;li&gt;Hight of the &lt;strong&gt;side lobe&lt;/strong&gt;(in dB): how loud is the leakage from distant frequencies&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/blockquote&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/window_design.png&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;70%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;h2 id=&#34;stftshorttime-fourier-transform&#34;&gt;STFT(short-time Fourier transform)&lt;/h2&gt;
-&lt;h3 id=&#34;process&#34;&gt;Process&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;Carve the signal into small &lt;strong&gt;frames&lt;/strong&gt;, with frame length $K$ and hop length $h$:
-&lt;ul&gt;
-&lt;li&gt;x[0], x[1], &amp;hellip;, x[K-1]&lt;/li&gt;
-&lt;li&gt;x[h], x[h+1], &amp;hellip;, x[h+K-1]&lt;/li&gt;
-&lt;li&gt;x[2h], x[2h+1], &amp;hellip;, x[2h+K-1]&lt;/li&gt;
-&lt;li&gt;&amp;hellip;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Window each frame to reduces leakage and artifacts from frame slicing&lt;/li&gt;
-&lt;li&gt;Compute the DFT of each windowed frame&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;parameters--design&#34;&gt;Parameters &amp;amp; design&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Longer window (larger frame length $K$) means:
-&lt;ul&gt;
-&lt;li&gt;lower frequencies ($f_{min} = f_s / K$)&lt;/li&gt;
-&lt;li&gt;higher frequency resolution ($f_{max}$ is determined by Nyquist, number of analysis frequencies depends on frame length)&lt;/li&gt;
-&lt;li&gt;more data, more memory and compute&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;$K$ with value of power of 2 (512, 1024, &amp;hellip;) is ideal for FFT, pick $K$ to give the desired frequency resolution&lt;/li&gt;
-&lt;li&gt;Smaller hop (smaller hop length $h$) means:
-&lt;ul&gt;
-&lt;li&gt;higher temporal resolution&lt;/li&gt;
-&lt;li&gt;more data, more memory and compute&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;$h &amp;lt; K$, usually set hop = $K/2$ or $K/4$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;spectrogram&#34;&gt;Spectrogram&lt;/h3&gt;
-&lt;p&gt;A &lt;strong&gt;spectrogram&lt;/strong&gt; is the STFT as an image, with each column as DFT of one frame into magnitude, which is usually log-scaled to decibels (dB). $log_2$ preserves visual size of octaves.&lt;/p&gt;
-&lt;p&gt;$$ X[m] \rightarrow 20 \cdot log_{10}|X[m]| [dB] $$&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/Spectrogram-19thC.png&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;h2 id=&#34;fft-fast-fourier-transform&#34;&gt;FFT (Fast Fourier Transform)&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Idea: identify redundant calculations shared betwen different analysis frequencies, reducing time complexity from $O(N^2)$ to $O(N \cdot log(N))$&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;FFT computes the DFT&lt;/li&gt;
-&lt;li&gt;Requires signal length to be the power of 2 (1024, 2048, etc); otherwise pad up signal to the next power of 2 length&lt;/li&gt;
-&lt;li&gt;FFT could be further optimized when the input is real-valued (the rfft() function in most FFT libraries) by taking use of &lt;a href=&#34;#dft-symmetry&#34;&gt;conjugate symmetry&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;convolution&#34;&gt;Convolution&lt;/h1&gt;
-&lt;h2 id=&#34;definition&#34;&gt;Definition&lt;/h2&gt;
-&lt;p&gt;$$ y[n] = \sum_{k=0}^{K-1}h[k] \cdot x[n-k] = x * h $$&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;$h$ is filter coefficients ordered from &lt;strong&gt;most recent&lt;/strong&gt; ($h[0]$) to least recent ($h[K-1]$), while $x$ is ordered by increasing time $ \Rightarrow $ reversing $x$ to line up with $h$&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;modes&#34;&gt;Modes&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;Valid: no zero-padding, $[N]*[K] \rightarrow [N-K+1]$&lt;/li&gt;
-&lt;li&gt;Same: zero-padding before the signal, $[N]*[K] \rightarrow [max(N, K)]$&lt;/li&gt;
-&lt;li&gt;Full: pad by zeros on both ends, $[N]*[K] \rightarrow [N+K-1]$&lt;/li&gt;
-&lt;li&gt;Circular: like &lt;em&gt;Same&lt;/em&gt; mode except $x$ is &lt;em&gt;looped&lt;/em&gt; instead of zero-padded&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;simple-filters&#34;&gt;Simple filters&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Gain: $h=[G]$
-&lt;ul&gt;
-&lt;li&gt;$x[n] \rightarrow G \cdot x[n]$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Delay: $h=[0, 0,&amp;hellip;, 1]$
-&lt;ul&gt;
-&lt;li&gt;$x[n] \rightarrow x[n+d]$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Averaging: $h=[1/K, 1/K,&amp;hellip;, 1/K]$
-&lt;ul&gt;
-&lt;li&gt;fast changes get smoothed out, making a crude low-pass filter&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Differencing: $h=[1, -1]$
-&lt;ul&gt;
-&lt;li&gt;crude hight-pass filter&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;property&#34;&gt;Property&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;Linearity: $(c_1x_1+c_2x_2)&lt;em&gt;h = c_1x1&lt;/em&gt;h+c_2x_2*h$&lt;/li&gt;
-&lt;li&gt;Commutativity: $x&lt;em&gt;h = h&lt;/em&gt;x$ (we can treat the signal as the filter)&lt;/li&gt;
-&lt;li&gt;Associativity: $(x&lt;em&gt;h)&lt;em&gt;g = x&lt;/em&gt;(h&lt;/em&gt;g)$&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Similar to wave propagation, where after reflection the signal gets delayed and attenuated, and microphone sums up the waves from both direct path as well as reflection path, each $x[n-k]$ could be regarded as being&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;delayed by $k$ time steps&lt;/li&gt;
-&lt;li&gt;scaled by $h[k]$&lt;/li&gt;
-&lt;li&gt;added together&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Since convolution is &lt;strong&gt;linear&lt;/strong&gt; and &lt;strong&gt;time invariant&lt;/strong&gt;, every LSI system can be expressed as a convolution, and the &amp;ldquo;filter&amp;rdquo; $h$ is the &lt;em&gt;impulse response&lt;/em&gt; of the system, which completely determines the behavior of the system.&lt;/p&gt;
-&lt;p&gt;If $h$ is finite in length, it&#39;s called a &lt;span style=&#34;color: #abd282&#34;&gt;Finite Impulse Response(FIR)&lt;/span&gt;&lt;/p&gt;
-&lt;h2 id=&#34;convolution-theorem&#34;&gt;Convolution theorem&lt;/h2&gt;
-&lt;p&gt;Convolution (int circular mode&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;) in the time domain $x*h$ $\Leftrightarrow$ multiplication in the frequency domain $X \cdot H$, or&lt;/p&gt;
-&lt;p&gt;$$ DFT(x*h) = DFT(x) \cdot DFT(h) $$&lt;/p&gt;
-&lt;h3 id=&#34;fast-convolution&#34;&gt;Fast convolution&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Convolution in time domain has a time complexity of $O(N \cdot K)$&lt;/li&gt;
-&lt;li&gt;In the frequency domain, it takes $N$ multiplies, so
-&lt;ol&gt;
-&lt;li&gt;zero-pad $h$ from $K$ to $N$ samples&lt;/li&gt;
-&lt;li&gt;compute two forward DFTs $O(2 \cdot N \cdot log_2N)$&lt;/li&gt;
-&lt;li&gt;compute one inverse DFT $O(N \cdot log_2N)$&lt;/li&gt;
-&lt;li&gt;totally $O(N \cdot log_2N)$&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;filters&#34;&gt;Filters&lt;/h1&gt;
-&lt;p&gt;Frequency domain is complex-valued, with multiplication rule:&lt;/p&gt;
-&lt;p&gt;$$ (r \cdot e^{j \theta}) (s \cdot e^{j \varphi }) = (r \cdot s) \cdot e^{j(\theta + \varphi)} $$&lt;/p&gt;
-&lt;h2 id=&#34;fir-filters&#34;&gt;FIR filters&lt;/h2&gt;
-&lt;p&gt;Finite Impulse Response means the system&#39;s response to an impulse goes to 0 at finite time step, or $y[n]$ depends on finitely many inputs $x[n-k]$.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Positives:
-&lt;ul&gt;
-&lt;li&gt;Usually more simple to implement&lt;/li&gt;
-&lt;li&gt;can analyze by DFT&lt;/li&gt;
-&lt;li&gt;stable and well-behaved&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Negatives:
-&lt;ul&gt;
-&lt;li&gt;may not be efficient&lt;/li&gt;
-&lt;li&gt;somewhat limited expressivity (non-adaptive)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;delayed-impulse-analysis&#34;&gt;Delayed impulse analysis&lt;/h3&gt;
-&lt;p&gt;A k-step delay filter $h_k = [0, 0, 0, &amp;hellip;, 1]$ has DFT $H_k[m]=e^{-j2 \pi \cdot m \cdot k/N}$, which is a sinusoid of frequency $k$.&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/dft_impulse.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;p&gt;Phase response of a delay filter (wrapped &amp;amp; unrapped):&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/dft_impulse_phase.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;h3 id=&#34;averaging-filter-rectanglebox-analysis&#34;&gt;Averaging filter (rectangle/box) analysis&lt;/h3&gt;
-&lt;p&gt;K-tap averaging filter $h_a = [1/K, 1/K, &amp;hellip;, 1/K, 0, 0, &amp;hellip;]$, which could be regarded as an average of K delayed filters. Thus,&lt;br /&gt;
-$$ H_a[m] = DFT(h_a) = 1/K \sum_k DFT(h_k)[m] =  1/K \sum_k e^{-j2 \pi \cdot m \cdot k/N} $$&lt;/p&gt;
-&lt;p&gt;The real part $Re{H_a}$ is a $sinc$ function. If we apply $h_a$ to input signal $x$, according to &lt;a href=&#34;#convolution-theorem&#34;&gt;convolution theorem&lt;/a&gt;, we multiply them in frequency domain, and magnitudes of output is: $|X[m] \cdot H[m]| = |X[m]| \cdot |H_a[m]|$. Since $|H_a[m]|$ decays slowly but bounces up and down in high frequency, there will be high frequency components remaining if we use averaging filter as a low pass filter.&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/dft_average.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;p&gt;Phase response of a rectangle filter is sawtoothy even after unwrapping, but it&#39;s ok since it&#39;s linear within the pass-bands:&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/dft_average_phase.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;h3 id=&#34;typical-fir-window-analysis&#34;&gt;Typical FIR window analysis&lt;/h3&gt;
-&lt;p&gt;Most window functions for DFT could be used as low-pass filters. Below is the frequency response for Hann, Blackman-Harris, and Rectangle window.&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/dft_window.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;100%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;p&gt;Since the windows above are linear within the pass-bands, audible frequencies will have constant delay without noticeable phasing artifacts:&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/dft_window_phase.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;60%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;h2 id=&#34;iir-filters&#34;&gt;IIR filters&lt;/h2&gt;
-&lt;p&gt;Infinite Impulse Response filters can depend on infinitely many previous inputs by &lt;strong&gt;feedback&lt;/strong&gt;:&lt;/p&gt;
-&lt;p&gt;$$ y[n] = \sum_{k=0}^K b[k] \cdot x[n-k] - \sum_{k=1}^K a[k] \cdot y[n-k] $$&lt;/p&gt;
-&lt;p&gt;Here $K$ is the order of the filter. If we define $a[0] = 1$, then we get:&lt;/p&gt;
-&lt;p&gt;$$ \sum_{k \geq 0} a[k] \cdot y[n-k] = \sum_{k \geq 0} b[k] \cdot x[n-k] $$&lt;/p&gt;
-&lt;p&gt;Due to the feedback, to achieve comparable results, IIR filters need fewer coefficients and multiply-adds with lower latency than FIR filters, so it can be much more efficient.&lt;/p&gt;
-&lt;p&gt;To analyze frequency response of filters, we usually use following parameters to measure their performance:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;passband, passband ripple&lt;/li&gt;
-&lt;li&gt;transition region&lt;/li&gt;
-&lt;li&gt;stopband, stopband attenuation&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/filter_param.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;h3 id=&#34;butterworth-filters&#34;&gt;Butterworth filters&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;flat response in passband and stopband&lt;/li&gt;
-&lt;li&gt;very wide transition band&lt;/li&gt;
-&lt;li&gt;higher order = faster transition&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/butterworth.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scipy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;butter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;N&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_nyquist&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scipy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;lfilter&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;h3 id=&#34;chebyshev-filters&#34;&gt;Chebyshev filters&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;narrow transition band&lt;/li&gt;
-&lt;li&gt;type 1 has passband ripples and flat stopband(pictured); type 2 has stopband ripples and flat passband&lt;/li&gt;
-&lt;li&gt;non-linear phase response&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/chebyshev.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scipy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cheby1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;N&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;max_ripple&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_nyquist&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scipy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cheby2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;N&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;max_ripple&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_nyquist&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;h3 id=&#34;elliptic-filters&#34;&gt;Elliptic filters&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;narrowest transition band&lt;/li&gt;
-&lt;li&gt;ripples in both passband and stopband&lt;/li&gt;
-&lt;li&gt;most non-linear phase response&lt;/li&gt;
-&lt;/ul&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/elliptic.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;80%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scipy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ellip&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;N&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;max_ripple&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;min_stop_atten&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f_nyquist&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;h1 id=&#34;ztransform&#34;&gt;Z-Transform&lt;/h1&gt;
-&lt;p&gt;$$ X(z) = \sum_{n=0}^{\infty} x[n] \cdot z^{-n} $$&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;DFT converts $N$ samples ($x[n]$) into N complex coefficients ($X[m]$)&lt;/li&gt;
-&lt;li&gt;z-Transform generalizes the DFT. Specifically, ZT converts $N$ samples ($x[n]$) into a function $X[z]$ on the complex (z-) plane, with $x[n]$ as coefficients of a polynomial in $z^{-1}$. When $z = (e^{j2 \pi \cdot m/N})$, $X(z)$ becomes DFT $X[m]$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;properties&#34;&gt;Properties&lt;/h2&gt;
-&lt;p&gt;ZT allows us to analyze IIR filters without dependency on signal length N. It has following properties:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Linearity:
-&lt;ul&gt;
-&lt;li&gt;$ZT(c_1 \cdot x_1 + c_2 \cdot x_2) = c_1 \cdot ZT(x_1) + c_2 \cdot ZT(x_2)$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Convolution theorem:
-&lt;ul&gt;
-&lt;li&gt;$ZT(x * h) = ZT(x) \cdot ZT(h)$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Shifting theorem:
-&lt;ul&gt;
-&lt;li&gt;Delaying by $k$ samples $\Leftrightarrow$ $X(z) \rightarrow z^{-k} \cdot X(z)$&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;transform-function&#34;&gt;Transform function&lt;/h2&gt;
-&lt;p&gt;For a general IIR filter $ y[n] = \sum_{k=0}^K b[k] \cdot x[n-k] - \sum_{k=1}^K a[k] \cdot y[n-k] $, we have $Y(z) = H(z) \cdot X(z)$, where $H(z)$ is the **transform function**:&lt;/p&gt;
-&lt;p&gt;$$ H(z) = \dfrac{\sum_{k=0} b[k] \cdot z^{-k}}{1 + \sum_{k=1} a[k] \cdot z^{-k}} $$&lt;/p&gt;
-&lt;h2 id=&#34;frequency-response&#34;&gt;Frequency response&lt;/h2&gt;
-&lt;p&gt;$e^{j2 \pi \cdot m/N}$ is a point on the unit circle in the complex plane, according to &lt;a href=&#34;#idft-inverse-dft&#34;&gt;IDFT&lt;/a&gt;, such a point correpsonds to a sinusoid with frequency $f_s \cdot m/N$, or $ e^{j2 \pi \cdot t} \Rightarrow f_s \cdot t, t \in [0, 1/2]$. Thus, we can relate the angle of points in unit circle with frequencies:&lt;/p&gt;
-&lt;p&gt;$$ e^{j \theta} \Rightarrow f_s \cdot \theta / 2 \pi $$&lt;/p&gt;
-&lt;p&gt;By evaluating the transfer function at $z=e^{2 \pi \cdot t}$ for $t \in [0, 1/2]$, we can see how the frequency magnitude response $|H(e^{j2 \pi \cdot t})|$ changes with frequency $f_s \cdot t$.&lt;/p&gt;
-&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/iir_freq_resp.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;60%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;h2 id=&#34;zeros-and-poles&#34;&gt;Zeros and poles&lt;/h2&gt;
-&lt;p&gt;Places where $H(z) = 0$ are infinitely attenuated and are called &lt;strong&gt;zeros&lt;/strong&gt; of the system. Since $H(z)$ is a polynomial, which is continuous, frequencies near the zeros will also be attenuated. To find zeros, set $\sum b[k] \cdot z^{-k} = 0$ and solve for $z$.&lt;/p&gt;
-&lt;p&gt;Places where $H(z)$ divides by 0 are called the &lt;strong&gt;poles&lt;/strong&gt; of the system, which correspond to &lt;strong&gt;resonance and gain&lt;/strong&gt;. To find poles, solve for $z$ by denominator $1 + \sum_{k=1} a[k] \cdot z^{-k} = 0$&lt;/p&gt;
-&lt;p&gt;Given positions of poles and zeros (and total gain), the system is fully determined:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scipy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;zpk2tf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;zeros&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;poles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;gain&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;And vice versa:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;zeros&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;poles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;gain&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;scipy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tf2zpk&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;figure &gt;
-  
-    
-    &lt;img data-src=&#34;http://nianze.tk/images/2020/01/30/poles_zeros.jpg&#34;  data-caption=&#34;&#34; src=&#34;data:image/svg+xml,%0A%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;24&#39; height=&#39;24&#39; viewBox=&#39;0 0 24 24&#39;%3E%3Cpath fill=&#39;none&#39; d=&#39;M0 0h24v24H0V0z&#39;/%3E%3Cpath fill=&#39;%23aaa&#39; d=&#39;M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z&#39;/%3E%3C/svg%3E&#34; class=&#34;lazyload&#34; width=&#34;60%&#34; height=&#34;&#34;/&gt;
-    
-  
-&lt;/figure&gt;
-&lt;ul&gt;
-&lt;li&gt;If a system has a pole and a zero at the same $z$, they cancel out&lt;/li&gt;
-&lt;li&gt;If b and a are real, then poles/zeros always come in conjugate pairs&lt;/li&gt;
-&lt;li&gt;A system is &lt;em&gt;stable&lt;/em&gt; if all poles are strictly inside the unit circle&lt;/li&gt;
-&lt;li&gt;A system is &lt;em&gt;unstable&lt;/em&gt; if any poles are strictly outside the unit circle&lt;/li&gt;
-&lt;li&gt;Zeros do not affect stability&lt;/li&gt;
-&lt;li&gt;Proximity of poles and zeros to the unit circle corresponds to filter sharpness&lt;/li&gt;
-&lt;li&gt;Angle $\theta$ of poles and zeros corrspond to frequency ($f_s \cdot \theta / 2 \pi $)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
-&lt;hr /&gt;
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;We need the &lt;a href=&#34;#shifting&#34;&gt;DFT shifting property&lt;/a&gt;, which assumes looping. If we don&#39;t want circular convolution, just pad the signal with K-1 more zeros&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;</description>
+        <description>&lt;p&gt;A quick review of key concepts in digital signal processing such as aliasing, DFT, convolution, FIR/IIR filters, etc.&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2020/01/30/waves.jpg" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>dsp</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
       </item>
       
       <item>
@@ -494,71 +57,29 @@ $$ H_a[m] = DFT(h_a) = 1/K \sum_k DFT(h_k)[m] =  1/K \sum_k e^{-j2 \pi \cdot m \
         <link>http://nianze.tk/en/notes/2019/06/basic-musicianship-review/</link>
         <pubDate>Sat, 15 Jun 2019 19:39:39 -0400</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Sat, 15 Jun 2019 19:39:39 -0400</atom:modified>
         <guid>http://nianze.tk/en/notes/2019/06/basic-musicianship-review/</guid>
-        <description>&lt;p&gt;A review of some basic music theory before the NYU Steinhardt music technology placement exam.&lt;/p&gt;
-&lt;!-- toc --&gt;
-&lt;h1 id=&#34;intervals&#34;&gt;Intervals&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;Perfect Intervals: 1(perfect unison), 4(perfect 4th), 5(perfect 5th), 8(perfect octave)&lt;/li&gt;
-&lt;li&gt;Major Intervals: 2(major 2nd), 3(major 3rd), 6(major 6th), 7(major 7th)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;scales&#34;&gt;Scales&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;major scale (WWHWWWH)&lt;/li&gt;
-&lt;li&gt;natural minor scale / aeolian scale (WHWWHWW) = based off the 6th degree that shares the key signature of the major scale&lt;/li&gt;
-&lt;li&gt;harmonic minor scale(WHWWH1.5H) = natural minor + sharpened 7th degree&lt;/li&gt;
-&lt;li&gt;melodic minor scale(ASC:WHWWWWH, DESC:WWHWWHW) =  the ascending form of the scale has both a raised 6th and 7th degree, and the descending form of the scale reverts back to the natural minor scale form&lt;/li&gt;
-&lt;li&gt;chromatic scale(H*12) = constructed entirely of half steps or semitones.&lt;/li&gt;
-&lt;li&gt;wholetone scale(W*6) = constructed entirely of whole-steps or tones.&lt;/li&gt;
-&lt;li&gt;lydian scale(WWWHWWH) = based off the 4th degree of any major scale (C major scale from its fourth degree (F) -&amp;gt; F lydian scale)&lt;/li&gt;
-&lt;li&gt;mixolydian scale(WWHWWHW) = based off the 5th degree of any major scale (C major scale from its fifth degree (G), -&amp;gt; G mixolydian scale)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;chords&#34;&gt;Chords&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;Tonic: the note considered to be the basis of the chord, e.g.: C, D, …&lt;/li&gt;
-&lt;li&gt;Quality
-&lt;ul&gt;
-&lt;li&gt;major chords = 1,3,5 notes of major scale, major 3rd followed by minor 3rd;&lt;/li&gt;
-&lt;li&gt;minor chords = 1,3,5 notes of minor scale, minor 3rd followed by major 3rd, same as a major chord but the third being lowered a semitone&lt;/li&gt;
-&lt;li&gt;diminished chords = similar to minor, but the top note (the fifth) is also flattened, minor 3rd followed by minor 3rd.&lt;/li&gt;
-&lt;li&gt;augmented chords = similar to major, but the top note (the fifth) is raised by a semitone, major 3rd followed by a major 3rd&lt;/li&gt;
-&lt;li&gt;dominat 7th chords = similar to major, with the addition of a flattened seventh above the root note of the chord (C Dominant 7th = C,E,G,bB); within a diatonic context, it’s based from the 5th/dominant of any major key, so in the key of C major, the dominant 7th chord starts on G (GBDF)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Inversion: which note of the chord is placed at the bottom (root, 1st inversion, 2nd inversion)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;key-signatures&#34;&gt;Key Signatures&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;Relative minor &amp;amp; major keys: the sixth degree of the major key is the relative minor key, both share exactly the same key signature (C major -&amp;gt; A minor); similarly, to find the relative major of a minor key = either count down 6 notes, or count up to the 3rd note.&lt;/li&gt;
-&lt;li&gt;To add a flat sign, count up four notes from root; to add a sharp, count up five notes.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;chord-progressions&#34;&gt;Chord Progressions&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;Labelling:
-&lt;ul&gt;
-&lt;li&gt;C Major Root Position: C = I&lt;/li&gt;
-&lt;li&gt;C Major 1st Inversion: C/E = Ib = I6 = I6/3&lt;/li&gt;
-&lt;li&gt;C Major 2nd Inversion: C/G = Ic = I6/4&lt;/li&gt;
-&lt;li&gt;G7 1st Inversion: G7/B = Vb = V6/5&lt;/li&gt;
-&lt;li&gt;G7 2nd Inversion: G7/D = Vc = V4/3&lt;/li&gt;
-&lt;li&gt;G7 3rd Inversion: G7/F = Vd = V4/2&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;meter&#34;&gt;Meter&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;Simple meters: the top number in the time signature is a 3 or divisible by 2 (e.g., 2/4, 3/4, 4/4, 2/2, 3/2, 4/2).
-&lt;ul&gt;
-&lt;li&gt;4/4: simple quadruple, can be represented by a ‘C’, known as common time;&lt;/li&gt;
-&lt;li&gt;2/2 can be represented by ‘C’ with a vertical line through it, known as cut common time&lt;/li&gt;
-&lt;li&gt;2/4: simple duple meter. A bar consists of 2 crotchet beats&lt;/li&gt;
-&lt;li&gt;2/3: simple triple meter. A bar consists of 3 crotchet beats&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;Compound meters: top number in the time signature is divisible by 3, by a number greater than 1 (e.g., 6/8, 9/8, 12/8). The rhythmic value that is defined in the bottom number of the time signature, is grouped in 3s, which gives them distinct feel&lt;/li&gt;
-&lt;li&gt;Beams: lines that connect shorter note values and help to clearly display the main beats of a meter.&lt;/li&gt;
-&lt;li&gt;Grouping: as a general rule, the main beats of the meter must be clearly visible within the displayed rhythm at all times&lt;/li&gt;
-&lt;/ul&gt;</description>
+        <description>&lt;p&gt;A review of some basic music theory before the NYU Steinhardt music technology placement exam.&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2019/06/15/thumbnail/img_musition5.png" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>music theory</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
       </item>
       
       <item>
@@ -566,82 +87,39 @@ $$ H_a[m] = DFT(h_a) = 1/K \sum_k DFT(h_k)[m] =  1/K \sum_k e^{-j2 \pi \cdot m \
         <link>http://nianze.tk/en/notes/2018/05/music-generation-archive/</link>
         <pubDate>Thu, 31 May 2018 16:07:41 -0400</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Thu, 31 May 2018 16:07:41 -0400</atom:modified>
         <guid>http://nianze.tk/en/notes/2018/05/music-generation-archive/</guid>
-        <description>&lt;p&gt;A random collection of recent works on music generation.&lt;/p&gt;
-&lt;!-- toc --&gt;
-&lt;h1 id=&#34;papers&#34;&gt;Papers&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Melody Generation for Pop Music via Word Representation of Musical Properties&lt;/strong&gt; (2017.10) [&lt;a href=&#34;https://arxiv.org/abs/1710.11549&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/mil-tokyo/NeuralMelody&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Generating Nontrivial Melodies for Music as a Service&lt;/strong&gt; (2017.10) [&lt;a href=&#34;https://arxiv.org/abs/1710.02280&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://composing.ai&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;MuseGAN: Symbolic-domain Music Generation and Accompaniment with Multi-track Sequential Generative Adversarial Networks&lt;/strong&gt; (2017.9) [&lt;a href=&#34;https://arxiv.org/abs/1709.06298&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://salu133445.github.io/musegan/&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Similarity Embedding Network for Unsupervised Sequential Pattern Learning by Playing Music Puzzle Games&lt;/strong&gt; （2017.9）[&lt;a href=&#34;https://arxiv.org/abs/1709.04384&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://remyhuang.github.io/DJnet&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;A Tutorial on Deep Learning for Music Information Retrieval&lt;/strong&gt; (2017.9) [&lt;a href=&#34;https://arxiv.org/abs/1709.04396&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Deep Learning Techniques for Music Generation - A Survey&lt;/strong&gt; (2017.9) [&lt;a href=&#34;https://arxiv.org/abs/1709.01620&#34;&gt;arXiv&lt;/a&gt;] (论文综述)&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Neural Translation of Musical Style&lt;/strong&gt; (2017.8) [&lt;a href=&#34;https://arxiv.org/abs/1708.03535&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;http://imanmalik.com/cs/2017/06/05/neural-style.html&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;GLSR-VAE: Geodesic Latent Space Regularization for Variational AutoEncoder Architectures&lt;/strong&gt; (2017.7) [&lt;a href=&#34;https://arxiv.org/abs/1707.04588&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Learning and Evaluating Musical Features with Deep Autoencoders&lt;/strong&gt; (2017.6) [&lt;a href=&#34;https://arxiv.org/abs/1706.04486&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Objective-Reinforced Generative Adversarial Networks (ORGAN) for Sequence Generation Models&lt;/strong&gt; (2017.5) [&lt;a href=&#34;https://arxiv.org/abs/1705.10843&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/gablg1/ORGAN&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;MidiNet: A Convolutional Generative Adversarial Network for Symbolic-domain Music Generation using 1D and 2D Conditions&lt;/strong&gt; - &lt;strong&gt;ISMIR 2017&lt;/strong&gt; (2017.3) [&lt;a href=&#34;https://arxiv.org/abs/1703.10847&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://richardyang40148.github.io/TheBlog/midinet_arxiv_demo.html&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Automatic Conversion of Pop Music into Chiptunes for 8-bit Pixel Art&lt;/strong&gt; - &lt;strong&gt;ICASSP 2017&lt;/strong&gt; (2017.2) [&lt;a href=&#34;http://mac.citi.sinica.edu.tw/~yang/pub/su17icassp_8bit.pdf&#34;&gt;Paper&lt;/a&gt;] [&lt;a href=&#34;https://github.com/LemonATsu/pop-to-8bit&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;https://lemonatsu.github.io&#34;&gt;Page&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;DeepBach: a Steerable Model for Bach Chorales Generation&lt;/strong&gt; (2016.12) [&lt;a href=&#34;https://arxiv.org/abs/1612.01010&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/Ghadjeres/DeepBach&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;C-RNN-GAN: Continuous Recurrent Neural Networks with Adversarial Training&lt;/strong&gt; (2016.11) [&lt;a href=&#34;https://arxiv.org/abs/1611.09904&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/olofmogren/c-rnn-gan&#34;&gt;Code&lt;/a&gt;] 🌟&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Tuning Recurrent Neural Networks with Reinforcement Learning - ICLR 2017&lt;/strong&gt; (2016.11) [&lt;a href=&#34;https://arxiv.org/abs/1611.02796&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://magenta.tensorflow.org/2016/11/09/tuning-recurrent-networks-with-reinforcement-learning&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/tensorflow/magenta/tree/master/magenta/models/rl_tuner&#34;&gt;Code&lt;/a&gt;] 🌟&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient&lt;/strong&gt; - &lt;strong&gt;AAAI 2017&lt;/strong&gt; (2016.9) [&lt;a href=&#34;http://www.aaai.org/ocs/index.php/AAAI/AAAI17/paper/download/14344/14489&#34;&gt;Paper&lt;/a&gt;] [&lt;a href=&#34;https://github.com/LantaoYu/SeqGAN&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Song From PI: A Musically Plausible Network for Pop Music Generation&lt;/strong&gt; - &lt;strong&gt;ICLR 2017&lt;/strong&gt; [&lt;a href=&#34;https://arxiv.org/abs/1611.03477&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;http://www.theregister.co.uk/2016/11/11/ai_pop_music_maker/&#34;&gt;Reports&lt;/a&gt;]🌟&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Text-based LSTM networks for Automatic Music Composition&lt;/strong&gt; (2016.4) [&lt;a href=&#34;https://arxiv.org/abs/1604.05358#&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://keunwoochoi.wordpress.com/2016/02/23/lstmetallica/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/keunwoochoi/LSTMetallica&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Music Transcription Modelling and Composition Using Deep Learning&lt;/strong&gt; (2016.4) [&lt;a href=&#34;https://arxiv.org/abs/1604.08723&#34;&gt;arXiv&lt;/a&gt;] [&lt;a href=&#34;https://github.com/IraKorshunova/folk-rnn&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Composing A Melody with Long-short Term Memory (LSTM) Recurrent Neural Networks&lt;/strong&gt; (2016.2) [&lt;a href=&#34;http://konstilackner.github.io/LSTM-RNN-Melody-Composer-Website/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/konstilackner/LSTM-RNN-Melody-Composer&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;http://konstilackner.github.io/LSTM-RNN-Melody-Composer-Website/Thesis_final01.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Neural Adaptive Sequential Monte Carlo - NIPS 2015&lt;/strong&gt; (2015) [&lt;a href=&#34;http://papers.nips.cc/paper/5961-neural-adaptive-sequential-monte-carlo.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;A Recurrent Latent Variable Model for Sequential Data - NIPS 2015&lt;/strong&gt; (2015) [&lt;a href=&#34;http://papers.nips.cc/paper/5653-a-recurrent-latent-variable-model-for-sequential-data.pdf&#34;&gt;Paper&lt;/a&gt;] [&lt;a href=&#34;https://github.com/jych/nips2015_vrnn&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;AI Methods in Algorithmic Composition: A Comprehensive Survey&lt;/strong&gt; (2013) [&lt;a href=&#34;http://www.jair.org/media/3908/live-3908-7454-jair.pdf&#34;&gt;Paper&lt;/a&gt;] 🌟&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Modeling Temporal Dependencies in High-dimensional Sequences: Application to Polyphonic Music Generation and Transcription&lt;/strong&gt; (2012) [&lt;a href=&#34;https://arxiv.org/abs/1206.6392&#34;&gt;arXiv&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Towards Adaptive Music Generation By Reinforcement Learning of Musical Tension&lt;/strong&gt; (2010) [&lt;a href=&#34;https://ccrma.stanford.edu/~slegroux/affect/pubs/SMC2010.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;A First Look at Music Composition using LSTM Recurrent Neural Networks&lt;/strong&gt; (2002) [&lt;a href=&#34;http://www.iro.umontreal.ca/~eckdoug/blues/index.html&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;http://www.iro.umontreal.ca/~eckdoug/blues/IDSIA-07-02.pdf&#34;&gt;Paper&lt;/a&gt;]&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;projects&#34;&gt;Projects&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Google Magenta&lt;/strong&gt; [&lt;a href=&#34;https://magenta.tensorflow.org/welcome-to-magenta&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/tensorflow/magenta&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Deep Jazz&lt;/strong&gt;  [&lt;a href=&#34;https://deepjazz.io/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://deepjazz.io/&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;BachBot&lt;/strong&gt; [&lt;a href=&#34;http://bachbot.com/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/feynmanliang/bachbot/&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;WaveNet&lt;/strong&gt; [&lt;a href=&#34;https://deepmind.com/blog/wavenet-generative-model-raw-audio/&#34;&gt;Web&lt;/a&gt;][&lt;a href=&#34;https://github.com/ibab/tensorflow-wavenet&#34;&gt;Code&lt;/a&gt;] (not fully)&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;GRUV&lt;/strong&gt; [&lt;a href=&#34;https://github.com/MattVitelli/GRUV&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Kulitta&lt;/strong&gt; [&lt;a href=&#34;https://github.com/donya/Kulitta&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;applications&#34;&gt;Applications&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;AIVA&lt;/strong&gt;[&lt;a href=&#34;http://aiva.ai&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Google A.I. Duet&lt;/strong&gt; [&lt;a href=&#34;https://aiexperiments.withgoogle.com/ai-duet&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;The Infinite Drum Machine&lt;/strong&gt; [&lt;a href=&#34;https://aiexperiments.withgoogle.com/drum-machine&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Amper Music&lt;/strong&gt; [&lt;a href=&#34;https://www.ampermusic.com/app#/&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Intelligent Music System&lt;/strong&gt; [&lt;a href=&#34;http://120.52.72.53/www.intelligentmusicsystems.com/c3pr90ntc0td/vid/tempo_shifting.mp4&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Unwind&lt;/strong&gt; [&lt;a href=&#34;http://unwind.ai&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Tidalcycles&lt;/strong&gt; [&lt;a href=&#34;https://tidalcycles.org&#34;&gt;Link&lt;/a&gt;] [&lt;a href=&#34;https://www.youtube.com/watch?v=xoa3OT8ncX0&#34;&gt;Video&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Jukedeck&lt;/strong&gt; [&lt;a href=&#34;https://www.jukedeck.com/&#34;&gt;Link&lt;/a&gt;]&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;conferencesworkshops&#34;&gt;Conferences&amp;amp;Workshops&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;ACM MM&lt;/strong&gt; - ACM MultiMedia [&lt;a href=&#34;http://www.acmmm.org/2017&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;ISMIR&lt;/strong&gt; - The International Society of Music Information Retrieval [&lt;a href=&#34;http://www.ismir.net/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;ICASSP&lt;/strong&gt; - Conference on Acoustics, Speech and Signal Processing [&lt;a href=&#34;http://www.ieee-icassp2017.org/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;DLM&lt;/strong&gt; - Deep Learning for Music Workshop [&lt;a href=&#34;http://dorienherremans.com/dlm2017/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;CSMC&lt;/strong&gt; - Conference on Computer Simulation of Musical  Creativity [&lt;a href=&#34;https://csmc2016.wordpress.com/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;CCRMA&lt;/strong&gt; - Center for Computer Research in Music and Acoustics (Stanford University) [&lt;a href=&#34;https://ccrma.stanford.edu/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;ICMC&lt;/strong&gt; - Internatonal Computer Music Conference [&lt;a href=&#34;http://www.icmc2017.com/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;http://www.icmc2017.com/cn/page1.html&#34;&gt;Lists&lt;/a&gt;]&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;blogs&#34;&gt;Blogs&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Neural Nets for Generating Music&lt;/strong&gt; [&lt;a href=&#34;https://medium.com/@kcimc/neural-nets-for-generating-music-f46dffac21c0&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Generative Music with JavaScript &amp;amp; Web Audio&lt;/strong&gt; [&lt;a href=&#34;https://teropa.info/generative-music-slides/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;The Current State Of AI: Artificial Intelligence In Music, Movies &amp;amp; More&lt;/strong&gt; (2017.7) [&lt;a href=&#34;http://www.hypebot.com/hypebot/2017/07/ai-today-the-current-state-of-artificial-intelligence.html&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Composing Music With Recurrent Neural Networks&lt;/strong&gt; (2015.8) [&lt;a href=&#34;http://www.hexahedria.com/2015/08/03/composing-music-with-recurrent-neural-networks/&#34;&gt;Web&lt;/a&gt;] [&lt;a href=&#34;https://github.com/hexahedria/biaxial-rnn-music-composition&#34;&gt;Code&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Analyzing deep learning tools for music generation&lt;/strong&gt; [&lt;a href=&#34;http://www.asimovinstitute.org/analyzing-deep-learning-tools-music/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;COORD&lt;/strong&gt; [&lt;a href=&#34;http://www.coord.fm/home/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;How evolved LSTMS improvise on a melogy you specify&lt;/strong&gt;[&lt;a href=&#34;https://www.sentient.ai/sentient-labs/ea/lstm-music/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;AI makes pop music in the style of any composer&lt;/strong&gt;[&lt;a href=&#34;http://www.flow-machines.com/ai-makes-pop-music/&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Richard Yang&#39;s Blog&lt;/strong&gt;[&lt;a href=&#34;https://richardyang40148.github.io/TheBlog/index.html&#34;&gt;Blog&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Thousands of bird sounds visualized using machine learning&lt;/strong&gt;[&lt;a href=&#34;https://experiments.withgoogle.com/bird-sounds&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Music AI: Loop-in-the-Human&lt;/strong&gt;[&lt;a href=&#34;https://medium.com/@jayhardesty/music-ai-loop-in-the-human-1a15681e573e&#34;&gt;Web&lt;/a&gt;]&lt;/li&gt;
-&lt;/ul&gt;</description>
+        <description>&lt;p&gt;A random collection of recent works on music generation.&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2018/2018-05/2018-05-31.png" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+            
+              <category>recourse</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>effective c&#43;&#43;</category>
+            
+          
+        
       </item>
       
       <item>
@@ -649,18 +127,40 @@ $$ H_a[m] = DFT(h_a) = 1/K \sum_k DFT(h_k)[m] =  1/K \sum_k e^{-j2 \pi \cdot m \
         <link>http://nianze.tk/en/posts/2016/spirited-away/</link>
         <pubDate>Mon, 15 Feb 2016 00:00:00 +0000</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Mon, 15 Feb 2016 00:00:00 +0000</atom:modified>
         <guid>http://nianze.tk/en/posts/2016/spirited-away/</guid>
         <description>&lt;p&gt;东风夜放花千树，更吹落、星如雨。&lt;br /&gt;
-宝马雕车香满路。凤箫声动，玉壶光转，一夜鱼龙舞。&lt;/p&gt;
-&lt;p&gt;This music is from &lt;a href=&#34;http://www.imdb.com/title/tt0245429/&#34;&gt;Spirited Away&lt;/a&gt; (千と千尋の神隠し), which is a 2001 Japanese animated fantasy film written and directed by Hayao Miyazaki and produced by &lt;a href=&#34;http://www.ghibli.jp/&#34;&gt;Studio Ghibli&lt;/a&gt;. The melody is peaceful and elegant, which is written by Youmi Kimura (木村 弓), a Japanese singer and lyre performer.&lt;/p&gt;
-&lt;p&gt;Actually, I choose this one because this is chosen as the library&#39;s closing-door music when I&#39;m a undergrad.&lt;/p&gt;
-&lt;p&gt;Everytime the music is on, we know it is 10:00pm and it is time to go back to dorm. At that time I always prefer to stay as late as possible in the library until the guard cruising around to drive me away. If the assignment is still not yet finished and deadline is approaching, I might even decided to go to the lab building around,  finishing the remaining part.&lt;/p&gt;
-&lt;p&gt;Sometimes when I stepping out of the library building, the &lt;a href=&#34;https://en.wikipedia.org/wiki/Big_Dipper&#34;&gt;Big Dipper&lt;/a&gt; lied right ahead of me on the sky, and I would wear my headphones, turn on the music, and ride my bycicle back to the dorm. On the way, thinking about everything, past and future, I could only felt the wind.&lt;/p&gt;
-&lt;p&gt;And all those days are spirited away:&lt;/p&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/PzILtO6viiw&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;</description>
+宝马雕车香满路。凤箫声动，玉壶光转，一夜鱼龙舞。&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2016/2016-02-15-Spirited-Away.png" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>clarinet</category>
+            
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music cover</category>
+            
+          
+        
       </item>
       
       <item>
@@ -668,37 +168,39 @@ $$ H_a[m] = DFT(h_a) = 1/K \sum_k DFT(h_k)[m] =  1/K \sum_k e^{-j2 \pi \cdot m \
         <link>http://nianze.tk/en/posts/2016/new-semester/</link>
         <pubDate>Mon, 25 Jan 2016 00:00:00 +0000</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Mon, 25 Jan 2016 00:00:00 +0000</atom:modified>
         <guid>http://nianze.tk/en/posts/2016/new-semester/</guid>
-        <description>&lt;p&gt;As the new semester approaches, I finished two more clarinet covers&lt;/p&gt;
-&lt;h2 id=&#34;hello-especially&#34;&gt;Hello especially&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&#34;http://nianze.tk/images/2016/2016-01-25/2016-01-25-pig.png&#34; alt=&#34;Pig&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The music is from ED of&lt;br /&gt;
-&lt;a href=&#34;https://en.wikipedia.org/wiki/Silver_Spoon_(manga)&#34;&gt;Silver Spoon&lt;/a&gt;, which&lt;br /&gt;
-is full of pastorale and optimism. Every time&lt;br /&gt;
-I hear the song, I recall the happy daily life of Yuugo Hachiken in his&lt;br /&gt;
-agricultural school. May you also enjoy this happiness as I do.&lt;/p&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/sUkafIknbPc&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&#34;heading&#34;&gt;つないだ手&lt;/h2&gt;
-&lt;p&gt;Another ED from Fullmetal Alchemist FA, also from Japanese manga artist&lt;br /&gt;
-&lt;a href=&#34;https://en.wikipedia.org/wiki/Hiromu_Arakawa&#34;&gt;Hiromu Arakawa(荒川 弘)&lt;/a&gt;. Below&lt;br /&gt;
-is her self-portray of bespectacled cow.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://nianze.tk/images/2016/2016-01-25/2016-01-25-cow.png&#34; alt=&#34;Cow&#34; /&gt;&lt;/p&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/1hCsGN3_7N4&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;I have to say Hiromi&#39;s manga is always my type. I can find an optimism from&lt;br /&gt;
-every person in her manga, which makes me think about the good side of life.&lt;/p&gt;
-&lt;p&gt;And then you&#39;ll know that:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Take it easy, and all is well.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;http://nianze.tk/images/2016/2016-01-25/2016-01-25-fight.jpg&#34; alt=&#34;Fight&#34; /&gt;&lt;/p&gt;</description>
+        <description>&lt;p&gt;As the new semester approaches, I finished two more clarinet covers&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2016/2016-01-25/2016-01-25-new-year.png" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>clarinet</category>
+            
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music cover</category>
+            
+          
+        
       </item>
       
       <item>
@@ -706,35 +208,39 @@ every person in her manga, which makes me think about the good side of life.&lt;
         <link>http://nianze.tk/en/posts/2016/aesthetic/</link>
         <pubDate>Fri, 01 Jan 2016 00:00:00 +0000</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Fri, 01 Jan 2016 00:00:00 +0000</atom:modified>
         <guid>http://nianze.tk/en/posts/2016/aesthetic/</guid>
-        <description>&lt;p&gt;My new year&#39;s first cover is for Hiroyuki Sawano!&lt;/p&gt;
-&lt;h2 id=&#34;another-beautiful-piece-from-hiroyuki-sawanohttpwwwsawanohiroyukicom&#34;&gt;Another beautiful piece from &lt;a href=&#34;http://www.sawanohiroyuki.com/&#34;&gt;Hiroyuki Sawano&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;I have to admit that I&#39;m a big fan of Hiroyuki Sawano. Every time I listen to his music, my heart is always filled with strength.&lt;/p&gt;
-&lt;p&gt;This &lt;em&gt;Aesthetic&lt;/em&gt; is from his original album &lt;a href=&#34;http://www.sawanohiroyuki.com/works-original.html&#34;&gt;Musica&lt;/a&gt; released in 2009-07-15.&lt;/p&gt;
-&lt;h3 id=&#34;aesthetic&#34;&gt;Aesthetic&lt;/h3&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/niKDxuHvPfY&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Longing for you day and in dream&lt;br /&gt;
-盼望著你白天與夜夢中&lt;/p&gt;
-&lt;p&gt;I&#39;m hoping you are here and leading my way&lt;br /&gt;
-我期盼你在身邊牽引著我向前&lt;/p&gt;
-&lt;p&gt;You steers my road anytime I need&lt;br /&gt;
-你總在我需要時引領著我&lt;/p&gt;
-&lt;p&gt;If you walk away，I will follow you&lt;br /&gt;
-如果你離開了，我將會跟隨著你&lt;/p&gt;
-&lt;p&gt;Trying my life with your sacred gifts you gave to me&lt;br /&gt;
-盡我一生攜帶直著你贈予我的神聖禮物&lt;/p&gt;
-&lt;p&gt;I won&#39;t vain and succeed it as your precious soul&lt;br /&gt;
-我向你高貴的靈魂看齊即使功成名就也不驕傲自負&lt;/p&gt;
-&lt;p&gt;Holding your hand&lt;br /&gt;
-緊握著你的手&lt;/p&gt;
-&lt;p&gt;And I&#39;m walking through the all of the world&lt;br /&gt;
-在黯淡的天空中&lt;/p&gt;
-&lt;p&gt;Carrying your wish like the Venus in the dim sky&lt;br /&gt;
-緊擁著你如金星般閃耀的夢想將足跡遍佈整個世界&lt;/p&gt;</description>
+        <description>&lt;p&gt;My new year&#39;s first cover is for Hiroyuki Sawano!&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2016/2016-01-01-night-with-star.jpg" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>clarinet</category>
+            
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music cover</category>
+            
+          
+        
       </item>
       
       <item>
@@ -742,19 +248,39 @@ every person in her manga, which makes me think about the good side of life.&lt;
         <link>http://nianze.tk/en/posts/2015/end-of-semester/</link>
         <pubDate>Sat, 12 Dec 2015 00:00:00 +0000</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Sat, 12 Dec 2015 00:00:00 +0000</atom:modified>
         <guid>http://nianze.tk/en/posts/2015/end-of-semester/</guid>
-        <description>&lt;p&gt;A mark on the end of my first semester in Cornell.&lt;/p&gt;
-&lt;h2 id=&#34;finally&#34;&gt;Finally&amp;hellip;&lt;/h2&gt;
-&lt;p&gt;After a busy semester, finally I have some time to try some new pieces of music:&lt;/p&gt;
-&lt;h3 id=&#34;heading&#34;&gt;運命と恋心&lt;/h3&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/8ZVSWYU10H8&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Hope this winter be a productive one!&lt;/p&gt;
-&lt;p&gt;BTW, the cover image is credit to pixiv user 駒＠ついった:&lt;/p&gt;
-&lt;script src=&#34;http://source.pixiv.net/source/embed.js&#34; data-id=&#34;43731455_4caeca1d1a29caec94dd37ded1c92ad0&#34; data-size=&#34;large&#34; data-border=&#34;off&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&lt;noscript&gt;&lt;p&gt;&lt;a href=&#34;http://www.pixiv.net/member_illust.php?mode=medium&amp;amp;illust_id=43731455&#34; target=&#34;_blank&#34;&gt;呪縛&lt;/a&gt; by &lt;a href=&#34;http://www.pixiv.net/member.php?id=23122&#34; target=&#34;_blank&#34;&gt;駒＠ついった&lt;/a&gt; on &lt;a href=&#34;http://www.pixiv.net/&#34; target=&#34;_blank&#34;&gt;pixiv&lt;/a&gt;&lt;/p&gt;&lt;/noscript&gt;</description>
+        <description>&lt;p&gt;A mark on the end of my first semester in Cornell.&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2015/2015-12-12-inuyasha.png" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>clarinet</category>
+            
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music cover</category>
+            
+          
+        
       </item>
       
       <item>
@@ -762,16 +288,39 @@ every person in her manga, which makes me think about the good side of life.&lt;
         <link>http://nianze.tk/en/posts/2015/halloween-celebration/</link>
         <pubDate>Sun, 01 Nov 2015 00:00:00 +0000</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Sun, 01 Nov 2015 00:00:00 +0000</atom:modified>
         <guid>http://nianze.tk/en/posts/2015/halloween-celebration/</guid>
-        <description>&lt;p&gt;A small piece of music to celebrating the Halloween.&lt;/p&gt;
-&lt;h2 id=&#34;celebrating-the-halloween&#34;&gt;Celebrating the Halloween!&lt;/h2&gt;
-&lt;p&gt;To celebrate the Halloween, I picked this piece of music, with some photos I took recently in the campus. Hope the magic fantasy style able to match with those old buildings in Cornell.&lt;/p&gt;
-&lt;p&gt;Hope you enjoy!&lt;/p&gt;
-&lt;h3 id=&#34;its-only-the-fairytale&#34;&gt;It&#39;s only the fairytale&lt;/h3&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/5xun7KD3q7k&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;</description>
+        <description>&lt;p&gt;A small piece of music to celebrating the Halloween.&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2015/2015-11-01-sunset.png" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>clarinet</category>
+            
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music cover</category>
+            
+          
+        
       </item>
       
       <item>
@@ -779,63 +328,46 @@ every person in her manga, which makes me think about the good side of life.&lt;
         <link>http://nianze.tk/en/posts/2015/clarinet-cover-collection/</link>
         <pubDate>Tue, 28 Jul 2015 00:00:00 +0000</pubDate>
         <author>daoxinzhishui@gmail.com (Nzo)</author>
+        <atom:modified>Tue, 28 Jul 2015 00:00:00 +0000</atom:modified>
         <guid>http://nianze.tk/en/posts/2015/clarinet-cover-collection/</guid>
-        <description>&lt;p&gt;Some of my early clarinet cover is collected here in this article.&lt;/p&gt;
-&lt;!-- toc --&gt;
-&lt;h1 id=&#34;why-i-launched-the-clarinet-cover-project&#34;&gt;Why I launched the clarinet cover project&lt;/h1&gt;
-&lt;p&gt;In the summer of 2015, I started recording my clarinet cover inspired by &lt;a href=&#34;https://www.youtube.com/user/linnaes&#34;&gt;ShonHayashi&lt;/a&gt; when I accidentally found his Youtube channel. At that time, actually, I haven&#39;t touched my clarinet for a long time, partially due to my old opinion that clarinet is such a classical instrument that it is never a good fit for performing mordern style music.&lt;/p&gt;
-&lt;p&gt;And I changed my opinion since I heard ShonHayashi&#39;s clarinet cover on Vocaloid then.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Whoa! He plays the clarinet so well, why not to have a try muself just like him?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;In my mind, clarinet is not as expressive as violin or piano: the voice character of clarinet feels like silk, so it is hard to handle music with too strong emotions - maybe that&#39;s why it is hard to see clarinet in Rock music :). However, it&#39;s worth a try for music with elegant and sweet styles. Especially a good fit to imitate human voice&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
-&lt;p&gt;So, since I happen to know how to play this instrument, why not to have fun with it, and play some music that once touched me?&lt;/p&gt;
-&lt;figure&gt;
-  &lt;a href=&#34;http://orig03.deviantart.net/3ac1/f/2012/078/d/6/listen_to_the_clarinet_by_sherrae78-d4t912s.jpg&#34;&gt;&lt;img src=&#34;http://orig03.deviantart.net/3ac1/f/2012/078/d/6/listen_to_the_clarinet_by_sherrae78-d4t912s.jpg&#34;&gt;&lt;/a&gt;
-  &lt;figcaption&gt;&lt;a href=&#34;http://sherrae78.deviantart.com/art/Listen-to-the-Clarinet-290994868&#34; title=&#34;Listen to the Clarinet, on DeviantArt&#34;&gt;Listen to the Clarinet by sherrae78, on DeviantArt&lt;/a&gt;.&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;h1 id=&#34;my-early-covers-in-summer-of-2015&#34;&gt;My early covers in summer of 2015&lt;/h1&gt;
-&lt;p&gt;At that moment, I did not know how to transcribe a sheet on my own, so I simply picked some of my favorite covers from ShonHayashi. All of these clarinet sheets below are transcribed by &lt;a href=&#34;https://www.youtube.com/user/linnaes&#34;&gt;him&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;heading&#34;&gt;地球最後の告白を&lt;/h2&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/Eh8NIP1-akg&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&#34;let-it-go&#34;&gt;Let it go&lt;/h2&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/7ktLwr_nCuY&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&#34;jenga-&#34;&gt;Jenga (ジェンガ)&lt;/h2&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/OUc6z6D0jeI&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&#34;vogel-im-kfig&#34;&gt;Vogel im Käfig&lt;/h2&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/gdtaa--NLl8&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&#34;odds--ends&#34;&gt;ODDS &amp;amp; ENDS&lt;/h2&gt;
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;https://www.youtube.com/embed/Ce1CVU7w9hM&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
-&lt;hr /&gt;
-&lt;ol&gt;
-&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;Reference from what Mozart wrote to &lt;a href=&#34;https://en.wikipedia.org/wiki/Anton_Stadler&#34;&gt;Stadler&lt;/a&gt; &amp;ldquo;Never should I have thought that a clarinet could be capable of imitating the human voice as it was imitated by you.&amp;rdquo;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;</description>
+        <description>&lt;p&gt;Some of my early clarinet cover is collected here in this article.&lt;/p&gt;</description>
+        
+        <dc:creator>Nzo</dc:creator>
+        
+        <media:content url="http://nianze.tk/image/2015/2015-07-28-clarinet-dog.jpg" medium="image"><media:title type="html">featured image</media:title></media:content>
+        
+        
+          
+            
+              <category>clarinet</category>
+            
+          
+            
+              <category>vocaloid</category>
+            
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music</category>
+            
+          
+        
+        
+          
+            
+              <category>music cover</category>
+            
+          
+        
       </item>
       
+
     
   </channel>
 </rss>
