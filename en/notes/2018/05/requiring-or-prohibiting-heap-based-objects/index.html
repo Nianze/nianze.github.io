@@ -1164,7 +1164,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.61.0" />
+<meta name="generator" content="Hugo 0.60.1" />
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff">
 <link rel="canonical" href="http://nianze.tk/en/notes/2018/05/requiring-or-prohibiting-heap-based-objects/">
@@ -1497,7 +1497,7 @@ if (!doNotTrack) {
       
       <p>Techniques for requiring or prohibiting heap-based objects</p>
 <!-- toc -->
-<h1 id="requiring-heap-based-objects">Requiring Heap-Based Objects</h1>
+<h1 id="requiring-heapbased-objects">Requiring Heap-Based Objects</h1>
 <h2 id="1-the-straightforward-way">1. The straightforward way</h2>
 <p>The brutle way is to declare the constructors and the destructor <code>private</code>, but this is overkill. Either one of them need to be private to ensure objects only be created on the heap. Since there are usually many constructors but only one destructor per class, a more elegant way is to make the destructor private and the constructors public, prividing privileged pseudo-destructor function (which has access to the real destructor) for clients to call, as suggested in MECpp item 26.</p>
 <p>Example:</p>
@@ -1548,7 +1548,7 @@ if (!doNotTrack) {
 </span><span class="c1"></span><span class="n">p</span><span class="o">-</span><span class="o">&gt;</span><span class="n">destroy</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="c1">// fine
 </span></code></pre></td></tr></table>
 </div>
-</div><h2 id="2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</h2>
+</div><h2 id="2-inheritanceandcontainment-friendly">2. Inheritance-and-containment friendly</h2>
 <p>Restricting access to a class's destructor or constructors prevents the creation of not only non-heap objects, but also both inheritance and containment. To work this out:</p>
 <ul>
 <li>To be friendly for inheritance, we declare <code>protected</code> for <code>UPNumber</code>'s destructor.</li>
@@ -1762,7 +1762,7 @@ if (!doNotTrack) {
 </code></pre></td></tr></table>
 </div>
 </div><p>Since built-in types such as <code>int</code> and <code>char</code> can't inherit from anything, <code>HeapTracked</code> can't be used with these built-in types. Still, the most common reason for wanting to use a class like <code>HeapTracked</code> is to determine whether it's okay to <code>delete this</code>, and we don't want to do that with a built-in type because such types have no <code>this</code> pointer.</p>
-<h1 id="prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</h1>
+<h1 id="prohibiting-heapbased-objects">Prohibiting Heap-Based Objects</h1>
 <p>To preventing objects from being allocated on the heap, there are three cases:</p>
 <ol>
 <li>objects that are directly instantiated</li>
@@ -2350,15 +2350,15 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc " data-dir="ltr" data-folding="false">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#requiring-heap-based-objects">Requiring Heap-Based Objects</a>
+    <li><a href="#requiring-heapbased-objects">Requiring Heap-Based Objects</a>
       <ul>
         <li><a href="#1-the-straightforward-way">1. The straightforward way</a></li>
-        <li><a href="#2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</a></li>
+        <li><a href="#2-inheritanceandcontainment-friendly">2. Inheritance-and-containment friendly</a></li>
         <li><a href="#3-determining-whether-an-object-is-on-the-heap">3. Determining Whether an Object is On The Heap</a></li>
         <li><a href="#4-determine-whether-its-safe-to-delete-a-pointer">4. Determine whether it's safe to delete a pointer</a></li>
       </ul>
     </li>
-    <li><a href="#prohibiting-heap-based-objects">Prohibiting Heap-Based Objects</a>
+    <li><a href="#prohibiting-heapbased-objects">Prohibiting Heap-Based Objects</a>
       <ul>
         <li><a href="#1-preventing-directly-instantiation-on-heap">1. Preventing directly instantiation on heap</a></li>
         <li><a href="#2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</a></li>
