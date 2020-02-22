@@ -58,15 +58,18 @@ featured_image: 2020/02/21/m4_front_1.jpg
 接着选相机，筛出来这么三台：
 
 * 徕卡M9（徕卡第一款全幅数码旁轴，也想体验下传说中的CCD）
-    {{< img src="/images/2020/02/21/m9.jpg" caption=“Leica_M9” >}}
+    {{< img src="/images/2020/02/21/m9.jpg" >}}
 * 索尼A7一代（够轻够薄够便宜，500刀收的二手，主要想着用来转接蔡司那枚广角，实际使用频率很低）
-    {{< img src="/images/2020/02/21/a7.jpg" caption=“Sony_A7” >}}
+    {{< img src="/images/2020/02/21/a7.jpg" >}}
 * 徕卡M4（今天讨论的主角）
-    {{< img src="/images/2020/02/21/m4_front_2.jpg" caption=“Leica_M4” >}}
+    {{< img src="/images/2020/02/21/m4_front_2.jpg" >}}
+* 三机三镜
+    {{< img src="/images/2020/02/21/a7_m4_m9_top.jpg" >}}
+    {{< img src="/images/2020/02/21/a7_m4_m9_front.jpg" >}}
 
-{{< img src="/images/2020/02/21/a7_m4_m9_front.jpg" caption=三机三镜 >}}
+# 动机
 
-徕卡M9在之前[这篇]({{< ref "/posts/2018/06/2018-06-02-a-sip-of-leica-m9.zh.md" >}})讲过了。来说说最近新入的M4，以及从数码转胶片的体验。
+徕卡M9在之前[这篇]({{< ref "/posts/2018/06/2018-06-02-a-sip-of-leica-m9.zh.md" >}})讲过了。来说说为什么最近要新入M4，以及从数码转胶片的体验。
 
 - 首先要问，为什么在2020年去选择使用一台胶片机：因为好奇——平时后期照片的时候还挺喜欢用胶片滤镜的，好奇直接用胶片拍出来会是怎样的效果；
 - 其次要问，为什么不考虑豆瓣四大神机（尼康FM2，佳能AE-1，奥林巴斯OM-1，美能达X700）：因为我已经有了M口镜头；
@@ -89,8 +92,12 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/images/2020/02/21/m4_top.jpg" caption=M4顶部 >}}
 {{< img src="/images/2020/02/21/m4_rewind.jpg" caption=很好用的快速回片扳手 >}}
 
+{{< img src="/images/2020/02/21/m4_21_left.jpg" >}}
 {{< img src="/images/2020/02/21/m4_21_right.jpg" caption=M4配21 >}}
+{{< img src="/images/2020/02/21/m4_35_left.jpg" >}}
 {{< img src="/images/2020/02/21/m4_35_right.jpg" caption=M4配35 >}}
+{{< img src="/images/2020/02/21/m4_50_left.jpg" >}}
+{{< img src="/images/2020/02/21/m4_50_front.jpg" >}}
 {{< img src="/images/2020/02/21/m4_50_right.jpg" caption=M4配50 >}}
 
 # 体验
