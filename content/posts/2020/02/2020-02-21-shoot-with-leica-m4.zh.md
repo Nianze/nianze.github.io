@@ -1,5 +1,5 @@
 ---
-title: "拍照不插电-徕卡M4初体验"
+title: "拍照不插电-胶片初体验"
 date: 2020-02-21T16:11:39-05:00
 series:
 - camera
@@ -11,8 +11,7 @@ tags:
 - film
 - chinese
 slug: "Shoot With Leica M4"
-featured_image: 2020/02/21T16:11:39/05:00.JPG
-draft: true
+featured_image: 2020/02/21/m4_front_1.jpg
 ---
 
 技术总结：阳光16法则人肉测光，黄斑手动对焦，Rodinal冲黑白，C41冲彩负， LS-40ED扫描，vuescan软件驱动。
@@ -30,17 +29,45 @@ draft: true
 * Leica Summicron-M 35mm f/2 ASPH
 * ZEISS C Sonnar T* 50mm f/1.5 ZM
 
+{{< img src="/images/2020/02/21/lenses.jpg" caption=三枚小巧的定焦头 >}}
+
 接着选相机，筛出来这么三台：
 
 * 徕卡M9（徕卡第一款全幅数码旁轴，也想体验下传说中的CCD）
-* 索尼A7一代（够轻够薄够便宜，500刀收的二手，主要想着用来转接蔡司那枚广角，实际使用频率很低。。）
+    {{< img src="/images/2020/02/21/m9.jpg" caption=“Leica_M9” >}}
+* 索尼A7一代（够轻够薄够便宜，500刀收的二手，主要想着用来转接蔡司那枚广角，实际使用频率很低）
+    {{< img src="/images/2020/02/21/a7.jpg" caption=“Sony_A7” >}}
 * 徕卡M4（今天讨论的主角）
+    {{< img src="/images/2020/02/21/m4_front_2.jpg" caption=“Leica_M4” >}}
+
+{{< img src="/images/2020/02/21/a7_m4_m9_front.jpg" caption=三机三镜 >}}
 
 徕卡M9在之前[这篇]({{< ref "/posts/2018/06/2018-06-02-a-sip-of-leica-m9.zh.md" >}})讲过了。来说说最近新入的M4，以及从数码转胶片的体验。
 
-首先要问，为什么在2020年去选择使用一台胶片机：因为好奇——平时后期照片的时候还挺喜欢用胶片滤镜的，好奇直接用胶片拍出来会是怎样的效果；其次要问，为什么不考虑豆瓣四大神机（尼康FM2，佳能AE-1，奥林巴斯OM-1，美能达X700）：因为我已经有了M口镜头；然后要问，为什么不选M3：因为想用上我已有的那枚Summicon 35；接着问，为什么不选M2：因为没找到合适的卖家；最后问，为什么不选自带测光的M6或者M7:因为穷。
+- 首先要问，为什么在2020年去选择使用一台胶片机：因为好奇——平时后期照片的时候还挺喜欢用胶片滤镜的，好奇直接用胶片拍出来会是怎样的效果；
+- 其次要问，为什么不考虑豆瓣四大神机（尼康FM2，佳能AE-1，奥林巴斯OM-1，美能达X700）：因为我已经有了M口镜头；
+- 然后要问，为什么不选M3：因为想用上我已有的那枚Summicon 35；
+- 接着问，为什么不选M2：因为没找到合适的卖家；
+- 最后问，为什么不选自带测光的M6或者M7:因为穷
 
 # 开箱
+
+这台M4是eBay上淘的，1967年产，不到$1000，买之前刚做过CLA，成色不错，唯一瑕疵是正面快门按钮前有被磕过的凹痕（不算明显），其余功能一切正常。另外原机主是一名记者，这台M4背后铭刻刻着机主的名字。由于机子主要买来自用，非收藏，所以也就无所谓了。
+
+{{< img src="/images/2020/02/21/open_box_1.jpg" caption=快递盒子 >}}
+{{< img src="/images/2020/02/21/open_box_2.jpg" caption=拆开包装 >}}
+{{< img src="/images/2020/02/21/open_box_3.jpg" caption=附赠杂志光盘 >}}
+{{< img src="/images/2020/02/21/open_box_4.jpg" caption=CLA证明以及原机主名片 >}}
+
+{{< img src="/images/2020/02/21/m4_front_1.jpg" caption=M4正面 >}}
+{{< img src="/images/2020/02/21/m4_back.jpg" caption=M4背面（原机主姓名铭文在此） >}}
+{{< img src="/images/2020/02/21/m4_back_open.jpg" caption=M4底盖翻开，内置快速上片轴 >}}
+{{< img src="/images/2020/02/21/m4_top.jpg" caption=M4顶部 >}}
+{{< img src="/images/2020/02/21/m4_rewind.jpg" caption=很好用的快速回片扳手 >}}
+
+{{< img src="/images/2020/02/21/m4_21_right.jpg" caption=M4配21 >}}
+{{< img src="/images/2020/02/21/m4_35_right.jpg" caption=M4配35 >}}
+{{< img src="/images/2020/02/21/m4_50_right.jpg" caption=M4配50 >}}
 
 # 体验
 
@@ -76,9 +103,36 @@ draft: true
 
 ## Ilford Delta 100
 
+{{< img src="/gallery/film/2020/01/18/delta_building.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/delta_fans.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/delta_flags.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/delta_market.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/delta_sleep.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/delta_traffic_light.jpg" >}}
+
 ## Ilford HP5 Plus 400
 
+{{< img src="/gallery/film/2020/01/18/hp5_astor.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/hp5_branches.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/hp5_dummy.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/hp5_reflection2.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/hp5_street.jpg" >}}
+{{< img src="/gallery/film/2020/01/18/hp5_tank.jpg" >}}
+
 ## Kodak Colorplus 200
+
+{{< img src="/gallery/film/2020/02/22/child.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/coffee_shop.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/door.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/market.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/pedestrian.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/pigeons.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/second-hand_store.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/smoker.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/truck.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/used_gears.jpg" >}}
+{{< img src="/gallery/film/2020/02/22/window.jpg" >}}
+
 
 # 真香（吗）
 
@@ -86,7 +140,8 @@ draft: true
 
 从拍摄体验上来看，胶片和数码拍摄时最大的区别是拍完后不能立即知道效果，需要自己亲自冲洗扫描所带来的延迟感，以及这份更费事的延迟感带来的未知、忐忑、期待和成就感。从玩味的角度来看，这份延长了的摄影体验，更耐玩。
 
-从经济角度来看,嗯，最近胶卷好像又涨价了。。爱好嘛，自己玩玩就好。
+从经济角度来看,嗯，最近胶卷又涨价了，且拍且珍惜。。。
 
 # 参考
 
+[Shooting Without a Meter](http://gear.vogelius.se/-editorials/shooting-without-meter/index.html)
