@@ -31,7 +31,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/gallery/digital/2019/06/08/moon_plane.jpeg" >}}
 
 {{< img src="/gallery/digital/2019/06/22/boucherie.JPG" >}}
-{{< img src="/gallery/digital/2019/06/22/family.JPG" >}}
+{{< img src="/gallery/digital/2019/06/22/family.jpg" >}}
 {{< img src="/gallery/digital/2019/06/22/doggy.JPG" >}}
 {{< img src="/gallery/digital/2019/06/22/reflection1.JPG" >}}
 {{< img src="/gallery/digital/2019/06/22/reflection2.JPG" >}}
