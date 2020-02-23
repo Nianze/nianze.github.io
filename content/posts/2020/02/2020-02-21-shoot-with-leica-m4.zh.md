@@ -149,6 +149,10 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/gallery/film/2020/01/18/hp5_reflection2.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/hp5_street.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/hp5_tank.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/dog.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/lavender.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/pigeon.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/son.jpg" >}}
 
 ## Kodak Colorplus 200
 
