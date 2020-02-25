@@ -1203,7 +1203,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1643,7 +1643,7 @@ if (!doNotTrack) {
 </span></code></pre></td></tr></table>
 </div>
 </div><p>We generally assume the last call will invoke the <code>int</code> overload, but instead it will invoke the <code>T&amp;&amp;</code> one, since the universal reference overload version exactly matches the <code>short</code> argument by deduce <code>T</code> to be <code>short&amp;</code>, while <code>int</code> version has to match <code>short</code> with a promotion. As a result, the exact match beats a match with a promotion. However, within the <code>T&amp;&amp;</code> overload, the parameter <code>name</code> with type <code>short&amp;</code> first get passed into <code>std::forward</code>, which will not get casted into a rvalue since <code>name</code> is initialized with an lvalue (refer to EMCpp item 24), and then get passed into <code>emplace</code> member function on <code>names</code>, which finally forwards it to the <code>std::string</code> constructor, and we get an error here because no constructor for <code>std::string</code> will take a short.</p>
-<h1 id="more-problematic-perfectforwarding-consturctors">More problematic: Perfect-forwarding consturctors</h1>
+<h1 id="more-problematic-perfect-forwarding-consturctors">More problematic: Perfect-forwarding consturctors</h1>
 <p>Perfect-forwarding constructors are typically better matches than copy constructors for non-<code>const</code> lvalues, and they can hijack derived class calls to base class copy and move constructors, which makes them problematic. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2228,7 +2228,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <ul>
     <li><a href="#why-universal-references">Why universal references?</a></li>
     <li><a href="#what-trouble-universal-references-introduces">What trouble universal references introduces?</a></li>
-    <li><a href="#more-problematic-perfectforwarding-consturctors">More problematic: Perfect-forwarding consturctors</a></li>
+    <li><a href="#more-problematic-perfect-forwarding-consturctors">More problematic: Perfect-forwarding consturctors</a></li>
     <li><a href="#conclusion">Conclusion</a></li>
   </ul>
 </nav>

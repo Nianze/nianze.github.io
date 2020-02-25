@@ -1203,7 +1203,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1633,7 +1633,7 @@ if (!doNotTrack) {
 </div>
 </div><p>Conceptually, <code>true</code> and <code>false</code> are <em>runtime</em> values, and what we need here for the tag parameter should be <em>compil-time</em> types that corresponds to <code>true</code> and <code>false</code>, which in the Standard Library are called <code>std::true_type</code> and <code>std::false_type</code>. This compile-time variables serve no purpose at runtime, so some compilers who's smart enough may recognize these tag parameters and optimize them out of the program's execution image.</p>
 <p>Tag dispatch is a standard building block of template metaprogramming to let the tag determine which overload gets called, so that overloading on universal references may work as expect.</p>
-<h1 id="use-enableif-to-constrain-templates-that-take-universal-references">Use <code>enable_if</code> to constrain templates that take universal references</h1>
+<h1 id="use-enable-if-to-constrain-templates-that-take-universal-references">Use <code>enable_if</code> to constrain templates that take universal references</h1>
 <p>Tag dispatch solves some of the problems related with templates taking universal references, but not all of them. The perfect-forwarding constructor for the <code>Person</code> class, for example, remains problematic: even if we write only one constructor and apply tag dispactch technique to it, some constructor calls (copy from <code>const</code> vs non-<code>const</code> lvalues) may sometimes be handled by compiler-generated functions (e.g., copy and move constructors) that bypass the tag dispatch system.</p>
 <p>Thus, we want to constrain on when the function template is permitted to be employed. By default, all templates are <em>enabled</em>, but a template using <code>std::enable_if</code> is enabled only if the condition specified by <code>std::enable_if</code> is satisfied.</p>
 <p>In the case of <code>Person</code>'s perfect forwarding constructor, we want to enable its instantiation only if the type being passed isn't <code>Person</code>, so that the class's copy or move constructor my handle the calls where a <code>Person</code> object gets passed in. Specifically, when checking the type of the argument being passed, we want to ignore its referenceness, constness, and volatileness using <code>std::decay&lt;T&gt;</code>:</p>
@@ -2331,7 +2331,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <li><a href="#pass-by-const-t">Pass by const T&</a></li>
     <li><a href="#pass-by-value">Pass by value</a></li>
     <li><a href="#use-tag-dispatch">Use Tag dispatch</a></li>
-    <li><a href="#use-enableif-to-constrain-templates-that-take-universal-references">Use enable_if to constrain templates that take universal references</a></li>
+    <li><a href="#use-enable-if-to-constrain-templates-that-take-universal-references">Use enable_if to constrain templates that take universal references</a></li>
   </ul>
 </nav>
   </div>

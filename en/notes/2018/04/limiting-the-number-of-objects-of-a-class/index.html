@@ -1203,7 +1203,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1642,8 +1642,8 @@ if (!doNotTrack) {
 </div>
 </div><p>This design never instantiates more than a single <code>Printer</code> object at a time, but it does use different <code>Printer</code> objects in different parts of the program. It does not violate the constraint that only one printer may exist, but is still illegal with a single function static implementation.</p>
 <p>This need for flexibility leads us to the design of object-counting.</p>
-<h1 id="allowing-multimple-objects-objectcounting-with-pseudoconstructor">Allowing multimple objects: object-counting with pseudo-constructor</h1>
-<h2 id="objectcounting">Object-counting</h2>
+<h1 id="allowing-multimple-objects-object-counting-with-pseudo-constructor">Allowing multimple objects: object-counting with pseudo-constructor</h1>
+<h2 id="object-counting">Object-counting</h2>
 <p>The good point of object-counting is that, it provides us with more flexibility than the function static, and makes it easier to generalize the limit number to more than one. However, object-counting alone will not work. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1758,7 +1758,7 @@ if (!doNotTrack) {
 </div>
 </div><p>From object definition above, there are two <code>Printer</code> objects, one for <code>p</code> and one for the <code>Printer</code> part of <code>cp</code>. This is usually unwanted behavior.</p>
 <p>Often we are interested only in allowing objects to exist on their own, and limit the number of those kinds of instantiations. To satisfy such restrictions, we should declare the class constructors <code>private</code>, and (in the absence of <code>friend</code> declarations) classes with private constructors can't be used as base classes, nor can they be embedded inside other objects.</p>
-<h2 id="pseudoconstructor">Pseudo-constructor</h2>
+<h2 id="pseudo-constructor">Pseudo-constructor</h2>
 <p>In fact, private constructors are a general solution for preventing derivation. Instead of returning a reference to a single object (like what <code>thePrinter</code> does), we can declare a pseudo-constructor returning a pointer to a unique object to allow multiple objects.</p>
 <p>That is, we combine the object-counting with pseudo-consturctors:</p>
 <div class="highlight"><div class="chroma">
@@ -1867,7 +1867,7 @@ if (!doNotTrack) {
 <span class="p">{</span> <span class="k">return</span> <span class="k">new</span> <span class="nf">Printer</span><span class="p">(</span><span class="n">rhs</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><h2 id="an-objectcounting-base-class">An object-counting base class</h2>
+</div><h2 id="an-object-counting-base-class">An object-counting base class</h2>
 <p>We can split the instance counting ability apart from the <code>Printer</code> class to reuse the limited-number-of-instance functionality.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -2517,11 +2517,11 @@ document.addEventListener('DOMContentLoaded', function () {
     <nav id="TableOfContents">
   <ul>
     <li><a href="#allowing-zero-or-one-objects">Allowing zero or one objects</a></li>
-    <li><a href="#allowing-multimple-objects-objectcounting-with-pseudoconstructor">Allowing multimple objects: object-counting with pseudo-constructor</a>
+    <li><a href="#allowing-multimple-objects-object-counting-with-pseudo-constructor">Allowing multimple objects: object-counting with pseudo-constructor</a>
       <ul>
-        <li><a href="#objectcounting">Object-counting</a></li>
-        <li><a href="#pseudoconstructor">Pseudo-constructor</a></li>
-        <li><a href="#an-objectcounting-base-class">An object-counting base class</a></li>
+        <li><a href="#object-counting">Object-counting</a></li>
+        <li><a href="#pseudo-constructor">Pseudo-constructor</a></li>
+        <li><a href="#an-object-counting-base-class">An object-counting base class</a></li>
       </ul>
     </li>
   </ul>

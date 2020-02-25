@@ -1203,7 +1203,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1659,7 +1659,7 @@ if (!doNotTrack) {
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>This code will compiler, but it has potential danger: <code>process()</code> passes raw pointer <code>this</code> to a container of <code>std::shared_ptr</code>, resulting to a new control block for pointed-to <code>Widget`(</code>*this<code>); as long as there are </code>std::shared_ptr<code>s outside the </code>process()<code>that already point to that</code>Widget`, undefined behavior shows up.</p>
+</div><p>This code will compiler, but it has potential danger: <code>process()</code> passes raw pointer <code>this</code> to a container of <code>std::shared_ptr</code>, resulting to a new control block for pointed-to <code>Widget</code>(<code>*this</code>); as long as there are <code>std::shared_ptr</code>s outside the <code>process()</code> that already point to that <code>Widget</code>, undefined behavior shows up.</p>
 <p>Here, we want a class managed by <code>std::shared_ptr</code>s to be able to safely create a <code>std::shared_ptr</code> from a <code>this</code> pointer without creating multiple control blocks. The solution is to inherit from a base class template  <code>std::enable_shared_from_this</code>, which contains a member function <code>shared_from_this()</code>, which points to the same object as the <code>this</code> pointer. We can use this function to create a <code>std::shared_ptr</code> worring about creating a new control block.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
