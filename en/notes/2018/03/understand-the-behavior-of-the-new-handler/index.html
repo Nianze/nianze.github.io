@@ -1203,7 +1203,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.61.0" />
+<meta name="generator" content="Hugo 0.60.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1598,7 +1598,7 @@ if (!doNotTrack) {
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><h1 id="customize-the-new-handler-per-class">Customize the <code>new-handler</code> per class</h1>
+</div><h1 id="customize-the-newhandler-per-class">Customize the <code>new-handler</code> per class</h1>
 <p>C++ has no support for class-specific new-handlers, so we implement this by ourselves: we have each class provide its own versions of <code>set_new_handler</code> (which allows clients to specify the customized <code>new-handler</code>) and <code>operator new</code> (which ensures the class-specific <code>new-handler</code> is used in place of the global <code>new-handler</code> when memory allocation request fails).</p>
 <p>To make thie ensurance confirmed, this class-specific <code>operator new</code> should do the following stuff:</p>
 <ol>
@@ -1740,7 +1740,7 @@ if (!doNotTrack) {
 </span><span class="c1"></span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span>  <span class="c1">// there&#39;s no new-handling func. for Widget now, so if mem. alloc. fails, throw an exception immediately
 </span></code></pre></td></tr></table>
 </div>
-</div><h1 id="traditional-failure-yields-null-alternative-for-operator-new">Traditional failure-yields-null alternative for <code>operator new</code></h1>
+</div><h1 id="traditional-failureyieldsnull-alternative-for-operator-new">Traditional failure-yields-null alternative for <code>operator new</code></h1>
 <p>Althought now it is specified to throw a <code>bad_alloc</code> exception, until 1993, C++ required that <code>operator new</code> return null when it way unable to allocate the requested memory. Unwilling to abandon the traditional behavior, the C++ standardization committee provided an alternative form of <code>operator new</code> called &ldquo;nothrow&rdquo; forms, in part because the forms employ <code>nothrow</code> objects defined in the header <code>&lt;new&gt;</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1764,10 +1764,10 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>One way to achieve this strategy is to allocate a large block of memory at program start-up, then release it for use in the program the first time the new-handler is invoked. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>One way to achieve this strategy is to allocate a large block of memory at program start-up, then release it for use in the program the first time the new-handler is invoked.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>The strategy may be implemented by calling <code>set_new_handler</code> inside current <code>new-handler</code>. The next time <code>operator new</code> call the <code>new-handler</code> function, it will get the one most recently installed. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>The strategy may be implemented by calling <code>set_new_handler</code> inside current <code>new-handler</code>. The next time <code>operator new</code> call the <code>new-handler</code> function, it will get the one most recently installed.<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
 </li>
 </ol>
 </div>
@@ -2267,8 +2267,8 @@ document.addEventListener('DOMContentLoaded', function () {
     <nav id="TableOfContents">
   <ul>
     <li><a href="#the-basic">The basic</a></li>
-    <li><a href="#customize-the-new-handler-per-class">Customize the new-handler per class</a></li>
-    <li><a href="#traditional-failure-yields-null-alternative-for-operator-new">Traditional failure-yields-null alternative for operator new</a></li>
+    <li><a href="#customize-the-newhandler-per-class">Customize the new-handler per class</a></li>
+    <li><a href="#traditional-failureyieldsnull-alternative-for-operator-new">Traditional failure-yields-null alternative for operator new</a></li>
   </ul>
 </nav>
   </div>
