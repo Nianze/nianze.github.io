@@ -3,7 +3,7 @@
 
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Coco(寻梦环游记)随想 – 刀心水の胡言乱语</title>
     
@@ -78,7 +78,30 @@
   }
   
 
+
   document.addEventListener('DOMContentLoaded', function () {
+    
+    var navCollapseBtn = document.querySelector('.navbar__burger');
+    navCollapseBtn ? navCollapseBtn.addEventListener('click', function (e) {
+      var navCollapse = document.querySelector('.navbarm__collapse');
+
+      if (navCollapse) {
+        var dataOpen = navCollapse.getAttribute('data-open');
+
+        if (dataOpen === 'true') {
+          navCollapse.setAttribute('data-open', 'false');
+          navCollapse.style.maxHeight = 0;
+          navCollapseBtn.classList.remove('is-active');
+        } else {
+          navCollapse.setAttribute('data-open', 'true');
+          navCollapse.style.maxHeight = navCollapse.scrollHeight + "px";
+          navCollapseBtn.classList.add('is-active');
+        }
+      }
+    }) : null;
+    
+
+
     
     var summaryContainer = document.querySelector('.summary__container');
     var searchResult = document.querySelector('.search-result');
@@ -417,22 +440,6 @@
 
 
   
-    var navbarBurgerElem = document.querySelector('.navbar__burger');
-    var navbarMenuElem = document.querySelector('.navbar__menu');
-    navbarBurgerElem ?
-    navbarBurgerElem.addEventListener('click', function () {
-      if (navbarBurgerElem.classList.contains('is-active')) {
-        navbarBurgerElem.classList.remove('is-active');
-        navbarMenuElem.classList.remove('is-active');
-      } else {
-        navbarBurgerElem.classList.add('is-active');
-        navbarMenuElem.classList.add('is-active');
-      }
-    }) : null;
-  
-
-
-  
     var localTheme = localStorage.getItem('theme');
     var rootEleme = document.getElementById('root');
     var selectThemeElem = document.querySelectorAll('.select-theme');
@@ -557,7 +564,7 @@
       xhr.onload = function () {
         if (xhr.status === 200) {
           fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-            keys: sectionType.includes('publication') ? ['title', 'description', 'content'] : ['title', 'abstract'],
+            keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
             includeMatches: enableSearchHighlight,
             shouldSort: true,
             threshold: 0.4,
@@ -1203,7 +1210,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.61.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1211,7 +1218,9 @@
 <meta name="msapplication-navbutton-color" content="#fff">
 
 <meta name="apple-mobile-web-app-status-bar-style" content="#fff">
+
 <link rel="canonical" href="http://nianze.tk/zh/posts/2018/01/coco/">
+
 <link rel="manifest" href="/manifest.json">
 
   <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
@@ -1298,9 +1307,8 @@ if (!doNotTrack) {
         var localTheme = localStorage.getItem('theme');
         if (localTheme) {
             document.getElementById('root').className = 'theme__' + localTheme;
-        }        
+        }
     </script>
-    
     <div id="container">
         
         <div class="wrapper" data-type="posts" data-kind="page">
@@ -1317,9 +1325,9 @@ if (!doNotTrack) {
       </a>
     
   </div>
+
   
-  
-<div class="theme-mobile" data-ani="true">
+<div class="theme theme-mobile" data-ani="true">
   <div class="dropdown">
     <button class="dropdown-trigger navbar__slide-down" aria-label="Select Theme Button" style="" data-ani="true">
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="none" d="M24 0H0v24h24V0z"/><path fill="currentColor" d="M6.34 7.93c-3.12 3.12-3.12 8.19 0 11.31C7.9 20.8 9.95 21.58 12 21.58s4.1-.78 5.66-2.34c3.12-3.12 3.12-8.19 0-11.31l-4.95-4.95c-.39-.39-1.02-.39-1.41 0L6.34 7.93zM12 19.59c-1.6 0-3.11-.62-4.24-1.76C6.62 16.69 6 15.19 6 13.59s.62-3.11 1.76-4.24L12 5.1v14.49z"/></svg>      
@@ -1352,7 +1360,7 @@ if (!doNotTrack) {
   </div>
 </div>
 
-  
+
 <div id="mobileSearchBtn" class="mobile-search__btn" data-ani="true">
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M15.5 14h-.79l-.28-.27c1.2-1.4 1.82-3.31 1.48-5.34-.47-2.78-2.79-5-5.59-5.34-4.23-.52-7.79 3.04-7.27 7.27.34 2.8 2.56 5.12 5.34 5.59 2.03.34 3.94-.28 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
 </div>
@@ -1369,15 +1377,97 @@ if (!doNotTrack) {
   </div>
 </div>
 
-  
-  <a role="button" class="navbar__burger" aria-label="menu" aria-expanded="false" data-ani="true">
-    <span aria-hidden="true"></span>
-    <span aria-hidden="true"></span>
-    <span aria-hidden="true"></span>
-  </a>  
 
-  <div class="navbar__menu">
+<a role="button" class="navbar__burger" aria-label="menu" aria-expanded="false"
+  data-ani="true">
+  <span aria-hidden="true"></span>
+  <span aria-hidden="true"></span>
+  <span aria-hidden="true"></span>
+</a>
+<div class="navbarm__collapse" data-open="false">
+  <ul dir="ltr">
     
+    
+      
+      
+      
+      
+
+      
+        <li class="navbarm__menu--item active">
+          <a href="/zh/posts">胡言</a>
+        </li>
+      
+      
+    
+      
+      
+      
+      
+
+      
+        <li class="navbarm__menu--item ">
+          <a href="/zh/notes">笔记</a>
+        </li>
+      
+      
+    
+      
+      
+      
+      
+
+      
+        <li class="navbarm__menu--item ">
+          <a href="/zh/gallery">
+            影像
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-4.59 4.59c-.39.39-1.02.39-1.41 0L6.7 10.7c-.39-.39-.39-1.02 0-1.41.39-.38 1.03-.39 1.42 0z"/></svg>
+          </a>
+        </li>
+
+        
+          <li class="navbarm__menu--item navbarm__menu--subitem">
+            <a href="/zh/gallery/digital">数码</a>
+          </li>
+        
+          <li class="navbarm__menu--item navbarm__menu--subitem">
+            <a href="/zh/gallery/film">胶片</a>
+          </li>
+        
+
+      
+      
+    
+      
+      
+      
+      
+
+      
+        <li class="navbarm__menu--item ">
+          <a href="/zh/archives">归档</a>
+        </li>
+      
+      
+    
+      
+      
+      
+      
+
+      
+        <li class="navbarm__menu--item ">
+          <a href="/zh/about">关于</a>
+        </li>
+      
+      
+    
+
+    
+  </ul>
+</div>
+  <div class="navbar__menu">
+  
 <div class="theme" data-ani="true">
   <div class="dropdown">
     <button class="dropdown-trigger navbar__slide-down" aria-label="Select Theme Button" data-ani="true">
@@ -1411,63 +1501,62 @@ if (!doNotTrack) {
   </div>
 </div>
 
-    
-    
+  
+  
+  
+  
+  
+  
+  
+  <a href="/zh/posts" class="navbar__menu-item navbar__slide-down active" dir="ltr" data-ani="true">胡言</a>
+  
+  
+  
+  
+  
+  
+  
+  <a href="/zh/notes" class="navbar__menu-item navbar__slide-down " dir="ltr" data-ani="true">笔记</a>
+  
+  
+  
+  
+  
+  
+  
+  <div class="navbar__dropdown navbar__slide-down" data-ani="true">
+    <a href="/zh/gallery" class="navbar__menu-item "
+      dir="ltr">
+      影像
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-4.59 4.59c-.39.39-1.02.39-1.41 0L6.7 10.7c-.39-.39-.39-1.02 0-1.41.39-.38 1.03-.39 1.42 0z"/></svg>
+    </a>
+    <div class="navbar__dropdown--content">
       
+      <a href="/zh/gallery/digital" class="navbar__dropdown--item" dir="ltr">数码</a>
       
+      <a href="/zh/gallery/film" class="navbar__dropdown--item" dir="ltr">胶片</a>
       
-      
-      
-        <a href="/zh/posts" class="navbar__menu-item navbar__slide-down active" dir="ltr" data-ani="true">胡言</a>
-      
-    
-      
-      
-      
-      
-      
-        <a href="/zh/notes" class="navbar__menu-item navbar__slide-down " dir="ltr" data-ani="true">笔记</a>
-      
-    
-      
-      
-      
-      
-      
-        <div class="navbar__dropdown navbar__slide-down" data-ani="true">
-          <a href="/zh/gallery" class="navbar__menu-item " dir="ltr">
-            影像
-            <span class="navbar__menu-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M8.12 9.29L12 13.17l3.88-3.88c.39-.39 1.02-.39 1.41 0 .39.39.39 1.02 0 1.41l-4.59 4.59c-.39.39-1.02.39-1.41 0L6.7 10.7c-.39-.39-.39-1.02 0-1.41.39-.38 1.03-.39 1.42 0z"/></svg>
-            </span>
-          </a>        
-          <div class="navbar__dropdown--content">
-            
-            <a href="/zh/gallery/digital" class="navbar__dropdown--item" dir="ltr">数码</a>        
-            
-            <a href="/zh/gallery/film" class="navbar__dropdown--item" dir="ltr">胶片</a>        
-            
-          </div>
-        </div>
-      
-    
-      
-      
-      
-      
-      
-        <a href="/zh/archives" class="navbar__menu-item navbar__slide-down " dir="ltr" data-ani="true">归档</a>
-      
-    
-      
-      
-      
-      
-      
-        <a href="/zh/about" class="navbar__menu-item navbar__slide-down " dir="ltr" data-ani="true">关于</a>
-      
-    
+    </div>
   </div>
+  
+  
+  
+  
+  
+  
+  
+  <a href="/zh/archives" class="navbar__menu-item navbar__slide-down " dir="ltr" data-ani="true">归档</a>
+  
+  
+  
+  
+  
+  
+  
+  <a href="/zh/about" class="navbar__menu-item navbar__slide-down " dir="ltr" data-ani="true">关于</a>
+  
+  
+</div>
 </nav>
             
             
@@ -1507,11 +1596,10 @@ if (!doNotTrack) {
   
 </nav>
   
-  <noscript>
-    Please enable Javascript to view the contents
-  </noscript>
-  <div class="single hide">
-    <script>document.querySelector('.single').classList.remove('hide')</script>
+  
+  <div class="single ">
+    <div class="single__nojs">Please enable Javascript to view the contents</div>
+    <script>document.querySelector('.single').classList.remove('hide'); document.querySelector('.single__nojs').classList.add('hide');</script>
     <h2 class="single__title" data-ani="true">Coco(寻梦环游记)随想</h2>
     <div class="single__meta">
       
@@ -1554,18 +1642,20 @@ if (!doNotTrack) {
 <p>昨晚在纽约看了去年底就在国内引起热议的Pixar新动画 <em>Coco</em> 。外面天气很冻人，里面电影很动人。</p>
 <p>虽然不至于哭出来，但是能理解为什么很多人看完会想哭了。可能是因为被影片勾起了已故至亲的温暖回忆；可能是因为被主人公Miguel执着追求梦想的勇气打动心里充满了&quot;seize the moment&quot;的正能量；可能是心中还残留着些许被那根名为“为你着想”的“爱”的绳索束缚的痕迹所以自然代入了片中Miguel的叛逆行为；可能是因为最后Happy Ending的相互谅解大团圆结局让观众在那个瞬间有了宽恕一切的温暖仁慈；就算内心麻木不仁，可能全片动听的音乐，流畅的节奏和绚丽的画面也足够过把眼瘾值回票价了。不论能不能拿奥斯卡最佳动画奖，该片肯定是完成度很高的佳作无疑。</p>
 <p>片中对于死后世界的设定取材自墨西哥的传统节日亡灵节。我理解的片中对死后世界的构想是源于生者为了安慰在世时的灵魂所虚构的一种传统，考究这份传统的起源和发展将会是件很有趣的事情。虽然并不相信这份虚构的传统，但不得不承认，不管是否有死后需要依靠在世者的记忆才能存在的虚构世界，对活着的人来说，有亲人支持的现世生活总是比独行的世界更有温度的。每天放学下班回家，与家人互动会是件很让人感到有安全感的事情，如此一来平日里学习工作的劳累也会在互动中被稀释很多吧。只是任何事情都有两面，在享受亲情的热度带来的温暖的同时，也得掌握好这份温度的微妙距离和火候，否则就会被烫到了——Miguel自制的琴被Grandma砸了的时候我是真心疼，也就很能够理解他出走时的心情了。本片能在中国引起这么多共鸣和热议，我相信中国传统中相似的家庭观念是很重要的一个因素，<a href="https://www.zhihu.com/question/57177072">知乎</a>上也有很多对此相关的讨论了。</p>
+
+
 <figure >
   
-    
-    <img data-src="/images/2018/2018-01/2018-01-03/festival.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
+    <img data-src="/images/2018/2018-01/2018-01-03/festival.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
     
   
-  <figcaption style="text-align: ">
+    <figcaption style="text-align: ">
     <strong>墨西哥亡灵节</strong>:
     
   </figcaption>
   
 </figure>
+
 <p>回归本片，<em>Coco</em> 以一种豁达的角度阐述了墨西哥传统文化对于死亡的理解。这其实是个蛮沉重的话题，稍加深入便进入到虚无主义的领域了。对于人生，结合最近纽约冻人的天气，我可以大致做这么一个比喻吧：人生是一场残酷的跋涉，每个人都在名为孤独的寒风中被时间裹挟着走向死亡。如果希望旅途中不被这寒风冻死，那么眼下有至少两种解决方案：</p>
 <ol>
 <li>和人抱团靠理解与默契贴近心与心的距离来相互取暖</li>
@@ -1573,53 +1663,62 @@ if (!doNotTrack) {
 </ol>
 <p>作为一个“耐寒”的人，目前相比起掌握火候的技巧，我会将磨砺自己的优先级靠前，在自由状态下追求自己想做的事。我同意温暖的人生是值得追求的，但还不会加入抱团取暖后被篝火吸引决定驻足的人群；愈发习惯了寒风的凌冽，现在便只想着远方的征途。但我倒确实是佩服那些拥有足够的精力，能够在不停前进的同时，还温暖他人，既享受温度，又可以不被火焰烫伤的人；而那些偶然中巧遇小伙伴一起前往相同目的地的幸运者就更加值得祝福了。</p>
 <p>当片中开创家族鞋业的曾祖母在亡灵国度的聚光灯中重新开嗓，体会了久违的作为歌手时自己的追求与荣光，想起自己跟曾祖父一起合唱的岁月，又想起自己为了忘记曾祖父的离别，独自一人抚养 <em>Coco</em> 长大而不得不作出抉择放弃歌唱的事业，她是否因此感到了一丝惋惜，才在最后宽恕了没能回家的曾祖父，并在手执花瓣时决定不再添加任何条件的献上自己的祝福呢？</p>
+
+
 <figure >
   
-    
-    <img data-src="/images/2018/2018-01/2018-01-03/flower.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
+    <img data-src="/images/2018/2018-01/2018-01-03/flower.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
     
   
 </figure>
+
 <blockquote>
 <p>P.S.:片头的预告有对称狂魔 <a href="https://en.wikipedia.org/wiki/Wes_Anderson">Wes Anderson</a> 的新片 <a href="https://en.wikipedia.org/wiki/Isle_of_Dogs_(film)">Isle of Dogs</a>,看的第一眼就让我想到了<a href="https://en.wikipedia.org/wiki/Fantastic_Mr._Fox_(film)">Fantastic Mr.Fox(了不起的狐狸爸爸)</a>。他也导演了另一部包揽2014年奥斯卡四项大奖的作品 <a href="https://en.wikipedia.org/wiki/The_Grand_Budapest_Hotel">The Grand Budapest Hotel(布达佩斯大饭店)</a>。</p>
 </blockquote>
-<p><figure >
+<p>
+
+<figure >
   
-    
-    <img data-src="/images/2018/2018-01/2018-01-03/dog.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
+    <img data-src="/images/2018/2018-01/2018-01-03/dog.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
     
   
-  <figcaption style="text-align: ">
+    <figcaption style="text-align: ">
     <strong>Isle of Dogs</strong>:
     
   </figcaption>
   
-</figure><br />
+</figure>
+<br />
+
+
 <figure >
   
-    
-    <img data-src="/images/2018/2018-01/2018-01-03/fox.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
+    <img data-src="/images/2018/2018-01/2018-01-03/fox.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
     
   
-  <figcaption style="text-align: ">
+    <figcaption style="text-align: ">
     <strong>Fantastic Mr.Fox</strong>:
     
   </figcaption>
   
-</figure><br />
+</figure>
+<br />
+
+
 <figure >
   
-    
-    <img data-src="/images/2018/2018-01/2018-01-03/hotel.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" width="" height=""/>
+    <img data-src="/images/2018/2018-01/2018-01-03/hotel.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
     
   
-  <figcaption style="text-align: ">
+    <figcaption style="text-align: ">
     <strong>The Grand Budapest Hotel</strong>:
     
   </figcaption>
   
-</figure></p>
+</figure>
+</p>
     </article>
+    
     <script>
   'use strict';
   
@@ -2167,7 +2266,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      document.getElementsByClassName('navbar__burger')[0].classList.remove('is-active');
+      var navCollapseBtn = document.querySelector('.navbar__burger');
+      var navCollapse = document.getElementsByClassName('navbarm__collapse')[0];
+      if (navCollapse) {
+        navCollapse.setAttribute('data-open', false);
+        navCollapse.style.maxHeight = 0;
+        navCollapseBtn.classList.remove('is-active');
+      }
       document.getElementsByClassName('navbar__menu')[0].classList.remove('is-active');
       document.getElementsByClassName('mobile-search')[0].classList.add('hide');
     },
@@ -2435,7 +2540,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var clipInit = false;
     var preChromaElem = document.querySelectorAll('pre.chroma');
     var langCodeElem = document.querySelectorAll('.language-code');
-    var dolorCodeElem = document.querySelectorAll('div.language-\\$');
+    var dollarCodeElem = document.querySelectorAll('div.language-\\$');
     var gtCodeElem = document.querySelectorAll('div.language-\\>');
 
     var makeClipboard = function(elem) {
@@ -2492,7 +2597,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var newClipboardElem = document.createElement('span');
             newClipboardElem.setAttribute('class', 'copy-to-clipboard');
             newClipboardElem.setAttribute('title', 'Copy to clipboard');
-            closest(code, 'div.chroma').append(newClipboardElem);
+            elem.parentNode.parentNode.insertBefore(newClipboardElem, elem.parentNode.nextElementSibling);
           }
         }
       }
@@ -2519,8 +2624,8 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }) : null;
 
-    dolorCodeElem ? 
-    dolorCodeElem.forEach(function(elem) {
+    dollarCodeElem ? 
+    dollarCodeElem.forEach(function(elem) {
       elem.querySelectorAll('code').forEach(function (codeElem) {
         makeSymbolClipboard(codeElem);
       });
@@ -2536,8 +2641,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     
-    dolorCodeElem ?
-    dolorCodeElem.forEach(function(elem) {
+    dollarCodeElem ?
+    dollarCodeElem.forEach(function(elem) {
       var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
       lnts ? 
       lnts.forEach(function(lnt) {
