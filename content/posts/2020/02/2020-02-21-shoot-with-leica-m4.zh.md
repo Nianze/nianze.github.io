@@ -47,7 +47,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 
 手机摄影的优点是随时抓拍，自带后期和分享，用起来非常方便。不过手机的镜头和传感器受限于物理定律，拍出来的照片毕竟质感有限。所以，如果预期到可能会有更值得记录细节的美好瞬间，出门前我不介意再带一台小相机在身边——它得够小，才能不影响正常的生活体验；它的画质还得跟手机拉开足够差距，否则我用手机就足够了。
 
-照这个标准，首先选镜头。变焦镜头太长太粗，排除；定焦里，自动对焦头要么太吵要没太大，也排除；最后符合小巧而又高画质要求的，便是手动对焦的M口镜头了。考察一番，锁定了下面三枚足够小的手动定焦头：
+照这个标准，首先选镜头。变焦镜头太长，排除；定焦里，自动对焦头要么太吵要么太粗，也排除；最后符合小巧而又高画质要求的，便是手动对焦的M口镜头了。考察一番，锁定了下面三枚足够小的手动定焦头：
 
 * ZEISS Biogon T* 21mm f/2.8 ZM
 * Leica Summicron-M 35mm f/2 ASPH
@@ -110,7 +110,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 
 由于摁下快门后无法回放照片，每次构图前会更加谨慎，反复检查有没有算好曝光对好焦过好片，导致我第一卷（Ilford Delta 100）24张照片拍了很久才用完，且依然有三张摁下快门才发现没开镜头盖。后来主要是心理上习惯了不回放，拍废了就废了吧，随缘；心态一轻松，拍起来就愉快多了。而且胶片对过曝的宽容度好于数码传感器，熟悉这一特性后心理负担也会少很多。
 
-# 冲洗
+## 冲洗
 
 在家冲洗胶卷其实并没有很难。买齐工具后按部就班就好。我用到的工具：
 
@@ -128,11 +128,11 @@ featured_image: 2020/02/21/m4_front_1.jpg
 
 黑白胶片的冲洗，主要参考Mattias Burling的[这个视频](https://youtu.be/kp8cACHz_Og)；由于没买停显液，显影后我直接用自来水冲。彩色负片的冲洗就是照着C41的标准流程来；普通浴缸里的热水稍稍调一下就能稳定在38°C。兑好的药液我就直接放在1L纯净水的塑料瓶子里置于暗处，方便以后接着用。
 
-# 扫描
+## 扫描
 
 扫描仪是在eBay上淘的[尼康COOLSCAN IV ED (LS-40 ED)](https://imaging.nikon.com/lineup/scanner/coolscan_4/index.htm)。买回来后找了半天适合macOS最新系统用的软件驱动，最后用的[VueScan](https://www.hamrick.com/)。目前拍了一卷Delta 100，两卷HP5 Plus 400和一卷Colorplus 200.扫描结果如下（目前无后期，直接扫成jpg格式倒出）：
 
-## Ilford Delta 100
+### Ilford Delta 100
 
 {{< img src="/gallery/film/2020/01/18/delta_building.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/delta_fans.jpg" >}}
@@ -141,7 +141,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/gallery/film/2020/01/18/delta_sleep.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/delta_traffic_light.jpg" >}}
 
-## Ilford HP5 Plus 400
+### Ilford HP5 Plus 400
 
 {{< img src="/gallery/film/2020/01/18/hp5_astor.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/hp5_branches.jpg" >}}
@@ -149,8 +149,12 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/gallery/film/2020/01/18/hp5_reflection2.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/hp5_street.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/hp5_tank.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/dog.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/lavender.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/pigeon.jpg" >}}
+{{< img src="/gallery/film/2020/02/08/son.jpg" >}}
 
-## Kodak Colorplus 200
+### Kodak Colorplus 200
 
 {{< img src="/gallery/film/2020/02/22/child.jpg" >}}
 {{< img src="/gallery/film/2020/02/22/coffee_shop.jpg" >}}
