@@ -141,7 +141,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/gallery/film/2020/01/18/delta_sleep.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/delta_traffic_light.jpg" >}}
 
-### Ilford HP5 Plus 400
+### Ilford HP5 Plus 400 [^1]
 
 {{< img src="/gallery/film/2020/01/18/hp5_astor.jpg" >}}
 {{< img src="/gallery/film/2020/01/18/hp5_branches.jpg" >}}
@@ -154,7 +154,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/gallery/film/2020/02/08/pigeon.jpg" >}}
 {{< img src="/gallery/film/2020/02/08/son.jpg" >}}
 
-### Kodak Colorplus 200
+### Kodak Colorplus 200 [^2]
 
 {{< img src="/gallery/film/2020/02/22/child.jpg" >}}
 {{< img src="/gallery/film/2020/02/22/coffee_shop.jpg" >}}
@@ -169,7 +169,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 {{< img src="/gallery/film/2020/02/22/window.jpg" >}}
 
 
-# 真香（吗）
+# 真香
 
 从出片效果来看，胶片有自己的独特质感，数码当然可以模拟出来，但既然可以直接拍胶片，为什么还要费事的用数码模拟呢？所以如果喜欢胶片的这种不用太多后期就能直接得到的质感，那么拍胶片会更轻松。
 
@@ -180,3 +180,6 @@ featured_image: 2020/02/21/m4_front_1.jpg
 # 参考
 
 [Shooting Without a Meter](http://gear.vogelius.se/-editorials/shooting-without-meter/index.html)
+
+[^1]: 最开始没买扫描仪，前两卷黑白我试着自制了个支架用相机翻拍底片，当时底片蹭到地面划伤了不少
+[^2]: 车边抽烟大叔的图高光染色特别明显，人物周边明显泛紫，应该是洗底片的时候水温低了导致的。室内拍的那几张静物图又明显偏绿，应该是欠曝了。
