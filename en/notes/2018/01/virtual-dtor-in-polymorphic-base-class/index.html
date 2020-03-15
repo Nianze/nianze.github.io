@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-01-25T18:04:14-0500">
 <meta name="modified" content="2018-01-25T18:04:14-0500">
 <meta property="article:published_time" content="2018-01-25T18:04:14-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Jan 25, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Jan 25, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1632,7 +1638,7 @@ if (!doNotTrack) {
 <p>In the convention of factory functions, we use base class pointers manipulating derived class objects during runtime, which gives us the convenience of polymophism.</p>
 <p>Because C++ specifies that when a derived class object is deleted through a pointer to a base class with a non-virtual destructor, results are undefined, we need to declare the destructor as <em>virtual</em>. Otherwise, what typically happens at runtime is that, while base class data members get destroyed, the derived part of the object (i.e., the data members declared in the derived class) is never destroyed, ending with a curious &ldquo;partially destroyed&rdquo; object that is an excellent way to leak resources, corrupt data structures, and waste time debugging.</p>
 <p>Basically, the implementation of virtual functions requires that objects carry a pointer (called a <code>vptr</code>, virtual table pointer) accessible at runtime to determine which virtual functions should be invoked on the object. The <code>vptr</code> points to <code>vtbl</code> (virtual table), which is an array of function pointers to appropriate actual functions.</p>
-<p>Sometimes we may want to create an <em>abstract</em> class (which contains pure <em>virtual</em> functions) but don't have any pure virtual functions in mind, we may simply make a pure <em>virtual</em> destructor:</p>
+<p>Sometimes we may want to create an <em>abstract</em> class (which contains pure <em>virtual</em> functions) but don&rsquo;t have any pure virtual functions in mind, we may simply make a pure <em>virtual</em> destructor:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1643,20 +1649,20 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">AWOV</span> <span class="p">{</span>  <span class="c1">// &#34;Abstract w/o Virtuals&#34;
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">AWOV</span><span class="p">(</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// declare pure virtual destructor
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">AWOV</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// declare pure virtual destructor
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Since <code>AWOV</code> has a pure virtual function, it's abstract as we wish while also benifits us with not worrying about the derived class destructor problem at the same time, but there's one twist: <strong>a definition of the pure virtual destructor must still be provided:</strong></p>
+</div><p>Since <code>AWOV</code> has a pure virtual function, it&rsquo;s abstract as we wish while also benifits us with not worrying about the derived class destructor problem at the same time, but there&rsquo;s one twist: <strong>a definition of the pure virtual destructor must still be provided:</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">AWOV</span><span class="o">:</span><span class="o">:</span><span class="o">~</span><span class="n">AWOV</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span>  <span class="c1">// definition of pure virtual destructor
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">AWOV</span><span class="o">::~</span><span class="n">AWOV</span><span class="p">()</span> <span class="p">{}</span>  <span class="c1">// definition of pure virtual destructor
 </span></code></pre></td></tr></table>
 </div>
-</div><p>Otherwise the linking will complain, because compilers will generate a call from derived classes&rsquo; destructors to each base class, all the way up to <code>~AWOV</code>, yet the body of base class destructor function can't be found.</p>
+</div><p>Otherwise the linking will complain, because compilers will generate a call from derived classes&rsquo; destructors to each base class, all the way up to <code>~AWOV</code>, yet the body of base class destructor function can&rsquo;t be found.</p>
 <p>However, not all base classes are designed to be used polymorphically. For classes not designed to be base classes (std::string, STL container types such as vector, list, set, etc.) or not designed to be used polymorphically (item 6, <code>Uncopyable</code> class), we should not declare <em>virtual</em> destructors. Here is an example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1671,11 +1677,11 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span> <span class="c1">// a 2D point
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="n">Point</span><span class="p">(</span><span class="kt">int</span> <span class="n">xCoord</span><span class="p">,</span> <span class="kt">int</span> <span class="n">yCoord</span><span class="p">)</span><span class="p">;</span>
-    <span class="o">~</span><span class="n">Point</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">Point</span><span class="p">(</span><span class="kt">int</span> <span class="n">xCoord</span><span class="p">,</span> <span class="kt">int</span> <span class="n">yCoord</span><span class="p">);</span>
+    <span class="o">~</span><span class="n">Point</span><span class="p">();</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>If an <code>int</code> occupies 32 bits, a <code>Point</code> object typically fits into a 64-bit register, which can be passed as a 64-bit quantity to functions written in other languages such as C or FORTRAN. However, if <code>Point</code>'s destructor is declared <em>virtual</em>, <code>Point</code> object will increased from 64 bits (for the 2 <code>int</code>s) to 96 bits (for 2 <code>int</code>s with the <code>vptr</code>) on 32-bit architecture, or to 128 bits on 64-bit architecture (where pointers are 64 bits in size). As a result, portability decreases.</p>
@@ -2997,7 +3003,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

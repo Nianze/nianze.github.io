@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-07-02T22:44:34-0400">
 <meta name="modified" content="2018-07-02T22:44:34-0400">
 <meta property="article:published_time" content="2018-07-02T22:44:34-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,40 +1612,38 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Jul 2, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Jul 2, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
       <p>There are three sets of rules for type deduction in modern C++: one for function templates, one for <code>auto</code>, and one for <code>decltype</code>. Without a solid understanding of how deduction operates, effective programming in modern C++ is all but impossible.</p>
 <!-- toc -->
-<p>Since type deduction for templates is the basis of that for <code>auto</code>, it's important to truly understand the aspects of template type deduction that <code>auto</code> builds on: during template type deduction, there are three cases for parameter types:</p>
+<p>Since type deduction for templates is the basis of that for <code>auto</code>, it&rsquo;s important to truly understand the aspects of template type deduction that <code>auto</code> builds on: during template type deduction, there are three cases for parameter types:</p>
 <ol>
 <li>pointer type or non-universal reference type</li>
 <li>universal reference type</li>
 <li>neither a pointer nor a reference (value type)</li>
 </ol>
-<p>Moreover, there's a niche case worth knowing about, that arguments that are array or function names decay to pointers unless they're used to initialize references.</p>
-<p>To tell the difference, let's think of a function template as looking like this:</p>
+<p>Moreover, there&rsquo;s a niche case worth knowing about, that arguments that are array or function names decay to pointers unless they&rsquo;re used to initialize references.</p>
+<p>To tell the difference, let&rsquo;s think of a function template as looking like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1646,8 +1652,8 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">tempalte</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">ParamType</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>
-<span class="n">f</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span><span class="p">;</span> <span class="c1">// deduce T and ParamType from expr
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">ParamType</span> <span class="n">param</span><span class="p">);</span>
+<span class="n">f</span><span class="p">(</span><span class="n">expr</span><span class="p">);</span> <span class="c1">// deduce T and ParamType from expr
 </span></code></pre></td></tr></table>
 </div>
 </div><h1 id="case-1-paramtype-is-reference-or-pointer-but-not-a-universal-reference">Case 1: <code>ParamType</code> is Reference or Pointer, but not a Universal Reference</h1>
@@ -1672,18 +1678,18 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// param is a reference
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">);</span>  <span class="c1">// param is a reference
 </span><span class="c1"></span>
 <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>         <span class="c1">// x is an int
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>   <span class="c1">// cx is a const int
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">rx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>  <span class="c1">// rx is a refrence to x as a const int
 </span><span class="c1"></span>
-<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// T is int, param&#39;s type is int&amp;
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// T is const int, param&#39;s type is const int&amp;
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// T is const int, param&#39;s type is const int&amp;
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>   <span class="c1">// T is int, param&#39;s type is int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">);</span>  <span class="c1">// T is const int, param&#39;s type is const int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">);</span>  <span class="c1">// T is const int, param&#39;s type is const int&amp;
 </span></code></pre></td></tr></table>
 </div>
-</div><p>Note that even though rx's type is a reference, T is deduced to be a non-reference, because rx's reference-ness is ignored during type deduction.</p>
+</div><p>Note that even though rx&rsquo;s type is a reference, T is deduced to be a non-reference, because rx&rsquo;s reference-ness is ignored during type deduction.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1695,14 +1701,14 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// param is now a ref-to-const, 
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">);</span>  <span class="c1">// param is now a ref-to-const, 
 </span><span class="c1"></span>                         <span class="c1">// so there&#39;s no longer a need for const to be deduced as part of T
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// T is int, param&#39;s type is const int&amp;
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span><span class="p">;</span> <span class="c1">// T is int, param&#39;s type is const int&amp;
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span><span class="p">;</span> <span class="c1">// T is int, param&#39;s type is const int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>  <span class="c1">// T is int, param&#39;s type is const int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">);</span> <span class="c1">// T is int, param&#39;s type is const int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">);</span> <span class="c1">// T is int, param&#39;s type is const int&amp;
 </span></code></pre></td></tr></table>
 </div>
-</div><p>As before, rx's reference-ness is ignored during type deduction.</p>
+</div><p>As before, rx&rsquo;s reference-ness is ignored during type deduction.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1716,13 +1722,13 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>     <span class="c1">// param is now a pointer
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">param</span><span class="p">);</span>     <span class="c1">// param is now a pointer
 </span><span class="c1"></span>
 <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>           <span class="c1">// x is an int
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">px</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>   <span class="c1">// px is a ptr to x as a const int
 </span><span class="c1"></span>
-<span class="n">f</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// T is int, param&#39;s type is int*
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">px</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// T is const int, param&#39;s type is const int*
+<span class="n">f</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">);</span>   <span class="c1">// T is int, param&#39;s type is int*
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">px</span><span class="p">);</span>   <span class="c1">// T is const int, param&#39;s type is const int*
 </span></code></pre></td></tr></table>
 </div>
 </div><p>As shown above, when param were a pointer (or a pointer to const), things work essentially the same way.</p>
@@ -1749,24 +1755,24 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// param is now a universal reference
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">param</span><span class="p">);</span>  <span class="c1">// param is now a universal reference
 </span><span class="c1"></span>
 <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>         <span class="c1">// as before
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>   <span class="c1">// as before
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">rx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>  <span class="c1">// as before
 </span><span class="c1"></span>
-<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// x is lvalue, so T is int&amp;, param&#39;s type is also int&amp;
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span><span class="p">;</span> <span class="c1">// x is lvalue, so T is const int&amp;, param&#39;s type is also const int&amp;
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span><span class="p">;</span> <span class="c1">// x is lvalue, so T is const int&amp;, param&#39;s type is also const int&amp;
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span><span class="p">;</span> <span class="c1">// x is rvlaue, so T is int, param&#39;s type is therefore int&amp;&amp;
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>  <span class="c1">// x is lvalue, so T is int&amp;, param&#39;s type is also int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">);</span> <span class="c1">// x is lvalue, so T is const int&amp;, param&#39;s type is also const int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">);</span> <span class="c1">// x is lvalue, so T is const int&amp;, param&#39;s type is also const int&amp;
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="mi">27</span><span class="p">);</span> <span class="c1">// x is rvlaue, so T is int, param&#39;s type is therefore int&amp;&amp;
 </span></code></pre></td></tr></table>
 </div>
 </div><p>EMCpp Item24 explains why these examples play out the way they do.</p>
 <h1 id="case-3-paramtype-is-neither-a-pointer-nor-a-reference">Case 3: <code>ParamType</code> is Neither a Pointer nor a Reference</h1>
-<p>In this case, we're dealing with pass-by-value. That means that <code>param</code> will be a new object, which motivates the rules below:</p>
+<p>In this case, we&rsquo;re dealing with pass-by-value. That means that <code>param</code> will be a new object, which motivates the rules below:</p>
 <ol>
 <li>As before, if <code>expr</code>'s type is a reference, ignore the reference part</li>
-<li>If, after ignoring <code>expr</code>'s reference-ness, <code>expr</code> is const, ignore that, too. If it's <code>volatile</code>, also ignore that (refer to EMCpp item 40 for <code>volatile</code>).</li>
+<li>If, after ignoring <code>expr</code>'s reference-ness, <code>expr</code> is const, ignore that, too. If it&rsquo;s <code>volatile</code>, also ignore that (refer to EMCpp item 40 for <code>volatile</code>).</li>
 </ol>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1785,17 +1791,17 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// param is now passed by value
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">);</span>  <span class="c1">// param is now passed by value
 </span><span class="c1"></span>
 <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>         <span class="c1">// as before
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>   <span class="c1">// as before
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">rx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>  <span class="c1">// as before
-</span><span class="c1"></span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span> <span class="o">=</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">Fun with pointers</span><span class="s">&#34;</span><span class="p">;</span> <span class="c1">// ptr is const ptr to const obj.
+</span><span class="c1"></span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span> <span class="o">=</span> <span class="s">&#34;Fun with pointers&#34;</span><span class="p">;</span> <span class="c1">// ptr is const ptr to const obj.
 </span><span class="c1"></span>
-<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// T&#39;s and param&#39;s types are both int
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">)</span><span class="p">;</span> <span class="c1">// T&#39;s and param&#39;s types are both int
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span><span class="p">;</span> <span class="c1">// T&#39;s and param&#39;s types are both int
-</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span><span class="p">;</span> <span class="c1">// T&#39;s and param&#39;s types are const char*, the constness of ptr is ignored.
+<span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>  <span class="c1">// T&#39;s and param&#39;s types are both int
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">cx</span><span class="p">);</span> <span class="c1">// T&#39;s and param&#39;s types are both int
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">rx</span><span class="p">);</span> <span class="c1">// T&#39;s and param&#39;s types are both int
+</span><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span> <span class="c1">// T&#39;s and param&#39;s types are const char*, the constness of ptr is ignored.
 </span></code></pre></td></tr></table>
 </div>
 </div><h1 id="array-arguments">Array Arguments</h1>
@@ -1806,11 +1812,11 @@ if (!doNotTrack) {
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="p">]</span> <span class="o">=</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">J.P. Briggs</span><span class="s">&#34;</span><span class="p">;</span>  <span class="c1">// name&#39;s type is const char [13]
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span> <span class="n">name</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;J.P. Briggs&#34;</span><span class="p">;</span>  <span class="c1">// name&#39;s type is const char [13]
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">ptrToName</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>      <span class="c1">// array decays to pointer
 </span></code></pre></td></tr></table>
 </div>
-</div><p>Array parameter declarations are treated as if they were pointer parameters, so <code>void myFunc(int param[]);</code> is equivalent to <code>void myFunc(int* param);</code>. Thus, the type of an array that's passed to a template function by value is deduced to be a pointer type:</p>
+</div><p>Array parameter declarations are treated as if they were pointer parameters, so <code>void myFunc(int param[]);</code> is equivalent to <code>void myFunc(int* param);</code>. Thus, the type of an array that&rsquo;s passed to a template function by value is deduced to be a pointer type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1820,12 +1826,12 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">);</span>
 
-<span class="n">f</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// name is array, but T deduced as const char*
+<span class="n">f</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>  <span class="c1">// name is array, but T deduced as const char*
 </span></code></pre></td></tr></table>
 </div>
-</div><p>Although functions can't declare parameters that are truly arrays, they <em>can</em> declare parameters that are <em>references</em> to arrays. Thus,</p>
+</div><p>Although functions can&rsquo;t declare parameters that are truly arrays, they <em>can</em> declare parameters that are <em>references</em> to arrays. Thus,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1835,9 +1841,9 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// template with by-reference parameter
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">);</span>  <span class="c1">// template with by-reference parameter
 </span><span class="c1"></span>
-<span class="n">f</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// T is deduced as array type: const char [13], type of param is const char (&amp;)[13]
+<span class="n">f</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>  <span class="c1">// T is deduced as array type: const char [13], type of param is const char (&amp;)[13]
 </span></code></pre></td></tr></table>
 </div>
 </div><p>The actual type of the array includes the array size, so in this example, <code>T</code> is deduced to be <code>const char[13]</code>, and the type of <code>f</code>'s parameter (a reference to this array) is <code>const char (&amp;)[13]</code>.</p>
@@ -1854,9 +1860,9 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// return size of an array as a compile-time constant.
-</span><span class="c1"></span><span class="c1">// array parameter has no name because we don&#39;t care its name
-</span><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">N</span><span class="o">&gt;</span>
-<span class="k">constexpr</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">arraySize</span><span class="p">(</span><span class="n">T</span> <span class="p">(</span><span class="o">&amp;</span><span class="p">)</span><span class="p">[</span><span class="n">N</span><span class="p">]</span><span class="p">)</span> <span class="k">noexcept</span>
+</span><span class="c1">// array parameter has no name because we don&#39;t care its name
+</span><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">N</span><span class="o">&gt;</span>
+<span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">arraySize</span><span class="p">(</span><span class="n">T</span> <span class="p">(</span><span class="o">&amp;</span><span class="p">)[</span><span class="n">N</span><span class="p">])</span> <span class="k">noexcept</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="n">N</span><span class="p">;</span>
 <span class="p">}</span>
@@ -1873,9 +1879,9 @@ if (!doNotTrack) {
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">keyVals</span><span class="p">[</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">35</span> <span class="p">}</span><span class="p">;</span>  <span class="c1">// 7 elements
-</span><span class="c1"></span><span class="kt">int</span> <span class="n">mappedVals</span><span class="p">[</span><span class="n">arraySize</span><span class="p">(</span><span class="n">keyVals</span><span class="p">)</span><span class="p">]</span><span class="p">;</span> <span class="c1">// 7 elements
-</span><span class="c1"></span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">arraySize</span><span class="p">(</span><span class="n">keyVals</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">;</span>  <span class="c1">// size == 7
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">keyVals</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">35</span> <span class="p">};</span>  <span class="c1">// 7 elements
+</span><span class="c1"></span><span class="kt">int</span> <span class="n">mappedVals</span><span class="p">[</span><span class="n">arraySize</span><span class="p">(</span><span class="n">keyVals</span><span class="p">)];</span> <span class="c1">// 7 elements
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">arraySize</span><span class="p">(</span><span class="n">keyVals</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">values</span><span class="p">;</span>  <span class="c1">// size == 7
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1900,17 +1906,17 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">)</span><span class="p">;</span> <span class="c1">// someFunc is a function, type is void(int, double)
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">);</span> <span class="c1">// someFunc is a function, type is void(int, double)
 </span><span class="c1"></span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f1</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// in f1, param passed by value
+<span class="kt">void</span> <span class="n">f1</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">);</span>  <span class="c1">// in f1, param passed by value
 </span><span class="c1"></span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">f2</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// in f2, param passed by ref
+<span class="kt">void</span> <span class="n">f2</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">);</span>  <span class="c1">// in f2, param passed by ref
 </span><span class="c1"></span>
-<span class="n">f1</span><span class="p">(</span><span class="n">someFunc</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// param deduced as ptr-to-func, type is void (*)(int, double)
+<span class="n">f1</span><span class="p">(</span><span class="n">someFunc</span><span class="p">);</span>  <span class="c1">// param deduced as ptr-to-func, type is void (*)(int, double)
 </span><span class="c1"></span>
-<span class="n">f2</span><span class="p">(</span><span class="n">someFunc</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// param deduced as ref-to-func, type is void (&amp;)(int, double)
+<span class="n">f2</span><span class="p">(</span><span class="n">someFunc</span><span class="p">);</span>  <span class="c1">// param deduced as ref-to-func, type is void (&amp;)(int, double)
 </span></code></pre></td></tr></table>
 </div>
 </div><p>This rarely makes any difference in practice.</p>
@@ -2410,9 +2416,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc " data-dir="ltr" data-folding="false" data-ani="true">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#case-1-paramtype-is-reference-or-pointer-but-not-a-universal-reference">Case 1: ParamType is Reference or Pointer, but not a Universal Reference</a></li>
-    <li><a href="#case-2-paramtype-is-a-universal-reference">Case 2: ParamType is a Universal Reference</a></li>
-    <li><a href="#case-3-paramtype-is-neither-a-pointer-nor-a-reference">Case 3: ParamType is Neither a Pointer nor a Reference</a></li>
+    <li><a href="#case-1-paramtype-is-reference-or-pointer-but-not-a-universal-reference">Case 1: <code>ParamType</code> is Reference or Pointer, but not a Universal Reference</a></li>
+    <li><a href="#case-2-paramtype-is-a-universal-reference">Case 2: <code>ParamType</code> is a Universal Reference</a></li>
+    <li><a href="#case-3-paramtype-is-neither-a-pointer-nor-a-reference">Case 3: <code>ParamType</code> is Neither a Pointer nor a Reference</a></li>
     <li><a href="#array-arguments">Array Arguments</a></li>
     <li><a href="#function-arguments">Function Arguments</a></li>
   </ul>
@@ -3239,7 +3245,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

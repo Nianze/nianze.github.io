@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-03-26T11:21:08-0400">
 <meta name="modified" content="2018-03-26T11:21:08-0400">
 <meta property="article:published_time" content="2018-03-26T11:21:08-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Mar 26, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 5 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Mar 26, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 5 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1642,13 +1648,13 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EquipmentPiece</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="kt">int</span> <span class="n">IDNumber</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="kt">int</span> <span class="n">IDNumber</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><h1 id="with-default-constructor">With default constructor</h1>
-<p>Some people believe <em>all</em> classes should include a default constructors, even if a default constructor doesn't have enough information to fully initialize objects of the class. Adherents to this philosophy will modify <code>EquipmentPiece</code> as follows:</p>
+<p>Some people believe <em>all</em> classes should include a default constructors, even if a default constructor doesn&rsquo;t have enough information to fully initialize objects of the class. Adherents to this philosophy will modify <code>EquipmentPiece</code> as follows:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1662,17 +1668,17 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EquipmentPiece</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="kt">int</span> <span class="n">IDNumber</span> <span class="o">=</span> <span class="n">UNSPECIFIED</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="kt">int</span> <span class="n">IDNumber</span> <span class="o">=</span> <span class="n">UNSPECIFIED</span><span class="p">);</span>
+    <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">UNSPECIFIED</span><span class="p">;</span> <span class="c1">// magic ID num. value meaning no ID was specified
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>There are two downsides after including a default constructor in a class where none was warranted:</p>
 <ol>
-<li>There's no longer any guarantee that the fields of an <code>EquipmentPiece</code> object have been meaningfully initialized, so member functions must check if each object has valid <code>IDNumber</code> before using it. If not, clients must find a solution to deal with the situation - sometimes they simply throw an exception or terminates the program, which may degrade the overall quality of the software.</li>
-<li>The meaningless default constructors affects the efficiency of classes: member functions have to include extra code to test object's validness and deal with the failure tests, and clients of those functions have to pay for the time those tests take as well as the space the extra code occupies.</li>
+<li>There&rsquo;s no longer any guarantee that the fields of an <code>EquipmentPiece</code> object have been meaningfully initialized, so member functions must check if each object has valid <code>IDNumber</code> before using it. If not, clients must find a solution to deal with the situation - sometimes they simply throw an exception or terminates the program, which may degrade the overall quality of the software.</li>
+<li>The meaningless default constructors affects the efficiency of classes: member functions have to include extra code to test object&rsquo;s validness and deal with the failure tests, and clients of those functions have to pay for the time those tests take as well as the space the extra code occupies.</li>
 </ol>
 <h1 id="without-default-constructor">Without default constructor</h1>
 <p>If a class lacks a default constructor, there are restrictions on how you can use that class. Specifically, in three constexts:</p>
@@ -1689,8 +1695,8 @@ if (!doNotTrack) {
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">EquipmentPiece</span> <span class="n">bestPieces</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="p">;</span>  <span class="c1">// error! No way to call EquipmentPiece ctors.
-</span><span class="c1"></span><span class="n">EquipmentPiece</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EquipmentPiece</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="p">;</span>  <span class="c1">// error! same problem
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">EquipmentPiece</span> <span class="n">bestPieces</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>  <span class="c1">// error! No way to call EquipmentPiece ctors.
+</span><span class="c1"></span><span class="n">EquipmentPiece</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EquipmentPiece</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>  <span class="c1">// error! same problem
 </span></code></pre></td></tr></table>
 </div>
 </div><p>There are three ways to get around the restriction:</p>
@@ -1710,13 +1716,13 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">ID1</span><span class="p">,</span> <span class="n">ID2</span><span class="p">,</span> <span class="n">ID3</span><span class="p">,</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">,</span> <span class="n">ID10</span><span class="p">;</span>  <span class="c1">// variables to hold equipment ID numbers
-</span><span class="c1"></span><span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="n">EquipmentPiece</span> <span class="n">bestPieces</span><span class="p">[</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1">// fine, ctor arguments are provided
-</span><span class="c1"></span>    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="n">ID1</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="n">ID2</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="n">ID10</span><span class="p">)</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">ID1</span><span class="p">,</span> <span class="n">ID2</span><span class="p">,</span> <span class="n">ID3</span><span class="p">,</span> <span class="p">...,</span> <span class="n">ID10</span><span class="p">;</span>  <span class="c1">// variables to hold equipment ID numbers
+</span><span class="c1"></span><span class="p">...</span>
+<span class="n">EquipmentPiece</span> <span class="n">bestPieces</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1">// fine, ctor arguments are provided
+</span><span class="c1"></span>    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="n">ID1</span><span class="p">);</span>
+    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="n">ID2</span><span class="p">);</span>
+    <span class="p">...</span>
+    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="n">ID10</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1735,17 +1741,17 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="n">EquipmentPiece</span><span class="o">*</span> <span class="n">PEP</span><span class="p">;</span>     <span class="c1">// a PEP is a pointer to an EuipmentPiece
-</span><span class="c1"></span><span class="n">PEP</span> <span class="n">bestPieces</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="p">;</span>              <span class="c1">// fine, no ctor called
-</span><span class="c1"></span><span class="n">PEP</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PEP</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="p">;</span>   <span class="c1">// fine, no ctor called
+</span><span class="c1"></span><span class="n">PEP</span> <span class="n">bestPieces</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>              <span class="c1">// fine, no ctor called
+</span><span class="c1"></span><span class="n">PEP</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PEP</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>   <span class="c1">// fine, no ctor called
 </span><span class="c1"></span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">+</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">bestPieces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EquipmentPiece</span><span class="p">(</span> <span class="n">ID</span> <span class="n">Number</span> <span class="p">)</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">bestPieces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EquipmentPiece</span><span class="p">(</span> <span class="n">ID</span> <span class="n">Number</span> <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>The disadvantages to this approach is:</p>
 <ul>
-<li>We have to remember to delete all the objects pointed to by the array. Otherwise there's resource leak.</li>
+<li>We have to remember to delete all the objects pointed to by the array. Otherwise there&rsquo;s resource leak.</li>
 <li>The total amount of memory increases due to the extra space for the pointers</li>
 </ul>
 </li>
@@ -1766,14 +1772,14 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// allocate enough memory for an array of 10 EuipmentPiece obj.
-</span><span class="c1"></span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[</span><span class="p">]</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="n">EquipmentPiece</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="n">EquipmentPiece</span><span class="p">));</span>
 
 <span class="c1">// make bestPieces point to the memory so it can be treated as an EquipmentPiece array
-</span><span class="c1"></span><span class="n">EquipmentPiece</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">EquipmentPiece</span><span class="o">*</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">rawMemory</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span><span class="n">EquipmentPiece</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">EquipmentPiece</span><span class="o">*&gt;</span> <span class="p">(</span><span class="n">rawMemory</span><span class="p">);</span>
 
 <span class="c1">// construct the EquipmentPiece objects in the memory using placement new
-</span><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">+</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">new</span> <span class="p">(</span><span class="n">bestPieces</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="n">EquipmentPiece</span><span class="p">(</span> <span class="n">ID</span> <span class="n">Number</span> <span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">new</span> <span class="p">(</span><span class="n">bestPieces</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="n">EquipmentPiece</span><span class="p">(</span> <span class="n">ID</span> <span class="n">Number</span> <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1789,16 +1795,16 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// destruct the objects in bestPieces in the inverse order
-</span><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">-</span><span class="o">-</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">bestPieces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="p">.</span><span class="o">~</span><span class="n">EquipmentPiece</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>    
+</span><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">bestPieces</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="o">~</span><span class="n">EquipmentPiece</span><span class="p">();</span>    
 <span class="p">}</span>
 <span class="c1">// deallocate the raw memory
-</span><span class="c1"></span><span class="k">operator</span> <span class="k">delete</span><span class="p">[</span><span class="p">]</span><span class="p">(</span><span class="n">rawMemory</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span><span class="k">operator</span> <span class="k">delete</span><span class="p">[](</span><span class="n">rawMemory</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div></li>
 </ol>
-<h2 id="2-ineligible-for-some-templatebased-container-classes">2. Ineligible for some template-based container classes</h2>
+<h2 id="2-ineligible-for-some-template-based-container-classes">2. Ineligible for some template-based container classes</h2>
 <p>Some templates requires that the type used to instantiate the template proved a default constructor for purpose such as createing an array of the template parameter type inside the template:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1822,28 +1828,28 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Array</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>
+    <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="n">T</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 
 <span class="n">Template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
-<span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="o">:</span><span class="o">:</span><span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
+<span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">[</span><span class="n">size</span><span class="p">]</span><span class="p">;</span>  <span class="c1">// calls T::T() for each elem. of the array
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">T</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>  <span class="c1">// calls T::T() for each elem. of the array
+</span><span class="c1"></span>    <span class="p">...</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Although careful template design can eliminate the need for a default constructor (such as <code>vector</code> template), there are templates designed with that requirement. That being the case, classes without default constructors will be incompatible with such templates.</p>
 <h2 id="3-virtual-base-classes">3. Virtual base classes</h2>
-<p>Arguments for virtual base class construcctors must be provided by the most derived class of the object being constructed. As a result, a virtual base class lacking a default constructor requires that <em>all</em> classes derived from that class must know about, understand the meaning of, and provide for the virtual base class's constructors&rsquo; arguments, which is neigher expected not appreciated by authors of derived classes.</p>
+<p>Arguments for virtual base class construcctors must be provided by the most derived class of the object being constructed. As a result, a virtual base class lacking a default constructor requires that <em>all</em> classes derived from that class must know about, understand the meaning of, and provide for the virtual base class&rsquo;s constructors&rsquo; arguments, which is neigher expected not appreciated by authors of derived classes.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>If we forget this requirement and use the normal array-deletion syntax <code>delete[] bestPieces</code>, the program will behave unpredictably, because deleting a pointer that didn't come from the <code>new</code> operator is undefined.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>If we forget this requirement and use the normal array-deletion syntax <code>delete[] bestPieces</code>, the program will behave unpredictably, because deleting a pointer that didn&rsquo;t come from the <code>new</code> operator is undefined. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -2347,7 +2353,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <li><a href="#without-default-constructor">Without default constructor</a>
       <ul>
         <li><a href="#1-creation-of-arrays">1. Creation of arrays</a></li>
-        <li><a href="#2-ineligible-for-some-templatebased-container-classes">2. Ineligible for some template-based container classes</a></li>
+        <li><a href="#2-ineligible-for-some-template-based-container-classes">2. Ineligible for some template-based container classes</a></li>
         <li><a href="#3-virtual-base-classes">3. Virtual base classes</a></li>
       </ul>
     </li>
@@ -3175,7 +3181,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

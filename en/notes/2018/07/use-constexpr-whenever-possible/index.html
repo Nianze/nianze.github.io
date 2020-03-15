@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-07-23T19:27:53-0400">
 <meta name="modified" content="2018-07-23T19:27:53-0400">
 <meta property="article:published_time" content="2018-07-23T19:27:53-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Jul 23, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Jul 23, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 5 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1643,11 +1649,11 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">sz</span><span class="p">;</span>  <span class="c1">// non-constexpr variable
-</span><span class="c1"></span><span class="p">.</span><span class="p">.</span><span class="p">.</span>
+</span><span class="c1"></span><span class="p">...</span>
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">arraySize1</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>  <span class="c1">// error: value not known at compilation
-</span><span class="c1"></span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">sz</span><span class="o">&gt;</span> <span class="n">data1</span><span class="p">;</span>       <span class="c1">// error: same problem
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">sz</span><span class="o">&gt;</span> <span class="n">data1</span><span class="p">;</span>       <span class="c1">// error: same problem
 </span><span class="c1"></span><span class="k">constexpr</span> <span class="k">auto</span> <span class="n">arraySize2</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>  <span class="c1">// fine: 10 is compile-time constant
-</span><span class="c1"></span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">arraySize2</span><span class="o">&gt;</span> <span class="n">data2</span><span class="p">;</span> <span class="c1">// fine, arraySize2 is constexpr
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">arraySize2</span><span class="o">&gt;</span> <span class="n">data2</span><span class="p">;</span> <span class="c1">// fine, arraySize2 is constexpr
 </span></code></pre></td></tr></table>
 </div>
 </div><p>All <code>constexpr</code> objects are <code>const</code>, but not all <code>const</code> objects are <code>constexpr</code>, because <code>const</code> objects need not be initialized with values known during compilations:</p>
@@ -1660,21 +1666,21 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">sz</span><span class="p">;</span>
-<span class="p">.</span><span class="p">.</span><span class="p">.</span>
+<span class="p">...</span>
 <span class="k">const</span> <span class="k">auto</span> <span class="n">arraySize</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>  <span class="c1">// fine: arraySize is const copy of sz
-</span><span class="c1"></span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">arraySize</span><span class="o">&gt;</span>  <span class="n">data</span><span class="p">;</span> <span class="c1">// error: arraySize&#39;s value not known at compilation
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">arraySize</span><span class="o">&gt;</span>  <span class="n">data</span><span class="p">;</span> <span class="c1">// error: arraySize&#39;s value not known at compilation
 </span></code></pre></td></tr></table>
 </div>
 </div><h1 id="constexpr-functions"><code>constexpr</code> functions</h1>
-<p><code>constexpr</code> is part of a functions's interface, which proclaims &ldquo;I can be used in a context where C++ requires a constant expression.&rdquo; In other words:</p>
+<p><code>constexpr</code> is part of a functions&rsquo;s interface, which proclaims &ldquo;I can be used in a context where C++ requires a constant expression.&rdquo; In other words:</p>
 <ul>
 <li>if the values of the arguments we pass to a <code>constexpr</code> function are known during compilation, the result will be computed during compilation</li>
-<li>when a <code>constexpr</code> function is called with one or more values that are not known during compilation, it acts like a normal function, computing its result at runtime: so that we don't need two functions to perform the same operation.</li>
+<li>when a <code>constexpr</code> function is called with one or more values that are not known during compilation, it acts like a normal function, computing its result at runtime: so that we don&rsquo;t need two functions to perform the same operation.</li>
 </ul>
-<p>For example, we want to initialize a <code>std::array</code> with the size of 3^n, wher n is a known integer (or can be computed) during compilation. <code>std::pow</code> doesn't help here, because</p>
+<p>For example, we want to initialize a <code>std::array</code> with the size of 3^n, wher n is a known integer (or can be computed) during compilation. <code>std::pow</code> doesn&rsquo;t help here, because</p>
 <ol>
 <li><code>std::pow</code> works on floating-point types, while we need an integral result</li>
-<li><code>std::pow</code> isn't constexpr</li>
+<li><code>std::pow</code> isn&rsquo;t constexpr</li>
 </ol>
 <p>Thus, we write the pow we need:</p>
 <div class="highlight"><div class="chroma">
@@ -1696,18 +1702,18 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">constexpr</span>
 <span class="kt">int</span> <span class="nf">pow</span><span class="p">(</span><span class="kt">int</span> <span class="n">base</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">exp</span><span class="p">)</span> <span class="k">noexcept</span>  <span class="c1">// never throws
 </span><span class="c1"></span><span class="p">{</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>  <span class="c1">// impl is below
+    <span class="p">...</span>  <span class="c1">// impl is below
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">numConds</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>   <span class="c1">// # of conditions
-</span><span class="c1"></span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">numConds</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">results</span><span class="p">;</span> <span class="c1">// results has 3^numConds elements
-</span><span class="c1"></span><span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="k">auto</span> <span class="n">base</span> <span class="o">=</span> <span class="n">readFromDB</span><span class="p">(</span><span class="sa"></span><span class="s">&#34;</span><span class="s">base</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// get the value at runtime
-</span><span class="c1"></span><span class="k">auto</span> <span class="n">exp</span> <span class="o">=</span> <span class="n">readFromDB</span><span class="p">(</span><span class="sa"></span><span class="s">&#34;</span><span class="s">exponent</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span> <span class="c1">// ditto
-</span><span class="c1"></span><span class="k">auto</span> <span class="n">baseToExp</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// we can also call pow function at runtime, of course
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">numConds</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">results</span><span class="p">;</span> <span class="c1">// results has 3^numConds elements
+</span><span class="c1"></span><span class="p">...</span>
+<span class="k">auto</span> <span class="n">base</span> <span class="o">=</span> <span class="n">readFromDB</span><span class="p">(</span><span class="s">&#34;base&#34;</span><span class="p">);</span>  <span class="c1">// get the value at runtime
+</span><span class="c1"></span><span class="k">auto</span> <span class="n">exp</span> <span class="o">=</span> <span class="n">readFromDB</span><span class="p">(</span><span class="s">&#34;exponent&#34;</span><span class="p">);</span> <span class="c1">// ditto
+</span><span class="c1"></span><span class="k">auto</span> <span class="n">baseToExp</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exp</span><span class="p">);</span>  <span class="c1">// we can also call pow function at runtime, of course
 </span></code></pre></td></tr></table>
 </div>
-</div><p>In C++11, there're some restrictions on <code>constexpr</code> functions:</p>
+</div><p>In C++11, there&rsquo;re some restrictions on <code>constexpr</code> functions:</p>
 <ol>
 <li>they may only contain a single return statement</li>
 <li>they are limited to taking and returning <em>literal types</em><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></li>
@@ -1723,7 +1729,7 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">constexpr</span> <span class="kt">int</span> <span class="nf">pow</span><span class="p">(</span><span class="kt">int</span> <span class="n">base</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">exp</span><span class="p">)</span> <span class="k">noexcept</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">exp</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">base</span> <span class="o">*</span> <span class="n">pow</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exp</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">exp</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">base</span> <span class="o">*</span> <span class="n">pow</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exp</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1741,7 +1747,7 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">constexpr</span> <span class="kt">int</span> <span class="nf">pow</span><span class="p">(</span><span class="kt">int</span> <span class="n">base</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">exp</span><span class="p">)</span> <span class="k">noexcept</span>
 <span class="p">{</span>
     <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">exp</span><span class="p">;</span> <span class="o">+</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="n">result</span> <span class="o">*</span><span class="o">=</span> <span class="n">base</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">exp</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="n">result</span> <span class="o">*=</span> <span class="n">base</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -1783,29 +1789,29 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">constexpr</span> <span class="n">Point</span><span class="p">(</span><span class="kt">double</span> <span class="n">xVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dobule</span> <span class="n">yVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">noexcept</span>
-    <span class="o">:</span> <span class="n">x</span><span class="p">(</span><span class="n">xVal</span><span class="p">)</span><span class="p">,</span> <span class="n">y</span><span class="p">(</span><span class="n">yVal</span><span class="p">)</span>
-    <span class="p">{</span><span class="p">}</span>
+    <span class="o">:</span> <span class="n">x</span><span class="p">(</span><span class="n">xVal</span><span class="p">),</span> <span class="n">y</span><span class="p">(</span><span class="n">yVal</span><span class="p">)</span>
+    <span class="p">{}</span>
 
-    <span class="k">constexpr</span> <span class="kt">double</span> <span class="nf">xValue</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">constexpr</span> <span class="kt">double</span> <span class="nf">yValue</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">constexpr</span> <span class="kt">double</span> <span class="nf">xValue</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">constexpr</span> <span class="kt">double</span> <span class="nf">yValue</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">constexpr</span> <span class="kt">void</span> <span class="nf">setX</span><span class="p">(</span><span class="kt">double</span> <span class="n">newX</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="n">x</span> <span class="o">=</span> <span class="n">newX</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// due to &#34;void&#34; return type, 
 </span><span class="c1"></span>    <span class="k">constexpr</span> <span class="kt">void</span> <span class="nf">setY</span><span class="p">(</span><span class="kt">double</span> <span class="n">newY</span><span class="p">)</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="n">y</span> <span class="o">=</span> <span class="n">newY</span><span class="p">;</span>    <span class="c1">// setters&#39;re contexpr only in C++14
 </span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
     <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 
 <span class="k">constexpr</span>
 <span class="n">Point</span> <span class="nf">midpoint</span><span class="p">(</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">,</span> <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">p2</span><span class="p">)</span> <span class="k">noexcept</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="p">{</span> <span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">xValue</span><span class="p">(</span><span class="p">)</span> <span class="o">+</span> <span class="n">p2</span><span class="p">.</span><span class="n">xValue</span><span class="p">(</span><span class="p">)</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
-             <span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">yValue</span><span class="p">(</span><span class="p">)</span> <span class="o">+</span> <span class="n">p2</span><span class="p">.</span><span class="n">yValue</span><span class="p">(</span><span class="p">)</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="p">}</span><span class="p">;</span>  <span class="c1">// call constexpr member funcs
+    <span class="k">return</span> <span class="p">{</span> <span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">xValue</span><span class="p">()</span> <span class="o">+</span> <span class="n">p2</span><span class="p">.</span><span class="n">xValue</span><span class="p">())</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+             <span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">yValue</span><span class="p">()</span> <span class="o">+</span> <span class="n">p2</span><span class="p">.</span><span class="n">yValue</span><span class="p">())</span> <span class="o">/</span> <span class="mi">2</span> <span class="p">};</span>  <span class="c1">// call constexpr member funcs
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="k">constexpr</span> <span class="n">Point</span> <span class="nf">reflection</span><span class="p">(</span><span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">p</span><span class="p">)</span> <span class="k">noexcept</span>
 <span class="p">{</span>
     <span class="n">Point</span> <span class="n">result</span><span class="p">;</span>           <span class="c1">// create non-const Point
-</span><span class="c1"></span>    <span class="n">result</span><span class="p">.</span><span class="n">setX</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">.</span><span class="n">xValue</span><span class="p">)</span><span class="p">;</span> <span class="c1">// set its x and y value
-</span><span class="c1"></span>    <span class="n">result</span><span class="p">.</span><span class="n">setY</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">.</span><span class="n">yValue</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="n">result</span><span class="p">.</span><span class="n">setX</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">.</span><span class="n">xValue</span><span class="p">);</span> <span class="c1">// set its x and y value
+</span><span class="c1"></span>    <span class="n">result</span><span class="p">.</span><span class="n">setY</span><span class="p">(</span><span class="o">-</span><span class="n">p</span><span class="p">.</span><span class="n">yValue</span><span class="p">);</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">;</span>          <span class="c1">// return copy of it
 </span><span class="c1"></span><span class="p">}</span>
 
@@ -1820,10 +1826,10 @@ if (!doNotTrack) {
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">constexpr</span> <span class="n">Point</span> <span class="nf">p1</span><span class="p">(</span><span class="mf">9.4</span><span class="p">,</span> <span class="mf">27.7</span><span class="p">)</span><span class="p">;</span> <span class="c1">// &#34;runs&#34; constexpr ctor during compilation
-</span><span class="c1"></span><span class="k">constexpr</span> <span class="n">Point</span> <span class="nf">p2</span><span class="p">(</span><span class="mf">28.8</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">)</span><span class="p">;</span> <span class="c1">// same
-</span><span class="c1"></span><span class="k">constexpr</span> <span class="k">auto</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">midpoint</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// init constexpr object with result of constexpr func
-</span><span class="c1"></span><span class="k">constexpr</span> <span class="k">auto</span> <span class="n">reflectedMid</span> <span class="o">=</span> <span class="n">reflection</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// reflectedMid&#39;s value is known during compilation
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">constexpr</span> <span class="n">Point</span> <span class="nf">p1</span><span class="p">(</span><span class="mf">9.4</span><span class="p">,</span> <span class="mf">27.7</span><span class="p">);</span> <span class="c1">// &#34;runs&#34; constexpr ctor during compilation
+</span><span class="c1"></span><span class="k">constexpr</span> <span class="n">Point</span> <span class="nf">p2</span><span class="p">(</span><span class="mf">28.8</span><span class="p">,</span> <span class="mf">5.3</span><span class="p">);</span> <span class="c1">// same
+</span><span class="c1"></span><span class="k">constexpr</span> <span class="k">auto</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">midpoint</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">);</span>  <span class="c1">// init constexpr object with result of constexpr func
+</span><span class="c1"></span><span class="k">constexpr</span> <span class="k">auto</span> <span class="n">reflectedMid</span> <span class="o">=</span> <span class="n">reflection</span><span class="p">(</span><span class="n">mid</span><span class="p">);</span>  <span class="c1">// reflectedMid&#39;s value is known during compilation
 </span></code></pre></td></tr></table>
 </div>
 </div><p>As a result, the more code taking part in the compilation time, the faster our software will run<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</p>
@@ -1831,13 +1837,13 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Such contexts include specification of array sizes, integral template arguments, enumerator values, alignment specifiers, etc.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Such contexts include specification of array sizes, integral template arguments, enumerator values, alignment specifiers, etc. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>Literal types: types that can have values determined during compilation. In C++11, all built-in types except <code>void</code> qualify, plus some user-defined types whose constructors and other member functions are <code>constexpr</code>.<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Literal types: types that can have values determined during compilation. In C++11, all built-in types except <code>void</code> qualify, plus some user-defined types whose constructors and other member functions are <code>constexpr</code>. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Compilation may take longer, however.<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Compilation may take longer, however. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -2337,8 +2343,8 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc " data-dir="ltr" data-folding="false" data-ani="true">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#constexpr-objects">constexpr objects</a></li>
-    <li><a href="#constexpr-functions">constexpr functions</a></li>
+    <li><a href="#constexpr-objects"><code>constexpr</code> objects</a></li>
+    <li><a href="#constexpr-functions"><code>constexpr</code> functions</a></li>
   </ul>
 </nav>
   </div>
@@ -3163,7 +3169,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

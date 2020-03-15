@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-02-20T18:23:38-0500">
 <meta name="modified" content="2018-02-20T18:23:38-0500">
 <meta property="article:published_time" content="2018-02-20T18:23:38-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Feb 20, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 8 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Feb 20, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 8 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1633,16 +1639,16 @@ if (!doNotTrack) {
 <p>For exception-safe functions, there are two requirements when an exception is thrown:</p>
 <ol>
 <li>Leak no resources</li>
-<li>Don't allow data structures to become corrupted</li>
+<li>Don&rsquo;t allow data structures to become corrupted</li>
 </ol>
 <p>Specifically, from the perspective of data structure corruption, exception-safe functions must offer one of three guarantees below from the weakest to the strongest:</p>
 <ol>
 <li>The <strong>basic guarantee</strong> promises that if an exception is thrown, everything in the program remains in a valid state - all class invariants are satisfied, but the exact state of the program may not be predictable.</li>
-<li>The <strong>strong guarantee</strong> promises that if an exception is thrown, the state of the program is unchanged - calls to such functions are <em>atomic</em> in the sense that if they succeed, they successd completely, and if they fail, the program state is as if they'd never been called.</li>
+<li>The <strong>strong guarantee</strong> promises that if an exception is thrown, the state of the program is unchanged - calls to such functions are <em>atomic</em> in the sense that if they succeed, they successd completely, and if they fail, the program state is as if they&rsquo;d never been called.</li>
 <li>The <strong>nothrow guarantee</strong> promises never to throw exceptions - all operators on built-in types (e.g., <code>int</code>s, pointers, etc.) are nothrow. This is a critical building block of exception-safe code.</li>
 </ol>
 <h1 id="example">Example</h1>
-<p>With all these terminologies bear in mind, let's see an example representing exception-unsafe style. Suppose there's a class for GUI menus with background images, and it will be used in a threaded environment, so it has a mutex for concurrency control:</p>
+<p>With all these terminologies bear in mind, let&rsquo;s see an example representing exception-unsafe style. Suppose there&rsquo;s a class for GUI menus with background images, and it will be used in a threaded environment, so it has a mutex for concurrency control:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1658,13 +1664,13 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PrettyMenu</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="kt">void</span> <span class="n">changeBackGround</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span><span class="p">;</span> <span class="c1">// change background image
+    <span class="p">...</span>
+    <span class="kt">void</span> <span class="n">changeBackGround</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">);</span> <span class="c1">// change background image
 </span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
     <span class="n">Mutex</span> <span class="n">mutex</span><span class="p">;</span>      <span class="c1">// mutex for this obejct
 </span><span class="c1"></span>    <span class="n">Image</span> <span class="o">*</span><span class="n">bgImage</span><span class="p">;</span>   <span class="c1">// current background image
 </span><span class="c1"></span>    <span class="kt">int</span> <span class="n">imageChanges</span><span class="p">;</span> <span class="c1">// # of times image has been changed
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1679,13 +1685,13 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">:</span><span class="o">:</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// acquire mutex (item 14)
+    <span class="n">lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>   <span class="c1">// acquire mutex (item 14)
 </span><span class="c1"></span>    <span class="k">delete</span> <span class="n">bgImage</span><span class="p">;</span> <span class="c1">// get rid of old background
-</span><span class="c1"></span>    <span class="o">+</span><span class="o">+</span><span class="n">imageChanges</span><span class="p">;</span> <span class="c1">// update image change count
-</span><span class="c1"></span>    <span class="n">bgImage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">)</span><span class="p">;</span> <span class="c1">// install new background
-</span><span class="c1"></span>    <span class="n">unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span> <span class="c1">// release mutex 
+</span><span class="c1"></span>    <span class="o">++</span><span class="n">imageChanges</span><span class="p">;</span> <span class="c1">// update image change count
+</span><span class="c1"></span>    <span class="n">bgImage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">);</span> <span class="c1">// install new background
+</span><span class="c1"></span>    <span class="n">unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span> <span class="c1">// release mutex 
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1704,21 +1710,21 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">:</span><span class="o">:</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// item 14: acquire mutex and ensure its later release
+    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>   <span class="c1">// item 14: acquire mutex and ensure its later release
 </span><span class="c1"></span>    <span class="k">delete</span> <span class="n">bgImage</span><span class="p">;</span> 
-    <span class="o">+</span><span class="o">+</span><span class="n">imageChanges</span><span class="p">;</span> <span class="c1">// update image change count
-</span><span class="c1"></span>    <span class="n">bgImage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">)</span><span class="p">;</span> <span class="c1">// install new background
+    <span class="o">++</span><span class="n">imageChanges</span><span class="p">;</span> <span class="c1">// update image change count
+</span><span class="c1"></span>    <span class="n">bgImage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">);</span> <span class="c1">// install new background
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="data-structure-corruption">Data structure corruption</h2>
 <p>To address the issue of data structure corruption, we may need to determine which guarantee to offer. As a general rule,</p>
 <blockquote>
-<p>we want to offer <em>the strongest</em> guarantee that's <em>practical</em>.</p>
+<p>we want to offer <em>the strongest</em> guarantee that&rsquo;s <em>practical</em>.</p>
 </blockquote>
-<p>Note the word <em>practical</em>. We definitely want to offer nothrow guarantee for every functions we write, but it's hard to keep such a promise - to name a common exception: anything using dynamically allocated memory (e.g., all STL containers) runs the risk of a <code>bad_alloc</code> exception if it can't find enough memory to satisfy a request (item 49). For most functions, the choice for us is between the basic and strong guarantees.</p>
+<p>Note the word <em>practical</em>. We definitely want to offer nothrow guarantee for every functions we write, but it&rsquo;s hard to keep such a promise - to name a common exception: anything using dynamically allocated memory (e.g., all STL containers) runs the risk of a <code>bad_alloc</code> exception if it can&rsquo;t find enough memory to satisfy a request (item 49). For most functions, the choice for us is between the basic and strong guarantees.</p>
 <p>In the case of <code>changeBackground</code>, <em>almost</em> offering the strong guarantee is not difficult:</p>
 <ul>
 <li>firstly, we change the type of <code>bgImage</code> data member in <code>PrettyMunu</code> from a built-in <code>Image*</code> pointer to smart pointer such as <code>tr1::shraed_ptr</code> (item 13), which benefits us with
@@ -1727,7 +1733,7 @@ if (!doNotTrack) {
 <li>offering strong exception safety guarantee</li>
 </ol>
 </li>
-<li>secondly, we reorder the statements so that we don't increment <code>imageChanges</code> until the image has been changed.</li>
+<li>secondly, we reorder the statements so that we don&rsquo;t increment <code>imageChanges</code> until the image has been changed.</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1739,10 +1745,10 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PrettyMenu</span> <span class="p">{</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">tr1</span><span class="o">:</span><span class="o">:</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Imgae</span><span class="o">&gt;</span> <span class="n">bgImage</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Imgae</span><span class="o">&gt;</span> <span class="n">bgImage</span><span class="p">;</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1756,12 +1762,12 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">:</span><span class="o">:</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">bgImage</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// replace bgImage&#39;s internal pointer with the
+    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>
+    <span class="n">bgImage</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">));</span> <span class="c1">// replace bgImage&#39;s internal pointer with the
 </span><span class="c1"></span>                                      <span class="c1">// result of the &#34;new Image&#34; expression
-</span><span class="c1"></span>    <span class="o">+</span><span class="o">+</span><span class="n">imageChanges</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="o">++</span><span class="n">imageChanges</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1770,10 +1776,10 @@ if (!doNotTrack) {
 <li>The <code>tr1::shared_ptr::reset</code> function will be called only if its parameter (the result of <code>new Image(imgSrc)</code>) is successfully created</li>
 <li>The <code>delete</code> operation for the old image is inside the <code>reset</code>, so if the <code>reset</code> function is never entered (the program somehow fails to create new image), the deletion of the old image will never take place</li>
 <li>As a result, the deletion takes place only if the new image is successfully created</li>
-<li>We don't need to manually <code>delete</code> the old image, and the length of <code>changeBackground</code> reduces</li>
+<li>We don&rsquo;t need to manually <code>delete</code> the old image, and the length of <code>changeBackground</code> reduces</li>
 </ol>
-<p>After these two changes, <code>changeBackground</code> <em>almost</em> offer the strong exception safety guarantee. The only weakness now is the parameter <code>imgSrc</code>: if the <code>Image</code> constructor throws an exception, it's possible that the read marker for the input stream has been moved, which is a change in state visible to the rest of the program, leading to offering only the basic exception safety guarantee.</p>
-<h3 id="copyandswap-strategy">Copy-and-<code>swap</code> strategy</h3>
+<p>After these two changes, <code>changeBackground</code> <em>almost</em> offer the strong exception safety guarantee. The only weakness now is the parameter <code>imgSrc</code>: if the <code>Image</code> constructor throws an exception, it&rsquo;s possible that the read marker for the input stream has been moved, which is a change in state visible to the rest of the program, leading to offering only the basic exception safety guarantee.</p>
+<h3 id="copy-and-swap-strategy">Copy-and-<code>swap</code> strategy</h3>
 <p>There actually is a general design strategy for offering the strong guarantee:</p>
 <blockquote>
 <p><strong>copy and swap</strong> strategy:<br />
@@ -1800,16 +1806,16 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">PMImpl</span> <span class="p">{</span>  <span class="c1">// PMIpml = &#34;PrettyMenu Impl.&#34;
-</span><span class="c1"></span>    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">tr1</span><span class="o">:</span><span class="o">:</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Image</span><span class="o">&gt;</span> <span class="n">bgImage</span><span class="p">;</span> 
+</span><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Image</span><span class="o">&gt;</span> <span class="n">bgImage</span><span class="p">;</span> 
     <span class="kt">int</span> <span class="n">imageChanges</span><span class="p">;</span> 
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">PrettyMenu</span> <span class="p">{</span>
-<span class="p">.</span><span class="p">.</span><span class="p">.</span>
+<span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="n">Mutex</span> <span class="n">mutex</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">tr1</span><span class="o">:</span><span class="o">:</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">PMImpl</span><span class="o">&gt;</span> <span class="n">pImpl</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">PMImpl</span><span class="o">&gt;</span> <span class="n">pImpl</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1826,19 +1832,19 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">:</span><span class="o">:</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">using</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">swap</span><span class="p">;</span>  <span class="c1">// item 25
-</span><span class="c1"></span>    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// acquire the mutex
+    <span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">;</span>  <span class="c1">// item 25
+</span><span class="c1"></span>    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>  <span class="c1">// acquire the mutex
 </span><span class="c1"></span>    
-    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">tr1</span><span class="o">:</span><span class="o">:</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">PMImpl</span><span class="o">&gt;</span> <span class="n">pNew</span><span class="p">(</span><span class="k">new</span> <span class="n">PMImpl</span><span class="p">(</span><span class="o">*</span><span class="n">pImpl</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// copy obj. data
-</span><span class="c1"></span>    <span class="n">pNew</span><span class="o">-</span><span class="o">&gt;</span><span class="n">bgImage</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// modify the copy
-</span><span class="c1"></span>    <span class="o">+</span><span class="o">+</span><span class="n">pNew</span><span class="o">-</span><span class="o">&gt;</span><span class="n">imageChanges</span><span class="p">;</span>
-    <span class="n">swap</span><span class="p">(</span><span class="n">pImpl</span><span class="p">,</span> <span class="n">pNew</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// swap the new data into place
+    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">PMImpl</span><span class="o">&gt;</span> <span class="n">pNew</span><span class="p">(</span><span class="k">new</span> <span class="n">PMImpl</span><span class="p">(</span><span class="o">*</span><span class="n">pImpl</span><span class="p">));</span>  <span class="c1">// copy obj. data
+</span><span class="c1"></span>    <span class="n">pNew</span><span class="o">-&gt;</span><span class="n">bgImage</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">));</span> <span class="c1">// modify the copy
+</span><span class="c1"></span>    <span class="o">++</span><span class="n">pNew</span><span class="o">-&gt;</span><span class="n">imageChanges</span><span class="p">;</span>
+    <span class="n">swap</span><span class="p">(</span><span class="n">pImpl</span><span class="p">,</span> <span class="n">pNew</span><span class="p">);</span>  <span class="c1">// swap the new data into place
 </span><span class="c1"></span><span class="p">}</span> <span class="c1">// release the mutex
 </span></code></pre></td></tr></table>
 </div>
-</div><p>We don't have to make the struct <code>PMImpl</code> as a class, because the encapsulation of <code>PrettyMenu</code> data is assured by <code>pImpl</code> being private, and it is more convenient to use struct. If desired, <code>PMImpl</code> could be nested inside <code>PrettyMenu</code> when considering packaging issues.</p>
+</div><p>We don&rsquo;t have to make the struct <code>PMImpl</code> as a class, because the encapsulation of <code>PrettyMenu</code> data is assured by <code>pImpl</code> being private, and it is more convenient to use struct. If desired, <code>PMImpl</code> could be nested inside <code>PrettyMenu</code> when considering packaging issues.</p>
 <h3 id="side-effects-and-efficiency">Side effects and efficiency</h3>
 <p>Even with the help of copy-and-<code>swap</code> strategy, there are two possible reasons that downgrade the overall exception safety level from strong to basic: <em>side effects</em> and <em>efficiency</em>.</p>
 <h4 id="1-side-effects">1. Side effects</h4>
@@ -1854,27 +1860,27 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">(</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>    <span class="c1">// make copy of local state
-</span><span class="c1"></span>    <span class="n">f1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">f2</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>    <span class="c1">// swap modified state into place
+    <span class="p">...</span>    <span class="c1">// make copy of local state
+</span><span class="c1"></span>    <span class="n">f1</span><span class="p">();</span>
+    <span class="n">f2</span><span class="p">();</span>
+    <span class="p">...</span>    <span class="c1">// swap modified state into place
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Apparently, if <code>f1</code> or <code>f2</code> is less than strongly exception-safe, it will be hard for <code>someFunc</code> to be strong exception-safe. For example, suppose <code>f1</code> offers only the basic guarantee, in order to offer the strong guarantee for <code>someFunc</code>, we have to write code to determine the state of the entire program before calling <code>f1</code>, catch all exceptions from <code>f1</code>, and then store the original state. It's complicated, but it's doable. However, even if <code>f1</code> and <code>f2</code> are both strongly exception safe, as long as there are side effects on non-local data, it's much harder to offer the strong guarantee.</p>
-<p>For example, if a side effect of calling <code>f1</code> is that a database is modified, and there is, in general, no way to undo a database modification that has already been committed; so after successfully calling <code>f1</code>, if <code>f2</code> then throws an exception, the state of the program is not the same as it was when calling <code>someFunc</code>, even though <code>f2</code> didn't change anything.</p>
+</div><p>Apparently, if <code>f1</code> or <code>f2</code> is less than strongly exception-safe, it will be hard for <code>someFunc</code> to be strong exception-safe. For example, suppose <code>f1</code> offers only the basic guarantee, in order to offer the strong guarantee for <code>someFunc</code>, we have to write code to determine the state of the entire program before calling <code>f1</code>, catch all exceptions from <code>f1</code>, and then store the original state. It&rsquo;s complicated, but it&rsquo;s doable. However, even if <code>f1</code> and <code>f2</code> are both strongly exception safe, as long as there are side effects on non-local data, it&rsquo;s much harder to offer the strong guarantee.</p>
+<p>For example, if a side effect of calling <code>f1</code> is that a database is modified, and there is, in general, no way to undo a database modification that has already been committed; so after successfully calling <code>f1</code>, if <code>f2</code> then throws an exception, the state of the program is not the same as it was when calling <code>someFunc</code>, even though <code>f2</code> didn&rsquo;t change anything.</p>
 <h4 id="2-efficiency">2. Efficiency</h4>
-<p>Copy and <code>swap</code> strategy requires making a copy of each object to be modified, which takes time and space we may be unable or unwilling to make available. It's just not practical 100% of the time when we want to offer the strong guarantee.</p>
-<p>When it's not, we'll have to offer the basic guarantee. In practice, we can usually offer the strong guarantee for some functions, but the const in efficiency or complexity will make it untenable for many others. For those functions, the basic guarantee is a perfectly resonable choice, as long as we've made a reasonable effort to offer the strong guarantee whenever it's practical.</p>
+<p>Copy and <code>swap</code> strategy requires making a copy of each object to be modified, which takes time and space we may be unable or unwilling to make available. It&rsquo;s just not practical 100% of the time when we want to offer the strong guarantee.</p>
+<p>When it&rsquo;s not, we&rsquo;ll have to offer the basic guarantee. In practice, we can usually offer the strong guarantee for some functions, but the const in efficiency or complexity will make it untenable for many others. For those functions, the basic guarantee is a perfectly resonable choice, as long as we&rsquo;ve made a reasonable effort to offer the strong guarantee whenever it&rsquo;s practical.</p>
 <h1 id="in-practice">In practice</h1>
-<p>A software system is either exception-safe or it's not. There's no such thing as a partially exception-safe system. If a system has even a single function that's not exception-safe, the system as a whole is not exception-safe. Unfortunately, much C++ legacy code was written without exception safety in mind, so many system incorporating legacy code today are not exception-safe.</p>
-<p>There's no reason to perpetuate this state of affairs. When writing new code or modifying existing code, think carefully about how to make it exception-safe:</p>
+<p>A software system is either exception-safe or it&rsquo;s not. There&rsquo;s no such thing as a partially exception-safe system. If a system has even a single function that&rsquo;s not exception-safe, the system as a whole is not exception-safe. Unfortunately, much C++ legacy code was written without exception safety in mind, so many system incorporating legacy code today are not exception-safe.</p>
+<p>There&rsquo;s no reason to perpetuate this state of affairs. When writing new code or modifying existing code, think carefully about how to make it exception-safe:</p>
 <ol>
 <li>begin by using objects to manage resources to prevent resource leaks</li>
 <li>follow by determining which of the three exception safety guarantees is the strongest we cound practically offer for each function, settling for no guarantee only if calls to legacy code leave us no choice.</li>
-<li>Document our decisions, both for clients of our functions and for future maintainers - a function's exception-safety guaranteee is a visible part of its interface, so we should choose it as deliberately as we choose all other aspects of a function's interface.</li>
+<li>Document our decisions, both for clients of our functions and for future maintainers - a function&rsquo;s exception-safety guaranteee is a visible part of its interface, so we should choose it as deliberately as we choose all other aspects of a function&rsquo;s interface.</li>
 </ol>
     </article>
     
@@ -2377,7 +2383,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <li><a href="#resource-leak">Resource leak</a></li>
         <li><a href="#data-structure-corruption">Data structure corruption</a>
           <ul>
-            <li><a href="#copyandswap-strategy">Copy-and-swap strategy</a></li>
+            <li><a href="#copy-and-swap-strategy">Copy-and-<code>swap</code> strategy</a></li>
             <li><a href="#side-effects-and-efficiency">Side effects and efficiency</a></li>
           </ul>
         </li>
@@ -3208,7 +3214,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

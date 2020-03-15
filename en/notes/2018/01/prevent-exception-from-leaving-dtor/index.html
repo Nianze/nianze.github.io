@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-01-26T20:15:48-0500">
 <meta name="modified" content="2018-01-26T20:15:48-0500">
 <meta property="article:published_time" content="2018-01-26T20:15:48-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Jan 26, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Jan 26, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1642,13 +1648,13 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConnection</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="k">static</span> <span class="n">DBConnection</span> <span class="n">creast</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// return DBConnection obj
-</span><span class="c1"></span>    <span class="kt">void</span> <span class="nf">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>                  <span class="c1">// close connection; throw an exception if closing fails
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="k">static</span> <span class="n">DBConnection</span> <span class="n">creast</span><span class="p">();</span>  <span class="c1">// return DBConnection obj
+</span><span class="c1"></span>    <span class="kt">void</span> <span class="nf">close</span><span class="p">();</span>                  <span class="c1">// close connection; throw an exception if closing fails
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>To ensure clients don't forget to call <code>close()</code> on DBConnection objects, we may want to put <code>close()</code> inside the destructor of managing class:</p>
+</div><p>To ensure clients don&rsquo;t forget to call <code>close()</code> on DBConnection objects, we may want to put <code>close()</code> inside the destructor of managing class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -1665,14 +1671,14 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConn</span> <span class="p">{</span>    <span class="c1">// class to manage DBConnection object
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="o">~</span><span class="n">DBConn</span><span class="p">(</span><span class="p">)</span>     <span class="c1">// make sure database connections are closed
+    <span class="p">...</span>
+    <span class="o">~</span><span class="n">DBConn</span><span class="p">()</span>     <span class="c1">// make sure database connections are closed
 </span><span class="c1"></span>    <span class="p">{</span>
-        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="n">DBConnetion</span> <span class="n">db</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>However, once <code>db.close()</code> yields an exception, <code>DBConn</code>'s destructor will propogate the exception, which would be a problem: considering <code>std::vector&lt;DBConn&gt; v</code>, chances are that two simultaneously active exceptions (from calling <code>~DBConn()</code>) arise during destroying the vector <code>v</code>, and program execution will either terminate or yield undefined behavior. Moreover, premature program termination or undefined behavior can result from destructors emitting exceptions even without using containers and arrays. There are 2 ways to handle the situation:</p>
@@ -1691,12 +1697,12 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">:</span><span class="o">:</span><span class="o">~</span><span class="n">DBConn</span><span class="p">(</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">::~</span><span class="n">DBConn</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">catch</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span> <span class="p">}</span>
+    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
         <span class="c1">// make log entry: the call to close failed;
-</span><span class="c1"></span>        <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">abort</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span>        <span class="n">std</span><span class="o">::</span><span class="n">abort</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -1716,10 +1722,10 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">:</span><span class="o">:</span><span class="o">~</span><span class="n">DBConn</span><span class="p">(</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">::~</span><span class="n">DBConn</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">catch</span><span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span> <span class="p">}</span>
+    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
         <span class="c1">// make log entry: the call to close failed;
 </span><span class="c1"></span>    <span class="p">}</span>
 <span class="p">}</span>
@@ -1757,20 +1763,20 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConn</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="kt">void</span> <span class="n">close</span><span class="p">(</span><span class="p">)</span>         <span class="c1">// new interface for clients
+    <span class="p">...</span>
+    <span class="kt">void</span> <span class="n">close</span><span class="p">()</span>         <span class="c1">// new interface for clients
 </span><span class="c1"></span>    <span class="p">{</span>                    <span class="c1">// to handle possible exception outside dtor
-</span><span class="c1"></span>        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span>        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
         <span class="n">closed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>   <span class="c1">// keep track of whether db has been closed
 </span><span class="c1"></span>    <span class="p">}</span>
-    <span class="o">~</span><span class="n">DBConn</span><span class="p">(</span><span class="p">)</span>
+    <span class="o">~</span><span class="n">DBConn</span><span class="p">()</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">closed</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">try</span> <span class="p">{</span>              <span class="c1">// close the connecton
-</span><span class="c1"></span>                <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>    <span class="c1">// if the client didn&#39;t
+</span><span class="c1"></span>                <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>    <span class="c1">// if the client didn&#39;t
 </span><span class="c1"></span>            <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">catch</span> <span class="p">(</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
             <span class="c1">// make log entry: the call to close failed;
 </span><span class="c1"></span>            <span class="c1">//  terminate or swallow
 </span><span class="c1"></span>        <span class="p">}</span>
@@ -1778,10 +1784,10 @@ if (!doNotTrack) {
 <span class="k">private</span><span class="o">:</span>
     <span class="n">DBConnection</span> <span class="n">db</span><span class="p">;</span>
     <span class="kt">bool</span> <span class="n">closed</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Under such a design, if clients decide to ignore the opportunity to close the connection and handle the possible exception by themselves for they believe that no error will occur, they can rely on <code>DBConn</code>'s destructor to call <code>close()</code> for them. However, if <code>close()</code> does throw in <code>~DBConn</code>, they're in no position to complain if <code>DBConn</code> swallows the exception or terminates the program.</p>
+</div><p>Under such a design, if clients decide to ignore the opportunity to close the connection and handle the possible exception by themselves for they believe that no error will occur, they can rely on <code>DBConn</code>'s destructor to call <code>close()</code> for them. However, if <code>close()</code> does throw in <code>~DBConn</code>, they&rsquo;re in no position to complain if <code>DBConn</code> swallows the exception or terminates the program.</p>
 <p>In summary,</p>
 <ul>
 <li>Never emit exceptions from destructors. If functions in a destructor may throw, catch it and then either swallow it or terminate the program.</li>
@@ -3104,7 +3110,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

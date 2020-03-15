@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-08-21T19:22:22-0400">
 <meta name="modified" content="2018-08-21T19:22:22-0400">
 <meta property="article:published_time" content="2018-08-21T19:22:22-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,33 +1612,31 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Aug 21, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Aug 21, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
       <p>Default by-reference capture can lead to dangling references; default by-value capture is susceptible to dangling pointers, while misleadingly susggests the lambdas are self-contained.</p>
 <!-- toc -->
-<h1 id="default-byreference-capture">Default by-reference capture</h1>
+<h1 id="default-by-reference-capture">Default by-reference capture</h1>
 <p>If the lifetime of a closure created from a lambda exceeds the lifetime of the local variable or parameter captured by-reference, the reference in the closure will dangle:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1650,25 +1656,25 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">FilterContainer</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;</span><span class="o">&gt;</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">FilterContainer</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="p">;</span>
 <span class="n">FilterContainer</span> <span class="n">filters</span><span class="p">;</span>
 
-<span class="kt">void</span> <span class="nf">addDivisorFilter</span><span class="p">(</span><span class="p">)</span>
+<span class="kt">void</span> <span class="nf">addDivisorFilter</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="k">auto</span> <span class="n">calc1</span> <span class="o">=</span> <span class="n">computeSomeValue1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">auto</span> <span class="n">calc2</span> <span class="o">=</span> <span class="n">computeSomeValue2</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">calc1</span> <span class="o">=</span> <span class="n">computeSomeValue1</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">calc2</span> <span class="o">=</span> <span class="n">computeSomeValue2</span><span class="p">();</span>
 
-    <span class="k">auto</span> <span class="n">diviser</span> <span class="o">=</span> <span class="n">coputeDiviser</span><span class="p">(</span><span class="n">calc1</span><span class="p">,</span> <span class="n">calc2</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">diviser</span> <span class="o">=</span> <span class="n">coputeDiviser</span><span class="p">(</span><span class="n">calc1</span><span class="p">,</span> <span class="n">calc2</span><span class="p">);</span>
 
     <span class="n">filters</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span>
-        <span class="p">[</span><span class="o">&amp;</span><span class="p">]</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// ref to divisor will dangle
-</span><span class="c1"></span>    <span class="p">)</span><span class="p">;</span>
+        <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// ref to divisor will dangle
+</span><span class="c1"></span>    <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Long-term, it's better software engineering to explicitly list the local variables and parameters that a lambda depends on.</p>
-<h1 id="default-byvalue-capture">Default by-value capture</h1>
-<p>Capture by value will solve the dangling problem in above example, but it can't guarantee the safety if we capture a pointer and that pointer is deleted outside the lambda, which causes our copied pointer to dangle. This usually happens where <code>this</code>, a raw pointer, implicitly shows up, for example:</p>
+</div><p>Long-term, it&rsquo;s better software engineering to explicitly list the local variables and parameters that a lambda depends on.</p>
+<h1 id="default-by-value-capture">Default by-value capture</h1>
+<p>Capture by value will solve the dangling problem in above example, but it can&rsquo;t guarantee the safety if we capture a pointer and that pointer is deleted outside the lambda, which causes our copied pointer to dangle. This usually happens where <code>this</code>, a raw pointer, implicitly shows up, for example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -1689,17 +1695,17 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="kt">void</span> <span class="n">addFilter</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="kt">void</span> <span class="n">addFilter</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">divisor</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 
-<span class="kt">void</span> <span class="n">Widget</span><span class="o">:</span><span class="o">:</span><span class="n">addFilter</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+<span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">addFilter</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
     <span class="n">filters</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span>
-        <span class="p">[</span><span class="o">=</span><span class="p">]</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">vlaue</span> <span class="o">%</span> <span class="n">diviser</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">)</span><span class="p">;</span>
+        <span class="p">[</span><span class="o">=</span><span class="p">](</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">vlaue</span> <span class="o">%</span> <span class="n">diviser</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1716,13 +1722,13 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Widget</span><span class="o">:</span><span class="o">:</span><span class="n">addFilter</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">addFilter</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
     <span class="k">auto</span> <span class="n">currentObjectPtr</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
     <span class="n">filters</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">currentObjectPtr</span><span class="p">]</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
-        <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">currentObjectPtr</span><span class="o">-</span><span class="o">&gt;</span><span class="n">divisor</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">)</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">currentObjectPtr</span><span class="p">](</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">currentObjectPtr</span><span class="o">-&gt;</span><span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1737,11 +1743,11 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">doSomeWork</span><span class="p">(</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">doSomeWork</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="k">auto</span> <span class="n">pw</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">make</span><span class="p">)</span><span class="n">unique</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">pw</span><span class="o">-</span><span class="o">&gt;</span><span class="n">addFilter</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="k">auto</span> <span class="n">pw</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make</span><span class="p">)</span><span class="n">unique</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">pw</span><span class="o">-&gt;</span><span class="n">addFilter</span><span class="p">();</span>
+    <span class="p">...</span>
 <span class="p">}</span>  <span class="c1">// destroy Widget; filters now holds dangling pointer
 </span></code></pre></td></tr></table>
 </div>
@@ -1759,13 +1765,13 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Widget</span><span class="o">:</span><span class="o">:</span><span class="n">addFilter</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">addFilter</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
     <span class="k">auto</span> <span class="n">currentObjectPtr</span> <span class="o">=</span> <span class="n">divisor</span><span class="p">;</span>  <span class="c1">// copy data member
 </span><span class="c1"></span>    <span class="n">filters</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">divisorCopy</span><span class="p">]</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
-        <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">)</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">divisorCopy</span><span class="p">](</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1781,12 +1787,12 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Widget</span><span class="o">:</span><span class="o">:</span><span class="n">addFilter</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">addFilter</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>    
     <span class="n">filters</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span>  <span class="c1">// C++14
-</span><span class="c1"></span>        <span class="p">[</span><span class="n">divisor</span> <span class="o">=</span> <span class="n">divisor</span><span class="p">]</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>  <span class="c1">// copy divisor to closure
-</span><span class="c1"></span>        <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// use the copy
-</span><span class="c1"></span>    <span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span>        <span class="p">[</span><span class="n">divisor</span> <span class="o">=</span> <span class="n">divisor</span><span class="p">](</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>  <span class="c1">// copy divisor to closure
+</span><span class="c1"></span>        <span class="p">{</span> <span class="k">return</span> <span class="n">value</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// use the copy
+</span><span class="c1"></span>    <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -2287,8 +2293,8 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc " data-dir="ltr" data-folding="false" data-ani="true">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#default-byreference-capture">Default by-reference capture</a></li>
-    <li><a href="#default-byvalue-capture">Default by-value capture</a></li>
+    <li><a href="#default-by-reference-capture">Default by-reference capture</a></li>
+    <li><a href="#default-by-value-capture">Default by-value capture</a></li>
   </ul>
 </nav>
   </div>
@@ -3113,7 +3119,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

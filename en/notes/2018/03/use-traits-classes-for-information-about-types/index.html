@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-03-14T18:49:03-0400">
 <meta name="modified" content="2018-03-14T18:49:03-0400">
 <meta property="article:published_time" content="2018-03-14T18:49:03-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,33 +1612,31 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Mar 14, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Mar 14, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
       <p>Implemented by templates and template specializations, traits classes make information about types available during compilation. Combining traints with overloading, it is possible to perform compile-time <code>if...else</code> tests on types.</p>
 <!-- toc -->
-<p>In this item, let's look at how STL supports the utility template <code>advance</code>, which moves a specified iterator a specified distance:</p>
+<p>In this item, let&rsquo;s look at how STL supports the utility template <code>advance</code>, which moves a specified iterator a specified distance:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1638,16 +1644,16 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="p">,</span> <span class="k">typename</span> <span class="n">DistT</span><span class="o">&gt;</span>  
-<span class="kt">void</span> <span class="n">advance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">)</span><span class="p">;</span> <span class="c1">// move iter d units forward; if d &lt; 0, move iter backward
+<span class="kt">void</span> <span class="n">advance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">);</span> <span class="c1">// move iter d units forward; if d &lt; 0, move iter backward
 </span></code></pre></td></tr></table>
 </div>
 </div><p>Before we step into the field of <code>advance</code> implementation, we should be familiar about STL iterator categoryies, because different iterators support different operations.</p>
 <h1 id="five-iterator-categories">Five iterator categories</h1>
 <p>According to the operations they support, there are five categories of iterators<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <ul>
-<li><strong><em>Input iterators</em></strong> can move only one step forward at a time, can only read, and can read what they're pointing to only once (e.g., <code>istream_iterator</code>)</li>
-<li><strong><em>Output iterators</em></strong> can move only one step forwrad at a time, can only write, and can write what they're pointing to only once (e.g., <code>ostream_iterator</code>)</li>
-<li><strong><em>Forward iterators</em></strong> can do whatever input and output iterators can do, and they can read or write what they point to momre than once (e.g., singly linked list or iterators into TR1's hashed containers (item 54) may be in the forward category)</li>
+<li><strong><em>Input iterators</em></strong> can move only one step forward at a time, can only read, and can read what they&rsquo;re pointing to only once (e.g., <code>istream_iterator</code>)</li>
+<li><strong><em>Output iterators</em></strong> can move only one step forwrad at a time, can only write, and can write what they&rsquo;re pointing to only once (e.g., <code>ostream_iterator</code>)</li>
+<li><strong><em>Forward iterators</em></strong> can do whatever input and output iterators can do, and they can read or write what they point to momre than once (e.g., singly linked list or iterators into TR1&rsquo;s hashed containers (item 54) may be in the forward category)</li>
 <li><strong><em>Bidirectional iterators</em></strong> add to forward iterators the ability to move backward as well as forward (e.g., iterators for <code>list</code>, <code>set</code>, <code>multiset</code>, <code>map</code>, <code>multimap</code> in STL)</li>
 <li><strong><em>Random access iterators</em></strong> are the most powerful ones: they add to bidirectional iterators the ability to perform &ldquo;iterator arithmetic&rdquo; - to jump forward or backward an arbitrary distance in constant time, which is similar to pointer arithmetic (e.g., iterators for <code>vector</code>, <code>deque</code>, <code>string</code>)</li>
 </ul>
@@ -1661,11 +1667,11 @@ if (!doNotTrack) {
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">input_iterator_tag</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="k">struct</span> <span class="nc">output_iterator_tag</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="k">struct</span> <span class="nc">forward_iterator_tag</span><span class="o">:</span> <span class="k">public</span> <span class="n">input_iterator_tag</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="k">struct</span> <span class="nc">bidirectional_iterator_tag</span><span class="o">:</span> <span class="k">public</span> <span class="n">forward_iterator_tag</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="k">struct</span> <span class="nc">random_access_iterator_tag</span><span class="o">:</span> <span class="k">public</span> <span class="n">bidirectional_iterator_tag</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">input_iterator_tag</span> <span class="p">{};</span>
+<span class="k">struct</span> <span class="nc">output_iterator_tag</span> <span class="p">{};</span>
+<span class="k">struct</span> <span class="nc">forward_iterator_tag</span><span class="o">:</span> <span class="k">public</span> <span class="n">input_iterator_tag</span> <span class="p">{};</span>
+<span class="k">struct</span> <span class="nc">bidirectional_iterator_tag</span><span class="o">:</span> <span class="k">public</span> <span class="n">forward_iterator_tag</span> <span class="p">{};</span>
+<span class="k">struct</span> <span class="nc">random_access_iterator_tag</span><span class="o">:</span> <span class="k">public</span> <span class="n">bidirectional_iterator_tag</span> <span class="p">{};</span>
 </code></pre></td></tr></table>
 </div>
 </div><h1 id="pseudocode-for-advance">Pseudocode for <code>advance</code></h1>
@@ -1689,19 +1695,19 @@ if (!doNotTrack) {
 <span class="kt">void</span> <span class="n">advance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">iter</span> <span class="n">is</span> <span class="n">a</span> <span class="n">random</span> <span class="n">access</span> <span class="n">iterator</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">iter</span> <span class="o">+</span><span class="o">=</span> <span class="n">d</span><span class="p">;</span> <span class="c1">// use iterator arithmetic for random access iters
+        <span class="n">iter</span> <span class="o">+=</span> <span class="n">d</span><span class="p">;</span> <span class="c1">// use iterator arithmetic for random access iters
 </span><span class="c1"></span>    <span class="p">}</span>
     <span class="k">else</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span><span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">while</span> <span class="p">(</span><span class="n">d</span><span class="o">-</span><span class="o">-</span><span class="p">)</span> <span class="o">+</span><span class="o">+</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// use iterative calls 
-</span><span class="c1"></span>        <span class="k">else</span> <span class="p">{</span> <span class="k">while</span> <span class="p">(</span><span class="n">d</span><span class="o">+</span><span class="o">+</span><span class="p">)</span> <span class="o">-</span><span class="o">-</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span>        <span class="c1">// to ++ or -- for other iterator categories
+        <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">while</span> <span class="p">(</span><span class="n">d</span><span class="o">--</span><span class="p">)</span> <span class="o">++</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// use iterative calls 
+</span><span class="c1"></span>        <span class="k">else</span> <span class="p">{</span> <span class="k">while</span> <span class="p">(</span><span class="n">d</span><span class="o">++</span><span class="p">)</span> <span class="o">--</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span>        <span class="c1">// to ++ or -- for other iterator categories
 </span><span class="c1"></span>    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>How to determine whether <code>iter</code> is a random access iterator? Here comes the technique of <em>traits</em>, which allow us to get type information during compilation.</p>
 <h1 id="traits">Traits</h1>
-<p>Traits aren't a keyword or a predefined construct in C++, but simply a technique and a convention followed by C++ programmers. It has some requirements, one of which asks that it has to work as well for built-in types as it does for user-defined types. This demand leads to the conclusion that the traits information for a type must be external to the type<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
-<h2 id="for-userdefined-types">For user-defined types</h2>
+<p>Traits aren&rsquo;t a keyword or a predefined construct in C++, but simply a technique and a convention followed by C++ programmers. It has some requirements, one of which asks that it has to work as well for built-in types as it does for user-defined types. This demand leads to the conclusion that the traits information for a type must be external to the type<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+<h2 id="for-user-defined-types">For user-defined types</h2>
 <p>The standard technique is to put the information into a template and one or more specializations of that template. For iterators, the template in the standard library is named <code>iterator_traits</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1715,12 +1721,12 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// the iterator_category for type IterT is whatever IterT says it is
-</span><span class="c1"></span><span class="c1">// see item 42 for info on the use of &#34;typedef typename&#34;
+</span><span class="c1">// see item 42 for info on the use of &#34;typedef typename&#34;
 </span><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="o">&gt;</span>
 <span class="k">struct</span> <span class="nc">iterator_traits</span> <span class="p">{</span>
-    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">IterT</span><span class="o">:</span><span class="o">:</span><span class="n">iterator_category</span> <span class="n">iterator_category</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="k">typename</span> <span class="n">IterT</span><span class="o">::</span><span class="n">iterator_category</span> <span class="n">iterator_category</span><span class="p">;</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>How does <code>iterator_traits</code> work? Since <code>iterator_traits</code> just parrots back a typedef called <code>iterator_category</code> inside the iterator class, it requires that any user-defined iterator type must contain this nested typedef named <code>iterator_category</code>, which identifies the appropriate tag struct. For example, <code>deque</code> iterators belong to random access category, and <code>list</code>'s iterators are bidirectional:</p>
@@ -1738,16 +1744,16 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">deque</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">iterator</span> <span class="p">{</span>
     <span class="k">public</span><span class="o">:</span>
         <span class="k">typedef</span> <span class="n">random_access_iterator_tag</span> <span class="n">iterator_category</span><span class="p">;</span>
-        <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="p">}</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+        <span class="p">...</span>
+    <span class="p">};</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1764,20 +1770,20 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">list</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">iterator</span> <span class="p">{</span>
     <span class="k">public</span><span class="o">:</span>
         <span class="k">typedef</span> <span class="n">bidirectional_iterator_tag</span> <span class="n">iterator_category</span><span class="p">;</span>
-        <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="p">}</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+        <span class="p">...</span>
+    <span class="p">};</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="for-pointer-types">For pointer types</h2>
-<p>The code above works well for user-defined types, but it doasn't work for iterators that are pointers, since there's no such thing as a nested typedef inside a built-in pointer. To make it work, <code>iterator_traits</code> need to offer a <em>partial template specialization</em> for pointer types:</p>
+<p>The code above works well for user-defined types, but it doasn&rsquo;t work for iterators that are pointers, since there&rsquo;s no such thing as a nested typedef inside a built-in pointer. To make it work, <code>iterator_traits</code> need to offer a <em>partial template specialization</em> for pointer types:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1789,16 +1795,16 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="o">&gt;</span>  <span class="c1">// partial template specialization
-</span><span class="c1"></span><span class="k">struct</span> <span class="nc">iterator_traits</span><span class="o">&lt;</span><span class="n">IterT</span><span class="o">*</span><span class="o">&gt;</span> <span class="c1">// for built-in pointer types
+</span><span class="c1"></span><span class="k">struct</span> <span class="nc">iterator_traits</span><span class="o">&lt;</span><span class="n">IterT</span><span class="o">*&gt;</span> <span class="c1">// for built-in pointer types
 </span><span class="c1"></span><span class="p">{</span>
     <span class="k">typedef</span> <span class="n">random_access_iterator_tag</span> <span class="n">iterator_category</span><span class="p">;</span> <span class="c1">// pointers act as random access iterators
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+</span><span class="c1"></span>    <span class="p">...</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</h2>
 <ul>
-<li>Identify some information about types we'd like to make available (e.g., iterator category for iterator types)</li>
+<li>Identify some information about types we&rsquo;d like to make available (e.g., iterator category for iterator types)</li>
 <li>Choose a name to identify that information (e.g., <code>iterator_category</code>)</li>
 <li>Provide a template and set of specializations (e.g., <code>iterator_traits</code>) that contain the information for the types we want to support</li>
 </ul>
@@ -1818,15 +1824,15 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="p">,</span> <span class="k">typename</span> <span class="n">DistT</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">advance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeid</span><span class="p">(</span><span class="k">typename</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">IterT</span><span class="o">&gt;</span><span class="o">:</span><span class="o">:</span><span class="n">iterator_category</span><span class="p">)</span> <span class="o">=</span><span class="o">=</span>
-        <span class="k">typeid</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">random_access_iterator_tag</span><span class="p">)</span><span class="p">)</span>
-        <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeid</span><span class="p">(</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">IterT</span><span class="o">&gt;::</span><span class="n">iterator_category</span><span class="p">)</span> <span class="o">==</span>
+        <span class="k">typeid</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">random_access_iterator_tag</span><span class="p">))</span>
+        <span class="p">...</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Sadly, this is not what we want: for one thing, it will lead to compilation problems (refer to item 48); anther issue, which is more fundamental, is that <code>if</code> statement is evaluated at runtime but <code>iterator_traits&lt;IterT&gt;::iterator_category</code> can be determined during compilation already. There's no point to move the evaluation from compile-time to runtime to waste time and bloat the executable.</p>
+</div><p>Sadly, this is not what we want: for one thing, it will lead to compilation problems (refer to item 48); anther issue, which is more fundamental, is that <code>if</code> statement is evaluated at runtime but <code>iterator_traits&lt;IterT&gt;::iterator_category</code> can be determined during compilation already. There&rsquo;s no point to move the evaluation from compile-time to runtime to waste time and bloat the executable.</p>
 <h2 id="template-metaprogramming">Template metaprogramming</h2>
-<p>What we want is a conditional construct for types that is evaluated during compilation. Actually this demand brings us to the realm of template metaprogramming (item 48), but the technique we'll use turns out to be quit familiar: <em>overloading</em>:</p>
+<p>What we want is a conditional construct for types that is evaluated during compilation. Actually this demand brings us to the realm of template metaprogramming (item 48), but the technique we&rsquo;ll use turns out to be quit familiar: <em>overloading</em>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -1860,33 +1866,33 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="p">,</span> <span class="k">typename</span> <span class="n">DistT</span><span class="o">&gt;</span> <span class="c1">// use this impl for random access iterators
-</span><span class="c1"></span><span class="kt">void</span> <span class="n">doAdvance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">,</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">random_access_iterator_tag</span><span class="p">)</span>
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">doAdvance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">random_access_iterator_tag</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">iter</span> <span class="o">+</span><span class="o">=</span> <span class="n">d</span><span class="p">;</span>
+    <span class="n">iter</span> <span class="o">+=</span> <span class="n">d</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="p">,</span> <span class="k">typename</span> <span class="n">DistT</span><span class="o">&gt;</span> <span class="c1">// use this impl for bidirectional iterators
-</span><span class="c1"></span><span class="kt">void</span> <span class="n">doAdvance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">,</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">bidirectional_iterator_tag</span><span class="p">)</span>
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">doAdvance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">bidirectional_iterator_tag</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&gt;</span><span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">while</span><span class="p">(</span><span class="n">d</span><span class="o">-</span><span class="o">-</span><span class="p">)</span> <span class="o">+</span><span class="o">+</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">else</span> <span class="p">{</span> <span class="k">while</span><span class="p">(</span><span class="n">d</span><span class="o">+</span><span class="o">+</span><span class="p">)</span> <span class="o">-</span><span class="o">-</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="k">while</span><span class="p">(</span><span class="n">d</span><span class="o">--</span><span class="p">)</span> <span class="o">++</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span> <span class="k">while</span><span class="p">(</span><span class="n">d</span><span class="o">++</span><span class="p">)</span> <span class="o">--</span><span class="n">iter</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="p">,</span> <span class="k">typename</span> <span class="n">DistT</span><span class="o">&gt;</span> <span class="c1">// use this impl for input iterators, also applies to inherited forward_iterator_tag
-</span><span class="c1"></span><span class="kt">void</span> <span class="n">doAdvance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">,</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">input_iterator_tag</span><span class="p">)</span>
+</span><span class="c1"></span><span class="kt">void</span> <span class="n">doAdvance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">input_iterator_tag</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">d</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">out_of_range</span><span class="p">(</span><span class="sa"></span><span class="s">&#34;</span><span class="s">Negative distance</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span> 
+        <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">out_of_range</span><span class="p">(</span><span class="s">&#34;Negative distance&#34;</span><span class="p">);</span> 
     <span class="p">}</span>
-    <span class="k">while</span><span class="p">(</span><span class="n">d</span><span class="o">-</span><span class="o">-</span><span class="p">)</span> <span class="o">+</span><span class="o">+</span><span class="n">iter</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">d</span><span class="o">--</span><span class="p">)</span> <span class="o">++</span><span class="n">iter</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">IterT</span><span class="p">,</span> <span class="k">typename</span> <span class="n">DistT</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">advance</span><span class="p">(</span><span class="n">IterT</span><span class="o">&amp;</span> <span class="n">iter</span><span class="p">,</span> <span class="n">DistT</span> <span class="n">d</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">doAdvance</span><span class="p">(</span><span class="n">iter</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> 
-        <span class="k">typename</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">IterT</span><span class="o">&gt;</span><span class="o">:</span><span class="o">:</span><span class="n">iterator_category</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+        <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">IterT</span><span class="o">&gt;::</span><span class="n">iterator_category</span><span class="p">());</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="summary">Summary</h2>
@@ -1899,13 +1905,13 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Input and output iterators, as two least powerful iterator categories, are modeled on the read (into an input file) and write (into an output file) pointer, suitable only for one-pass algorithm. Forward (and higher level iterators) can do multi-pass algoritms. The most powerful random access iterators are modeled on built-in pointers.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Input and output iterators, as two least powerful iterator categories, are modeled on the read (into an input file) and write (into an output file) pointer, suitable only for one-pass algorithm. Forward (and higher level iterators) can do multi-pass algoritms. The most powerful random access iterators are modeled on built-in pointers. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>For example, if <code>advance</code> is called with a pointer <code>const char*</code> and an <code>int</code>, since traits technique must apply to built-in types like <code>const char*</code>, and there's no way to nesting information inside pointers, thus the traits information for a type must be external to the type.<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>For example, if <code>advance</code> is called with a pointer <code>const char*</code> and an <code>int</code>, since traits technique must apply to built-in types like <code>const char*</code>, and there&rsquo;s no way to nesting information inside pointers, thus the traits information for a type must be external to the type. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>By convention, traits are always implemented as structs, but that  structs are called &ldquo;traits classes&rdquo; - not joking.<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>By convention, traits are always implemented as structs, but that  structs are called &ldquo;traits classes&rdquo; - not joking. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -2406,15 +2412,15 @@ document.addEventListener('DOMContentLoaded', function () {
     <nav id="TableOfContents">
   <ul>
     <li><a href="#five-iterator-categories">Five iterator categories</a></li>
-    <li><a href="#pseudocode-for-advance">Pseudocode for advance</a></li>
+    <li><a href="#pseudocode-for-advance">Pseudocode for <code>advance</code></a></li>
     <li><a href="#traits">Traits</a>
       <ul>
-        <li><a href="#for-userdefined-types">For user-defined types</a></li>
+        <li><a href="#for-user-defined-types">For user-defined types</a></li>
         <li><a href="#for-pointer-types">For pointer types</a></li>
         <li><a href="#workflow-for-designing-and-implementing-a-traits-class">Workflow for designing and implementing a traits class</a></li>
       </ul>
     </li>
-    <li><a href="#implementing-advance">Implementing advance</a>
+    <li><a href="#implementing-advance">Implementing <code>advance</code></a>
       <ul>
         <li><a href="#template-metaprogramming">Template metaprogramming</a></li>
         <li><a href="#summary">Summary</a></li>
@@ -3244,7 +3250,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

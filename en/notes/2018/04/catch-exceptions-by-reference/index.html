@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-04-05T18:57:13-0400">
 <meta name="modified" content="2018-04-05T18:57:13-0400">
 <meta property="article:published_time" content="2018-04-05T18:57:13-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,34 +1612,32 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Apr 5, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 2 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Apr 5, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 2 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
       <p>If catching by reference, we sidestep the questions about object deletion, avoid slicing exception objects, retain the ability to catch standard exceptions, and limit the number of times exception objects being copied.</p>
 <!-- toc -->
 <h1 id="catch-by-pointer">Catch by pointer</h1>
-<p>In order to catch by pointer, programmers need to define exception objects in a way that <strong>guarantees the objects exist</strong> after control leaves the <code>throw</code> site. Global and static objects work fine, but it's easy for programmers to forget the constraint:</p>
+<p>In order to catch by pointer, programmers need to define exception objects in a way that <strong>guarantees the objects exist</strong> after control leaves the <code>throw</code> site. Global and static objects work fine, but it&rsquo;s easy for programmers to forget the constraint:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1643,12 +1649,12 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">(</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">exception</span> <span class="n">ex</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="p">...</span>
     <span class="k">throw</span> <span class="o">&amp;</span><span class="n">ex</span><span class="p">;</span>   <span class="c1">// throw a pointer to an object 
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>          <span class="c1">// that&#39;s about to be destroyed
+</span><span class="c1"></span>    <span class="p">...</span>          <span class="c1">// that&#39;s about to be destroyed
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1663,30 +1669,30 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">(</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="p">...</span>
     <span class="k">throw</span> <span class="k">new</span> <span class="n">exception</span><span class="p">;</span> <span class="c1">// throw a pointer to a new heap-based object 
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>  <span class="c1">// hopefully the objerator new will not itself throw any exception
+</span><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// hopefully the objerator new will not itself throw any exception
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>This design will make a hard time for authors of <code>catch</code> clauses: <strong>to delete or not to delete</strong> the pointer they receive? In the <code>catch</code> site, we can't tell if an exception object is allocated on the heap or defined as a global (or static) object.</p>
+</div><p>This design will make a hard time for authors of <code>catch</code> clauses: <strong>to delete or not to delete</strong> the pointer they receive? In the <code>catch</code> site, we can&rsquo;t tell if an exception object is allocated on the heap or defined as a global (or static) object.</p>
 <p>Furthermore, catch-by-pointer runs <strong>contrary to the convention</strong> of the language: the four standard exception<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> - <code>bad_alloc</code>, <code>bad_cast</code>, <code>bad_typeid</code>, and <code>bad_exception</code> are all objects, rather than pointers to objefts, so we have to catch them by value or by reference.</p>
 <h1 id="catch-by-value">Catch by value</h1>
 <p>Catch-by-value requires exception objects be copied <em>twice</em> each time they thrown (MECpp item 12), and it also has <strong><em>slicing problem</em></strong>: derived class exception objects caught as base class exceptions have their derivedness &ldquo;sliced off&rdquo; : they lack derived class data members, and resolve to base class virtual functions (the same behavior as when an object is passed to a function by value)</p>
 <h1 id="catch-by-reference">Catch by reference</h1>
 <p>Catch-by-reference suffers from none of the problems:</p>
 <ul>
-<li>Unlike catch-by-pointer, the question of object deletion fails to arise, and there's no difficulty in catching the standard exception types</li>
+<li>Unlike catch-by-pointer, the question of object deletion fails to arise, and there&rsquo;s no difficulty in catching the standard exception types</li>
 <li>Unlike catch-by-value, there is no slicing problem, and exception objects are copied only once.</li>
 </ul>
-<p>Of course, if there's no need to change the exception object in the <code>catch</code> site, we'd catch not just reference, but by reference to <code>const</code>.</p>
+<p>Of course, if there&rsquo;s no need to change the exception object in the <code>catch</code> site, we&rsquo;d catch not just reference, but by reference to <code>const</code>.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p><code>bad_alloc</code>: thrown when <code>operator new</code> can't satisfy a memory request (MECpp item 8); <code>bad_cast</code>: thrown when a <code>dynamic_cast</code> to a reference fails (MECpp item 2); <code>bad_typeid</code>: thrown when <code>typeid</code> is applied to a dereferenced null pointer; and <code>bad_exception</code>: available for unexpected exceptions (MECpp item 14)<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p><code>bad_alloc</code>: thrown when <code>operator new</code> can&rsquo;t satisfy a memory request (MECpp item 8); <code>bad_cast</code>: thrown when a <code>dynamic_cast</code> to a reference fails (MECpp item 2); <code>bad_typeid</code>: thrown when <code>typeid</code> is applied to a dereferenced null pointer; and <code>bad_exception</code>: available for unexpected exceptions (MECpp item 14) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -3013,7 +3019,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

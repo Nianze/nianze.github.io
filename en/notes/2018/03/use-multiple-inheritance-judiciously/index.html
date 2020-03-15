@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-03-06T17:35:59-0500">
 <meta name="modified" content="2018-03-06T17:35:59-0500">
 <meta property="article:published_time" content="2018-03-06T17:35:59-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,31 +1612,29 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Mar 6, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Mar 6, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
-      <p>Being more complex than single inheritance, Multiple inheritance (MI) can lead to ambiguity issues and to the need for virtual inheritance, the latter of which imposes costs in size, speed, and complexity of initialization and assignment, so it's more practical to make &ldquo;empty&rdquo; virtual base classes.</p>
+      <p>Being more complex than single inheritance, Multiple inheritance (MI) can lead to ambiguity issues and to the need for virtual inheritance, the latter of which imposes costs in size, speed, and complexity of initialization and assignment, so it&rsquo;s more practical to make &ldquo;empty&rdquo; virtual base classes.</p>
 <!-- toc -->
 <h1 id="ambiguity">Ambiguity</h1>
 <p>In the realm of MI, one thing worth noting is that it becomes possible to inherit the same name (e.g., function, typedef, etc.) from more than one base class:</p>
@@ -1654,20 +1660,20 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BorrowableItem</span> <span class="p">{</span>  <span class="c1">// something a library lets you borrow
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="kt">void</span> <span class="n">checkOut</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// check the item out from the library
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="n">checkOut</span><span class="p">();</span>  <span class="c1">// check the item out from the library
+</span><span class="c1"></span>    <span class="p">...</span>
+<span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">ElectronicGadget</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="kt">bool</span> <span class="n">checkOut</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// perfom self-test, return whether test succeeds
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">checkOut</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// perfom self-test, return whether test succeeds
+</span><span class="c1"></span>    <span class="p">...</span>
+<span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">MP3Player</span><span class="o">:</span>  <span class="c1">// Multiple inheritance
 </span><span class="c1"></span>    <span class="k">public</span> <span class="n">BorrowableItem</span><span class="p">,</span>
     <span class="k">public</span> <span class="n">ElectronicGadget</span>
-<span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
+<span class="p">{...};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1677,17 +1683,17 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">MP3Player</span> <span class="n">mp</span><span class="p">;</span>
-<span class="n">mp</span><span class="p">.</span><span class="n">checkOut</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// ambiguous!
+<span class="n">mp</span><span class="p">.</span><span class="n">checkOut</span><span class="p">();</span>  <span class="c1">// ambiguous!
 </span></code></pre></td></tr></table>
 </div>
-</div><p>In the example above, even though only the public one in <code>BorrowableItem</code> of the two <code>checkOut</code> functions is accessible, the call to <code>checkOut</code> is ambiguous, because before seeing whether a function is accessible, C++ first identifies the function that's the best match for the call, and in this case both <code>checkOut</code>s are equally good matches, so there's no best match. The accessibility of <code>ElectronicGadget::checkOut</code> is never examined.</p>
-<p>To resolve the ambiguity, specify which base class's function to call:</p>
+</div><p>In the example above, even though only the public one in <code>BorrowableItem</code> of the two <code>checkOut</code> functions is accessible, the call to <code>checkOut</code> is ambiguous, because before seeing whether a function is accessible, C++ first identifies the function that&rsquo;s the best match for the call, and in this case both <code>checkOut</code>s are equally good matches, so there&rsquo;s no best match. The accessibility of <code>ElectronicGadget::checkOut</code> is never examined.</p>
+<p>To resolve the ambiguity, specify which base class&rsquo;s function to call:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">mp</span><span class="p">.</span><span class="n">BorrowableItem</span><span class="o">:</span><span class="o">:</span><span class="n">checkOut</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">mp</span><span class="p">.</span><span class="n">BorrowableItem</span><span class="o">::</span><span class="n">checkOut</span><span class="p">();</span>
 </code></pre></td></tr></table>
 </div>
 </div><h1 id="virtual-inheritance">Virtual inheritance</h1>
@@ -1702,12 +1708,12 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">InputFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">File</span><span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">OutputFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">File</span><span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{...};</span>
+<span class="k">class</span> <span class="nc">InputFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
+<span class="k">class</span> <span class="nc">OutputFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">IOFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">InputFile</span><span class="p">,</span>
               <span class="k">public</span> <span class="n">OutputFile</span>
-<span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
+<span class="p">{...};</span>
 </code></pre></td></tr></table>
 </div>
 </div><pre><code>          File
@@ -1715,11 +1721,11 @@ if (!doNotTrack) {
 InputFile       OutputFile
         ↖      ↗
          IOFile
-</code></pre><p>Here, between <code>File</code> and <code>IOFile</code>, we've found two paths either through <code>InputFile</code> or <code>OutputFile</code>, and we come to the following question:</p>
+</code></pre><p>Here, between <code>File</code> and <code>IOFile</code>, we&rsquo;ve found two paths either through <code>InputFile</code> or <code>OutputFile</code>, and we come to the following question:</p>
 <blockquote>
 <p>Do we want the data members in the base class to be replicated for each of the paths?</p>
 </blockquote>
-<p>By default, C++ performs the replication, so if there's a data member named <code>fileName</code> in the <code>File</code>, <code>IOFile</code> will inherits a copy from each of its base classes <code>InputFile</code> and <code>OutputFile</code>, resulting in two <code>fielName</code> data members in <code>IOFile</code>.</p>
+<p>By default, C++ performs the replication, so if there&rsquo;s a data member named <code>fileName</code> in the <code>File</code>, <code>IOFile</code> will inherits a copy from each of its base classes <code>InputFile</code> and <code>OutputFile</code>, resulting in two <code>fielName</code> data members in <code>IOFile</code>.</p>
 <p>If this is not what we want, we must make the <code>File</code> a <em>virtual base class</em>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1731,12 +1737,12 @@ InputFile       OutputFile
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">InputFile</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">File</span><span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">OutputFile</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">File</span><span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{...};</span>
+<span class="k">class</span> <span class="nc">InputFile</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
+<span class="k">class</span> <span class="nc">OutputFile</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">IOFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">InputFile</span><span class="p">,</span>
               <span class="k">public</span> <span class="n">OutputFile</span>
-<span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
+<span class="p">{...};</span>
 </code></pre></td></tr></table>
 </div>
 </div><pre><code>           File
@@ -1752,7 +1758,7 @@ InputFile       OutputFile
 </ul>
 <p>To make things easier to handle, we could adopt following strategy:</p>
 <ul>
-<li>Use non-virtual by default, and don't use virtual bases unless we need to</li>
+<li>Use non-virtual by default, and don&rsquo;t use virtual bases unless we need to</li>
 <li>If we must use a virtual base classes, avoid putting data in them<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
 </ul>
 <h1 id="example-of-legitimate-mi-usecase">Example of legitimate MI usecase</h1>
@@ -1771,11 +1777,11 @@ InputFile       OutputFile
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">IPerson</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span><span class="o">:</span> <span class="o">~</span><span class="n">IPerson</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">virtual</span><span class="o">:</span> <span class="o">~</span><span class="n">IPerson</span><span class="p">();</span>
 
-    <span class="k">virtual</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">name</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">birthDate</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">birthDate</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>We want to create a concrete class <code>CPerson</code>, and luckily, we find following old database-specific class <code>PersonInfo</code> offering the essense of what <code>CPerson</code> needs:</p>
@@ -1825,48 +1831,48 @@ InputFile       OutputFile
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PersonInfo</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="k">explicit</span> <span class="n">PersonInfo</span><span class="p">(</span><span class="n">DatabaseID</span> <span class="n">pid</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">PersonInfo</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">explicit</span> <span class="n">PersonInfo</span><span class="p">(</span><span class="n">DatabaseID</span> <span class="n">pid</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">PersonInfo</span><span class="p">();</span>
 
-    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">theName</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">theBirthDate</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">theName</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">theBirthDate</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">valueDelimOpen</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">valueDelimClose</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">valueDelimOpen</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">valueDelimClose</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 
-<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">PersonInfo</span><span class="o">:</span><span class="o">:</span><span class="n">valueDilimOpen</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">PersonInfo</span><span class="o">::</span><span class="n">valueDilimOpen</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">[</span><span class="s">&#34;</span><span class="p">;</span>  <span class="c1">// default opening delimiter
+    <span class="k">return</span> <span class="s">&#34;[&#34;</span><span class="p">;</span>  <span class="c1">// default opening delimiter
 </span><span class="c1"></span><span class="p">}</span>
 
-<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">PersonInfo</span><span class="o">:</span><span class="o">:</span><span class="n">valueDilimClose</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">PersonInfo</span><span class="o">::</span><span class="n">valueDilimClose</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">]</span><span class="s">&#34;</span><span class="p">;</span>  <span class="c1">// default closing delimiter
+    <span class="k">return</span> <span class="s">&#34;]&#34;</span><span class="p">;</span>  <span class="c1">// default closing delimiter
 </span><span class="c1"></span><span class="p">}</span>
 
-<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">PersonInfo</span><span class="o">:</span><span class="o">:</span><span class="n">theName</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">PersonInfo</span><span class="o">::</span><span class="n">theName</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
     <span class="c1">// reserve buffer for return value, 
 </span><span class="c1"></span>    <span class="c1">// it&#39;s automatically init. to all zeros due to static
-</span><span class="c1"></span>    <span class="k">static</span> <span class="kt">char</span> <span class="n">value</span><span class="p">[</span><span class="n">Max_Formatted_Field_Value_Length</span><span class="p">]</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="k">static</span> <span class="kt">char</span> <span class="n">value</span><span class="p">[</span><span class="n">Max_Formatted_Field_Value_Length</span><span class="p">];</span>
 
     <span class="c1">// write opening delimiter
-</span><span class="c1"></span>    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">strcpy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">valueDelimOpen</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">strcpy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">valueDelimOpen</span><span class="p">());</span>
 
     <span class="n">append</span> <span class="k">this</span> <span class="n">obj</span><span class="p">.</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">name</span> <span class="n">fields</span> <span class="n">to</span> <span class="n">the</span> <span class="n">string</span> <span class="n">in</span> <span class="n">value</span>
 
     <span class="c1">// write closing delimiter
-</span><span class="c1"></span>    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">strcat</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">valueDelimClose</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">strcat</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">valueDelimClose</span><span class="p">());</span>
 
     <span class="k">return</span> <span class="n">value</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>This design of <code>PersonInfo::theName</code> is antiquated indeed: it use a fix-size static buffer, which is rife for both overrun and threading problems (item 21). Let's set such imperfection aside, and focus on <code>theName</code>, which calls virtual function <code>valueDelimOpen</code> and <code>valueDelimClose</code>, so the result returnd by <code>theName</code> is dependent not only on <code>PersonInfo</code> but also on the classes derived from <code>PersonInfo</code>.</p>
-<p>Apparently, the relationship between <code>CPerson</code> and <code>PersonInfo</code> is <code>is-implemented-in-terms-of</code> (we just want to re-use some of the code. That's all). Also, suppose that we want our target class <code>CPerson</code> to return unadorned values (return &ldquo;Name&rdquo; instead of &ldquo;[Name]&quot;), which requires redefining of the virtual functions in <code>PersonInfo</code>. Thus between the composition (item 38) and private inheritance (item 39) we prefer private inheritance, because simple composition will not let us redefine the virtual functions in <code>PersonInfo</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+</div><p>This design of <code>PersonInfo::theName</code> is antiquated indeed: it use a fix-size static buffer, which is rife for both overrun and threading problems (item 21). Let&rsquo;s set such imperfection aside, and focus on <code>theName</code>, which calls virtual function <code>valueDelimOpen</code> and <code>valueDelimClose</code>, so the result returnd by <code>theName</code> is dependent not only on <code>PersonInfo</code> but also on the classes derived from <code>PersonInfo</code>.</p>
+<p>Apparently, the relationship between <code>CPerson</code> and <code>PersonInfo</code> is <code>is-implemented-in-terms-of</code> (we just want to re-use some of the code. That&rsquo;s all). Also, suppose that we want our target class <code>CPerson</code> to return unadorned values (return &ldquo;Name&rdquo; instead of &ldquo;[Name]&quot;), which requires redefining of the virtual functions in <code>PersonInfo</code>. Thus between the composition (item 38) and private inheritance (item 39) we prefer private inheritance, because simple composition will not let us redefine the virtual functions in <code>PersonInfo</code><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
 <p>Thus, we could make following reasonable multiple inheritance:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1889,23 +1895,23 @@ InputFile       OutputFile
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">IPerson</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span> <span class="c1">// the interface. same as above
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">IPerson</span> <span class="p">{...};</span> <span class="c1">// the interface. same as above
 </span><span class="c1"></span>
-<span class="k">class</span> <span class="nc">DatabaseID</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span> <span class="c1">// used below
+<span class="k">class</span> <span class="nc">DatabaseID</span> <span class="p">{...};</span> <span class="c1">// used below
 </span><span class="c1"></span>
-<span class="k">class</span> <span class="nc">PersonInfo</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>  <span class="c1">// used for implementing the IPerson interface
+<span class="k">class</span> <span class="nc">PersonInfo</span> <span class="p">{...};</span>  <span class="c1">// used for implementing the IPerson interface
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">CPerson</span><span class="o">:</span> <span class="k">public</span> <span class="n">IPerson</span><span class="p">,</span> <span class="k">private</span> <span class="n">PersonInfo</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="k">explicit</span> <span class="n">CPerson</span><span class="p">(</span><span class="n">DatabaseID</span> <span class="n">pid</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="o">:</span> <span class="n">PersonInfo</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span>
-    <span class="k">virtual</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">name</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
-    <span class="p">{</span> <span class="k">return</span> <span class="n">PersonInfo</span><span class="o">:</span><span class="o">:</span><span class="n">theName</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// implementing the IPerson member function
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">birthDate</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
-    <span class="p">{</span> <span class="k">return</span> <span class="n">PersonInfo</span><span class="o">:</span><span class="o">:</span><span class="n">theBirthDate</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// implementing the IPerson member function
+    <span class="k">explicit</span> <span class="n">CPerson</span><span class="p">(</span><span class="n">DatabaseID</span> <span class="n">pid</span><span class="p">())</span><span class="o">:</span> <span class="n">PersonInfo</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="n">PersonInfo</span><span class="o">::</span><span class="n">theName</span><span class="p">();</span> <span class="p">}</span>  <span class="c1">// implementing the IPerson member function
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">birthDate</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span> <span class="k">return</span> <span class="n">PersonInfo</span><span class="o">::</span><span class="n">theBirthDate</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// implementing the IPerson member function
 </span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
-    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">valueDelimOpen</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">&#34;</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// inherited virtual delimiter functions
-</span><span class="c1"></span>    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">valueDelimClose</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">&#34;</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// inherited virtual delimiter functions
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">valueDelimOpen</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;&#34;</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// inherited virtual delimiter functions
+</span><span class="c1"></span>    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">valueDelimClose</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;&#34;</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// inherited virtual delimiter functions
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>In UML, the design looks like this:</p>
@@ -1913,15 +1919,15 @@ InputFile       OutputFile
         ↖      ↗(private)
          IOFile
 </code></pre><h1 id="summary">Summary</h1>
-<p>Compared to single inheritance (SI), multiple inheritance (MI) is typically more complicated to use and more complicated to understand, so if SI design is more or less equivalent to an MI design, we prefer the SI design. Sometimes, though, MI is the clearest, most maintainable, most reasonable way to get the job done. When that's the case, just use it, with judiciousness.</p>
+<p>Compared to single inheritance (SI), multiple inheritance (MI) is typically more complicated to use and more complicated to understand, so if SI design is more or less equivalent to an MI design, we prefer the SI design. Sometimes, though, MI is the clearest, most maintainable, most reasonable way to get the job done. When that&rsquo;s the case, just use it, with judiciousness.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Without any standalone data, we don't worry about oddities in the initialization and assignment rules for the virtual bases. This is exactly why the Interfaces in Java and .NET, which are in many ways comparable to virtual base classes in C++, are not allowed to contain any data.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Without any standalone data, we don&rsquo;t worry about oddities in the initialization and assignment rules for the virtual bases. This is exactly why the Interfaces in Java and .NET, which are in many ways comparable to virtual base classes in C++, are not allowed to contain any data. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>Complex composition that is combined with public inheritance, as showed in item 39, may also meed our needs, but here we just use private inheritance because it's easy to understand.<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Complex composition that is combined with public inheritance, as showed in item 39, may also meed our needs, but here we just use private inheritance because it&rsquo;s easy to understand. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -3249,7 +3255,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

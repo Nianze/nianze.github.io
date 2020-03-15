@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-03-27T18:53:56-0400">
 <meta name="modified" content="2018-03-27T18:53:56-0400">
 <meta property="article:published_time" content="2018-03-27T18:53:56-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1249,7 +1252,7 @@
     "datePublished": "2018-03-27T18:53:56-04:00",
     "dateModified": "2018-03-27T18:53:56-04:00",
     "url" : "http://nianze.tk/en/notes/2018/03/be-wary-of-user-defined-conversion-functions/",
-    "description": "\u003cp\u003eImplicit type conversions usually lead to more harm than good, so don't provide conversion functions unless we're sure we want them.\u003c/p\u003e",
+    "description": "\u003cp\u003eImplicit type conversions usually lead to more harm than good, so don\u0026rsquo;t provide conversion functions unless we\u0026rsquo;re sure we want them.\u003c/p\u003e",
     "keywords": ["technique","cpp"],
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,31 +1612,29 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Mar 27, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Mar 27, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
-      <p>Implicit type conversions usually lead to more harm than good, so don't provide conversion functions unless we're sure we want them.</p>
+      <p>Implicit type conversions usually lead to more harm than good, so don&rsquo;t provide conversion functions unless we&rsquo;re sure we want them.</p>
 <!-- toc -->
 <p>There are two kinds of functions allowing compilers to perform implicit type conversions:</p>
 <ul>
@@ -1647,9 +1653,9 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="k">operator</span> <span class="kt">double</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// converts Rational to double
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="k">operator</span> <span class="kt">double</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// converts Rational to double
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>This implicit type conversion function will be automatically invoked in contexts like this:</p>
@@ -1660,13 +1666,13 @@ if (!doNotTrack) {
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span> <span class="nf">r</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="p">;</span>    <span class="c1">// r has a value 1/2
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span> <span class="nf">r</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>    <span class="c1">// r has a value 1/2
 </span><span class="c1"></span><span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">r</span><span class="p">;</span>  <span class="c1">// converts r to a double, then do multiplication
-</span><span class="c1"></span><span class="n">count</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">r</span><span class="p">;</span>          <span class="c1">// will print a floating point number instead of 1/2 if lacking difinition of operator&lt;&lt;
+</span><span class="c1"></span><span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">;</span>          <span class="c1">// will print a floating point number instead of 1/2 if lacking difinition of operator&lt;&lt;
 </span></code></pre></td></tr></table>
 </div>
 </div><p>Suppose we forget to write an <code>operator&lt;&lt;</code> for <code>Rational</code> objects, and expect the attempt to print <code>r</code> would fail due to the lack of appropriate <code>operator&lt;&lt;</code> to call. However, in the lack of <code>operator&lt;&lt;</code>, compilers are happy to find an acceptable sequence of implicit type conversions they could apply to make the call succeed. In this case, they will discover they could make the call succeed by implicitly converting <code>r</code> to a <code>double</code> by calling <code>Rational::operator double</code>, leading to <em>wrong</em> (often unexpected) function being called.</p>
-<p>Solution: replace the implicit type conversion operators with equivalent functions that don't have the syntactically magic names, just like the explicit member function <code>c_str</code> in <code>string</code> type from standard C++ library (MECpp item 35):</p>
+<p>Solution: replace the implicit type conversion operators with equivalent functions that don&rsquo;t have the syntactically magic names, just like the explicit member function <code>c_str</code> in <code>string</code> type from standard C++ library (MECpp item 35):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1678,9 +1684,9 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="kt">double</span> <span class="n">asDouble</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// converts Rational to double
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="kt">double</span> <span class="n">asDouble</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// converts Rational to double
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1691,13 +1697,13 @@ if (!doNotTrack) {
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span> <span class="nf">r</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span> <span class="nf">r</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 
-<span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">r</span><span class="p">;</span> <span class="c1">// error! no operator&lt;&lt; for Rationals
-</span><span class="c1"></span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">asDouble</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// fine, prints r as a double
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">;</span> <span class="c1">// error! no operator&lt;&lt; for Rationals
+</span><span class="c1"></span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">r</span><span class="p">.</span><span class="n">asDouble</span><span class="p">();</span>  <span class="c1">// fine, prints r as a double
 </span></code></pre></td></tr></table>
 </div>
-</div><h1 id="singleargument-constructor">Single-argument constructor</h1>
+</div><h1 id="single-argument-constructor">Single-argument constructor</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1714,12 +1720,12 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Array</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">lowBound</span><span class="p">,</span> <span class="kt">int</span> <span class="n">highBound</span><span class="p">)</span><span class="p">;</span> <span class="c1">// specify a range of array indices, ineligible for type-conversion
-</span><span class="c1"></span>    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// specify the number of elements in the array, can be used as a type conversion function
+    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">lowBound</span><span class="p">,</span> <span class="kt">int</span> <span class="n">highBound</span><span class="p">);</span> <span class="c1">// specify a range of array indices, ineligible for type-conversion
+</span><span class="c1"></span>    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>  <span class="c1">// specify the number of elements in the array, can be used as a type conversion function
 </span><span class="c1"></span>    
-    <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[</span><span class="p">]</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>The problem of implicit type conversion occurs in following condition:</p>
@@ -1738,15 +1744,15 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="k">operator</span><span class="o">=</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span><span class="p">;</span>
-<span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">;</span>
-<span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">;</span>
-<span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">+</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// oops! &#34;a&#34; should be &#34;a[i]&#34;
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">=</span><span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
-        <span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">.</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+<span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// oops! &#34;a&#34; should be &#34;a[i]&#34;
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="p">....</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+        <span class="p">...</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -1757,7 +1763,7 @@ if (!doNotTrack) {
 <p>Compilers see a call to <code>operator==</code> taking type <code>Array&lt;int&gt;</code> (for <code>a</code>) and <code>int</code> (for <code>b[i]</code>), and fail to find the corresponding function</p>
 </li>
 <li>
-<p>There's a <code>operator==</code> taking two <code>Array&lt;int&gt;</code> type arguments, and compilers are able to convert the <code>int</code> into an <code>Array&lt;int&gt;</code> object by calling <code>Array&lt;int&gt;</code> constructor that taking a single <code>int</code> as an argument, ending up with something like this<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
+<p>There&rsquo;s a <code>operator==</code> taking two <code>Array&lt;int&gt;</code> type arguments, and compilers are able to convert the <code>int</code> into an <code>Array&lt;int&gt;</code> object by calling <code>Array&lt;int&gt;</code> constructor that taking a single <code>int</code> as an argument, ending up with something like this<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1765,8 +1771,8 @@ if (!doNotTrack) {
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">+</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">=</span><span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span> <span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="p">)</span><span class="p">)</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="k">static_cast</span><span class="o">&lt;</span> <span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">...</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1789,10 +1795,10 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Array</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="k">explicit</span> <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// use &#34;explicit&#34; to prevent implicit type conversion    
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>    
-<span class="p">}</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="k">explicit</span> <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>  <span class="c1">// use &#34;explicit&#34; to prevent implicit type conversion    
+</span><span class="c1"></span>    <span class="p">...</span>    
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="solution-2-proxy-classes">Solution 2: Proxy classes</h2>
@@ -1820,16 +1826,16 @@ if (!doNotTrack) {
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">ArraySize</span> <span class="p">{</span>
     <span class="k">public</span><span class="o">:</span>
-        <span class="n">ArraySize</span><span class="p">(</span><span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span><span class="o">:</span> <span class="n">theSize</span><span class="p">(</span><span class="n">numElements</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span>
-        <span class="kt">int</span> <span class="nf">size</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">theSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ArraySize</span><span class="p">(</span><span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span><span class="o">:</span> <span class="n">theSize</span><span class="p">(</span><span class="n">numElements</span><span class="p">)</span> <span class="p">{}</span>
+        <span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">theSize</span><span class="p">;</span> <span class="p">}</span>
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">int</span> <span class="n">theSize</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">;</span>
+    <span class="p">};</span>
 
-    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">lowBound</span><span class="p">,</span> <span class="kt">int</span> <span class="n">highBound</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">Array</span><span class="p">(</span><span class="n">ArraySize</span> <span class="n">size</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// new declaration
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">lowBound</span><span class="p">,</span> <span class="kt">int</span> <span class="n">highBound</span><span class="p">);</span>
+    <span class="n">Array</span><span class="p">(</span><span class="n">ArraySize</span> <span class="n">size</span><span class="p">);</span>  <span class="c1">// new declaration
+</span><span class="c1"></span>    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1841,20 +1847,20 @@ if (!doNotTrack) {
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">;</span> <span class="c1">// convert 10 to a temp. ArraySize object, then feed that temp. object to Array&lt;int&gt; ctor.
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Array</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">// convert 10 to a temp. ArraySize object, then feed that temp. object to Array&lt;int&gt; ctor.
 </span><span class="c1"></span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">+</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">=</span><span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="p">)</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span>   <span class="c1">// error now!
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">...</span>   <span class="c1">// error now!
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>One of the rules governing implicit type conversions is that no sequence of conversions is allowed to contain more than one user-defined conversion (i.e., a call to a single-argument constructor or an implicit type conversion operator). The above class difinition adopting a general technique called <em>proxy classes</em> takes advantage of this rule, ending up with ideal behavior that the object constructions we want to allow are legal, but the implicit conversions we don't want to allow are illegal (compilers in one implicit conversion can't call two user-defined conversions, one from <code>int</code> to <code>ArraySize</code> and one from <code>ArraySize</code> to <code>Array&lt;int&gt;</code>).</p>
-<p>Proxy objects can give us control over aspects of software's behavior that is otherswise beyond our grasp. For more detail, refer to MECpp item 30.</p>
+</div><p>One of the rules governing implicit type conversions is that no sequence of conversions is allowed to contain more than one user-defined conversion (i.e., a call to a single-argument constructor or an implicit type conversion operator). The above class difinition adopting a general technique called <em>proxy classes</em> takes advantage of this rule, ending up with ideal behavior that the object constructions we want to allow are legal, but the implicit conversions we don&rsquo;t want to allow are illegal (compilers in one implicit conversion can&rsquo;t call two user-defined conversions, one from <code>int</code> to <code>ArraySize</code> and one from <code>ArraySize</code> to <code>Array&lt;int&gt;</code>).</p>
+<p>Proxy objects can give us control over aspects of software&rsquo;s behavior that is otherswise beyond our grasp. For more detail, refer to MECpp item 30.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>The space separating the two &ldquo;&gt;&rdquo; characters has its purpose: without it, the statement will be like <code>static_cast&lt;Array&lt;int&gt;&gt;(b[i])</code>, and some C++ compilers parsing &ldquo;&raquo;&rdquo; as a single token, ending up with a syntax error.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>The space separating the two &ldquo;&gt;&rdquo; characters has its purpose: without it, the statement will be like <code>static_cast&lt;Array&lt;int&gt;&gt;(b[i])</code>, and some C++ compilers parsing &ldquo;&raquo;&rdquo; as a single token, ending up with a syntax error. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -2355,9 +2361,9 @@ document.addEventListener('DOMContentLoaded', function () {
     <nav id="TableOfContents">
   <ul>
     <li><a href="#implicit-type-conversion-operators">Implicit type conversion operators</a></li>
-    <li><a href="#singleargument-constructor">Single-argument constructor</a>
+    <li><a href="#single-argument-constructor">Single-argument constructor</a>
       <ul>
-        <li><a href="#solution-1-keyword-explicit">Solution 1: Keyword explicit</a></li>
+        <li><a href="#solution-1-keyword-explicit">Solution 1: Keyword <code>explicit</code></a></li>
         <li><a href="#solution-2-proxy-classes">Solution 2: Proxy classes</a></li>
       </ul>
     </li>
@@ -3185,7 +3191,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

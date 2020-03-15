@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-07-24T10:26:02-0400">
 <meta name="modified" content="2018-07-24T10:26:02-0400">
 <meta property="article:published_time" content="2018-07-24T10:26:02-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1249,7 +1252,7 @@
     "datePublished": "2018-07-24T10:26:02-04:00",
     "dateModified": "2018-07-24T10:26:02-04:00",
     "url" : "http://nianze.tk/en/notes/2018/07/make-const-member-functions-thread-safe/",
-    "description": "\u003cp\u003eMake \u003ccode\u003econst\u003c/code\u003e member functions thread safe unless we're \u003cem\u003ecertain\u003c/em\u003e they'll never be used in a concurrent context.\u003c/p\u003e",
+    "description": "\u003cp\u003eMake \u003ccode\u003econst\u003c/code\u003e member functions thread safe unless we\u0026rsquo;re \u003cem\u003ecertain\u003c/em\u003e they\u0026rsquo;ll never be used in a concurrent context.\u003c/p\u003e",
     "keywords": ["technique","cpp"],
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,31 +1612,29 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Jul 24, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Jul 24, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
-      <p>Make <code>const</code> member functions thread safe unless we're <em>certain</em> they'll never be used in a concurrent context.</p>
+      <p>Make <code>const</code> member functions thread safe unless we&rsquo;re <em>certain</em> they&rsquo;ll never be used in a concurrent context.</p>
 <!-- toc -->
 <p>Due to <code>mutable</code> member datas, <code>const</code> member functions may not be thread safe. For a classic use case for <code>mutable</code>:</p>
 <div class="highlight"><div class="chroma">
@@ -1653,20 +1659,20 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Polynomial</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="k">using</span> <span class="n">RootsType</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// holding val. where poly. evals to zero
-</span><span class="c1"></span>    <span class="n">RootsType</span> <span class="nf">roots</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+    <span class="k">using</span> <span class="n">RootsType</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// holding val. where poly. evals to zero
+</span><span class="c1"></span>    <span class="n">RootsType</span> <span class="nf">roots</span><span class="p">()</span> <span class="k">const</span>
     <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">rootsAreValie</span><span class="p">)</span> <span class="p">{</span>       <span class="c1">// if cache not valid
-</span><span class="c1"></span>            <span class="p">.</span><span class="p">.</span><span class="p">.</span>                     <span class="c1">// compute roots, store them in rootVals
+</span><span class="c1"></span>            <span class="p">...</span>                     <span class="c1">// compute roots, store them in rootVals
 </span><span class="c1"></span>            <span class="n">rootsAreValid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> 
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">rootVals</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">mutable</span> <span class="kt">bool</span> <span class="n">rootsAreValid</span><span class="p">{</span> <span class="nb">false</span> <span class="p">}</span><span class="p">;</span>
-    <span class="k">mutable</span> <span class="n">RootsType</span> <span class="n">rootVals</span><span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="kt">bool</span> <span class="n">rootsAreValid</span><span class="p">{</span> <span class="nb">false</span> <span class="p">};</span>
+    <span class="k">mutable</span> <span class="n">RootsType</span> <span class="n">rootVals</span><span class="p">{};</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Here <code>roots()</code> retrieves the roots of a polynomial without changing the value of the <code>Polynomial</code> object on which it operates, so <code>const</code> declaratoin is correct. However, <code>rootVals</code> and <code>rootsAreValid</code> might be modified for the purpose of caching. Seeing the <code>const</code> interface for <code>roots()</code>, clients are perfectly reasonable to do something like this:</p>
@@ -1679,12 +1685,12 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Polynomial</span> <span class="n">p</span><span class="p">;</span>
-<span class="p">.</span><span class="p">.</span><span class="p">.</span>
+<span class="p">...</span>
 <span class="c1">// thread 1                   // thread 2
-</span><span class="c1"></span><span class="k">auto</span> <span class="n">rootsOfP</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">roots</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>    <span class="k">auto</span> <span class="n">valsGivingZero</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">roots</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span><span class="k">auto</span> <span class="n">rootsOfP</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">roots</span><span class="p">();</span>    <span class="k">auto</span> <span class="n">valsGivingZero</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">roots</span><span class="p">();</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Having multiple threads perform a read operation without synchronization is safe. However, although <code>roots</code> is declared <code>const</code>, it's not thread safe: more than one threads might try to modify the data members <code>rootsAreValid</code> and <code>rootVals</code> inside <code>roots</code>, reading and writing the same memory without synchronization - which is data racing, leading to undefined behavior.</p>
+</div><p>Having multiple threads perform a read operation without synchronization is safe. However, although <code>roots</code> is declared <code>const</code>, it&rsquo;s not thread safe: more than one threads might try to modify the data members <code>rootsAreValid</code> and <code>rootVals</code> inside <code>roots</code>, reading and writing the same memory without synchronization - which is data racing, leading to undefined behavior.</p>
 <h1 id="solution-mutex">Solution: mutex</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1710,28 +1716,28 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Polynomial</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="k">using</span> <span class="n">RootsType</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// holding val. where poly. evals to zero
-</span><span class="c1"></span>    <span class="n">RootsType</span> <span class="nf">roots</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span>
+    <span class="k">using</span> <span class="n">RootsType</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// holding val. where poly. evals to zero
+</span><span class="c1"></span>    <span class="n">RootsType</span> <span class="nf">roots</span><span class="p">()</span> <span class="k">const</span>
     <span class="p">{</span>
-        <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">g</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// lock mutex
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">g</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>  <span class="c1">// lock mutex
 </span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">rootsAreValie</span><span class="p">)</span> <span class="p">{</span>       <span class="c1">// if cache not valid
-</span><span class="c1"></span>            <span class="p">.</span><span class="p">.</span><span class="p">.</span>                     <span class="c1">// compute roots, store them in rootVals
+</span><span class="c1"></span>            <span class="p">...</span>                     <span class="c1">// compute roots, store them in rootVals
 </span><span class="c1"></span>            <span class="n">rootsAreValid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> 
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">rootVals</span><span class="p">;</span>
     <span class="p">}</span>                                      <span class="c1">// unlock mutex
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+</span><span class="c1"></span>    <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">mutable</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">mutex</span> <span class="n">m</span><span class="p">;</span>
-    <span class="k">mutable</span> <span class="kt">bool</span> <span class="n">rootsAreValid</span><span class="p">{</span> <span class="nb">false</span> <span class="p">}</span><span class="p">;</span>
-    <span class="k">mutable</span> <span class="n">RootsType</span> <span class="n">rootVals</span><span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="kt">bool</span> <span class="n">rootsAreValid</span><span class="p">{</span> <span class="nb">false</span> <span class="p">};</span>
+    <span class="k">mutable</span> <span class="n">RootsType</span> <span class="n">rootVals</span><span class="p">{};</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p><code>roots</code> is a <code>const</code> member function, inside which <code>std::mutex m</code> would be considered a <code>const</code> object, while <code>locking</code> and <code>unlocking</code> are non-<code>const</code> member functions, so we need to declared <code>m</code> as <code>mutable</code>.</p>
 <p>Another point worth noting is that <code>std::mutex</code> can be neither copied nor moved, so a side effect of adding <code>m</code> to <code>Polynomial</code> is that <code>Polynomial</code> loses the ability to be copied and moved.</p>
 <h1 id="for-a-single-variable-requiring-synchronization">For a single variable requiring synchronization</h1>
-<p>Sometimes when there's only one variable or memory location requiring synchronization, <code>mutex</code> might be overkill, and we might consider <code>std::atomic</code> counter (EMCpp item 40), which is often a less expensive way to go<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
+<p>Sometimes when there&rsquo;s only one variable or memory location requiring synchronization, <code>mutex</code> might be overkill, and we might consider <code>std::atomic</code> counter (EMCpp item 40), which is often a less expensive way to go<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -1750,16 +1756,16 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="kt">double</span> <span class="n">distanceFromOrigin</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+    <span class="p">...</span>
+    <span class="kt">double</span> <span class="n">distanceFromOrigin</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span>
     <span class="p">{</span>
-        <span class="o">+</span><span class="o">+</span><span class="n">callCount</span><span class="p">;</span>   <span class="c1">// atomic increment
-</span><span class="c1"></span>        <span class="k">return</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">hypot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="p">;</span>
+        <span class="o">++</span><span class="n">callCount</span><span class="p">;</span>   <span class="c1">// atomic increment
+</span><span class="c1"></span>        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">hypot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">mutable</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">callCount</span><span class="p">{</span> <span class="mi">0</span> <span class="p">}</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span> <span class="n">callCount</span><span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
     <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>The same side effect goes here: the existance of <code>callCount</code> in <code>Point</code> makes <code>Point</code> neither copyable nor movable.</p>
@@ -1770,7 +1776,7 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Whether it actually is less expensive depends on the hardware we're runnig on and the implementation of mutexes in our Standard Library.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Whether it actually is less expensive depends on the hardware we&rsquo;re runnig on and the implementation of mutexes in our Standard Library. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -3097,7 +3103,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

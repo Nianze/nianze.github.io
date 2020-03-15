@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-10-30T19:05:01-0400">
 <meta name="modified" content="2018-10-30T19:05:01-0400">
 <meta property="article:published_time" content="2018-10-30T19:05:01-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Oct 30, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Oct 30, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 3 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1640,20 +1646,20 @@ if (!doNotTrack) {
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ai</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// init. ai to 0
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ai</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>  <span class="c1">// init. ai to 0
 </span><span class="c1"></span><span class="n">ai</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>                 <span class="c1">// atomically set ai to 10
-</span><span class="c1"></span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">ai</span><span class="p">;</span>         <span class="c1">// atomically read ai&#39;s value
-</span><span class="c1"></span><span class="o">+</span><span class="o">+</span><span class="n">ai</span><span class="p">;</span>                    <span class="c1">// atomically increment ai to 11
-</span><span class="c1"></span><span class="o">-</span><span class="o">-</span><span class="n">ai</span><span class="p">;</span>                    <span class="c1">// atomically decrement ai to 10
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ai</span><span class="p">;</span>         <span class="c1">// atomically read ai&#39;s value
+</span><span class="c1"></span><span class="o">++</span><span class="n">ai</span><span class="p">;</span>                    <span class="c1">// atomically increment ai to 11
+</span><span class="c1"></span><span class="o">--</span><span class="n">ai</span><span class="p">;</span>                    <span class="c1">// atomically decrement ai to 10
 </span></code></pre></td></tr></table>
 </div>
 </div><p>During execution of these statements, other threads reading <code>ai</code> may see only values of 0, 10, or 11 (assuming, of course, this is the only thread modifying <code>ai</code>). Two things worth noting here:</p>
 <ol>
-<li>For <code>std::cout &lt;&lt; ai;</code>, only the read of <code>ai</code> is atomic, so it's possible that between the time <code>ai</code>'s value is rad and <code>operator&lt;&lt;</code> is invoked to write it to standard output, another thread may modify <code>ai</code>'s value.</li>
+<li>For <code>std::cout &lt;&lt; ai;</code>, only the read of <code>ai</code> is atomic, so it&rsquo;s possible that between the time <code>ai</code>'s value is rad and <code>operator&lt;&lt;</code> is invoked to write it to standard output, another thread may modify <code>ai</code>'s value.</li>
 <li>The increment and decrement of <code>ai</code> are <em>read-modify-write (RMW)</em> operations, and they execute atomatically as well, which is one of the nicest characteristics of the <code>std::atomic</code> types that they guarantee all member functions on <code>std::atomic</code> types will be seen by other threads as atomic.</li>
 <li>The use of <code>std::atomic</code> imposes restrictions that no code precedes a write of a <code>std::atomic</code> variable may take place afterwards. No reorder tricks for compiler/hardwaes for speed-up optimization purpose.</li>
 </ol>
-<p>In contrast, <code>volatile</code> offers <em>no guarantee of operation atomicity</em> and suffer <em>insufficient restrictions on code reordering</em> - basically not useful in multithreaded context. Say if we have a counter defined as <code>volatile int vc(0)</code>, and there are two threads increment the <code>volatile</code> counter simultaneously, then the ending value of <code>vc</code> need not be <code>2</code> - the RMW operation in each of two threads may take place in any order, involving in a data race, which leading to undefined behavior according to Standard's decree.</p>
+<p>In contrast, <code>volatile</code> offers <em>no guarantee of operation atomicity</em> and suffer <em>insufficient restrictions on code reordering</em> - basically not useful in multithreaded context. Say if we have a counter defined as <code>volatile int vc(0)</code>, and there are two threads increment the <code>volatile</code> counter simultaneously, then the ending value of <code>vc</code> need not be <code>2</code> - the RMW operation in each of two threads may take place in any order, involving in a data race, which leading to undefined behavior according to Standard&rsquo;s decree.</p>
 <p>The place in which <code>volatile</code> shines is in the context where <em>redundant loads</em> and <em>dead stores</em> should not be optimized away, that is, we need special memory to perform such kinds of redundent reads and superfluous writes:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1671,14 +1677,14 @@ if (!doNotTrack) {
 </span><span class="c1"></span><span class="n">x</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>      <span class="c1">// write x again
 </span></code></pre></td></tr></table>
 </div>
-</div><p>The most common kind of special memory is memory used for <em>memory-mapped I/O</em>, which is used for communication with peripherals, e.g., external sensors or displays, printers, network ports, etc. rather than reading or writing normal memory (i.e., RAM). <code>volatile</code> is the way to tell compilers that we're dealing with special memory.</p>
+</div><p>The most common kind of special memory is memory used for <em>memory-mapped I/O</em>, which is used for communication with peripherals, e.g., external sensors or displays, printers, network ports, etc. rather than reading or writing normal memory (i.e., RAM). <code>volatile</code> is the way to tell compilers that we&rsquo;re dealing with special memory.</p>
 <p>Because <code>std::atomic</code> and <code>volatile</code> serve different purposes, they can be used together:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">volatile</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vai</span><span class="p">;</span>  <span class="c1">// operations on vai are atomic and can&#39;t be optimized away
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">volatile</span> <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vai</span><span class="p">;</span>  <span class="c1">// operations on vai are atomic and can&#39;t be optimized away
 </span></code></pre></td></tr></table>
 </div>
 </div><p>This could be useful if <code>vai</code> corresponded to a memory-mapped I/O location that was concurrently accessed by multiple threads.</p>
@@ -2178,7 +2184,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc " data-dir="ltr" data-folding="false" data-ani="true">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#stdatomic-template">std::atomic template</a></li>
+    <li><a href="#stdatomic-template"><code>std::atomic</code> template</a></li>
   </ul>
 </nav>
   </div>
@@ -3003,7 +3009,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

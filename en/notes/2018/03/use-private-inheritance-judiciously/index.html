@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-03-05T18:42:43-0500">
 <meta name="modified" content="2018-03-05T18:42:43-0500">
 <meta property="article:published_time" content="2018-03-05T18:42:43-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Mar 5, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Mar 5, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1649,7 +1655,7 @@ if (!doNotTrack) {
 <li>Sometimes when we want to take advance of empty base optimization (which is the edge case)</li>
 </ul>
 <h1 id="typical-usage">Typical usage</h1>
-<p>Let's see a typical usecase for private inheritance. Suppose we want to periodically examine the the internal status of class <code>Widget</code>, and we'd like to reuse the following utility class:</p>
+<p>Let&rsquo;s see a typical usecase for private inheritance. Suppose we want to periodically examine the the internal status of class <code>Widget</code>, and we&rsquo;d like to reuse the following utility class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1662,13 +1668,13 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Timer</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="k">explicit</span> <span class="n">Timer</span><span class="p">(</span><span class="kt">int</span> <span class="n">tickFrequency</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">onTick</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// automatically called for each tick
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="k">explicit</span> <span class="n">Timer</span><span class="p">(</span><span class="kt">int</span> <span class="n">tickFrequency</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">onTick</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// automatically called for each tick
+</span><span class="c1"></span>    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>A <code>Timer</code> object can be configured to tick with whatever frequency we need, and on each tick, it calls a virtual function, which we can redefine so that it examines the current state of the <code>Widget</code> object. In order to redefine a virtual function, <code>Widget</code> must inherit from <code>Timer</code>. But public inheritance is inappropriate in this case: it's not true that a <code>Widget</code> is-a <code>Timer</code>, because <code>Widget</code> clients should not be able to call <code>onTick</code> on a <code>Widget</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+</div><p>A <code>Timer</code> object can be configured to tick with whatever frequency we need, and on each tick, it calls a virtual function, which we can redefine so that it examines the current state of the <code>Widget</code> object. In order to redefine a virtual function, <code>Widget</code> must inherit from <code>Timer</code>. But public inheritance is inappropriate in this case: it&rsquo;s not true that a <code>Widget</code> is-a <code>Timer</code>, because <code>Widget</code> clients should not be able to call <code>onTick</code> on a <code>Widget</code><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
 <p>Public inheritance is not a valid option here. Instead, we inherit privately:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1680,13 +1686,13 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">private</span> <span class="n">Timer</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onTick</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// look at Widget usage data, etc.
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onTick</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// look at Widget usage data, etc.
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>After private inheritance, <code>Timer</code>'s public <code>onTick</code> function becomes private in <code>Widget</code>, so keep it as private when we redeclare it<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
 <h2 id="alternatives">Alternatives</h2>
-<p>This is a nice design, but it's worth noting that private inheritance isn't strictly necessary - we could use composition instead:</p>
+<p>This is a nice design, but it&rsquo;s worth noting that private inheritance isn&rsquo;t strictly necessary - we could use composition instead:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -1705,21 +1711,21 @@ if (!doNotTrack) {
 <span class="k">private</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">WidgetTimer</span><span class="o">:</span> <span class="k">public</span> <span class="n">Timer</span> <span class="p">{</span>
     <span class="k">public</span><span class="o">:</span>
-        <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onTick</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-        <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="p">}</span><span class="p">;</span>
+        <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onTick</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+        <span class="p">...</span>
+    <span class="p">};</span>
     <span class="n">WidgetTimer</span> <span class="n">timer</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>This design is more complicated involving both (public) inheritance and composition, but we do get two more advantages from its complixity:</p>
 <ol>
 <li>Because <code>Widget</code>'s derived classes have no access to the private <code>WidgetTimer</code> data member, we prevent derived classes from redefining <code>onTick</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</li>
-<li>We've minimized <code>Widget</code>'s compilation dependencies: if <code>Widget</code> inherits from <code>Timer</code>, <code>Timer</code>'s definition must be available when <code>Widget</code> is compiled, so we probably has to <code>#include Timer.h</code>. If <code>WidgetTimer</code> is moved out of <code>Widget</code> and <code>Widget</code> only contains a pointer to  a <code>WidgetTimer</code>, we only need to simply forward decalare the <code>WidgetTimer</code> class without <code>#include</code> anything. Such decouplings can be important for large systems (details in item 31).</li>
+<li>We&rsquo;ve minimized <code>Widget</code>'s compilation dependencies: if <code>Widget</code> inherits from <code>Timer</code>, <code>Timer</code>'s definition must be available when <code>Widget</code> is compiled, so we probably has to <code>#include Timer.h</code>. If <code>WidgetTimer</code> is moved out of <code>Widget</code> and <code>Widget</code> only contains a pointer to  a <code>WidgetTimer</code>, we only need to simply forward decalare the <code>WidgetTimer</code> class without <code>#include</code> anything. Such decouplings can be important for large systems (details in item 31).</li>
 </ol>
 <h1 id="edge-case">Edge case</h1>
-<p>The edge case, as the name suggests, is edgy indeed: it applies only when we're dealing with a class that has no data in it: no non-static data members; no virtual functions (which introduces <code>vptr</code> to each object, item 7); and no virual base classes (which also incurs a size overhead, item 40). Conceptually, such an <em>empty</em> class should use no space, but C++ requires that freestanding objects must have non-zero size for some technical reasons. That being said,</p>
+<p>The edge case, as the name suggests, is edgy indeed: it applies only when we&rsquo;re dealing with a class that has no data in it: no non-static data members; no virtual functions (which introduces <code>vptr</code> to each object, item 7); and no virual base classes (which also incurs a size overhead, item 40). Conceptually, such an <em>empty</em> class should use no space, but C++ requires that freestanding objects must have non-zero size for some technical reasons. That being said,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1731,16 +1737,16 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Empty</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span> <span class="c1">// has no data, so obj. should use no memory
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Empty</span> <span class="p">{};</span> <span class="c1">// has no data, so obj. should use no memory
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">HoldsAnInt</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
     <span class="n">Empty</span> <span class="n">e</span><span class="p">;</span>  <span class="c1">// should use no memory
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>We'll find that  <code>sizeof(HoldsAnInt) &gt; sizeof(int)</code>, so <code>Empty</code> data member does require extra memory. With most compilers, <code>sizeof(Empty)</code> is 1, which is a silently inserted <code>char</code> inside the <code>Empty</code> objects to satisfy C++'s requirements. However, alignment requirements (see item 50) may casue compilers to add padding to <code>HoldsAnInt</code> classes, so the objects of <code>HoldsAnInt</code> may gain more than just the size of a char - they would actually enlarge enough to hold a second int.</p>
+</div><p>We&rsquo;ll find that  <code>sizeof(HoldsAnInt) &gt; sizeof(int)</code>, so <code>Empty</code> data member does require extra memory. With most compilers, <code>sizeof(Empty)</code> is 1, which is a silently inserted <code>char</code> inside the <code>Empty</code> objects to satisfy C++'s requirements. However, alignment requirements (see item 50) may casue compilers to add padding to <code>HoldsAnInt</code> classes, so the objects of <code>HoldsAnInt</code> may gain more than just the size of a char - they would actually enlarge enough to hold a second int.</p>
 <p>Now comes the point of using private inheritance: rather than containing &ldquo;freestanding&rdquo; objects that can not have zero size, we could inherit from <code>Empty</code> type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1753,29 +1759,29 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">HoldsAnInt</span><span class="o">:</span> <span class="k">private</span> <span class="n">Empty</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Now <code>sizeof(HoldsAnInt) == sizeof(int)</code>, thanks to <em>empty base optimization (EBO)</em>, which is typically supported by most compilersp<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>.</p>
 <p>In practice, &ldquo;empty&rdquo; base classes often contain typedefs, enums, static data members, or non-virtual functions, such as those in the STL that contains useful members (usually typedefs), and thus classes for user-defined function objects may inherit from them without worrying about size increase thanks to EBO.</p>
 <h1 id="in-summary">In summary</h1>
-<p>Private inheritance is most likely to be a legitimate design strategy when we're dealing with two classes not related by is-a where one either needs access to the protected members of another or needs to redefine one or more of its virtual functions. Even in this case, however, a mixture of public inheritance and composition can often yield the expected behavior, albeit with more design complexity.</p>
-<p>Most classes aren't empty, so the EBO is rarely a legitimate justification for private inheritance.</p>
-<p>Using private inheritance <em>judiciously</em> means employing it when, having considered all the alternatives, it's the best way to express the relationship between two classes.</p>
+<p>Private inheritance is most likely to be a legitimate design strategy when we&rsquo;re dealing with two classes not related by is-a where one either needs access to the protected members of another or needs to redefine one or more of its virtual functions. Even in this case, however, a mixture of public inheritance and composition can often yield the expected behavior, albeit with more design complexity.</p>
+<p>Most classes aren&rsquo;t empty, so the EBO is rarely a legitimate justification for private inheritance.</p>
+<p>Using private inheritance <em>judiciously</em> means employing it when, having considered all the alternatives, it&rsquo;s the best way to express the relationship between two classes.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Allowing adding <code>onTick</code> into the conceptual <code>Widget</code> interface would make it easy for clients to use the <code>Widget</code> interface incorrectly, a clear violation of item 18's advice to make interfaces easy to use correctly and hard to use incorrectly.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Allowing adding <code>onTick</code> into the conceptual <code>Widget</code> interface would make it easy for clients to use the <code>Widget</code> interface incorrectly, a clear violation of item 18&rsquo;s advice to make interfaces easy to use correctly and hard to use incorrectly. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>Putting <code>onTick</code> in the public side will not change its accessibility, only to mislead clients into thinking they could call it, and this, again, violates item 18's advice.<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>Putting <code>onTick</code> in the public side will not change its accessibility, only to mislead clients into thinking they could call it, and this, again, violates item 18&rsquo;s advice. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>If <code>Widget</code> inherits directly from <code>Timer</code>, <code>Widget</code>'s derived classes may redefine <code>onTick</code> even if <code>onTick</code> is private (recall item 35 that derived classes may redefine virtual functions even if they are not permitted to call them). By the way, Java or C# would not have such trouble due to their keyword <code>final</code> or <code>sealed</code>.<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>If <code>Widget</code> inherits directly from <code>Timer</code>, <code>Widget</code>'s derived classes may redefine <code>onTick</code> even if <code>onTick</code> is private (recall item 35 that derived classes may redefine virtual functions even if they are not permitted to call them). By the way, Java or C# would not have such trouble due to their keyword <code>final</code> or <code>sealed</code>. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p>It is worth knowing that the EBO is generally viable only under insgle inheritance, and can't be applied to derived classes taht have more than one base.<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>It is worth knowing that the EBO is generally viable only under insgle inheritance, and can&rsquo;t be applied to derived classes taht have more than one base. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -3106,7 +3112,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

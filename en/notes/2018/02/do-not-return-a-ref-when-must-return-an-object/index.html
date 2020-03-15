@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-02-09T18:02:23-0500">
 <meta name="modified" content="2018-02-09T18:02:23-0500">
 <meta property="article:published_time" content="2018-02-09T18:02:23-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,34 +1612,32 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Feb 9, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Feb 9, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
       <p>Never return a pointer or reference to a local stack object, a refenrence to a heap-allocated object, or a pointer or reference to a local static object if there is a change that more than one such object will be needed (item 4 provides a &ldquo;counter&rdquo; example that is reasonable in single-threaded environments).</p>
 <!-- toc -->
 <h1 id="case-study">Case Study</h1>
-<p>There are some situations where we <strong>must</strong> return an object, no matter how much effort we want to put into rooting out the evil of pass-by-value to pursue the heighest efficiency. Otherwise, we may invariably make a fatal mistake: pass references to objects that don't exist.</p>
+<p>There are some situations where we <strong>must</strong> return an object, no matter how much effort we want to put into rooting out the evil of pass-by-value to pursue the heighest efficiency. Otherwise, we may invariably make a fatal mistake: pass references to objects that don&rsquo;t exist.</p>
 <p>Consider following class for representing rational numbers with a multiplying function:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1652,15 +1658,15 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Rational</span><span class="p">(</span><span class="kt">int</span> <span class="n">numerator</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>     <span class="c1">// see item 24 for why this
-</span><span class="c1"></span>            <span class="kt">int</span> <span class="n">denominator</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// ctor isn&#39;t declared explicit
-</span><span class="c1"></span><span class="p">.</span><span class="p">.</span><span class="p">.</span>
+</span><span class="c1"></span>            <span class="kt">int</span> <span class="n">denominator</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span>   <span class="c1">// ctor isn&#39;t declared explicit
+</span><span class="c1"></span><span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">d</span><span class="p">;</span> <span class="c1">// numerator and denominator
 </span><span class="c1"></span><span class="k">friend</span><span class="o">:</span>
     <span class="k">const</span> <span class="n">Rational</span>  <span class="c1">// see item 3 for why the return type is const
-</span><span class="c1"></span>    <span class="k">operator</span><span class="o">*</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span>
-               <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="k">operator</span><span class="o">**</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span>
+               <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>We may want to remove the cost of construction and destruction from return-by-value, considering using return by reference instead. However, a reference is just a name for some <em>existing</em> object. In the case of <code>opeartor*</code>, the product of the two object does not exist before we call the function, so if <code>operator*</code> want to return a reference to the product, it must create the result itself.</p>
@@ -1678,14 +1684,14 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="c1">// bad code !
 </span><span class="c1"></span><span class="p">{</span>
-    <span class="n">Rational</span> <span class="nf">result</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">n</span><span class="p">,</span> <span class="n">lhs</span><span class="p">.</span><span class="n">d</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">d</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">Rational</span> <span class="nf">result</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">n</span><span class="p">,</span> <span class="n">lhs</span><span class="p">.</span><span class="n">d</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">d</span><span class="p">);</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>There's a serious problem: the function returns a reference to <code>result</code>, which is a local object, and local objects are destroyed when the function exits, ending to return a reference to an ex-<code>Rational</code>. Any caller glancing at this return value would instantly enter the realm of undefined behavior.</p>
+</div><p>There&rsquo;s a serious problem: the function returns a reference to <code>result</code>, which is a local object, and local objects are destroyed when the function exits, ending to return a reference to an ex-<code>Rational</code>. Any caller glancing at this return value would instantly enter the realm of undefined behavior.</p>
 <p>The fact is, any function returning a reference (or a pointer) to a local object is brocken.</p>
-<h1 id="return-a-reference-to-a-heapallocated-object">Return a reference to a heap-allocated object</h1>
+<h1 id="return-a-reference-to-a-heap-allocated-object">Return a reference to a heap-allocated object</h1>
 <p>Heap-based objects come into being through the use of <code>new</code>, so the heap-based <code>opearator*</code> looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1698,13 +1704,13 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">operation</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="c1">// bad code !
 </span><span class="c1"></span><span class="p">{</span>
-    <span class="n">Rational</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Raional</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">n</span><span class="p">,</span> <span class="n">lhs</span><span class="p">.</span><span class="n">d</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">d</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">Rational</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Raional</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">n</span><span class="p">,</span> <span class="n">lhs</span><span class="p">.</span><span class="n">d</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">d</span><span class="p">);</span>
     <span class="k">return</span> <span class="o">*</span><span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Now comes a different problem: who will apply <code>delete</code> matching the use of <code>new</code>?</p>
-<p>Even if callers are conscientious and well intentioned, there's not much they can do to prevent leaks in reasonable usage scenarios like this:</p>
+<p>Even if callers are conscientious and well intentioned, there&rsquo;s not much they can do to prevent leaks in reasonable usage scenarios like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1717,7 +1723,7 @@ if (!doNotTrack) {
 <span class="n">Rational</span> <span class="n">w</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">*</span> <span class="n">z</span><span class="p">;</span> <span class="c1">// same as operator*(operator*(x,y),z)
 </span></code></pre></td></tr></table>
 </div>
-</div><p>There are twoe uses of <code>new</code> that need to be undone with uses of <code>delete</code>. Yet there's no reasonable way for clients to get at the pointers hidden behind the references being returned from the calls to <code>operator*</code> and make calls to <code>delete</code>. This is a guaranteed resource leak.</p>
+</div><p>There are twoe uses of <code>new</code> that need to be undone with uses of <code>delete</code>. Yet there&rsquo;s no reasonable way for clients to get at the pointers hidden behind the references being returned from the calls to <code>operator*</code> and make calls to <code>delete</code>. This is a guaranteed resource leak.</p>
 <h1 id="return-a-reference-to-a-local-static-object">Return a reference to a local static object</h1>
 <p>If, however, we jump outside of the box, considering returning a reference to a <em>static</em> <code>Rational</code>, and think that this will avoid all but one initial constructor call without suffering from calling a constructor for each product result returned from <code>operatior*</code> in above on-the-stack and on-the-heap approaches:</p>
 <div class="highlight"><div class="chroma">
@@ -1733,12 +1739,12 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="c1">// bad code !
 </span><span class="c1"></span><span class="p">{</span>
     <span class="k">static</span> <span class="n">Rational</span> <span class="n">result</span><span class="p">;</span>  <span class="c1">// static object
-</span><span class="c1"></span>    <span class="n">result</span> <span class="o">=</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">;</span> <span class="c1">// put the product inside result
+</span><span class="c1"></span>    <span class="n">result</span> <span class="o">=</span> <span class="p">...;</span> <span class="c1">// put the product inside result
 </span><span class="c1"></span>    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Like all designs employing the use of static objects, this one immediately raises thread-safety hackles, but there's a deeper flaw: consider following perfectly reasonable client code:</p>
+</div><p>Like all designs employing the use of static objects, this one immediately raises thread-safety hackles, but there&rsquo;s a deeper flaw: consider following perfectly reasonable client code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1751,10 +1757,10 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="k">operator</span><span class="o">=</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span><span class="p">;</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span> 
 <span class="n">Rational</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">;</span>
-<span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="k">if</span> <span class="p">(</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="o">=</span><span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">...</span>
+<span class="k">if</span> <span class="p">((</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">d</span><span class="p">))</span> <span class="p">{</span>
     <span class="c1">// do whatever appropriate when the products are equal
 </span><span class="c1"></span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="c1">// do whatever appropriate when the products are unequal
@@ -1762,25 +1768,25 @@ if (!doNotTrack) {
 </code></pre></td></tr></table>
 </div>
 </div><p>Problem here is that the expression <code>((a * b) == (c * d))</code> will <em>always</em> evaluate to <code>true</code>, regardless of the values of a, b, c, and d.</p>
-<p>Let's rewrite the code in its equivalent functional form to understand what happened:</p>
+<p>Let&rsquo;s rewrite the code in its equivalent functional form to understand what happened:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="k">operator</span><span class="o">=</span><span class="o">=</span><span class="p">(</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="p">,</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span><span class="p">)</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)))</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>When <code>operator==</code> is called, there will already be two active calls to <code>opearator*</code>, each of which will return a reference to the static <code>Rational</code> object inside <code>opeartion*</code>, which, as is a static local object, will always be the exact one, with same value.</p>
 <p>Some may ask,</p>
 <blockquote>
-<p>Well, if <em>one</em> static isn't enough, maybe a static <em>array</em> will do the trick&hellip;</p>
+<p>Well, if <em>one</em> static isn&rsquo;t enough, maybe a static <em>array</em> will do the trick&hellip;</p>
 </blockquote>
 <p>The problem is, however, it is very hard to implement this arry of size <code>n</code>:</p>
 <ul>
 <li>if <code>n</code> is too small, we may run out of places to store return values and fall back to the single-static design situation;</li>
-<li>if <code>n</code> is too big, we'll decrease the performance of the program, because every object in the array will be constructed the first time the function is called - a cost of <code>n</code> constructors and equally <code>n</code> destructors even if the function is called only once.</li>
-<li>how to put the values we need into the array's objects and what is the cost. The most direct way is via assignment, which cost the same as a call to a destructor (to destroy the old value) plus a call to a constructor (to copy over the new value)</li>
+<li>if <code>n</code> is too big, we&rsquo;ll decrease the performance of the program, because every object in the array will be constructed the first time the function is called - a cost of <code>n</code> constructors and equally <code>n</code> destructors even if the function is called only once.</li>
+<li>how to put the values we need into the array&rsquo;s objects and what is the cost. The most direct way is via assignment, which cost the same as a call to a destructor (to destroy the old value) plus a call to a constructor (to copy over the new value)</li>
 <li>how to decide the position of target result in the array</li>
 </ul>
 <h1 id="the-right-way-return-by-value">The right way: return by value</h1>
@@ -1795,11 +1801,11 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kr">inline</span> <span class="k">const</span> <span class="n">Rational</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="nf">Rational</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">n</span><span class="p">,</span> <span class="n">lhs</span><span class="p">.</span><span class="n">d</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">d</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nf">Rational</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">n</span><span class="p">,</span> <span class="n">lhs</span><span class="p">.</span><span class="n">d</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">d</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>In the long run, the cost of constructing and destructing <code>operator*</code>'s return value is a small price to pay for correct behavior. What's more, since C++ allows compiler implementers to apply optimizations to immprove the performance of the generated code, it turns out that in some cases, construction and destruction of <code>operator*</code>'s return value can be safely eliminated, so the program will run faster than we expect and still behave correctly as it's supposed to be.</p>
+</div><p>In the long run, the cost of constructing and destructing <code>operator*</code>'s return value is a small price to pay for correct behavior. What&rsquo;s more, since C++ allows compiler implementers to apply optimizations to immprove the performance of the generated code, it turns out that in some cases, construction and destruction of <code>operator*</code>'s return value can be safely eliminated, so the program will run faster than we expect and still behave correctly as it&rsquo;s supposed to be.</p>
 <p>In summary, when deciding between returning a reference and returning an object, we should make choice that offers correct behavior.</p>
     </article>
     
@@ -2299,7 +2305,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <ul>
     <li><a href="#case-study">Case Study</a></li>
     <li><a href="#return-a-pointer-or-reference-to-a-local-stack-object">Return a pointer or reference to a local stack object</a></li>
-    <li><a href="#return-a-reference-to-a-heapallocated-object">Return a reference to a heap-allocated object</a></li>
+    <li><a href="#return-a-reference-to-a-heap-allocated-object">Return a reference to a heap-allocated object</a></li>
     <li><a href="#return-a-reference-to-a-local-static-object">Return a reference to a local static object</a></li>
     <li><a href="#the-right-way-return-by-value">The right way: return by value</a></li>
   </ul>
@@ -3126,7 +3132,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

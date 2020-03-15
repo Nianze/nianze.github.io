@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-01-16T18:41:58-0500">
 <meta name="modified" content="2018-01-16T18:41:58-0500">
 <meta property="article:published_time" content="2018-01-16T18:41:58-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,34 +1612,32 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Jan 16, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 5 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Jan 16, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 5 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
       <p>A new (hopefully) daily review on <code>C++</code>.</p>
 <!-- toc -->
-<p>This is another new series, which I plan to update daily (well, hopefully :P). It's mainly about <code>C++</code>, which is my current main development language. Each day I'll follow 1 item in the <em>Effective C++ 2nd edition</em> by <a href="https://www.aristeia.com/books.html">Scott Meyers</a> to discuss 1 tiny point of <code>C++</code>.</p>
-<p>The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer <code>const</code>s, <code>enum</code>s and <code>inline</code>s to <code>#define</code>. Now let's take a closer look.</p>
+<p>This is another new series, which I plan to update daily (well, hopefully :P). It&rsquo;s mainly about <code>C++</code>, which is my current main development language. Each day I&rsquo;ll follow 1 item in the <em>Effective C++ 2nd edition</em> by <a href="https://www.aristeia.com/books.html">Scott Meyers</a> to discuss 1 tiny point of <code>C++</code>.</p>
+<p>The item 1 of the book tells us when we should prefer the compiler to the preprocessor, or more specifically, why we should prefer <code>const</code>s, <code>enum</code>s and <code>inline</code>s to <code>#define</code>. Now let&rsquo;s take a closer look.</p>
 <h1 id="prefer-const-to-define">Prefer <code>const</code> to <code>#define</code></h1>
 <p>There are two ways we may consider, when we want to define a constant:</p>
 <div class="highlight"><div class="chroma">
@@ -1643,12 +1649,12 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// method one
-</span><span class="c1"></span><span class="cp">#</span><span class="cp">define PI_1 3.1415926</span><span class="cp">
+</span><span class="c1"></span><span class="cp">#define PI_1 3.1415926
 </span><span class="cp"></span><span class="c1">// method two
 </span><span class="c1"></span><span class="k">const</span> <span class="kt">double</span> <span class="n">PI_2</span> <span class="o">=</span> <span class="mf">3.1415926</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>However, since <code>PI_1</code> may be removed by preprocessor and never be seen by compilers, making it absent in the symbol table, this can be confusing during debugging if we get an error refering to 3.1415926 rather than <code>PI_1</code> (especially when <code>PI_1</code> is defined in a header file written by somebody else). Thus, instead of using a preprocessor macro, we'd better go with <code>const</code>. Below is some tricks with <code>const</code>.</p>
+</div><p>However, since <code>PI_1</code> may be removed by preprocessor and never be seen by compilers, making it absent in the symbol table, this can be confusing during debugging if we get an error refering to 3.1415926 rather than <code>PI_1</code> (especially when <code>PI_1</code> is defined in a header file written by somebody else). Thus, instead of using a preprocessor macro, we&rsquo;d better go with <code>const</code>. Below is some tricks with <code>const</code>.</p>
 <h2 id="tricks-on-const-definition">Tricks on <code>const</code> definition</h2>
 <ol>
 <li>
@@ -1658,12 +1664,12 @@ if (!doNotTrack) {
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">blogger</span> <span class="o">=</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">Nzo</span><span class="s">&#34;</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">blogger</span> <span class="o">=</span> <span class="s">&#34;Nzo&#34;</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
 </div></li>
 <li>
-<p>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, since there's no way we may create a class-scope-specific or class-encapsulated(i.e., private) constant using a <code>#define</code> (once a macro is defined, it's in force for the rest of the compilation unless it's <code>#undefed</code> somewhere along the line). Pay attention to the difference between constant declaration and constant definition:</p>
+<p>For class-specific constants, of which we want to limit the scope, we declare it as a <code>static</code> member, since there&rsquo;s no way we may create a class-scope-specific or class-encapsulated(i.e., private) constant using a <code>#define</code> (once a macro is defined, it&rsquo;s in force for the rest of the compilation unless it&rsquo;s <code>#undefed</code> somewhere along the line). Pay attention to the difference between constant declaration and constant definition:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1680,8 +1686,8 @@ if (!doNotTrack) {
 <span class="k">private</span><span class="o">:</span>
     <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">NUM_TURNS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>  <span class="c1">// constant declaration with initial value
 </span><span class="c1"></span>    <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span><span class="p">;</span>          <span class="c1">// constant declaration without initial value
-</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">]</span><span class="p">;</span>           <span class="c1">// use of constant
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">];</span>           <span class="c1">// use of constant
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1692,11 +1698,11 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// game.cpp
-</span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">GamePlayer</span><span class="o">:</span><span class="o">:</span><span class="n">NUM_TURNS</span><span class="p">;</span>     <span class="c1">// constant definition in impl. file
-</span><span class="c1"></span><span class="k">const</span> <span class="kt">double</span> <span class="n">GamePlayer</span><span class="o">:</span><span class="o">:</span><span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>  <span class="c1">// provide initial value at definition
+</span><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">GamePlayer</span><span class="o">::</span><span class="n">NUM_TURNS</span><span class="p">;</span>     <span class="c1">// constant definition in impl. file
+</span><span class="c1"></span><span class="k">const</span> <span class="kt">double</span> <span class="n">GamePlayer</span><span class="o">::</span><span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>  <span class="c1">// provide initial value at definition
 </span></code></pre></td></tr></table>
 </div>
-</div><p>It's worth noting that older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of <em>declaration</em>. Most of time we may solve the problem by putting the initial value at <em>definition</em> time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
+</div><p>It&rsquo;s worth noting that older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of <em>declaration</em>. Most of time we may solve the problem by putting the initial value at <em>definition</em> time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1710,17 +1716,17 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// Game.h
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">GamePlayer</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="k">enum</span> <span class="p">{</span> <span class="n">NUM_TURNS</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">}</span><span class="p">;</span>          <span class="c1">// NUM_TURNS is a symbolic name for 5        
-</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">]</span><span class="p">;</span>           <span class="c1">// fine with old compilers
-</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+    <span class="k">enum</span> <span class="p">{</span> <span class="n">NUM_TURNS</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">};</span>          <span class="c1">// NUM_TURNS is a symbolic name for 5        
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">];</span>           <span class="c1">// fine with old compilers
+</span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>There are mainly 2 reasons we may still see the enum hack today:</p>
 <ol>
-<li>It's legal to take the address of a <code>const</code>, but it's not legal to take the address of an enum, so if you don't want people to get a pointer or reference to your integral constants, an enum will enforce that constraint (and this makes the enum behave somewhat like a #define).</li>
-<li>It's purely pragmatic. Lots of code (such as template metaprogramming, item 48) still employs it.</li>
+<li>It&rsquo;s legal to take the address of a <code>const</code>, but it&rsquo;s not legal to take the address of an enum, so if you don&rsquo;t want people to get a pointer or reference to your integral constants, an enum will enforce that constraint (and this makes the enum behave somewhat like a #define).</li>
+<li>It&rsquo;s purely pragmatic. Lots of code (such as template metaprogramming, item 48) still employs it.</li>
 </ol>
-<p>For modern compilers, on the other hand, rules change a bit in a more convenient way. Usually C++ requires that you provide a difinition for anything you use, but class-specific <code>constant</code>s that are <code>stitic</code> and of <code>integral type</code> (e.g., <em>integers</em>, <em>chars</em>, <em>bools</em>) are an exception. As long as you don't take thier address, you can declare and read them <strong>without</strong> providing a definition, and (good) compilers will not allocate unneccessary memory for these integral-type const objects, which will make the static const integral an lvalue.</p>
+<p>For modern compilers, on the other hand, rules change a bit in a more convenient way. Usually C++ requires that you provide a difinition for anything you use, but class-specific <code>constant</code>s that are <code>stitic</code> and of <code>integral type</code> (e.g., <em>integers</em>, <em>chars</em>, <em>bools</em>) are an exception. As long as you don&rsquo;t take thier address, you can declare and read them <strong>without</strong> providing a definition, and (good) compilers will not allocate unneccessary memory for these integral-type const objects, which will make the static const integral an lvalue.</p>
 </li>
 </ol>
 <h1 id="prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></h1>
@@ -1730,7 +1736,7 @@ if (!doNotTrack) {
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#</span><span class="cp">define max(a,b) ((a) &gt; (b) ? (a) : (b))</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#define max(a,b) ((a) &gt; (b) ? (a) : (b))
 </span></code></pre></td></tr></table>
 </div>
 </div><p>This macro will lead to following weird things:</p>
@@ -1742,8 +1748,8 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="n">max</span><span class="p">(</span><span class="o">+</span><span class="o">+</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="p">;</span>     <span class="c1">// a increments twice
-</span><span class="c1"></span><span class="n">max</span><span class="p">(</span><span class="o">+</span><span class="o">+</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// a increments once
+<span class="n">max</span><span class="p">(</span><span class="o">++</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>     <span class="c1">// a increments twice
+</span><span class="c1"></span><span class="n">max</span><span class="p">(</span><span class="o">++</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">10</span><span class="p">);</span>  <span class="c1">// a increments once
 </span></code></pre></td></tr></table>
 </div>
 </div><p>Thus, we may prefer using a regular inline function that provides both predictable behavior and type-safety:</p>
@@ -1767,12 +1773,12 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
 <span class="kr">inline</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">max</span> <span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">a</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span> <span class="p">}</span>
 <span class="c1">// since we don&#39;t know what T is, 
-</span><span class="c1"></span><span class="c1">// we pass by reference-to-const, see item 20
+</span><span class="c1">// we pass by reference-to-const, see item 20
 </span></code></pre></td></tr></table>
 </div>
 </div><p>Basically, this template generates a whole family of functions, each of which takes two objects convertible to the same type and returns a reference to the greater of the two objects in const version.</p>
 <h1 id="when-to-use-preprocessor">When to use preprocessor</h1>
-<p>However, preprocessor is never dead. We still need preprocessor for tasks such as <code>#include</code> to include libraries, as well as <code>#ifdef`/</code>#ifndef` to control compilation.</p>
+<p>However, preprocessor is never dead. We still need preprocessor for tasks such as <code>#include</code> to include libraries, as well as <code>#ifdef</code>/<code>#ifndef</code> to control compilation.</p>
     </article>
     
     <script>
@@ -2253,12 +2259,12 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="toc " data-dir="ltr" data-folding="false" data-ani="true">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#prefer-const-to-define">Prefer const to #define</a>
+    <li><a href="#prefer-const-to-define">Prefer <code>const</code> to <code>#define</code></a>
       <ul>
-        <li><a href="#tricks-on-const-definition">Tricks on const definition</a></li>
+        <li><a href="#tricks-on-const-definition">Tricks on <code>const</code> definition</a></li>
       </ul>
     </li>
-    <li><a href="#prefer-inline-to-define">Prefer inline to #define</a></li>
+    <li><a href="#prefer-inline-to-define">Prefer <code>inline</code> to <code>#define</code></a></li>
     <li><a href="#when-to-use-preprocessor">When to use preprocessor</a></li>
   </ul>
 </nav>
@@ -3084,7 +3090,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

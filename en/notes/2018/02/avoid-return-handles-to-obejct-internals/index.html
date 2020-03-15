@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-02-16T12:26:14-0500">
 <meta name="modified" content="2018-02-16T12:26:14-0500">
 <meta property="article:published_time" content="2018-02-16T12:26:14-0500">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,39 +1612,37 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Feb 16, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Feb 16, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
       <p>Avoid returning handles to object internals to increase encapsulation, help <code>const</code> member functions act <code>const</code>, and minimize the creation of dangling handles.</p>
-<p>References, pointers, and iterators are all <em>handlers</em> (ways to get at other objects), and returning a handle to an object's internals always runs the risk of</p>
+<p>References, pointers, and iterators are all <em>handlers</em> (ways to get at other objects), and returning a handle to an object&rsquo;s internals always runs the risk of</p>
 <ol>
-<li>compromising an object's encapsulation</li>
-<li>making <code>const</code> member functions act like non-<code>const</code> ones, allowing an object's state to be modified</li>
+<li>compromising an object&rsquo;s encapsulation</li>
+<li>making <code>const</code> member functions act like non-<code>const</code> ones, allowing an object&rsquo;s state to be modified</li>
 <li>leading to dangling handles</li>
 </ol>
-<p>To see how handlers result in these resks, let's see an example.<br />
-Suppose we're working with a rectangle class, represented by its upper left corner and lower right corner. To keep a <code>Rectangle</code> object small, we decide that the corner points should be stored in an auxiliary struct that the <code>Rectangle</code> points to:</p>
+<p>To see how handlers result in these resks, let&rsquo;s see an example.<br />
+Suppose we&rsquo;re working with a rectangle class, represented by its upper left corner and lower right corner. To keep a <code>Rectangle</code> object small, we decide that the corner points should be stored in an auxiliary struct that the <code>Rectangle</code> points to:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1651,12 +1657,12 @@ Suppose we're working with a rectangle class, represented by its upper left corn
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>  <span class="c1">// class representing points
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="n">Point</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="kt">void</span> <span class="n">setX</span><span class="p">(</span><span class="kt">int</span> <span class="n">newVal</span><span class="p">)</span><span class="p">;</span>
-    <span class="kt">void</span> <span class="nf">setY</span><span class="p">(</span><span class="kt">int</span> <span class="n">newVal</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">Point</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+    <span class="p">...</span>
+    <span class="kt">void</span> <span class="n">setX</span><span class="p">(</span><span class="kt">int</span> <span class="n">newVal</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">setY</span><span class="p">(</span><span class="kt">int</span> <span class="n">newVal</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1688,16 +1694,16 @@ Suppose we're working with a rectangle class, represented by its upper left corn
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rectangle</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">Point</span><span class="o">&amp;</span> <span class="n">upperLeft</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-</span><span class="o">&gt;</span><span class="n">ulhc</span><span class="p">;</span> <span class="p">}</span>
-    <span class="n">Point</span><span class="o">&amp;</span> <span class="n">lowerRight</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-</span><span class="o">&gt;</span><span class="n">lrhc</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="n">Point</span><span class="o">&amp;</span> <span class="n">upperLeft</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-&gt;</span><span class="n">ulhc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">Point</span><span class="o">&amp;</span> <span class="n">lowerRight</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-&gt;</span><span class="n">lrhc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">tr1</span><span class="o">:</span><span class="o">:</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">RectData</span><span class="o">&gt;</span> <span class="n">pData</span><span class="p">;</span> <span class="c1">// see item 13 for tr1::shared_ptr
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">RectData</span><span class="o">&gt;</span> <span class="n">pData</span><span class="p">;</span> <span class="c1">// see item 13 for tr1::shared_ptr
+</span><span class="c1"></span>    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>As item 20 suggests that  passing user-defined types by reference is typically more efficient than passing them by value, the two public member functions return references to the underlying <code>Point</code> ojects. Yet this design is wrong, for it's self-contradictory:</p>
+</div><p>As item 20 suggests that  passing user-defined types by reference is typically more efficient than passing them by value, the two public member functions return references to the underlying <code>Point</code> ojects. Yet this design is wrong, for it&rsquo;s self-contradictory:</p>
 <ul>
 <li>
 <p>on the one side, the two member functions are declared <code>const</code>, indicating read-only access level of the point they return</p>
@@ -1712,10 +1718,10 @@ Suppose we're working with a rectangle class, represented by its upper left corn
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Point</span> <span class="nf">coord1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="p">;</span>
-<span class="n">Point</span> <span class="nf">coord3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="p">;</span>
-<span class="k">const</span> <span class="n">Rectangle</span> <span class="nf">rec</span><span class="p">(</span><span class="n">coord1</span><span class="p">,</span> <span class="n">coord2</span><span class="p">)</span><span class="p">;</span> <span class="c1">// rec is a const rectangle from (0,0) to (100,100)
-</span><span class="c1"></span><span class="n">rec</span><span class="p">.</span><span class="n">upperLeft</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="n">setX</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="p">;</span> <span class="c1">// now (50,0) to (100,100)
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Point</span> <span class="nf">coord1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="n">Point</span> <span class="nf">coord3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">Rectangle</span> <span class="nf">rec</span><span class="p">(</span><span class="n">coord1</span><span class="p">,</span> <span class="n">coord2</span><span class="p">);</span> <span class="c1">// rec is a const rectangle from (0,0) to (100,100)
+</span><span class="c1"></span><span class="n">rec</span><span class="p">.</span><span class="n">upperLeft</span><span class="p">().</span><span class="n">setX</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span> <span class="c1">// now (50,0) to (100,100)
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1736,16 +1742,16 @@ Suppose we're working with a rectangle class, represented by its upper left corn
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rectangle</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-    <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">upperLeft</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-</span><span class="o">&gt;</span><span class="n">ulhc</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">lowerRight</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-</span><span class="o">&gt;</span><span class="n">lrhc</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">upperLeft</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-&gt;</span><span class="n">ulhc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">lowerRight</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-&gt;</span><span class="n">lrhc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>With this altered design, the 2 problems above are indeed solved. Even so, the dangling handles in risk 3 are still possible.</p>
 <blockquote>
-<p>Dangling handles: handles that refer to parts of objects that don't exist any longer.</p>
+<p>Dangling handles: handles that refer to parts of objects that don&rsquo;t exist any longer.</p>
 </blockquote>
 <p>In fact, function return values are the most common source of dangling handles. Consider a function that returns the bounding box for a GUI object in the form of a rectangle:</p>
 <div class="highlight"><div class="chroma">
@@ -1754,8 +1760,8 @@ Suppose we're working with a rectangle class, represented by its upper left corn
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GUIObject</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">const</span> <span class="n">Rectangle</span> <span class="nf">boundingBox</span><span class="p">(</span><span class="k">const</span> <span class="n">GUIObject</span><span class="o">&amp;</span> <span class="n">obj</span><span class="p">)</span><span class="p">;</span> <span class="c1">// returns a rectangle by value; see item 3 for why return type is const
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GUIObject</span> <span class="p">{...};</span>
+<span class="k">const</span> <span class="n">Rectangle</span> <span class="nf">boundingBox</span><span class="p">(</span><span class="k">const</span> <span class="n">GUIObject</span><span class="o">&amp;</span> <span class="n">obj</span><span class="p">);</span> <span class="c1">// returns a rectangle by value; see item 3 for why return type is const
 </span></code></pre></td></tr></table>
 </div>
 </div><p>If client use this function like this:</p>
@@ -1767,14 +1773,14 @@ Suppose we're working with a rectangle class, represented by its upper left corn
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">GUIObject</span> <span class="o">*</span><span class="n">pgo</span><span class="p">;</span>  <span class="c1">// make pgo point to some GUIObject
-</span><span class="c1"></span><span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="k">const</span> <span class="n">Point</span> <span class="o">*</span><span class="n">pUpperLeft</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">(</span><span class="o">*</span><span class="n">pgo</span><span class="p">)</span><span class="p">.</span><span class="n">upperLeft</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// get a ptr to the upper left point of its bounding box
+</span><span class="c1"></span><span class="p">...</span>
+<span class="k">const</span> <span class="n">Point</span> <span class="o">*</span><span class="n">pUpperLeft</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">(</span><span class="o">*</span><span class="n">pgo</span><span class="p">).</span><span class="n">upperLeft</span><span class="p">());</span> <span class="c1">// get a ptr to the upper left point of its bounding box
 </span></code></pre></td></tr></table>
 </div>
-</div><p>This is a good example for dangling handle. The call to <code>boundingBox</code> will return a new, temporary <code>Rectangle</code> object. Let's call it <em>temp</em>. <code>upperLeft</code> will then be called on <em>temp</em>, and that call will return a reference to an internal part of <em>temp</em> (i.e., the upperLeft corner point), to which <code>pUpperLeft</code> will then point. The tragedy comes at the end of the statement, when <code>boundongBox</code>'s return value <em>temp</em> is destroyed, and then it indirectly leads to the destruction of <em>temp</em>&lsquo;s upperLeft corner point, leaving <code>pUpperLeft</code> pointing to an object that no longer exists.</p>
-<p>As long as a handle is being returned, we run the risk that the handle will outlive the object it refers to. But this doesn't mean we should <em>never</em> have a member function that returns a handle. Sometimes we have to - an exception is <code>operator[]</code> in <code>string</code> and <code>vector</code>, which works by returning references to the data in the containers (item 3), and that data will be destroyed when the containers themselves are.</p>
+</div><p>This is a good example for dangling handle. The call to <code>boundingBox</code> will return a new, temporary <code>Rectangle</code> object. Let&rsquo;s call it <em>temp</em>. <code>upperLeft</code> will then be called on <em>temp</em>, and that call will return a reference to an internal part of <em>temp</em> (i.e., the upperLeft corner point), to which <code>pUpperLeft</code> will then point. The tragedy comes at the end of the statement, when <code>boundongBox</code>'s return value <em>temp</em> is destroyed, and then it indirectly leads to the destruction of <em>temp</em>&lsquo;s upperLeft corner point, leaving <code>pUpperLeft</code> pointing to an object that no longer exists.</p>
+<p>As long as a handle is being returned, we run the risk that the handle will outlive the object it refers to. But this doesn&rsquo;t mean we should <em>never</em> have a member function that returns a handle. Sometimes we have to - an exception is <code>operator[]</code> in <code>string</code> and <code>vector</code>, which works by returning references to the data in the containers (item 3), and that data will be destroyed when the containers themselves are.</p>
 <blockquote>
-<p>P.S.: by the way, we generally think of an object's &ldquo;internals&rdquo; as its data members, but member functions not accessible to the general public (<code>private</code> and <code>protected</code> ones) are part of an object's internals, too. Thus it's important not to return handles to them (i.e., never have a member function return a pointer to a less accessible member function), otherwise the access level will be that of the more accessible function, just like how the risk 1 shows us.</p>
+<p>P.S.: by the way, we generally think of an object&rsquo;s &ldquo;internals&rdquo; as its data members, but member functions not accessible to the general public (<code>private</code> and <code>protected</code> ones) are part of an object&rsquo;s internals, too. Thus it&rsquo;s important not to return handles to them (i.e., never have a member function return a pointer to a less accessible member function), otherwise the access level will be that of the more accessible function, just like how the risk 1 shows us.</p>
 </blockquote>
     </article>
     
@@ -3093,7 +3099,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

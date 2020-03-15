@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-03-20T14:32:24-0400">
 <meta name="modified" content="2018-03-20T14:32:24-0400">
 <meta property="article:published_time" content="2018-03-20T14:32:24-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1249,7 +1252,7 @@
     "datePublished": "2018-03-20T14:32:24-04:00",
     "dateModified": "2018-03-20T14:32:24-04:00",
     "url" : "http://nianze.tk/en/notes/2018/03/adhere-to-convention-when-writing-new-and-delete/",
-    "description": "\u003cp\u003e\u003ccode\u003eoperator new\u003c/code\u003e should contain an infinite loop trying to allocate memory, should call the new-handler if it can't satisfy a memory request, and should handle requests for …\u003c/p\u003e",
+    "description": "\u003cp\u003e\u003ccode\u003eoperator new\u003c/code\u003e should contain an infinite loop trying to allocate memory, should call the new-handler if it can\u0026rsquo;t satisfy a memory request, and should handle requests …\u003c/p\u003e",
     "keywords": ["technique","cpp"],
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,31 +1612,29 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Mar 20, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Mar 20, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
-      <p><code>operator new</code> should contain an infinite loop trying to allocate memory, should call the new-handler if it can't satisfy a memory request, and should handle requests for zero bytes; class-specific versions should handle requests for larger blocks than expected. <code>operator delete</code> should do nothing if passed a pointer that is null; class specific versions should handle blocks that are larger than expected.</p>
+      <p><code>operator new</code> should contain an infinite loop trying to allocate memory, should call the new-handler if it can&rsquo;t satisfy a memory request, and should handle requests for zero bytes; class-specific versions should handle requests for larger blocks than expected. <code>operator delete</code> should do nothing if passed a pointer that is null; class specific versions should handle blocks that are larger than expected.</p>
 <!-- toc -->
 <p>When write our own versions of <code>operator new</code> and <code>operator delete</code>, there are conventions we must follow.</p>
 <h1 id="1-operator-new">1. operator new</h1>
@@ -1641,7 +1647,7 @@ if (!doNotTrack) {
 </ul>
 <h2 id="have-the-right-return-value">Have the right return value</h2>
 <p>If succeeding to supply the requested memory, return a pointer to it.</p>
-<h2 id="call-the-newhandler">Call the new-handler</h2>
+<h2 id="call-the-new-handler">Call the new-handler</h2>
 <p>If failing to supply the requested memory, follow the rule in item 49 to call the new-handling function after each fauilure. It is assumed that new-handling function might be able to free up some memory. Throw an exception of type <code>bad_alloc</code> only when the pointer to the new-handler is null.</p>
 <h2 id="cope-with-request-for-no-memory">Cope with request for no memory</h2>
 <p>C++ requires that <code>operator new</code> return a legitimate pointer even when zero bytes are requested (because this simplifies things else where in the language), so pseudocode for a non-member <code>operator new</code> looks like this:</p>
@@ -1666,21 +1672,21 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">bad_alloc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// handle 0-byte requests by treating them as 1-byte requests
 </span><span class="c1"></span>    <span class="p">}</span>
     <span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">attempt</span> <span class="n">to</span> <span class="n">allocate</span> <span class="n">size</span> <span class="n">bytes</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">succeed</span> <span class="n">to</span> <span class="n">allocate</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">the</span> <span class="n">memory</span><span class="p">)</span><span class="p">;</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">the</span> <span class="n">memory</span><span class="p">);</span>
         <span class="c1">// allocation fails
-</span><span class="c1"></span>        <span class="n">new_handler</span> <span class="n">globalHanlder</span> <span class="o">=</span> <span class="n">set_new_hanlder</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span> <span class="c1">// find out current 
-</span><span class="c1"></span>        <span class="n">set_new_handler</span><span class="p">(</span><span class="n">globalHandler</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// new handling-function
-</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">globalHandler</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">globaleHandler</span><span class="p">)</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="k">else</span> <span class="k">throw</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">bad_alloc</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</span><span class="c1"></span>        <span class="n">new_handler</span> <span class="n">globalHanlder</span> <span class="o">=</span> <span class="n">set_new_hanlder</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// find out current 
+</span><span class="c1"></span>        <span class="n">set_new_handler</span><span class="p">(</span><span class="n">globalHandler</span><span class="p">);</span>   <span class="c1">// new handling-function
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">globalHandler</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">globaleHandler</span><span class="p">)();</span>
+        <span class="k">else</span> <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">();</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -1710,18 +1716,18 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">bad_alloc</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span> 
-<span class="p">}</span><span class="p">;</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>
+    <span class="p">...</span> 
+<span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">Derived</span><span class="o">:</span><span class="k">public</span> <span class="n">Base</span>  <span class="c1">// Derived doesn&#39;t declare operator new
-</span><span class="c1"></span><span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
+</span><span class="c1"></span><span class="p">{...};</span>
 
-<span class="kt">void</span> <span class="o">*</span> <span class="n">Base</span><span class="o">:</span><span class="o">:</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">bad_alloc</span><span class="p">)</span>
+<span class="kt">void</span> <span class="o">*</span> <span class="n">Base</span><span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">!</span><span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Base</span><span class="p">)</span><span class="p">)</span>
-        <span class="k">return</span> <span class="o">:</span><span class="o">:</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="p">;</span> <span class="c1">// if size is &#34;wrong&#34;, call standard operator new
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>  <span class="c1">// otherwise do the Base-specific operation
+    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">!=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Base</span><span class="p">))</span>
+        <span class="k">return</span> <span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">size</span><span class="p">);</span> <span class="c1">// if size is &#34;wrong&#34;, call standard operator new
+</span><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// otherwise do the Base-specific operation
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="n">Derived</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Derived</span><span class="p">;</span> <span class="c1">// calls Base::operator new
@@ -1731,11 +1737,11 @@ if (!doNotTrack) {
 <h2 id="control-memory-allocation-for-operator-new">Control memory allocation for <code>operator new[]</code></h2>
 <p>To control allocation for arrays on a per-class basis, we need to implement <code>operator new[]</code> - all we can do is allocating a chunk of raw memory. The point here is that we can not do any assumption about the as-yet-nonexistent objects in the array:</p>
 <ol>
-<li>it is possible to allocate memory for an array of derived class objects via base class's <code>operator new[]</code> through inheritance, and the size of derived class objects are usually bigger than base class objects, so the number of objects in the array is no neccessarily <code>(bytes requested) / sizeof(Base)</code></li>
+<li>it is possible to allocate memory for an array of derived class objects via base class&rsquo;s <code>operator new[]</code> through inheritance, and the size of derived class objects are usually bigger than base class objects, so the number of objects in the array is no neccessarily <code>(bytes requested) / sizeof(Base)</code></li>
 <li><code>size_t</code> parameter passed to <code>operator new[]</code> may be for more memory than will be filled with objects, because dynamically allocated arrays may include extra space to store the number of array elements (item 16).</li>
 </ol>
 <h1 id="2-operator-delete">2. operator delete</h1>
-<p>C++ guarantees it's always safe to delete the null pointer, so things are easier in terms of implementing <code>operator delete</code>:</p>
+<p>C++ guarantees it&rsquo;s always safe to delete the null pointer, so things are easier in terms of implementing <code>operator delete</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1747,9 +1753,9 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// non-member operator delete
-</span><span class="c1"></span><span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="p">)</span>
+</span><span class="c1"></span><span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">rawMemory</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>  <span class="c1">// do nothing if the null pointer is being deleted
+    <span class="k">if</span> <span class="p">(</span><span class="n">rawMemory</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>  <span class="c1">// do nothing if the null pointer is being deleted
 </span><span class="c1"></span>    <span class="n">deallocate</span> <span class="n">the</span> <span class="n">memory</span> <span class="n">pointed</span> <span class="n">to</span> <span class="n">by</span> <span class="n">rawMemory</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -1778,16 +1784,16 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// class-specific operator delete
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">Base</span> <span class="p">{</span>  <span class="c1">// same as before, except that operator delete is declared
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">bad_alloc</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">static</span> <span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span><span class="p">,</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
+    <span class="p">...</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">Base</span><span class="o">:</span><span class="o">:</span><span class="n">opearator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span><span class="p">,</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">Base</span><span class="o">::</span><span class="n">opearator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">rawMemory</span> <span class="o">=</span><span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">!</span><span class="o">=</span> <span class="n">sizeOf</span><span class="p">(</span><span class="n">Base</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>        <span class="c1">// if size is &#34;wrong&#34;, 
-</span><span class="c1"></span>        <span class="o">:</span><span class="o">:</span><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">rawMemory</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// use standard operator delete to handle the request
+    <span class="k">if</span> <span class="p">(</span><span class="n">rawMemory</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">size</span> <span class="o">!=</span> <span class="n">sizeOf</span><span class="p">(</span><span class="n">Base</span><span class="p">))</span> <span class="p">{</span>        <span class="c1">// if size is &#34;wrong&#34;, 
+</span><span class="c1"></span>        <span class="o">::</span><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">rawMemory</span><span class="p">);</span>  <span class="c1">// use standard operator delete to handle the request
 </span><span class="c1"></span>    <span class="p">}</span>
     <span class="n">deallocate</span> <span class="n">the</span> <span class="n">memory</span> <span class="n">pointed</span> <span class="n">to</span> <span class="n">by</span> <span class="n">rawMemory</span><span class="p">;</span>
     <span class="k">return</span><span class="p">;</span>
@@ -2294,10 +2300,10 @@ document.addEventListener('DOMContentLoaded', function () {
     <li><a href="#1-operator-new">1. operator new</a>
       <ul>
         <li><a href="#have-the-right-return-value">Have the right return value</a></li>
-        <li><a href="#call-the-newhandler">Call the new-handler</a></li>
+        <li><a href="#call-the-new-handler">Call the new-handler</a></li>
         <li><a href="#cope-with-request-for-no-memory">Cope with request for no memory</a></li>
-        <li><a href="#avoid-hiding-the-normal-form-of-new">Avoid hiding the normal form of new</a></li>
-        <li><a href="#control-memory-allocation-for-operator-new">Control memory allocation for operator new[]</a></li>
+        <li><a href="#avoid-hiding-the-normal-form-of-new">Avoid hiding the &ldquo;normal&rdquo; form of <code>new</code></a></li>
+        <li><a href="#control-memory-allocation-for-operator-new">Control memory allocation for <code>operator new[]</code></a></li>
       </ul>
     </li>
     <li><a href="#2-operator-delete">2. operator delete</a></li>
@@ -3125,7 +3131,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

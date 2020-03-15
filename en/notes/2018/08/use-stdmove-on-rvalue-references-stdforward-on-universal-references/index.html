@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-08-11T15:26:53-0400">
 <meta name="modified" content="2018-08-11T15:26:53-0400">
 <meta property="article:published_time" content="2018-08-11T15:26:53-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1249,7 +1252,7 @@
     "datePublished": "2018-08-11T15:26:53-04:00",
     "dateModified": "2018-08-11T15:26:53-04:00",
     "url" : "http://nianze.tk/en/notes/2018/08/use-stdmove-on-rvalue-references-stdforward-on-universal-references/",
-    "description": "\u003cp\u003eBut don't apply \u003ccode\u003estd::move\u003c/code\u003e or \u003ccode\u003estd::forward\u003c/code\u003e to local objects if they would otherwise be eligible for the return value optimization.\u003c/p\u003e",
+    "description": "\u003cp\u003eBut don\u0026rsquo;t apply \u003ccode\u003estd::move\u003c/code\u003e or \u003ccode\u003estd::forward\u003c/code\u003e to local objects if they would otherwise be eligible for the return value optimization.\u003c/p\u003e",
     "keywords": ["technique","cpp"],
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,31 +1612,29 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Aug 11, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Aug 11, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 4 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
-      <p>But don't apply <code>std::move</code> or <code>std::forward</code> to local objects if they would otherwise be eligible for the return value optimization.</p>
+      <p>But don&rsquo;t apply <code>std::move</code> or <code>std::forward</code> to local objects if they would otherwise be eligible for the return value optimization.</p>
 <!-- toc -->
 <h1 id="normal-cases">Normal cases</h1>
 <p>When forwarding them to other functions, rvalue references, which is always bound to rvalues, should be <em>unconditionally</em> cast to rvalues (via <code>std::move</code>), while universal references, which is sometimes bound be rvalues, should be <em>conditionally</em> cast to rvalues (via <code>std::forward</code>):</p>
@@ -1652,18 +1658,18 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">Widget</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>          <span class="c1">// rhs is rvalue reference
-</span><span class="c1"></span>    <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="p">)</span><span class="p">,</span>
-      <span class="n">p</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">p</span><span class="p">)</span><span class="p">)</span>
-      <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span>
+    <span class="n">Widget</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="n">rhs</span><span class="p">)</span>          <span class="c1">// rhs is rvalue reference
+</span><span class="c1"></span>    <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">)),</span>
+      <span class="n">p</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">p</span><span class="p">))</span>
+      <span class="p">{...}</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-    <span class="kt">void</span> <span class="n">setName</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">newName</span><span class="p">)</span>     <span class="c1">// newName is rvalue reference
-</span><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newName</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
+    <span class="kt">void</span> <span class="n">setName</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">newName</span><span class="p">)</span>     <span class="c1">// newName is rvalue reference
+</span><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
-    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">SomeDataStructure</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">SomeDataStructure</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><h1 id="what-if">What if</h1>
@@ -1679,10 +1685,10 @@ if (!doNotTrack) {
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">:</span><span class="o">:</span><span class="n">Widget</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">:</span> 
-    <span class="n">name</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="p">)</span><span class="p">,</span> 
-    <span class="n">p</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">SomeDataStructure</span><span class="o">&gt;</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">p</span><span class="p">)</span><span class="p">)</span>
-<span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">::</span><span class="n">Widget</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">:</span> 
+    <span class="n">name</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">)),</span> 
+    <span class="n">p</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">SomeDataStructure</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">p</span><span class="p">))</span>
+<span class="p">{...}</span>
 </code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1702,14 +1708,14 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">Widget</span><span class="o">:</span><span class="o">:</span><span class="n">setName</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">newName</span><span class="p">)</span>
-<span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">move</span><span class="p">(</span><span class="n">newName</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// compiles, but is bad!
+<span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">setName</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">newName</span><span class="p">)</span>
+<span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// compiles, but is bad!
 </span><span class="c1"></span>
-<span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span> <span class="n">getWidgetName</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>   <span class="c1">// factory function
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getWidgetName</span><span class="p">();</span>   <span class="c1">// factory function
 </span><span class="c1"></span><span class="n">Widget</span> <span class="n">w</span><span class="p">;</span>
-<span class="k">auto</span> <span class="n">n</span> <span class="o">=</span> <span class="n">getWidgetName</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>      <span class="c1">// n is local variable
-</span><span class="c1"></span><span class="n">w</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="p">;</span>                  <span class="c1">// moves n into w
-</span><span class="c1"></span><span class="p">.</span><span class="p">.</span><span class="p">.</span>                            <span class="c1">// n&#39;s value now unkown!
+<span class="k">auto</span> <span class="n">n</span> <span class="o">=</span> <span class="n">getWidgetName</span><span class="p">();</span>      <span class="c1">// n is local variable
+</span><span class="c1"></span><span class="n">w</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>                  <span class="c1">// moves n into w
+</span><span class="c1"></span><span class="p">...</span>                            <span class="c1">// n&#39;s value now unkown!
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1729,12 +1735,12 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="kt">void</span> <span class="n">setName</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">newName</span><span class="p">)</span>  <span class="c1">// set from const lvalue
+    <span class="kt">void</span> <span class="n">setName</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">newName</span><span class="p">)</span>  <span class="c1">// set from const lvalue
 </span><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">newName</span><span class="p">;</span> <span class="p">}</span>
-    <span class="kt">void</span> <span class="nf">setName</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">string</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">newName</span><span class="p">)</span>      <span class="c1">// set from rvalue
-</span><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">move</span><span class="p">(</span><span class="n">newName</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">setName</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span> <span class="n">newName</span><span class="p">)</span>      <span class="c1">// set from rvalue
+</span><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>The cost we pay for this replacement is:</p>
@@ -1749,7 +1755,7 @@ if (!doNotTrack) {
 <pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">w</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="sa"></span><span class="s">&#34;</span><span class="s">John Smith</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">w</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="s">&#34;John Smith&#34;</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1761,8 +1767,8 @@ if (!doNotTrack) {
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">tempalte</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span><span class="err">.</span><span class="err">.</span><span class="err">.</span><span class="err"> </span><span class="nc">Args</span><span class="o">&gt;</span> 
-<span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">make_shared</span><span class="p">(</span><span class="n">Args</span><span class="o">&amp;</span><span class="o">&amp;</span><span class="p">.</span><span class="p">.</span><span class="p">.</span> <span class="n">args</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// can&#39;t overload on lvalues and rvalues on args. universal reference is used and std::forward is applyied
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">tempalte</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="p">,</span> <span class="k">class</span><span class="err">... </span><span class="nc">Args</span><span class="o">&gt;</span> 
+<span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">make_shared</span><span class="p">(</span><span class="n">Args</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">);</span>  <span class="c1">// can&#39;t overload on lvalues and rvalues on args. universal reference is used and std::forward is applyied
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1781,11 +1787,11 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="kt">void</span> <span class="n">setSignText</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">text</span><span class="p">)</span>  <span class="c1">// text is a universal reference
+<span class="kt">void</span> <span class="n">setSignText</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">text</span><span class="p">)</span>  <span class="c1">// text is a universal reference
 </span><span class="c1"></span><span class="p">{</span>
-    <span class="n">sign</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// use text, but do not modify it
-</span><span class="c1"></span>    <span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">chrono</span><span class="o">:</span><span class="o">:</span><span class="n">system_clock</span><span class="o">:</span><span class="o">:</span><span class="n">now</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">signHistory</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// conditionally cast to rvalue
+    <span class="n">sign</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">);</span>  <span class="c1">// use text, but do not modify it
+</span><span class="c1"></span>    <span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+    <span class="n">signHistory</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">text</span><span class="p">));</span> <span class="c1">// conditionally cast to rvalue
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1807,34 +1813,34 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Matric</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="n">Matric</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Matrix</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Matric</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="n">Matric</span><span class="o">&amp;&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Matrix</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">lhs</span> <span class="o">+</span><span class="o">=</span> <span class="n">rhs</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">move</span><span class="p">(</span><span class="n">lhs</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// move lhs into return value
+    <span class="n">lhs</span> <span class="o">+=</span> <span class="n">rhs</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">lhs</span><span class="p">);</span>  <span class="c1">// move lhs into return value
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-<span class="n">Fraction</span> <span class="n">reduceAndCopy</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span><span class="o">&amp;</span> <span class="n">frac</span><span class="p">)</span>
+<span class="n">Fraction</span> <span class="n">reduceAndCopy</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">frac</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">frac</span><span class="p">.</span><span class="n">reduce</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// move rvalue into return value; copy lvalue
+    <span class="n">frac</span><span class="p">.</span><span class="n">reduce</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">frac</span><span class="p">);</span>  <span class="c1">// move rvalue into return value; copy lvalue
 </span><span class="c1"></span><span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><h1 id="when-not-to">When not to</h1>
-<p>According to Standardization Committee, there's a kind of optimizatoin called <em>return value optimization (RVO)</em>:</p>
+<p>According to Standardization Committee, there&rsquo;s a kind of optimizatoin called <em>return value optimization (RVO)</em>:</p>
 <blockquote>
 <p>the “copying” version of makeWidget can avoid the need to copy the local variable w by constructing it in the memory alloted for the function’s return value</p>
 </blockquote>
-<p>Due to this optimization, we should not use <code>std::move</code> on a local object being returnd from a function that's returning by value so that we won't precluding the RVO that compilers will do for the return value.</p>
+<p>Due to this optimization, we should not use <code>std::move</code> on a local object being returnd from a function that&rsquo;s returning by value so that we won&rsquo;t precluding the RVO that compilers will do for the return value.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>The type we pass to <code>std::forward</code> should be a non-reference, according to the convention for encoding that the argument being passed is an rvalue (see EMCpp Item 28).<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>The type we pass to <code>std::forward</code> should be a non-reference, according to the convention for encoding that the argument being passed is an rvalue (see EMCpp Item 28). <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>With the universal reference version, there's only one call to <code>std::string</code> assignment operator for <code>w.name</code>, since the string literal would be passed to this function as a <code>const char*</code> pointer; the overloaded versions entail execution of one <code>std::string</code> constructor (to create a temporary), one <code>std::string</code> move assignment operator (to move <code>newName</code> into <code>w.name</code>), and one <code>std::string</code> destructor (to destroy the temporary), which is almost certainly more expensive.<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>With the universal reference version, there&rsquo;s only one call to <code>std::string</code> assignment operator for <code>w.name</code>, since the string literal would be passed to this function as a <code>const char*</code> pointer; the overloaded versions entail execution of one <code>std::string</code> constructor (to create a temporary), one <code>std::string</code> move assignment operator (to move <code>newName</code> into <code>w.name</code>), and one <code>std::string</code> destructor (to destroy the temporary), which is almost certainly more expensive. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -3162,7 +3168,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-04-16T00:00:00&#43;0000">
 <meta name="modified" content="2018-04-16T00:00:00&#43;0000">
 <meta property="article:published_time" content="2018-04-16T00:00:00&#43;0000">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,27 +1612,25 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Apr 16, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 2 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Apr 16, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 2 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1632,9 +1638,9 @@ if (!doNotTrack) {
 <p>Some functions (such as <code>operator*</code>) have to return objects:</p>
 <ul>
 <li>if returning pointers, the caller is responsible to delete the pointer, which usually leads to resource leaks.</li>
-<li>if returning references, then we're returning a reference to a local object, which no longer exists when the caller has it.</li>
+<li>if returning references, then we&rsquo;re returning a reference to a local object, which no longer exists when the caller has it.</li>
 </ul>
-<p>Although we can't eliminate by-value returns from functions that require them, we can still reduce the cost of returning objects: by the help of compilers, we can eliminate the cost of the temporaries by returning <em>constructor arguments</em> instead of objects:</p>
+<p>Although we can&rsquo;t eliminate by-value returns from functions that require them, we can still reduce the cost of returning objects: by the help of compilers, we can eliminate the cost of the temporaries by returning <em>constructor arguments</em> instead of objects:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1646,12 +1652,12 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">Rational</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="nf">Rational</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">(</span><span class="p">)</span><span class="p">,</span>
-                    <span class="n">lhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nf">Rational</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">(),</span>
+                    <span class="n">lhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">());</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Here we're creating an anonymous temporary <code>Rational</code> object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of <code>operator*</code> under the use case below:</p>
+</div><p>Here we&rsquo;re creating an anonymous temporary <code>Rational</code> object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of <code>operator*</code> under the use case below:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -1661,7 +1667,7 @@ if (!doNotTrack) {
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-<span class="n">Rational</span> <span class="nf">b</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+<span class="n">Rational</span> <span class="nf">b</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 
 <span class="n">Rational</span> <span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">;</span>  <span class="c1">// operator* is called
 </span></code></pre></td></tr></table>
@@ -1681,8 +1687,8 @@ if (!doNotTrack) {
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// most efficient way to write a function returning an object
 </span><span class="c1"></span><span class="kr">inline</span> <span class="k">const</span> <span class="n">Rational</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">return</span> <span class="nf">Rational</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">(</span><span class="p">)</span><span class="p">,</span>
-                    <span class="n">lhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nf">Rational</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">(),</span>
+                    <span class="n">lhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">());</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -3004,7 +3010,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>

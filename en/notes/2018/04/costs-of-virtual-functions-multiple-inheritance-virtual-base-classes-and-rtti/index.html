@@ -1196,7 +1196,10 @@
 
     
 <meta name="description" content="Nzo&#39;s Blog" />
-<meta name="keywords" content="">
+
+
+<meta name="keywords" content="technique,cpp">
+
 <meta name="created" content="2018-04-20T15:32:45-0400">
 <meta name="modified" content="2018-04-20T15:32:45-0400">
 <meta property="article:published_time" content="2018-04-20T15:32:45-0400">
@@ -1210,7 +1213,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.60.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1249,7 +1252,7 @@
     "datePublished": "2018-04-20T15:32:45-04:00",
     "dateModified": "2018-04-20T15:32:45-04:00",
     "url" : "http://nianze.tk/en/notes/2018/04/costs-of-virtual-functions-multiple-inheritance-virtual-base-classes-and-rtti/",
-    "description": "\u003cp\u003eIt's important to have a basic understanding of the cost of some C++ features that can have a noticeable impact on the size of objects and the speed at which member …\u003c/p\u003e",
+    "description": "\u003cp\u003eIt\u0026rsquo;s important to have a basic understanding of the cost of some C++ features that can have a noticeable impact on the size of objects and the speed at which member …\u003c/p\u003e",
     "keywords": ["technique","cpp"],
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -1311,6 +1314,11 @@ if (!doNotTrack) {
     </script>
     <div id="container">
         
+
+
+
+
+
         <div class="wrapper" data-type="notes" data-kind="page">
             <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
@@ -1604,31 +1612,29 @@ if (!doNotTrack) {
     <div class="single__meta">
       
 <div class="single__infos">
-  <time class="single__info" title="Written At">📅&nbsp;Apr 20, 2018 </time>  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  <time class="single__info" title="Written At">📅&nbsp;Apr 20, 2018 </time>
+  
+  &middot; <span class="single__info" title="Reading Time"> ☕ 6 min read </span>
+  
   <span class="single__info">
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> views
   </span>
 </div>
       
-<div class="single__tags caption">
-
+<ul class="single__tags caption">
   
-    🏷️
-  
-  
-    <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
+  🏷️
   
 
-  
-  
-    <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
-  
+  <li><a href="http://nianze.tk/en/tags/technique/" class="single__tag" title="technique">#technique</a></li>
 
-</div>
+  <li><a href="http://nianze.tk/en/tags/cpp/" class="single__tag" title="cpp">#cpp</a></li>
+
+</ul>
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
-      <p>It's important to have a basic understanding of the cost of some C++ features that can have a noticeable impact on the size of objects and the speed at which member functions execute.</p>
+      <p>It&rsquo;s important to have a basic understanding of the cost of some C++ features that can have a noticeable impact on the size of objects and the speed at which member functions execute.</p>
 <!-- toc -->
 <h1 id="virtual-functions">Virtual Functions</h1>
 <p>Virtual function feature in C++ gives us the ability to execute the code corresponding to the dynamic type of the object on which the virtual function is invoked. Most implementations use <em>virtual tables</em> (<em>vtbls</em>) and <em>virtual table pointers</em> (<em>vptrs</em>).</p>
@@ -1660,23 +1666,23 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">C1</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">C1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// nonvirtual func
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="o">~</span><span class="n">C1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// virtual func
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// virtual func
+    <span class="n">C1</span><span class="p">();</span>  <span class="c1">// nonvirtual func
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="o">~</span><span class="n">C1</span><span class="p">();</span>  <span class="c1">// virtual func
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f1</span><span class="p">();</span>  <span class="c1">// virtual func
 </span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">f2</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// virtual func
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f3</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// virtual func
-</span><span class="c1"></span>    <span class="kt">void</span> <span class="nf">f4</span><span class="p">(</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// nonvirtual func
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f3</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>  <span class="c1">// virtual func
+</span><span class="c1"></span>    <span class="kt">void</span> <span class="nf">f4</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// nonvirtual func
+</span><span class="c1"></span>    <span class="p">...</span>
+<span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">C2</span><span class="o">:</span> <span class="k">public</span> <span class="n">C1</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-    <span class="n">C2</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="c1">// nonvirtual func
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="o">~</span><span class="n">C2</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// virtual func
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// redefined virtual func
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f5</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// new virtual func
-</span><span class="c1"></span>    <span class="p">.</span><span class="p">.</span><span class="p">.</span>
-<span class="p">}</span><span class="p">;</span>
+    <span class="n">C2</span><span class="p">();</span> <span class="c1">// nonvirtual func
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="o">~</span><span class="n">C2</span><span class="p">();</span>  <span class="c1">// virtual func
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f1</span><span class="p">();</span>  <span class="c1">// redefined virtual func
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">f5</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">);</span>  <span class="c1">// new virtual func
+</span><span class="c1"></span>    <span class="p">...</span>
+<span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>The vtbls for <code>C1</code> and <code>C2</code> looks like this:</p>
@@ -1703,15 +1709,15 @@ if (!doNotTrack) {
 │  │--&gt; impl. of C2::f5
 └──┘
 </code></pre><p>These tables come with cost: for each class containing virtual functions we have to set aside space ofr a virtual table, and the size of the vtbl is proportional to the number of virtual functions declared for that class.</p>
-<p>Ideally, we need only one copy of a class's vtbl. Usually a class's vtbl is generated in the object file containing the definition (i.e., the body) of the first non-inline non-pure virtal function in that class <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. However, if all virtual functions are declared <code>inline</code>, compilers tend to generate a copy of the class's vtbl in <em>every object file</em> that uses it, so we should avoid declaring virtual functions <code>inline</code>.</p>
-<p>Speaking of <code>inline</code>, it is worth noting that for all practical purposes, virtual functions aren't inlined:</p>
+<p>Ideally, we need only one copy of a class&rsquo;s vtbl. Usually a class&rsquo;s vtbl is generated in the object file containing the definition (i.e., the body) of the first non-inline non-pure virtal function in that class <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. However, if all virtual functions are declared <code>inline</code>, compilers tend to generate a copy of the class&rsquo;s vtbl in <em>every object file</em> that uses it, so we should avoid declaring virtual functions <code>inline</code>.</p>
+<p>Speaking of <code>inline</code>, it is worth noting that for all practical purposes, virtual functions aren&rsquo;t inlined:</p>
 <ul>
 <li><code>inline</code> means replacing the call site with the body of the called function *<strong>during compilation</strong></li>
 <li><code>virtual</code> means wait until <strong>runtime</strong> to see which function is called.</li>
 <li>In practical real world situation, virtual function calls are made through <em>pointers</em> or <em>reference</em> to objects, which are not inlined; only the virtual functions invoked through <em>objects</em> can be inlined, which is usually pointless.</li>
 </ul>
 <h2 id="cost-of-vptr">Cost of vptr</h2>
-<p>Each object whose class declares virtual functions will be added by compilers a hidden member that points to the virtual table for that class, so we'll pay for an extra pointer indise each object that is of a class containing virtual functions:</p>
+<p>Each object whose class declares virtual functions will be added by compilers a hidden member that points to the virtual table for that class, so we&rsquo;ll pay for an extra pointer indise each object that is of a class containing virtual functions:</p>
 <pre><code>  C1 object                                              C1 object 
 ┌──────────────┐                                     ┌──────────────┐
 │ Data members │                                     │ Data members │
@@ -1736,7 +1742,7 @@ if (!doNotTrack) {
 <td class="lntd">
 <pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">makeACall</span><span class="p">(</span><span class="n">C1</span> <span class="o">*</span><span class="n">pC1</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="n">pC1</span><span class="o">-</span><span class="o">&gt;</span><span class="n">f1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">pC1</span><span class="o">-&gt;</span><span class="n">f1</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
@@ -1747,7 +1753,7 @@ if (!doNotTrack) {
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">(</span><span class="o">*</span><span class="n">pC1</span><span class="o">-</span><span class="o">&gt;</span><span class="n">vptr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="p">)</span><span class="p">(</span><span class="n">pC1</span><span class="p">)</span><span class="p">;</span>  <span class="c1">// call the function pointed to by the i-th entry in the vtbl
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">(</span><span class="o">*</span><span class="n">pC1</span><span class="o">-&gt;</span><span class="n">vptr</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">pC1</span><span class="p">);</span>  <span class="c1">// call the function pointed to by the i-th entry in the vtbl
 </span><span class="c1"></span>                       <span class="c1">// pointed to by pC1-&gt;vptr; pC1 is passed to the function as the &#34;this&#34; pointer
 </span></code></pre></td></tr></table>
 </div>
@@ -1777,10 +1783,10 @@ virtual ↗   ↖ virtual
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">C</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">D</span><span class="o">:</span> <span class="k">public</span> <span class="n">B</span><span class="p">,</span> <span class="k">public</span> <span class="n">C</span> <span class="p">{</span><span class="p">.</span><span class="p">.</span><span class="p">.</span><span class="p">}</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">A</span> <span class="p">{...};</span>
+<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{...};</span>
+<span class="k">class</span> <span class="nc">C</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{...};</span>
+<span class="k">class</span> <span class="nc">D</span><span class="o">:</span> <span class="k">public</span> <span class="n">B</span><span class="p">,</span> <span class="k">public</span> <span class="n">C</span> <span class="p">{...};</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>The layout for an object of type <code>D</code> is likely to look like this:</p>
@@ -1822,7 +1828,7 @@ virtual ↗   ↖ virtual
 <blockquote>
 <p>RTTI (Runtime type identification) lets us discover information about objects and classes at runtime. The information is stored in an object of type <code>type_+info</code>, which can be accessed by using the <code>typeid</code> operator.</p>
 </blockquote>
-<p>For each class, there only needs to be a single copy of the RTTI, and the language specification states that an object's dynamic type information is guaranteed accurate only if that type has at least one virtual funciton. This may end up with such a design that RTTI was implemented in terms of a class's vtbl.</p>
+<p>For each class, there only needs to be a single copy of the RTTI, and the language specification states that an object&rsquo;s dynamic type information is guaranteed accurate only if that type has at least one virtual funciton. This may end up with such a design that RTTI was implemented in terms of a class&rsquo;s vtbl.</p>
 <p>For example, index 0 of a vtbl array might contain a pointer to the <code>type_info</code> object for the class corresponding to that vtbl:</p>
 <pre><code>C1's vtbl
 ┌──┐
@@ -1841,7 +1847,7 @@ virtual ↗   ↖ virtual
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>For vendors who provide an integrated environment containing both compiler and linker, there is another brute-force starategy: generate a copy of the vtbl in each object file that might need it, and let linker strip out duplicate copies, leading to a single instance of each vtbl in the final executable or library.<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#8617;</a></p>
+<p>For vendors who provide an integrated environment containing both compiler and linker, there is another brute-force starategy: generate a copy of the vtbl in each object file that might need it, and let linker strip out duplicate copies, leading to a single instance of each vtbl in the final executable or library. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -3175,7 +3181,12 @@ document.addEventListener('DOMContentLoaded', function () {
 </footer>
         </div>
         
-<div class="wrapper__right hide" dir="ltr">
+
+
+
+
+
+<div class="wrapper__right hide" data-pad="true" dir="ltr">
   <script>document.querySelector('.wrapper__right').classList.remove('hide')</script>
   
 </div>
