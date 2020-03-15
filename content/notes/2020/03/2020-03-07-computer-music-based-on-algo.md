@@ -1,17 +1,18 @@
 ---
-title: "Adv. Computer Music Study: Music Based on Algo"
+title: "Computer Music Study 3: Music Based on Algo"
 date: 2020-03-07T11:49:56-05:00
+series:
+- computer music
 categories:
-- coding
+- music
 tags:
 - music
-- technique
+- computer music
 slug: "Algorithmic Computer Music"
-# featured_image: 2020/03/07T11:49:56/05:00.JPG
-draft: true
+featured_image: 2020/03/07/cover.jpg
 ---
 
-Inspired by Charles Dodge's music piece [Earth's Magnetc Field](https://sonificationart.wordpress.com/2017/06/01/earths-magnetic-field-realizations-in-computed-electronic-sound/), I'd like to revise my previous work of [trading beats]({{< ref "/posts/2018/12/audio.md" >}}).
+Recently I just learned that Charles Dodge is the pioneer in sonification and his music piece [Earth's Magnetc Field](https://sonificationart.wordpress.com/2017/06/01/earths-magnetic-field-realizations-in-computed-electronic-sound/) is inspiring.
 <!--more-->
 
 # Earth’s Magnetic Field
@@ -33,7 +34,6 @@ As the pitches were mapped through the Bartel diagram, Dodge focused on working 
 ## Electronic music involvement
 
 Besides its importance in sonification, Earth’s Magnetic Field is an important piece in the electro-acoustic music scene as it is the first piece that explicitly uses comb filters to control the timbre. Dodge used the comb filter in the first part while in the second part he used all-pass filtering. The use of filters is a pure aesthetical choice while pitch and rhythm are dependent on the data.
-
 
 Reference:
 [wikipedia](https://en.wikipedia.org/wiki/Charles_Dodge_(composer))
