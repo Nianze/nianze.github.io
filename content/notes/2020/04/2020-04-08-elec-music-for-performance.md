@@ -1,5 +1,5 @@
 ---
-title: "Electronic Music for Performance"
+title: "Computer Music Study 4: Electronic Music for Performance ft. Nicolas Collins"
 date: 2020-04-08T01:59:28-04:00
 series:
 - computer music
@@ -8,9 +8,8 @@ categories:
 tags:
 - music
 - computer music
-slug: "Electronic Music for Performance"
-# featured_image: 2020/04/08/cover.jpg
-draft: true
+slug: "Electronic Music for Performance featuring Nicolas Collins"
+featured_image: 2020/04/08/nicbymartingraf.jpg
 ---
 
 **Nicolas Collins** (born March 26, 1954 in New York City) has been composing and performing since the early 1970s. He studied composition with Alvin Lucier at Wesleyan University (received both B.A. and M.A. there) and worked for several years with David Tudor. 
@@ -29,14 +28,19 @@ In 2006 Collins' book Handmade Electronic Music: The Art of Hardware Hacking was
 # [Live at Luff](https://www.youtube.com/watch?v=tiCcXWfjFeU)
 The live performance covered excerpts from "Imperfekt", "The Royal Touch", and "In Memoriam Michel Waisvisz".
 
-## Imperfekt
- processing.
+## [Imperfekt](http://www.nicolascollins.com/neywa.htm)
+{{< img src="/images/2020/04/08/Imperfekt.jpg" caption="the performance is achieved by the sounds of a barely functional Soviet radio pass through a maze of computer signal processing." >}}
+
+{{< img src="/images/2020/04/08/neywarear.jpg" caption="At a workshop in Brno a few years ago a student brought in a \"Neywa\" Russian radio to hack. It sounded great to my ears, but he was ambivalent enough about it to trade it to me for a copy of my book. I dug it out a few months ago. Outside of the noisy workshop space the radio proved ridiculously loud and shrill, so I disconnected its tiny speaker and hooked up one I'd salvaged from our old teardrop iMac before it went to recycling. This gave a nice bass boost, and the speaker can be muted and filtered with the hand or resonated with one's mouth -- a sort of a marching band crackle box (CrackleCornet?). The red wire with the faston terminal is a replacement antenna. The road case is a Nicaraguan cigar box." >}}
 
 ## [The Royal Touch](https://www.youtube.com/watch?v=LCRULGDilis)
->... a simple circuit of my design reanimates a dead circuit board to create a chaotic multi-voice oscillator... Fishing weights make nudgeable contacts between my circuit in the Simon Lévelt tea box and the dead board.
+{{< img src="/images/2020/04/08/royaltouch150dpi.jpg" caption="from Nicolas:\"a simple circuit of my design reanimates a dead circuit board to create a chaotic multi-voice oscillator... Fishing weights make nudgeable contacts between my circuit in the Simon Lévelt tea box and the dead board.\"" >}}
+
+{{< img src="/images/2020/04/08/amersham2.jpg" caption="photos by Atau Tanaka of a performance of at EAVI X, Amersham Arms, London, January 15, 2015." >}}
 
 ## In Memoriam Michel Waisvisz
-This piece employs a candle’s flicker to control the tuning of four oscillators.
+{{< img src="/images/2020/04/08/sfemf.jpg" caption="this piece employs a candle’s flicker to control the tuning of four oscillators." >}}
+
 
 # Reference:
 https://en.wikipedia.org/wiki/Nicolas_Collins
