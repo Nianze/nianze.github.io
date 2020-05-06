@@ -44,6 +44,7 @@ function begin() {
                 }))
                 .reverse();
             chart.data = chart.feed.slice(0, 150);
+            console.log("test", chart.data);
             chart.isPlaying = false;
             chart.setScale(chart.feed);
             chart.redraw();
