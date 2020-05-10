@@ -10,7 +10,7 @@ slug: "Trade Sequencer"
 featured_image: 2020/05/05/trade-sequencer.jpg
 ---
 
-A refined version of trade beats: combine multiple stocks in one sequencer, suppored by React.js, Tone.js, and P5.js
+A refined version of trade beats: combine multiple stocks in one sequencer, supported by React.js, Tone.js, and P5.js
 <!--more-->
 
 <div>
