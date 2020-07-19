@@ -1,0 +1,122 @@
+---
+title: "巧思RF：胶片时代落幕的余晖"
+date: 2020-07-18
+series:
+- camera
+categories:
+- visual
+tags:
+- camera
+- konika hexar
+- film
+- chinese
+slug: "Hexar Rf Experience"
+featured_image: 2020/07/18/hexar_rf-22.jpg
+---
+
+# 起因
+
+手里有台徕卡M4，街拍的时候遇到光线复杂的场景想要测光，就得拿出我仅有的一个测光表——iPhone里的myLightMeter。然而疫情期间外出都戴口罩，面部识别不管用，每次解锁手机都得输入密码，很麻烦。于是便想着再收一台带测光的胶片旁轴。没有一步到位上M7，却从一个日本卖家手里收来了这台巧思RF，权且当作M4的副机吧。
+
+# 历史回顾
+
+最近佳能发布万众瞩目的[R5](https://www.canon.com.cn/special/r5/index.html)，索尼则放出期待已久的[A7s iii](https://www.engadget.com/sony-long-awaited-a7s-iii-will-be-revealed-on-july-28th-172756453.html)发布会预告，而久无音讯的宾得却发布了一支[影片](https://youtu.be/KfcFDGbtZyE)，宣言他们“相信单反的前景”，这下宾得熬成单反第一名指日可待了（手动狗头）。不经感慨，自己看着无反在大法的冲锋号角下徐徐拉开了历史新篇章，亲眼见证了单反时代的缓缓落幕。
+
+历史是轮回的，上一轮巨变，还在大概十多年前，摄影从胶片转向数字的时代：在那个胶片相机繁盛的时期，还有一家叫柯尼卡（Konica）的公司，于20世纪90年代初推出了一款叫做Konica Hexar (Hexar AF)的镜间快门固定镜头（35mm）旁轴取景自动对焦相机，基本可以看作是可装胶片的全画幅版富士X100系列相机，该系列的中文翻译很有韵味，被叫做“巧思”。由于巧思AF的广受好评，柯尼卡在1999年10月13日推出了可换镜头版的巧思：Hexar RF，中文名叫巧思RF，可以理解为装胶片的全画幅版富士X-pro系列相机。
+
+{{< img src="/images/2020/07/18/hexar-af.jpg" caption="↑巧思AF" >}}
+
+可惜生不逢时，胶片的时代很快就被数码的浪潮冲的七零八落，自从柯尼卡在2003年8月与美能达合并成“柯尼卡美能达”（Konica Minolta, Inc.）后，巧思RF系列就停产了。再后来的事情，便是2006年柯美被索尼收购，在幕后为索尼设计研发机身和镜头，而这也标志着大法开始正式进军单反行业，然后便有了我们之后看到的Sony Alpha系列单反相机，单电相机，以及再之后开启新时代的微单™（无反）相机。
+
+这款卖了四年（2000-2003）的巧思RF有个别称：东瀛徕卡，只因为这台“胶片全幅版X-pro”采用了镜头群庞大的徕卡M口。当然，柯尼卡官方为了避嫌，管这个卡口叫做KM口，但实际上跟徕卡M口的镜头是基本通用的。凭借日本人对电子技术的积累优势，[巧思RF的功能](http://www3.xitek.com/bingqiku/konica/rangefinder/rf.htm)非常强大，对同时在售的徕卡M6造成了很大的挑战，甚至同两年后（2002年）姗姗来迟的徕卡M7相比也完全不落下风。不过可能是叫好不叫座，也可能是日本企业面对徕卡时天生较弱的品牌价值，总之，生不逢时的巧思RF只短暂的生产了一代机型就草草停产，即使作为挑战者，巧思RF凭借其优秀的功能确实吸引了不少实拍者的青睐，但徕卡就是徕卡，其在135旁轴领域的地位是无法撼动的。
+
+# 机身细节
+
+## 正面
+
+{{< img src="/images/2020/07/18/hexar_rf-1.jpg" title="正面" caption="↑入的是145编号的后期版机身，镜头释放按钮外多了一圈金属环" >}}
+{{< img src="/images/2020/07/18/hexar_rf-2.jpg" title="正面" caption="↑这个角度看有点像富士的x100系列" >}}
+{{< img src="/images/2020/07/18/fuji-x100v.jpg" title="对比" caption="↑富士x100v" >}}
+{{< img src="/images/2020/07/18/hexar_rf-11.jpg" title="正面" caption="↑KM卡口，可以看到里面的纵走式金属快门和白色反光部分用来测光" >}}
+
+## 侧面
+
+{{< img src="/images/2020/07/18/hexar_rf-6.jpg" title="左侧面" caption="↑从上到下依次是快门线接口，胶片舱盖开关，提前回片按钮" >}}
+
+## 背面
+
+{{< img src="/images/2020/07/18/hexar_rf-5.jpg" title="背面" caption="↑竖条窗口可以显示胶片的型号" >}}
+{{< img src="/images/2020/07/18/hexar_rf-3.jpg" title="背面" caption="↑皮饰略微凸起方便握持" >}}
+{{< img src="/images/2020/07/18/hexar_rf-12.jpg" title="背面" caption="↑从侧面开关打开胶片舱盖" >}}
+{{< img src="/images/2020/07/18/viewfinder.png" title="取景器" caption="↑左边是快门速度，35mm/135mm框线如图所示，中心黄斑还是比较明显的" >}}
+值得一提的是，中心黄斑虽然明亮，但存在两个潜在问题：
+1. 如果眼睛没有正对取景器中心，那么黄斑会变的很浅看不清。
+2. 镜头拧到无限远处时，黄斑并不会重合。相同镜头我在徕卡机身上试过，对焦环拧到最远处时无限远的物体边缘是正好重合的。不过平时我还是正常使用，似乎也没什么问题（街拍我对对焦精度要求本来也不高，很多时候甚至是盲拍或者超焦距拍摄）。
+
+## 机顶
+
+{{< img src="/images/2020/07/18/hexar_rf-4.jpg" title="机顶" caption="↑由于机顶掉漆（后文有提），我在漆面脱落处喷了漆，稍微有色差；以后可能直接贴一整面贴膜" >}}
+{{< img src="/images/2020/07/18/hexar_rf-7.jpg" >}}
+- 左侧曝光补偿和ISO调节的转盘被整合在了一起，ISO转盘在DX模式下可自动读取胶片感光度
+- 中间开机拨环逆时针拨动分别是单张拍摄，连续拍摄，和自拍模式。自拍时正面有红色LED会闪烁指示倒计时。快门按钮是两段式的，半按快门时测光
+- 右侧拨轮带锁定，最高1/4000秒快门速度；闪光同步速度1/125秒；我一般都设置在AE或者AEL模式下（AEL时第一次半按快门测光完成后就锁定快门速度了，方便以先用中心点对焦+测光然后二次构图的方式来拍摄）
+{{< img src="/images/2020/07/18/hexar_rf-9.jpg" title="机顶" caption="↑提起外环可手动调节ISO，现在的X100V和X-pro 3也是这样的设计" >}}
+
+## 机底
+
+{{< img src="/images/2020/07/18/hexar_rf-13.jpg" title="机底" caption="↑左侧用硬币拧开可装入两节CR2电池，脚架接口和镜头不同轴" >}}
+
+## 对比徕卡机身
+
+{{< img src="/images/2020/07/18/hexar_rf-14.jpg" title="对比M4" caption="↑正面，基本一样的尺寸；对比之下巧思RF的颜值确实低些" >}}
+{{< img src="/images/2020/07/18/hexar_rf-15.jpg" title="对比M9" caption="↑正面，还是徕卡的正脸看着舒服" >}}
+{{< img src="/images/2020/07/18/hexar_rf-16.jpg" title="对比M4和M9" caption="↑机顶，M9最厚，M4和巧思RF厚度一致" >}}
+
+## 搭配镜头
+
+{{< img src="/images/2020/07/18/hexar_rf-22.jpg" title="搭配镜头" caption="↑ZEISS C Sonnar T* 50mm f/1.5 ZM" >}}
+{{< img src="/images/2020/07/18/hexar_rf-18.jpg" title="搭配镜头" caption="↑Leica Summicron-M 35mm f/2 ASPH" >}}
+{{< img src="/images/2020/07/18/hexar_rf-19.jpg" title="搭配镜头" caption="↑ZEISS Biogon T* 21mm f/2.8 ZM" >}}
+{{< img src="/images/2020/07/18/hexar_rf-20.jpg" title="搭配镜头和21mm取景器" caption="↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435" >}}
+当年配套Carl Zeiss BIOGON 21mm f/4.5镜头的[435取景器](https://www.mir.com.my/rb/photography/companies/nikon/nikkoresources/RF-Nikkor/Contax_RF/Zeiss-Finders.htm)是银黑配色，还是搭配相同配色的徕卡M4更和谐：
+{{< img src="/images/2020/07/18/leica_m4_zm_21.jpg" title="M4搭配蔡司21mm取景器" caption="↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435" >}}
+
+# 使用感受
+
+- 优点：
+    - 采用纵走式金属快门，最高快门速度1/4000秒，闪光同步速度1/125秒；对比起来，M7的横走式布帘快门只有1/1000秒的最高速度以及1/50秒的闪光同步速度
+    - 光圈优先自动曝光（AE），搭配曝光锁定（AEL）功能，该模式下半按快门可锁定曝光。徕卡M7只有AE，没有AEL
+    - 内置卷片马达，自动装片，自动过片，自动回片，有大概2.5张/秒的连拍模式 （旁轴相机居然有连拍，也是不容易）
+    - 省电，两节CR2电池可以连续拍140卷
+    - 基线长度69.2mm，徕卡M7是69.25mm。不过由于取景器倍率只有0.6，有效基线长度41.5mm；实际观感跟0.58倍率版的M7相仿，眼镜党福利，广角端28mm-35mm镜头看起来会很舒服
+    - DX档下可根据胶片DX码自动读取感光度
+    - 机顶和机底用料是钛金属，比薄钛镀膜的“钛机身”徕卡厚道；机身则采用铝合金模铸
+    - 不是徕卡，隐蔽性强，拍照不易引人瞩目
+
+- 缺点：
+    - 掉漆！钛合金顶盖和底盖对漆面的吸附力有限。我这台刚拿到手，发现机顶有个沙砾大小的露白，以为是灰尘，就手贱的用指甲搓了一下，结果漆面就被剥开，漏出了底下更多的钛金属色。银色限量款机型应该不会有这么明显的掉漆问题
+    {{< img src="/images/2020/07/18/peeling.jpg" title="掉漆问题" caption="↑当时一拿到就掉漆，瞬间就想退货了" >}}
+    {{< img src="/images/2020/07/18/konica-hexar-rf-limited.jpg" title="限量版巧思RF" caption="↑世界限量2001台" >}}
+    - 快门毕竟是金属的，会比布帘的噪音更大；对比起来，徕卡M4的布帘快门声明显更短促爽快，这台RF大概跟手头的徕卡M9的快门声差不多。这也讲得通，毕竟M9用的也是最高快门速度1/4000秒的纵走式金属快门    
+    - 取景器相比徕卡的会暗一些，虽然不影响对焦但体验确实有所下降
+    - 电子快门，所以没有电就摁不动快门；快门时滞记得大概90ms，对比起来M7好像大概20ms
+    - 内置了卷片马达后就没法手动过片了，可玩性降低（现在这年头买旁轴相机的基本都是以玩味和体验为目的了）
+    - 不是徕卡，逼格不够；做工也确实没法跟徕卡比，机身字体设计生硬，摸起来不够精致，不适合把玩
+
+总的来说，这是一台工具属性较强的旁轴相机，做工扎实但手感依然没法跟徕卡比，多了很多方便先进的电子功能，但少了很多精致的机械质感和细节：更适合拍照党图方便带出门去街拍，不太适合抚摸党放在家中干燥箱观赏把玩。我预感今后为了出图方便，这台作为“副机”的巧思RF会比M4有更多的出场机会，基本就是拿来当胶片版的M9来用。
+
+# 样片
+
+样片均由Kodak Ektar 100拍摄。由于家里几个月前配好的C41药水已经洗过大概5次可能也快过期了，这次洗出来颜色可能因此有些怪。
+
+{{< img src="/images/2020/07/17/ektar_1.jpg" >}}
+{{< img src="/images/2020/07/17/ektar_2.jpg" >}}
+{{< img src="/images/2020/07/17/ektar_3.jpg" >}}
+{{< img src="/images/2020/07/17/ektar_4.jpg" >}}
+{{< img src="/images/2020/07/17/ektar_5.jpg" >}}
+
+# 参考
+
+[色影无忌](http://www3.xitek.com/bingqiku/konica/rangefinder/rf.htm)
+[摄影之友](https://sheying.sioe.cn/qicai/7448.html)
+[菲林旧时光 篇三：东瀛和风徕卡 柯尼卡巧思RF旁轴相机](https://post.smzdm.com/p/ag8942dw/)
