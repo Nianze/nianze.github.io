@@ -20,7 +20,7 @@ featured_image: 2020/07/18/hexar_rf-22.jpg
 
 # 历史回顾
 
-最近佳能发布万众瞩目的[R5](https://www.canon.com.cn/special/r5/index.html)，索尼则放出期待已久的[A7s iii](https://www.engadget.com/sony-long-awaited-a7s-iii-will-be-revealed-on-july-28th-172756453.html)发布会预告，而久无音讯的宾得却发布了一支[影片](https://youtu.be/KfcFDGbtZyE)，宣言他们“相信单反的前景”，这下宾得熬成单反第一名指日可待了（手动狗头）。不经感慨，自己看着无反在大法的冲锋号角下徐徐拉开了历史新篇章，亲眼见证了单反时代的缓缓落幕。
+最近佳能发布万众瞩目的[R5](https://www.canon.com.cn/special/r5/index.html)，索尼则放出期待已久的[A7s iii](https://www.engadget.com/sony-long-awaited-a7s-iii-will-be-revealed-on-july-28th-172756453.html)发布会预告，而久无音讯的宾得却发布了一支[影片](https://youtu.be/KfcFDGbtZyE)，宣言他们“相信单反的前景”，这下宾得熬成单反第一名指日可待了（手动狗头）。不禁感慨，自己看着无反在大法的冲锋号角下徐徐拉开了历史新篇章，亲眼见证了单反时代的缓缓落幕。
 
 历史是轮回的，上一轮巨变，还在大概十多年前，摄影从胶片转向数字的时代：在那个胶片相机繁盛的时期，还有一家叫柯尼卡（Konica）的公司，于20世纪90年代初推出了一款叫做Konica Hexar (Hexar AF)的镜间快门固定镜头（35mm）旁轴取景自动对焦相机，基本可以看作是可装胶片的全画幅版富士X100系列相机，该系列的中文翻译很有韵味，被叫做“巧思”。由于巧思AF的广受好评，柯尼卡在1999年10月13日推出了可换镜头版的巧思：Hexar RF，中文名叫巧思RF，可以理解为装胶片的全画幅版富士X-pro系列相机。
 
