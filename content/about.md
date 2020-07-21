@@ -58,6 +58,7 @@ My current gears:
 * iPhone X (mostly used one)
 * Leica M9
 * Leica M4
+* Hexar RF
 * Leica Summicron-M 35mm f/2 ASPH
 * ZEISS C Sonnar T* 50mm f/1.5 ZM
 * ZEISS Biogon T* 21mm f/2.8 ZM
