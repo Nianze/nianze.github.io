@@ -119,14 +119,15 @@ featured_image: 2020/02/21/m4_front_1.jpg
     - 显影液：Ilford Rapid Fixer
 - 彩色负片冲洗：
     - C41套装: Tetenal C-41 Press Kit
-    - 盛热水用的盆子（普通脸盆就好）: Paterson Plastic Developing Tray
-    - 防水的温度计: Legacy Pro 6" Glass Thermometer
+    - ~~盛热水用的盆子（普通脸盆就好）: Paterson Plastic Developing Tray~~
+    - ~~防水的温度计: Legacy Pro 6" Glass Thermometer~~
+    - 做牛排用的恒温水浴棒或者可控温的洗脚盆
 - 洗卷罐：Paterson Universal Tank with Two Reels
 - 暗袋：Kalt Changing Bag
 - 量具：Paterson 32-oz Beaker & Kalt Plastic Graduate 2 oz - 50 cc
 - 附件：Paterson film squeegee
 
-黑白胶片的冲洗，主要参考Mattias Burling的[这个视频](https://youtu.be/kp8cACHz_Og)；由于没买停显液，显影后我直接用自来水冲。彩色负片的冲洗就是照着C41的标准流程来；普通浴缸里的热水稍稍调一下就能稳定在38°C。兑好的药液我就直接放在1L纯净水的塑料瓶子里置于暗处，方便以后接着用。
+黑白胶片的冲洗，主要参考Mattias Burling的[这个视频](https://youtu.be/kp8cACHz_Og)；由于没买停显液，显影后我直接用自来水冲。彩色负片的冲洗就是照着C41的标准流程来；~~普通浴缸里的热水稍稍调一下就能稳定在38°C~~用做牛排用的水浴棒或者可控温的洗脚盆可以很方便的控制水温，我后来用洗脚盆控温后，上面提到的盆子和温度计可以都省了。兑好的药液我就直接放在1L纯净水的塑料瓶子里置于暗处，方便以后接着用。
 
 ## 扫描
 
