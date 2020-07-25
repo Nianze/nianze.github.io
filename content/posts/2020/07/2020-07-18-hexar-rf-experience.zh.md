@@ -49,9 +49,9 @@ featured_image: 2020/07/18/hexar_rf-22.jpg
 {{< img src="/images/2020/07/18/hexar_rf-3.jpg" title="背面" caption="↑皮饰略微凸起方便握持" >}}
 {{< img src="/images/2020/07/18/hexar_rf-12.jpg" title="背面" caption="↑从侧面开关打开胶片舱盖" >}}
 {{< img src="/images/2020/07/18/viewfinder.png" title="取景器" caption="↑左边是快门速度，35mm/135mm框线如图所示，中心黄斑还是比较明显的" >}}
-值得一提的是，中心黄斑虽然明亮，但存在两个潜在问题：
+取景器框线根据镜头自动调节，框线分配跟徕卡[如出一辙](http://www3.xitek.com/bingqiku/konica/rangefinder/hexarrf.htm)，三档分别显示28/90，35/135，50/75。值得一提的是，中心黄斑虽然明亮，但存在两个潜在问题：
 1. 如果眼睛没有正对取景器中心，那么黄斑会变的很浅看不清。
-2. 镜头拧到无限远处时，黄斑并不会重合。相同镜头我在徕卡机身上试过，对焦环拧到最远处时无限远的物体边缘是正好重合的。不过平时我还是正常使用，似乎也没什么问题（街拍我对对焦精度要求本来也不高，很多时候甚至是盲拍或者超焦距拍摄）。
+2. 我这台使用徕卡镜头的时候拧到无限远处时，黄斑并不会重合，会有一点点错位。相同镜头我在徕卡机身上试过，对焦环拧到最远处时无限远的物体边缘是正好重合的。据说如果配合巧思的镜头就不会出现无限远不重合的问题。网上也有视频教学如何校准对焦，不过因为就错位了一点点，对拍片影响不大，平时我还就按徕卡相机那样正常使用，似乎也没什么问题（街拍我对对焦精度要求本来也不高，很多时候甚至是盲拍或者超焦距拍摄）
 
 ## 机顶
 
@@ -121,6 +121,6 @@ featured_image: 2020/07/18/hexar_rf-22.jpg
 
 # 参考
 
-[色影无忌](http://www3.xitek.com/bingqiku/konica/rangefinder/rf.htm)
+[色影无忌](http://www3.xitek.com/bingqiku/konica/rangefinder/hexarrf.htm)
 [摄影之友](https://sheying.sioe.cn/qicai/7448.html)
 [菲林旧时光 篇三：东瀛和风徕卡 柯尼卡巧思RF旁轴相机](https://post.smzdm.com/p/ag8942dw/)
