@@ -59,7 +59,7 @@ featured_image: 2020/02/21/m4_front_1.jpg
 
 * 徕卡M9（徕卡第一款全幅数码旁轴，也想体验下传说中的CCD）
     {{< img src="/images/2020/02/21/m9.jpg" >}}
-* 索尼A7一代（够轻够薄够便宜，500刀收的二手，主要想着用来转接蔡司那枚广角，实际使用频率很低）
+* 索尼A7一代（够轻够薄够便宜，500刀收的二手，但要解锁旁轴镜头边缘成像能力（尤其是蔡司那枚广角）还得找[Kolari Vision](https://kolarivision.com/product/sony-a7-series-thin-filter-legacy-lens-upgrade/)去除低通滤镜和传感器玻璃改薄，目前这台使用频率还蛮低的，也就拍拍开箱照）
     {{< img src="/images/2020/02/21/a7.jpg" >}}
 * 徕卡M4（今天讨论的主角）
     {{< img src="/images/2020/02/21/m4_front_2.jpg" >}}
