@@ -56,13 +56,12 @@ Virtualizing static fields in 3rd-party Java library during runtime to improve m
 My current gears:
 
 * iPhone X (mostly used one)
-* Leica M9
+* Leica SL
 * Leica M4
 * Hexar RF
 * Leica Summicron-M 35mm f/2 ASPH
 * ZEISS C Sonnar T* 50mm f/1.5 ZM
 * ZEISS Biogon T* 21mm f/2.8 ZM
-* Sony A7 (1st generation) with Voigtlander VM-E Close Focus Adapter for VM-Mount Lens to Sony E-Mount Camera
 * LightPix Labs FlashQ Q20II
 * Nikon COOLSCAN IV ED (LS-40 ED)
 
