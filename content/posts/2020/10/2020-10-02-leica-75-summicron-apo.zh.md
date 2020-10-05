@@ -63,9 +63,9 @@ featured_image: 2020/10/02/engineer-draw.JPG
 
 试完就感觉双A头素质不是吹的，可以当"望远镜/显微镜"来用了，风光党/数毛党福音。
 
-最后再来一张炫光测试，硬怼光源依然还是会有的：
+最后再来一张眩光测试，硬怼光源依然还是会有的：
 
-{{< img src="/images/2020/10/02/flare.jpg" title="炫光" caption="↑" >}}
+{{< img src="/images/2020/10/02/flare.jpg" title="眩光" caption="↑" >}}
 
 # 样张
 
