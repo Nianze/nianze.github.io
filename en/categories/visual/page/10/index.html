@@ -9,14 +9,11 @@
     
 
 
-  
-  <script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
-
-
-
 <script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <script defer src="/js/lazysizes.min.31dd6a2d3a1ec0f78a8df007535cf23f03aeb5c70f026e6d6a19dac3b3acc340.js"></script>
+
+<script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
 
 <script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
 
@@ -554,59 +551,44 @@
 
   
     
-    var baseurl = JSON.parse("\"http://nianze.tk/\"");
-    
     var permalink = JSON.parse("\"http://nianze.tk/en/categories/visual/\"");
-    
-    var langprefix = JSON.parse("\"/en\"");
     var searchResults = null;
     var searchMenu = null;
     var searchText = null;
     
-    
-    var enableSearch = JSON.parse("true");
     
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
     
     var sectionType = JSON.parse("\"categories\"");
-    
-    var kind = JSON.parse("\"taxonomy\"");
-    
+
     var fuse = null;
 
-    if (enableSearch) {
-      (function initFuse() {
-        var xhr = new XMLHttpRequest();
-        if (sectionType === "publication" && kind !== "page") {
-          xhr.open('GET', permalink + "index.json");
-        } else {
-          xhr.open('GET', baseurl + langprefix + "/index.json");
+    (function initFuse() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', permalink + "index.json");
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
+            keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+            includeMatches: enableSearchHighlight,
+            shouldSort: true,
+            threshold: 0.4,
+            location: 0,
+            distance: 100,
+            maxPatternLength: 32,
+            minMatchCharLength: 1,
+          });
+          window.fuse = fuse;
         }
-        
-        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
-              includeMatches: enableSearchHighlight,
-              shouldSort: true,
-              threshold: 0.4,
-              location: 0,
-              distance: 100,
-              maxPatternLength: 32,
-              minMatchCharLength: 1,
-            });
-            window.fuse = fuse;
-          }
-          else {
-            console.error('[' + xhr.status + ']Error:', xhr.statusText);
-          }
-        };
-        xhr.send();
-      })();
-    }
+        else {
+          console.error('[' + xhr.status + ']Error:', xhr.statusText);
+        }
+      };
+      xhr.send();
+    })();
 
     function makeLi(ulElem, obj) {
       var li = document.createElement('li');
@@ -1239,7 +1221,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1639,7 +1621,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/06/01/2019-06-01-street-photography/'>[Weekly-5] 2019.06.01</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/06/01/2019-06-01-street-photography/'> [Weekly-5] 2019.06.01</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Jun 1, 2019 </time> 
        
@@ -1669,7 +1651,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/25/2019-05-25-street-photography/'>[Weekly-4] 2019.05.25</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/25/2019-05-25-street-photography/'> [Weekly-4] 2019.05.25</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅May 25, 2019 </time> 
        
@@ -1698,7 +1680,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/18/2019-05-18-street-photography/'>[Weekly-3] 2019.05.18</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/18/2019-05-18-street-photography/'> [Weekly-3] 2019.05.18</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅May 18, 2019 </time> 
        
@@ -1727,7 +1709,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/11/2019-05-11-street-photography/'>[Weekly-2] 2019.05.11</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/11/2019-05-11-street-photography/'> [Weekly-2] 2019.05.11</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅May 11, 2019 </time> 
        
@@ -1756,7 +1738,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/04/2019-05-04-street-photography/'>[Weekly-1] May the 4th..</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/05/04/2019-05-04-street-photography/'> [Weekly-1] May the 4th..</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅May 4, 2019 </time> 
        
@@ -1950,7 +1932,6 @@ if (!doNotTrack) {
                 Tags
             </a>
         </span>
-        
         
         
             <span class="tag">
@@ -2199,7 +2180,6 @@ if (!doNotTrack) {
         </span>
         
         
-        
             <span class="tag">
                 <a href="/en/categories/coding/" class="is-categories taxo__link" data-dir="ltr">
                     <span class="taxo__text">
@@ -2249,7 +2229,6 @@ if (!doNotTrack) {
                 Series
             </a>
         </span>
-        
         
         
             <span class="tag">
@@ -2537,7 +2516,6 @@ if (!doNotTrack) {
       </a>
     
   
-
 
   </div>
 </div>

@@ -9,14 +9,11 @@
     
 
 
-  
-  <script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
-
-
-
 <script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <script defer src="/js/lazysizes.min.31dd6a2d3a1ec0f78a8df007535cf23f03aeb5c70f026e6d6a19dac3b3acc340.js"></script>
+
+<script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
 
 <script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
 
@@ -554,59 +551,44 @@
 
   
     
-    var baseurl = JSON.parse("\"http://nianze.tk/\"");
-    
     var permalink = JSON.parse("\"http://nianze.tk/en/tags/leica/\"");
-    
-    var langprefix = JSON.parse("\"/en\"");
     var searchResults = null;
     var searchMenu = null;
     var searchText = null;
     
-    
-    var enableSearch = JSON.parse("true");
     
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
     
     var sectionType = JSON.parse("\"tags\"");
-    
-    var kind = JSON.parse("\"taxonomy\"");
-    
+
     var fuse = null;
 
-    if (enableSearch) {
-      (function initFuse() {
-        var xhr = new XMLHttpRequest();
-        if (sectionType === "publication" && kind !== "page") {
-          xhr.open('GET', permalink + "index.json");
-        } else {
-          xhr.open('GET', baseurl + langprefix + "/index.json");
+    (function initFuse() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', permalink + "index.json");
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
+            keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+            includeMatches: enableSearchHighlight,
+            shouldSort: true,
+            threshold: 0.4,
+            location: 0,
+            distance: 100,
+            maxPatternLength: 32,
+            minMatchCharLength: 1,
+          });
+          window.fuse = fuse;
         }
-        
-        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
-              includeMatches: enableSearchHighlight,
-              shouldSort: true,
-              threshold: 0.4,
-              location: 0,
-              distance: 100,
-              maxPatternLength: 32,
-              minMatchCharLength: 1,
-            });
-            window.fuse = fuse;
-          }
-          else {
-            console.error('[' + xhr.status + ']Error:', xhr.statusText);
-          }
-        };
-        xhr.send();
-      })();
-    }
+        else {
+          console.error('[' + xhr.status + ']Error:', xhr.statusText);
+        }
+      };
+      xhr.send();
+    })();
 
     function makeLi(ulElem, obj) {
       var li = document.createElement('li');
@@ -1239,7 +1221,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1639,7 +1621,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/film/2020/01/18/2020-01-18-weekly-visual-project/'>[Weekly-38] 2020.01.18</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/film/2020/01/18/2020-01-18-weekly-visual-project/'> [Weekly-38] 2020.01.18</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Jan 18, 2020 </time> 
        
@@ -1668,7 +1650,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/film/2020/01/12/2020-01-12-weekly-visual-project/'>[Weekly-37] 2020.01.12</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/film/2020/01/12/2020-01-12-weekly-visual-project/'> [Weekly-37] 2020.01.12</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Jan 12, 2020 </time> 
        
@@ -1697,7 +1679,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/film/2019/12/21/2019-12-21-weekly-visual-project/'>[Weekly-34] 2019.12.21</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/film/2019/12/21/2019-12-21-weekly-visual-project/'> [Weekly-34] 2019.12.21</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Dec 21, 2019 </time> 
        
@@ -1726,7 +1708,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/12/07/2019-12-07-weekly-visual-project/'>[Weekly-32] 2019.12.07</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/gallery/digital/2019/12/07/2019-12-07-weekly-visual-project/'> [Weekly-32] 2019.12.07</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Dec 7, 2019 </time> 
        
@@ -1827,7 +1809,6 @@ if (!doNotTrack) {
                 Tags
             </a>
         </span>
-        
         
         
             <span class="tag">
@@ -2076,7 +2057,6 @@ if (!doNotTrack) {
         </span>
         
         
-        
             <span class="tag">
                 <a href="/en/categories/coding/" class="is-categories taxo__link" data-dir="ltr">
                     <span class="taxo__text">
@@ -2126,7 +2106,6 @@ if (!doNotTrack) {
                 Series
             </a>
         </span>
-        
         
         
             <span class="tag">
@@ -2414,7 +2393,6 @@ if (!doNotTrack) {
       </a>
     
   
-
 
   </div>
 </div>
