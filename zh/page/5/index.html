@@ -9,11 +9,14 @@
     
 
 
+  
+  <script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
+
+
+
 <script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <script defer src="/js/lazysizes.min.31dd6a2d3a1ec0f78a8df007535cf23f03aeb5c70f026e6d6a19dac3b3acc340.js"></script>
-
-<script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
 
 <script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
 
@@ -551,44 +554,59 @@
 
   
     
+    var baseurl = JSON.parse("\"http://nianze.tk/\"");
+    
     var permalink = JSON.parse("\"http://nianze.tk/zh/\"");
+    
+    var langprefix = JSON.parse("\"/zh\"");
     var searchResults = null;
     var searchMenu = null;
     var searchText = null;
     
+    
+    var enableSearch = JSON.parse("true");
     
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
     
     var sectionType = JSON.parse("\"page\"");
-
+    
+    var kind = JSON.parse("\"home\"");
+    
     var fuse = null;
 
-    (function initFuse() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', permalink + "index.json");
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-            keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
-            includeMatches: enableSearchHighlight,
-            shouldSort: true,
-            threshold: 0.4,
-            location: 0,
-            distance: 100,
-            maxPatternLength: 32,
-            minMatchCharLength: 1,
-          });
-          window.fuse = fuse;
+    if (enableSearch) {
+      (function initFuse() {
+        var xhr = new XMLHttpRequest();
+        if (sectionType === "publication" && kind !== "page") {
+          xhr.open('GET', permalink + "index.json");
+        } else {
+          xhr.open('GET', baseurl + langprefix + "/index.json");
         }
-        else {
-          console.error('[' + xhr.status + ']Error:', xhr.statusText);
-        }
-      };
-      xhr.send();
-    })();
+        
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              includeMatches: enableSearchHighlight,
+              shouldSort: true,
+              threshold: 0.4,
+              location: 0,
+              distance: 100,
+              maxPatternLength: 32,
+              minMatchCharLength: 1,
+            });
+            window.fuse = fuse;
+          }
+          else {
+            console.error('[' + xhr.status + ']Error:', xhr.statusText);
+          }
+        };
+        xhr.send();
+      })();
+    }
 
     function makeLi(ulElem, obj) {
       var li = document.createElement('li');
@@ -1221,7 +1239,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.69.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1617,10 +1635,72 @@ if (!doNotTrack) {
             
             
             
+            
+            
+            
+            
                 
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/gallery/digital/2020/01/05/2020-01-05-weekly-visual-project/'> [Weekly-36] 2020.01.05</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/gallery/film/2020/01/18/2020-01-18-weekly-visual-project/'>[Weekly-38] 2020.01.18</a> </h5>
+    <h6 class="subtitle caption">
+      <time title="创建日期" dir="ltr">📅2020年01月18日 </time> 
+       
+      <span title="阅读时长" dir="ltr"> &middot; ☕ 1 分钟</span>
+      
+    </h6>
+  </header>
+  <div class="summary-card__content">
+    <div class="summary-card__text p2">
+      
+      <p>Weekly visual project - 2020/01/18</p>
+      
+    </div>
+    
+    <div class="summary-card__image-wrapper">
+      <a href="http://nianze.tk/zh/gallery/film/2020/01/18/2020-01-18-weekly-visual-project/">
+        <img data-src="/images/2020/01/18/hp5_dummy.jpg" alt="2020/01/18/hp5_dummy.jpg" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
+      </a>
+    </div>
+    
+  </div>
+  <hr />
+</article>
+
+            
+                
+  <article class="summary-card" data-ani="true">
+  <header>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2020/01/hobby-as-ritual/'>&#34;不务正业&#34;的程序员</a> </h5>
+    <h6 class="subtitle caption">
+      <time title="创建日期" dir="ltr">📅2020年01月16日 </time> 
+       
+      <span title="阅读时长" dir="ltr"> &middot; ☕ 2 分钟</span>
+      
+    </h6>
+  </header>
+  <div class="summary-card__content">
+    <div class="summary-card__text p2">
+      
+      <p>古希腊人对“幸福”所下的定义：“生命的力量在生活赋予的广阔空间中的卓异展现”。</p>
+      
+    </div>
+    
+    <div class="summary-card__image-wrapper">
+      <a href="http://nianze.tk/zh/posts/2020/01/hobby-as-ritual/">
+        <img data-src="/images/2020/01/16/jewel.jpg" alt="2020/01/16/jewel.jpg" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
+      </a>
+    </div>
+    
+  </div>
+  <hr />
+</article>
+
+            
+                
+  <article class="summary-card" data-ani="true">
+  <header>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/gallery/digital/2020/01/05/2020-01-05-weekly-visual-project/'>[Weekly-36] 2020.01.05</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2020年01月05日 </time> 
        
@@ -1649,7 +1729,7 @@ if (!doNotTrack) {
                 
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/gallery/film/2019/12/21/2019-12-21-weekly-visual-project/'> [Weekly-34] 2019.12.21</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/gallery/film/2019/12/21/2019-12-21-weekly-visual-project/'>[Weekly-34] 2019.12.21</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2019年12月21日 </time> 
        
@@ -1678,7 +1758,7 @@ if (!doNotTrack) {
                 
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2019/12/first-film-development/'> 胶片初体验</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2019/12/first-film-development/'>胶片初体验</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2019年12月21日 </time> 
        
@@ -1696,64 +1776,6 @@ if (!doNotTrack) {
     <div class="summary-card__image-wrapper">
       <a href="http://nianze.tk/zh/posts/2019/12/first-film-development/">
         <img data-src="/images/2019/12/07/thumbnail/m4.JPG" alt="2019/12/07/thumbnail/m4.JPG" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-            
-                
-  <article class="summary-card" data-ani="true">
-  <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/gallery/digital/2019/12/15/2019-12-15-weekly-visual-project/'> [Weekly-33] 2019.12.15</a> </h5>
-    <h6 class="subtitle caption">
-      <time title="创建日期" dir="ltr">📅2019年12月15日 </time> 
-       
-      <span title="阅读时长" dir="ltr"> &middot; ☕ 1 分钟</span>
-      
-    </h6>
-  </header>
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>Weekly visual project - 2019/12/15</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="http://nianze.tk/zh/gallery/digital/2019/12/15/2019-12-15-weekly-visual-project/">
-        <img data-src="/images/2019/12/15/thumbnail/cross.JPG" alt="2019/12/15/thumbnail/cross.JPG" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-            
-                
-  <article class="summary-card" data-ani="true">
-  <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/gallery/digital/2019/12/07/2019-12-07-weekly-visual-project/'> [Weekly-32] 2019.12.07</a> </h5>
-    <h6 class="subtitle caption">
-      <time title="创建日期" dir="ltr">📅2019年12月07日 </time> 
-       
-      <span title="阅读时长" dir="ltr"> &middot; ☕ 1 分钟</span>
-      
-    </h6>
-  </header>
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>Weekly visual project - 2019/12/07</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="http://nianze.tk/zh/gallery/digital/2019/12/07/2019-12-07-weekly-visual-project/">
-        <img data-src="/images/2019/12/07/thumbnail/mushroom%20rice.JPG" alt="2019/12/07/thumbnail/mushroom rice.JPG" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
       </a>
     </div>
     
@@ -2054,6 +2076,22 @@ if (!doNotTrack) {
 
         
         <section class="sidebar-recent">
+            <a href="/zh/gallery/" class="sidebar-recent__title p2">影像</a>
+            <ul class="sidebar-recent__ul">
+                
+                    <li>
+                        <a href="/zh/gallery/digital/" class="sidebar-recent__a p2">数码</a>
+                    </li>
+                
+                    <li>
+                        <a href="/zh/gallery/film/" class="sidebar-recent__a p2">胶片</a>
+                    </li>
+                
+            </ul>
+        </section>
+        <hr class="hr-fade sidebar-hr" />
+        
+        <section class="sidebar-recent">
             <a href="/zh/posts/" class="sidebar-recent__title p2">胡言乱语</a>
             <ul class="sidebar-recent__ul">
                 
@@ -2075,22 +2113,6 @@ if (!doNotTrack) {
                 
                     <li>
                         <a href="/zh/posts/2020/02/snowboard-in-slc/" class="sidebar-recent__a p2">盐湖城单板四日游</a>
-                    </li>
-                
-            </ul>
-        </section>
-        <hr class="hr-fade sidebar-hr" />
-        
-        <section class="sidebar-recent">
-            <a href="/zh/gallery/" class="sidebar-recent__title p2">影像</a>
-            <ul class="sidebar-recent__ul">
-                
-                    <li>
-                        <a href="/zh/gallery/film/" class="sidebar-recent__a p2">胶片</a>
-                    </li>
-                
-                    <li>
-                        <a href="/zh/gallery/digital/" class="sidebar-recent__a p2">数码</a>
                     </li>
                 
             </ul>
@@ -2129,6 +2151,7 @@ if (!doNotTrack) {
                 标签
             </a>
         </span>
+        
         
         
             <span class="tag">
@@ -2540,7 +2563,7 @@ if (!doNotTrack) {
                         street photography
                     </span>
                     <span class="taxo__num" dir="auto">
-                        48
+                        50
                     </span>
                 </a>
             </span>
@@ -2611,6 +2634,7 @@ if (!doNotTrack) {
         </span>
         
         
+        
             <span class="tag">
                 <a href="/zh/categories/coding/" class="is-categories taxo__link" data-dir="ltr">
                     <span class="taxo__text">
@@ -2669,7 +2693,7 @@ if (!doNotTrack) {
                         visual
                     </span>
                     <span class="taxo__num" dir="auto">
-                        55
+                        57
                     </span>
                 </a>
             </span>
@@ -2686,6 +2710,7 @@ if (!doNotTrack) {
                 系列
             </a>
         </span>
+        
         
         
             <span class="tag">
@@ -2733,7 +2758,7 @@ if (!doNotTrack) {
                         weekly
                     </span>
                     <span class="taxo__num" dir="auto">
-                        47
+                        49
                     </span>
                 </a>
             </span>
@@ -2967,11 +2992,12 @@ if (!doNotTrack) {
   
   
     
-      <a href="http://nianze.tk/zh//index.xml" type="application/rss+xml" title="RSS" aria-label="RSS Feed Link">
+      <a href="http://nianze.tk/zh/index.xml" type="application/rss+xml" title="RSS" aria-label="RSS Feed Link">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><circle fill="currentColor" cx="6.18" cy="17.82" r="2.18"/><path fill="currentColor" d="M5.59 10.23c-.84-.14-1.59.55-1.59 1.4 0 .71.53 1.28 1.23 1.4 2.92.51 5.22 2.82 5.74 5.74.12.7.69 1.23 1.4 1.23.85 0 1.54-.75 1.41-1.59-.68-4.2-3.99-7.51-8.19-8.18zm-.03-5.71C4.73 4.43 4 5.1 4 5.93c0 .73.55 1.33 1.27 1.4 6.01.6 10.79 5.38 11.39 11.39.07.73.67 1.28 1.4 1.28.84 0 1.5-.73 1.42-1.56-.73-7.34-6.57-13.19-13.92-13.92z"/></svg>
       </a>
     
   
+
 
   </div>
 </div>

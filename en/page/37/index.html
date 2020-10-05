@@ -9,11 +9,14 @@
     
 
 
+  
+  <script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
+
+
+
 <script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <script defer src="/js/lazysizes.min.31dd6a2d3a1ec0f78a8df007535cf23f03aeb5c70f026e6d6a19dac3b3acc340.js"></script>
-
-<script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
 
 <script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
 
@@ -551,44 +554,59 @@
 
   
     
+    var baseurl = JSON.parse("\"http://nianze.tk/\"");
+    
     var permalink = JSON.parse("\"http://nianze.tk/en/\"");
+    
+    var langprefix = JSON.parse("\"/en\"");
     var searchResults = null;
     var searchMenu = null;
     var searchText = null;
     
+    
+    var enableSearch = JSON.parse("true");
     
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
     
     var sectionType = JSON.parse("\"page\"");
-
+    
+    var kind = JSON.parse("\"home\"");
+    
     var fuse = null;
 
-    (function initFuse() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', permalink + "index.json");
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-            keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
-            includeMatches: enableSearchHighlight,
-            shouldSort: true,
-            threshold: 0.4,
-            location: 0,
-            distance: 100,
-            maxPatternLength: 32,
-            minMatchCharLength: 1,
-          });
-          window.fuse = fuse;
+    if (enableSearch) {
+      (function initFuse() {
+        var xhr = new XMLHttpRequest();
+        if (sectionType === "publication" && kind !== "page") {
+          xhr.open('GET', permalink + "index.json");
+        } else {
+          xhr.open('GET', baseurl + langprefix + "/index.json");
         }
-        else {
-          console.error('[' + xhr.status + ']Error:', xhr.statusText);
-        }
-      };
-      xhr.send();
-    })();
+        
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              includeMatches: enableSearchHighlight,
+              shouldSort: true,
+              threshold: 0.4,
+              location: 0,
+              distance: 100,
+              maxPatternLength: 32,
+              minMatchCharLength: 1,
+            });
+            window.fuse = fuse;
+          }
+          else {
+            console.error('[' + xhr.status + ']Error:', xhr.statusText);
+          }
+        };
+        xhr.send();
+      })();
+    }
 
     function makeLi(ulElem, obj) {
       var li = document.createElement('li');
@@ -1221,7 +1239,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.69.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1592,10 +1610,72 @@ if (!doNotTrack) {
             
             
             
+            
+            
+            
+            
                 
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/use-const-whenever-possible/'> Item-3 Use const whenever possible</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/functions-silently-created/'>Item-5 What functions C&#43;&#43; silently generates</a> </h5>
+    <h6 class="subtitle caption">
+      <time title="Written At" dir="ltr">📅Jan 23, 2018 </time> 
+       
+      <span title="Reading Time" dir="ltr"> &middot; ☕ 3 min read</span>
+      
+    </h6>
+  </header>
+  <div class="summary-card__content">
+    <div class="summary-card__text p2">
+      
+      <p>Compilers may implicitly generate their own versions of default constructor, copy constructor, copy assignment operator, and destructor.</p>
+      
+    </div>
+    
+    <div class="summary-card__image-wrapper">
+      <a href="http://nianze.tk/en/notes/2018/01/functions-silently-created/">
+        <img data-src="/images/2018/2018-01/2018-01-23.jpg" alt="2018/2018-01/2018-01-23.jpg" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
+      </a>
+    </div>
+    
+  </div>
+  <hr />
+</article>
+
+            
+                
+  <article class="summary-card" data-ani="true">
+  <header>
+    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/initialize-before-use/'>Item-4 Initialize objects before they&#39;re used</a> </h5>
+    <h6 class="subtitle caption">
+      <time title="Written At" dir="ltr">📅Jan 22, 2018 </time> 
+       
+      <span title="Reading Time" dir="ltr"> &middot; ☕ 5 min read</span>
+      
+    </h6>
+  </header>
+  <div class="summary-card__content">
+    <div class="summary-card__text p2">
+      
+      <p>Since C++ is fickle about initialization, some good coding style is suggested.</p>
+      
+    </div>
+    
+    <div class="summary-card__image-wrapper">
+      <a href="http://nianze.tk/en/notes/2018/01/initialize-before-use/">
+        <img data-src="/images/2018/2018-01/2018-01-22.jpg" alt="2018/2018-01/2018-01-22.jpg" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
+      </a>
+    </div>
+    
+  </div>
+  <hr />
+</article>
+
+            
+                
+  <article class="summary-card" data-ani="true">
+  <header>
+    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/use-const-whenever-possible/'>Item-3 Use const whenever possible</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Jan 19, 2018 </time> 
        
@@ -1624,7 +1704,7 @@ if (!doNotTrack) {
                 
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/cpp-is-multiparadigm/'> Item-0 Federation of languages</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/cpp-is-multiparadigm/'>Item-0 Federation of languages</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Jan 18, 2018 </time> 
        
@@ -1653,7 +1733,7 @@ if (!doNotTrack) {
                 
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/tips-on-iostream/'> Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/tips-on-iostream/'>Item-2 Compare &lt;iostream&gt; to &lt;stdio.h&gt;</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Jan 17, 2018 </time> 
        
@@ -1671,64 +1751,6 @@ if (!doNotTrack) {
     <div class="summary-card__image-wrapper">
       <a href="http://nianze.tk/en/notes/2018/01/tips-on-iostream/">
         <img data-src="/images/2018/2018-01/2018-01-17.png" alt="2018/2018-01/2018-01-17.png" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-            
-                
-  <article class="summary-card" data-ani="true">
-  <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/start-of-effective-cpp-series/'> Item-1 Prefer consts, enums and inlines to #defines</a> </h5>
-    <h6 class="subtitle caption">
-      <time title="Written At" dir="ltr">📅Jan 16, 2018 </time> 
-       
-      <span title="Reading Time" dir="ltr"> &middot; ☕ 5 min read</span>
-      
-    </h6>
-  </header>
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>A new (hopefully) daily review on <code>C++</code>.</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="http://nianze.tk/en/notes/2018/01/start-of-effective-cpp-series/">
-        <img data-src="/images/2018/2018-01/2018-01-16.jpg" alt="2018/2018-01/2018-01-16.jpg" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-            
-                
-  <article class="summary-card" data-ani="true">
-  <header>
-    <h5 class="title h5"><a href='http://nianze.tk/en/notes/2018/01/start-of-machine-learning-series/'> Machine learning overview</a> </h5>
-    <h6 class="subtitle caption">
-      <time title="Written At" dir="ltr">📅Jan 4, 2018 </time> 
-       
-      <span title="Reading Time" dir="ltr"> &middot; ☕ 4 min read</span>
-      
-    </h6>
-  </header>
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>My first post in the new <code>machine learning</code> series.</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="http://nianze.tk/en/notes/2018/01/start-of-machine-learning-series/">
-        <img data-src="/images/2018/2018-01/2018-01-04-ml.png" alt="2018/2018-01/2018-01-04-ml.png" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
       </a>
     </div>
     
@@ -2157,11 +2179,11 @@ if (!doNotTrack) {
             <ul class="sidebar-recent__ul">
                 
                     <li>
-                        <a href="/en/gallery/film/" class="sidebar-recent__a p2">Film</a>
+                        <a href="/en/gallery/digital/" class="sidebar-recent__a p2">Digital</a>
                     </li>
                 
                     <li>
-                        <a href="/en/gallery/digital/" class="sidebar-recent__a p2">Digital</a>
+                        <a href="/en/gallery/film/" class="sidebar-recent__a p2">Film</a>
                     </li>
                 
             </ul>
@@ -2244,6 +2266,7 @@ if (!doNotTrack) {
                 Tags
             </a>
         </span>
+        
         
         
             <span class="tag">
@@ -2447,7 +2470,7 @@ if (!doNotTrack) {
                         street photography
                     </span>
                     <span class="taxo__num" dir="auto">
-                        48
+                        50
                     </span>
                 </a>
             </span>
@@ -2492,6 +2515,7 @@ if (!doNotTrack) {
         </span>
         
         
+        
             <span class="tag">
                 <a href="/en/categories/coding/" class="is-categories taxo__link" data-dir="ltr">
                     <span class="taxo__text">
@@ -2524,7 +2548,7 @@ if (!doNotTrack) {
                         visual
                     </span>
                     <span class="taxo__num" dir="auto">
-                        49
+                        51
                     </span>
                 </a>
             </span>
@@ -2541,6 +2565,7 @@ if (!doNotTrack) {
                 Series
             </a>
         </span>
+        
         
         
             <span class="tag">
@@ -2601,7 +2626,7 @@ if (!doNotTrack) {
                         weekly
                     </span>
                     <span class="taxo__num" dir="auto">
-                        48
+                        50
                     </span>
                 </a>
             </span>
@@ -2835,11 +2860,12 @@ if (!doNotTrack) {
   
   
     
-      <a href="http://nianze.tk/en//index.xml" type="application/rss+xml" title="RSS" aria-label="RSS Feed Link">
+      <a href="http://nianze.tk/en/index.xml" type="application/rss+xml" title="RSS" aria-label="RSS Feed Link">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><circle fill="currentColor" cx="6.18" cy="17.82" r="2.18"/><path fill="currentColor" d="M5.59 10.23c-.84-.14-1.59.55-1.59 1.4 0 .71.53 1.28 1.23 1.4 2.92.51 5.22 2.82 5.74 5.74.12.7.69 1.23 1.4 1.23.85 0 1.54-.75 1.41-1.59-.68-4.2-3.99-7.51-8.19-8.18zm-.03-5.71C4.73 4.43 4 5.1 4 5.93c0 .73.55 1.33 1.27 1.4 6.01.6 10.79 5.38 11.39 11.39.07.73.67 1.28 1.4 1.28.84 0 1.5-.73 1.42-1.56-.73-7.34-6.57-13.19-13.92-13.92z"/></svg>
       </a>
     
   
+
 
   </div>
 </div>
