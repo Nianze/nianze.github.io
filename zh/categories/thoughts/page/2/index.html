@@ -9,11 +9,14 @@
     
 
 
+  
+  <script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
+
+
+
 <script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
 <script defer src="/js/lazysizes.min.31dd6a2d3a1ec0f78a8df007535cf23f03aeb5c70f026e6d6a19dac3b3acc340.js"></script>
-
-<script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
 
 <script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
 
@@ -551,44 +554,59 @@
 
   
     
+    var baseurl = JSON.parse("\"http://nianze.tk/\"");
+    
     var permalink = JSON.parse("\"http://nianze.tk/zh/categories/thoughts/\"");
+    
+    var langprefix = JSON.parse("\"/zh\"");
     var searchResults = null;
     var searchMenu = null;
     var searchText = null;
     
+    
+    var enableSearch = JSON.parse("true");
     
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
     
     var sectionType = JSON.parse("\"categories\"");
-
+    
+    var kind = JSON.parse("\"taxonomy\"");
+    
     var fuse = null;
 
-    (function initFuse() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', permalink + "index.json");
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-            keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
-            includeMatches: enableSearchHighlight,
-            shouldSort: true,
-            threshold: 0.4,
-            location: 0,
-            distance: 100,
-            maxPatternLength: 32,
-            minMatchCharLength: 1,
-          });
-          window.fuse = fuse;
+    if (enableSearch) {
+      (function initFuse() {
+        var xhr = new XMLHttpRequest();
+        if (sectionType === "publication" && kind !== "page") {
+          xhr.open('GET', permalink + "index.json");
+        } else {
+          xhr.open('GET', baseurl + langprefix + "/index.json");
         }
-        else {
-          console.error('[' + xhr.status + ']Error:', xhr.statusText);
-        }
-      };
-      xhr.send();
-    })();
+        
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              includeMatches: enableSearchHighlight,
+              shouldSort: true,
+              threshold: 0.4,
+              location: 0,
+              distance: 100,
+              maxPatternLength: 32,
+              minMatchCharLength: 1,
+            });
+            window.fuse = fuse;
+          }
+          else {
+            console.error('[' + xhr.status + ']Error:', xhr.statusText);
+          }
+        };
+        xhr.send();
+      })();
+    }
 
     function makeLi(ulElem, obj) {
       var li = document.createElement('li');
@@ -1221,7 +1239,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.69.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1621,7 +1639,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/07/the-source-of-creative-desire/'> 创作欲望本质是什么？</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/07/the-source-of-creative-desire/'>创作欲望本质是什么？</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2018年07月13日 </time> 
        
@@ -1650,7 +1668,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/06/a-simple-calculation/'> 一个油腻中年大叔在儿童节的胡思乱想</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/06/a-simple-calculation/'>一个油腻中年大叔在儿童节的胡思乱想</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2018年06月01日 </time> 
        
@@ -1679,7 +1697,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/04/relocation-to-m2/'> 搬了个家</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/04/relocation-to-m2/'>搬了个家</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2018年04月29日 </time> 
        
@@ -1708,7 +1726,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/04/a-big-step/'> 一个大坑</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/04/a-big-step/'>一个大坑</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2018年04月25日 </time> 
        
@@ -1737,7 +1755,7 @@ if (!doNotTrack) {
         
   <article class="summary-card" data-ani="true">
   <header>
-    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/02/2018-roadmap/'> 2018进度表</a> </h5>
+    <h5 class="title h5"><a href='http://nianze.tk/zh/posts/2018/02/2018-roadmap/'>2018进度表</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2018年02月06日 </time> 
        
@@ -1876,6 +1894,7 @@ if (!doNotTrack) {
                 标签
             </a>
         </span>
+        
         
         
             <span class="tag">
@@ -2287,7 +2306,7 @@ if (!doNotTrack) {
                         street photography
                     </span>
                     <span class="taxo__num" dir="auto">
-                        50
+                        51
                     </span>
                 </a>
             </span>
@@ -2358,6 +2377,7 @@ if (!doNotTrack) {
         </span>
         
         
+        
             <span class="tag">
                 <a href="/zh/categories/coding/" class="is-categories taxo__link" data-dir="ltr">
                     <span class="taxo__text">
@@ -2416,7 +2436,7 @@ if (!doNotTrack) {
                         visual
                     </span>
                     <span class="taxo__num" dir="auto">
-                        57
+                        58
                     </span>
                 </a>
             </span>
@@ -2433,6 +2453,7 @@ if (!doNotTrack) {
                 系列
             </a>
         </span>
+        
         
         
             <span class="tag">
@@ -2480,7 +2501,7 @@ if (!doNotTrack) {
                         weekly
                     </span>
                     <span class="taxo__num" dir="auto">
-                        49
+                        50
                     </span>
                 </a>
             </span>
@@ -2693,6 +2714,7 @@ if (!doNotTrack) {
       </a>
     
   
+
 
   </div>
 </div>
