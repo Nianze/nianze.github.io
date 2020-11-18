@@ -10,17 +10,17 @@
 
 
   
-  <script defer src="/js/fuse.min.94c78ad70b02749822921660cf4e9f0b3701bc0680c421afb784a78228de0275.js"></script>
+  <script defer src="/js/fuse.min.32195737929df2c8096e855a5789cbb3f1331224d9169e8705493e7008f47df8.js"></script>
 
 
 
 <script src="/js/enquire.min.dfb99dee1e029d51d6cfb672d847929890b1585402de17f5ed092edd72a688b4.js"></script>
 
-<script defer src="/js/lazysizes.min.31dd6a2d3a1ec0f78a8df007535cf23f03aeb5c70f026e6d6a19dac3b3acc340.js"></script>
+<script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
 <script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.93a331f96194789a542f33690bbe4f0c102c7e78ffc018217f5a1c33010bad91.js"></script>
+<script defer src="/js/helper/fadeinout.min.efa35f4c090622130b3f4cfae6971448b5ffb61c5f0a8f21cdfd157fa712abc4.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -99,6 +99,74 @@
           navCollapse.setAttribute('data-open', 'true');
           navCollapse.style.maxHeight = navCollapse.scrollHeight + "px";
           navCollapseBtn.classList.add('is-active');
+        }
+      }
+    }) : null;
+    
+
+
+    
+    var tables = document.querySelectorAll('.single__contents > table');
+    for (let i = 0; i < tables.length; i++) {
+      var table = tables[i];
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      table.parentElement.replaceChild(wrapper, table);
+      wrapper.appendChild(table);
+    }
+    
+
+
+    
+    var footNoteRefs = document.querySelectorAll('.footnote-ref');
+    var footNoteBackRefs = document.querySelectorAll('.footnote-backref');
+
+    footNoteRefs ? 
+    footNoteRefs.forEach(function(elem, idx) {
+      elem.onmouseenter = function () {
+        if (navbar.classList.contains('scrolling')) {
+          navbar.classList.remove('scrolling');
+        }
+      }
+
+      elem.onmouseleave = function () {
+        if (!navbar.classList.contains('scrolling')) {
+          setTimeout(function () {
+            navbar.classList.add('scrolling');
+          }, 100);
+        }
+      }
+
+      elem.onclick = function () {
+        if (!navbar.classList.contains('scrolling')) {
+          navbar.classList.remove('navbar--show');
+          navbar.classList.remove('navbar--hide');
+          navbar.classList.add('navbar--hide');
+        }
+      }
+    }) : null;
+
+    footNoteBackRefs ? 
+    footNoteBackRefs.forEach(function(elem, idx) {
+      elem.onmouseenter = function () {
+        if (navbar.classList.contains('scrolling')) {
+          navbar.classList.remove('scrolling');
+        }
+      }
+
+      elem.onmouseleave = function () {
+        if (!navbar.classList.contains('scrolling')) {
+          setTimeout(function() {
+            navbar.classList.add('scrolling');
+          }, 100);
+        }
+      }
+
+      elem.onclick = function () {
+        if (!navbar.classList.contains('scrolling')) {
+          navbar.classList.remove('navbar--show');
+          navbar.classList.remove('navbar--hide');
+          navbar.classList.add('navbar--hide');
         }
       }
     }) : null;
@@ -292,11 +360,13 @@
         if (st < 45) {
           return null;
         }
-        
-        if (!navbar.classList.contains('navbar--hide')) {
-          navbar.classList.add('navbar--hide');
-        } else if (navbar.classList.contains('navbar--show')) {
-          navbar.classList.remove('navbar--show');
+
+        if (navbar.classList.contains('scrolling')) {
+          if (!navbar.classList.contains('navbar--hide')) {
+            navbar.classList.add('navbar--hide');
+          } else if (navbar.classList.contains('navbar--show')) {
+            navbar.classList.remove('navbar--show');
+          }
         }
 
         if (singleContentsElem) {
@@ -363,10 +433,12 @@
           gttBtn.style.display = "none";
         }
 
-        if (navbar.classList.contains('navbar--hide')) {
-          navbar.classList.remove('navbar--hide');
-        } else if (!navbar.classList.contains('navbar--show')) {
-          navbar.classList.add('navbar--show');
+        if (navbar.classList.contains('scrolling')) {
+          if (navbar.classList.contains('navbar--hide')) {
+            navbar.classList.remove('navbar--hide');
+          } else if (!navbar.classList.contains('navbar--show')) {
+            navbar.classList.add('navbar--show');
+          }
         }
 
         if (singleContentsElem) {
@@ -447,6 +519,17 @@
     var rootEleme = document.getElementById('root');
     var selectThemeElem = document.querySelectorAll('.select-theme');
     var selectThemeItemElem = document.querySelectorAll('.select-theme__item');
+    
+    
+    var skinDarkCode = JSON.parse("\"dark\"");
+    
+    var skinLightCode = JSON.parse("\"light\"");
+    
+    var skinHackerCode = JSON.parse("\"hacker\"");
+    
+    var skinSolarizedCode = JSON.parse("\"solarized\"");
+    
+    var skinKimbieCode = JSON.parse("\"kimbie\"");
 
     var setMetaColor = function(themeColor) {
       var metaMsapplicationTileColor = document.getElementsByName('msapplication-TileColor')[0];
@@ -479,7 +562,21 @@
         metaThemeColor.setAttribute('content', '#eee8d5');
         metaMsapplicationNavbuttonColor.setAttribute('content', '#eee8d5');
         metaAppleMobileWebAappStatusBarStyle.setAttribute('content', '#eee8d5');
-      } 
+      }
+    }
+
+    var parseSkinCode = function(themeText) {
+      if (themeText === skinDarkCode) {
+        return 'dark';
+      } else if (themeText === skinLightCode) {
+        return 'light';
+      } else if (themeText === skinHackerCode) {
+        return 'hacker';
+      } else if (themeText === skinSolarizedCode) {
+        return 'solarized';
+      } else if (themeText === skinKimbieCode) {
+        return 'kimbie';
+      }
     }
     
     if (localTheme) {
@@ -500,7 +597,7 @@
     selectThemeItemElem ? 
     selectThemeItemElem.forEach(function (v, i) {
       v.addEventListener('click', function (e) {
-        var selectedThemeVariant = e.target.text.trim();
+        var selectedThemeVariant = parseSkinCode(e.target.text.trim());
         localStorage.setItem('theme', selectedThemeVariant);
         setMetaColor(selectedThemeVariant);
 
@@ -591,12 +688,15 @@
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
               keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
-              shouldSort: true,
-              threshold: 0.4,
-              location: 0,
-              distance: 100,
+              shouldSort: true, 
+              threshold: 0.4, 
+              location: 0, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
+              isCaseSensitive: false, 
+              findAllMatches: false, 
+              useExtendedSearch: false, 
             });
             window.fuse = fuse;
           }
@@ -613,16 +713,16 @@
       li.className = 'search-result__item';
       
       var a = document.createElement('a');
-      a.innerHTML = obj.title;
+      a.innerHTML = obj.item.title;
       a.setAttribute('class', 'search-result__item--title');
-      a.setAttribute('href', obj.permalink);
+      a.setAttribute('href', obj.item.permalink);
 
       var descDiv = document.createElement('div');
       descDiv.setAttribute('class', 'search-result__item--desc');
-      if (obj.description) {
-        descDiv.innerHTML = obj.description;
-      } else if (obj.content) {
-        descDiv.innerHTML = obj.content.substring(0, 225);
+      if (obj.item.description) {
+        descDiv.innerHTML = obj.item.description;
+      } else if (obj.item.content) {
+        descDiv.innerHTML = obj.item.content.substring(0, 225);
       }
       
       li.appendChild(a);
@@ -1096,7 +1196,7 @@
   
     var mobileSearchInputElem = document.querySelector('#search-mobile');
     var mobileSearchClassElem = document.querySelector('.mobile-search');
-    var mobileSearchBtnElem = document.querySelector('#mobileSearchBtn');
+    var mobileSearchBtnElems = document.querySelectorAll('.navbar-search');
     var mobileSearchCloseBtnElem = document.querySelector('#search-mobile-close');
     var mobileSearchContainer = document.querySelector('#search-mobile-container');
     var mobileSearchResultsElem = document.querySelector('#search-mobile-results');
@@ -1106,19 +1206,21 @@
       mobileSearchClassElem.style.display = 'none';
     }
 
-    mobileSearchBtnElem ? 
-    mobileSearchBtnElem.addEventListener('click', function () {
-      if (mobileSearchContainer) {
-        mobileSearchContainer.style.display = 'block';
-      }
+    mobileSearchBtnElems ? 
+    mobileSearchBtnElems.forEach(function (elem, idx) {
+      elem.addEventListener('click', function () {
+        if (mobileSearchContainer) {
+          mobileSearchContainer.style.display = 'block';
+        }
 
-      if (mobileSearchInputElem) {
-        mobileSearchInputElem.focus();
-      }
+        if (mobileSearchInputElem) {
+          mobileSearchInputElem.focus();
+        }
 
-      if (htmlElem) {
-        htmlElem.style.overflowY = 'hidden';
-      }
+        if (htmlElem) {
+          htmlElem.style.overflowY = 'hidden';
+        }
+      });
     }) : null;
 
     mobileSearchCloseBtnElem ? 
@@ -1346,7 +1448,7 @@ if (!doNotTrack) {
 
 
         <div class="wrapper" data-type="posts" data-kind="page">
-            <nav class="navbar" role="navigation" aria-label="main navigation" data-dir="ltr">
+            <nav class="navbar scrolling" role="navigation" aria-label="main navigation" data-dir="ltr">
   <div class="navbar__brand">
     
     <a href="/zh/" title="主页" rel="home" class="navbar__logo-link">
@@ -1395,7 +1497,7 @@ if (!doNotTrack) {
 </div>
 
 
-<div id="mobileSearchBtn" class="mobile-search__btn" data-ani="true">
+<div class="mobile-search__btn navbar-search" data-ani="true">
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M15.5 14h-.79l-.28-.27c1.2-1.4 1.82-3.31 1.48-5.34-.47-2.78-2.79-5-5.59-5.34-4.23-.52-7.79 3.04-7.27 7.27.34 2.8 2.56 5.12 5.34 5.59 2.03.34 3.94-.28 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
 </div>
 
@@ -1501,6 +1603,8 @@ if (!doNotTrack) {
   </ul>
 </div>
   <div class="navbar__menu">
+  
+  
   
 <div class="theme" data-ani="true">
   <div class="dropdown">
@@ -1635,6 +1739,7 @@ if (!doNotTrack) {
     <div class="single__nojs">Please enable Javascript to view the contents</div>
     <script>document.querySelector('.single').classList.remove('hide'); document.querySelector('.single__nojs').classList.add('hide');</script>
     <h2 class="single__title" data-ani="true">巧思RF：胶片时代落幕的余晖</h2>
+    <h3 class="single__subtitle"></h3>
     <div class="single__meta">
       
 <div class="single__infos">
@@ -1646,6 +1751,7 @@ if (!doNotTrack) {
      &middot; 👀<span id="busuanzi_value_page_pv">...</span> 阅读
   </span>
 </div>
+
       
 <ul class="single__tags caption">
   
@@ -1661,6 +1767,7 @@ if (!doNotTrack) {
   <li><a href="http://nianze.tk/zh/tags/konika-hexar/" class="single__tag" title="konika hexar">#konika hexar</a></li>
 
 </ul>
+
     </div>
     <article class="single__contents" data-dir="ltr" data-ani="true">
       
@@ -1669,446 +1776,468 @@ if (!doNotTrack) {
 <h1 id="历史回顾">历史回顾</h1>
 <p>最近佳能发布万众瞩目的<a href="https://www.canon.com.cn/special/r5/index.html">R5</a>，索尼则放出期待已久的<a href="https://www.engadget.com/sony-long-awaited-a7s-iii-will-be-revealed-on-july-28th-172756453.html">A7s iii</a>发布会预告，而久无音讯的宾得却默默上传了一支<a href="https://youtu.be/KfcFDGbtZyE">影片</a>，宣言他们“相信单反的前景”，这下宾得熬成单反第一名指日可待了（手动狗头）。不禁感慨，自己看着无反在大法的冲锋号角下徐徐拉开了历史新篇章，亲眼见证了单反时代的缓缓落幕。</p>
 <p>历史是轮回的，上一轮巨变，还在大概十多年前，摄影从胶片转向数字的时代：在那个胶片相机繁盛的时期，还有一家叫柯尼卡（Konica）的公司，于20世纪90年代初推出了一款叫做Konica Hexar (Hexar AF)的镜间快门固定镜头（35mm）旁轴取景自动对焦相机，基本可以看作是可装胶片的全画幅版富士X100系列相机，该系列的中文翻译很有韵味，被叫做“巧思”。由于巧思AF的广受好评，柯尼卡在1999年10月13日推出了可换镜头版的巧思：Hexar RF，中文名叫巧思RF，可以理解为装胶片的全画幅版富士X-pro系列相机。</p>
-
-
 <figure >
   
+  
+  
     <img data-src="/images/2020/07/18/hexar-af.jpg" alt="↑巧思AF" data-caption="↑巧思AF" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    
-    ↑巧思AF
-    
       
+      ↑巧思AF
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
 </figure>
-
 <p>可惜生不逢时，胶片的时代很快就被数码的浪潮冲的七零八落，自从柯尼卡在2003年8月与美能达合并成“柯尼卡美能达”（Konica Minolta, Inc.）后，巧思RF系列就停产了。再后来的事情，便是2006年柯美被索尼收购，在幕后为索尼设计研发机身和镜头，而这也标志着大法开始正式进军单反行业，然后便有了我们之后看到的Sony Alpha系列单反相机，单电相机，以及再之后开启新时代的微单™（无反）相机。</p>
 <p>这款卖了四年（2000-2003）的巧思RF有个别称：东瀛徕卡，只因为这台“胶片全幅版X-pro”采用了镜头群庞大的徕卡M口。当然，柯尼卡官方为了避嫌，管这个卡口叫做KM口，但实际上跟徕卡M口的镜头是基本通用的。凭借日本人对电子技术的积累优势，<a href="http://www3.xitek.com/bingqiku/konica/rangefinder/rf.htm">巧思RF的功能</a>非常强大，对同时在售的徕卡M6造成了很大的挑战，甚至同两年后（2002年）姗姗来迟的徕卡M7相比也完全不落下风。不过可能是叫好不叫座，也可能是日本企业面对徕卡时天生较弱的品牌价值，总之，生不逢时的巧思RF只短暂的生产了一代机型就草草停产，即使作为挑战者，巧思RF凭借其优秀的功能确实吸引了不少实拍者的青睐，但徕卡就是徕卡，其在135旁轴领域的地位是无法撼动的。</p>
 <h1 id="机身细节">机身细节</h1>
 <h2 id="正面">正面</h2>
-<p>
-
-<figure >
+<p><figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-1.jpg" alt="↑入的是145编号的后期版机身，镜头释放按钮外多了一圈金属环" data-caption="↑入的是145编号的后期版机身，镜头释放按钮外多了一圈金属环" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>正面</strong>:
-    
-    ↑入的是145编号的后期版机身，镜头释放按钮外多了一圈金属环
-    
+      <strong>正面</strong>:
       
+      ↑入的是145编号的后期版机身，镜头释放按钮外多了一圈金属环
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-2.jpg" alt="↑这个角度看有点像富士的x100系列" data-caption="↑这个角度看有点像富士的x100系列" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>正面</strong>:
-    
-    ↑这个角度看有点像富士的x100系列
-    
+      <strong>正面</strong>:
       
+      ↑这个角度看有点像富士的x100系列
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/fuji-x100v.jpg" alt="↑富士x100v" data-caption="↑富士x100v" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>对比</strong>:
-    
-    ↑富士x100v
-    
+      <strong>对比</strong>:
       
+      ↑富士x100v
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-11.jpg" alt="↑KM卡口，可以看到里面的纵走式金属快门和白色反光部分用来测光" data-caption="↑KM卡口，可以看到里面的纵走式金属快门和白色反光部分用来测光" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>正面</strong>:
-    
-    ↑KM卡口，可以看到里面的纵走式金属快门和白色反光部分用来测光
-    
+      <strong>正面</strong>:
       
+      ↑KM卡口，可以看到里面的纵走式金属快门和白色反光部分用来测光
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-</p>
+</figure></p>
 <h2 id="侧面">侧面</h2>
-
-
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-6.jpg" alt="↑从上到下依次是快门线接口，胶片舱盖开关，提前回片按钮" data-caption="↑从上到下依次是快门线接口，胶片舱盖开关，提前回片按钮" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>左侧面</strong>:
-    
-    ↑从上到下依次是快门线接口，胶片舱盖开关，提前回片按钮
-    
+      <strong>左侧面</strong>:
       
+      ↑从上到下依次是快门线接口，胶片舱盖开关，提前回片按钮
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
 </figure>
-
 <h2 id="背面">背面</h2>
-<p>
-
-<figure >
+<p><figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-5.jpg" alt="↑竖条窗口可以显示胶片的型号" data-caption="↑竖条窗口可以显示胶片的型号" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>背面</strong>:
-    
-    ↑竖条窗口可以显示胶片的型号
-    
+      <strong>背面</strong>:
       
+      ↑竖条窗口可以显示胶片的型号
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-3.jpg" alt="↑皮饰略微凸起方便握持" data-caption="↑皮饰略微凸起方便握持" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>背面</strong>:
-    
-    ↑皮饰略微凸起方便握持
-    
+      <strong>背面</strong>:
       
+      ↑皮饰略微凸起方便握持
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-12.jpg" alt="↑从侧面开关打开胶片舱盖" data-caption="↑从侧面开关打开胶片舱盖" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>背面</strong>:
-    
-    ↑从侧面开关打开胶片舱盖
-    
+      <strong>背面</strong>:
       
+      ↑从侧面开关打开胶片舱盖
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
   
+  
+  
     <img data-src="/images/2020/07/18/viewfinder.png" alt="↑左边是快门速度，35mm/135mm框线如图所示，中心黄斑还是比较明显的" data-caption="↑左边是快门速度，35mm/135mm框线如图所示，中心黄斑还是比较明显的" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>取景器</strong>:
-    
-    ↑左边是快门速度，35mm/135mm框线如图所示，中心黄斑还是比较明显的
-    
+      <strong>取景器</strong>:
       
+      ↑左边是快门速度，35mm/135mm框线如图所示，中心黄斑还是比较明显的
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
+</figure><br />
 取景器框线根据镜头自动调节，框线分配跟徕卡<a href="http://www3.xitek.com/bingqiku/konica/rangefinder/hexarrf.htm">如出一辙</a>，三档分别显示28/90，35/135，50/75。值得一提的是，中心黄斑虽然明亮，但存在两个潜在问题：</p>
 <ol>
 <li>如果眼睛没有正对取景器中心，那么黄斑会变的很浅看不清。</li>
 <li>我这台使用徕卡镜头的时候拧到无限远处时，黄斑并不会重合，会有一点点错位。相同镜头我在徕卡机身上试过，对焦环拧到最远处时无限远的物体边缘是正好重合的。据说如果配合巧思的镜头就不会出现无限远不重合的问题。网上也有视频教学如何校准对焦，不过因为就错位了一点点，对拍片影响不大，平时我还就按徕卡相机那样正常使用，似乎也没什么问题（街拍我对对焦精度要求本来也不高，很多时候甚至是盲拍或者超焦距拍摄）</li>
 </ol>
 <h2 id="机顶">机顶</h2>
-
-
 <figure >
   
+  
+  
     <img data-src="/images/2020/07/18/hexar_rf-4.jpg" alt="↑由于机顶掉漆（后文有提），我在漆面脱落处喷了漆，稍微有色差；以后可能直接贴一整面贴膜" data-caption="↑由于机顶掉漆（后文有提），我在漆面脱落处喷了漆，稍微有色差；以后可能直接贴一整面贴膜" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>机顶</strong>:
-    
-    ↑由于机顶掉漆（后文有提），我在漆面脱落处喷了漆，稍微有色差；以后可能直接贴一整面贴膜
-    
+      <strong>机顶</strong>:
       
+      ↑由于机顶掉漆（后文有提），我在漆面脱落处喷了漆，稍微有色差；以后可能直接贴一整面贴膜
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
 </figure>
-
 <ul>
 <li>机顶左侧的液晶屏，即使关机状态也会显示剩余电量，开机后则显示已拍张数</li>
 <li>一个巧妙的小功能：拍完一卷后会自动回片，回片快结束时有几秒时间液晶屏会显示“— —”，这个时候开启舱盖会留一小截胶片在外面，方便之后冲洗；如果一直不开舱盖，回片马达会继续转动，胶卷就会全部收回去<br />
-
-
 <figure >
   
+  
+  
     <img data-src="/images/2020/07/18/hexar_rf-7.jpg" alt="↑右侧控制区" data-caption="↑右侧控制区" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>机顶</strong>:
-    
-    ↑右侧控制区
-    
+      <strong>机顶</strong>:
       
+      ↑右侧控制区
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-</li>
+</figure></li>
 <li>左侧曝光补偿和ISO调节的转盘被整合在了一起，ISO转盘在DX模式下可自动读取胶片感光度</li>
 <li>中间开机拨环逆时针拨动分别是单张拍摄，连续拍摄，和自拍模式。自拍时正面有红色LED会闪烁指示倒计时。快门按钮是两段式的，半按快门时测光</li>
 <li>右侧拨轮带锁定，最高1/4000秒快门速度；闪光同步速度1/125秒；我一般都设置在AE或者AEL模式下（AEL时第一次半按快门测光完成后就锁定快门速度了，方便以先用中心点对焦+测光然后二次构图的方式来拍摄）<br />
-
-
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-9.jpg" alt="↑提起外环可手动调节ISO，现在的X100V和X-pro 3也是这样的设计" data-caption="↑提起外环可手动调节ISO，现在的X100V和X-pro 3也是这样的设计" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>机顶</strong>:
-    
-    ↑提起外环可手动调节ISO，现在的X100V和X-pro 3也是这样的设计
-    
+      <strong>机顶</strong>:
       
+      ↑提起外环可手动调节ISO，现在的X100V和X-pro 3也是这样的设计
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-</li>
+</figure></li>
 </ul>
 <h2 id="机底">机底</h2>
-
-
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-13.jpg" alt="↑左侧用硬币拧开可装入两节CR2电池，脚架接口和镜头不同轴" data-caption="↑左侧用硬币拧开可装入两节CR2电池，脚架接口和镜头不同轴" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>机底</strong>:
-    
-    ↑左侧用硬币拧开可装入两节CR2电池，脚架接口和镜头不同轴
-    
+      <strong>机底</strong>:
       
+      ↑左侧用硬币拧开可装入两节CR2电池，脚架接口和镜头不同轴
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
 </figure>
-
 <h2 id="对比徕卡机身">对比徕卡机身</h2>
-<p>
-
-<figure >
+<p><figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-14.jpg" alt="↑正面，基本一样的尺寸；对比之下巧思RF的颜值确实低些" data-caption="↑正面，基本一样的尺寸；对比之下巧思RF的颜值确实低些" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>对比M4</strong>:
-    
-    ↑正面，基本一样的尺寸；对比之下巧思RF的颜值确实低些
-    
+      <strong>对比M4</strong>:
       
+      ↑正面，基本一样的尺寸；对比之下巧思RF的颜值确实低些
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-15.jpg" alt="↑正面，还是徕卡的正脸看着舒服" data-caption="↑正面，还是徕卡的正脸看着舒服" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>对比M9</strong>:
-    
-    ↑正面，还是徕卡的正脸看着舒服
-    
+      <strong>对比M9</strong>:
       
+      ↑正面，还是徕卡的正脸看着舒服
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-16.jpg" alt="↑机顶，M9最厚，M4和巧思RF厚度一致" data-caption="↑机顶，M9最厚，M4和巧思RF厚度一致" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>对比M4和M9</strong>:
-    
-    ↑机顶，M9最厚，M4和巧思RF厚度一致
-    
+      <strong>对比M4和M9</strong>:
       
+      ↑机顶，M9最厚，M4和巧思RF厚度一致
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-</p>
+</figure></p>
 <h2 id="搭配镜头">搭配镜头</h2>
-<p>
-
-<figure >
+<p><figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-22.jpg" alt="↑ZEISS C Sonnar T* 50mm f/1.5 ZM" data-caption="↑ZEISS C Sonnar T* 50mm f/1.5 ZM" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>搭配镜头</strong>:
-    
-    ↑ZEISS C Sonnar T* 50mm f/1.5 ZM
-    
+      <strong>搭配镜头</strong>:
       
+      ↑ZEISS C Sonnar T* 50mm f/1.5 ZM
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-18.jpg" alt="↑Leica Summicron-M 35mm f/2 ASPH" data-caption="↑Leica Summicron-M 35mm f/2 ASPH" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>搭配镜头</strong>:
-    
-    ↑Leica Summicron-M 35mm f/2 ASPH
-    
+      <strong>搭配镜头</strong>:
       
+      ↑Leica Summicron-M 35mm f/2 ASPH
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-19.jpg" alt="↑ZEISS Biogon T* 21mm f/2.8 ZM" data-caption="↑ZEISS Biogon T* 21mm f/2.8 ZM" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>搭配镜头</strong>:
-    
-    ↑ZEISS Biogon T* 21mm f/2.8 ZM
-    
+      <strong>搭配镜头</strong>:
       
+      ↑ZEISS Biogon T* 21mm f/2.8 ZM
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/hexar_rf-20.jpg" alt="↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435" data-caption="↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>搭配镜头和21mm取景器</strong>:
-    
-    ↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435
-    
+      <strong>搭配镜头和21mm取景器</strong>:
       
+      ↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
+</figure><br />
 当年配套Carl Zeiss BIOGON 21mm f/4.5镜头的<a href="https://www.mir.com.my/rb/photography/companies/nikon/nikkoresources/RF-Nikkor/Contax_RF/Zeiss-Finders.htm">435取景器</a>是银黑配色，还是搭配相同配色的徕卡M4更和谐：<br />
-
-
 <figure >
   
+  
+  
     <img data-src="/images/2020/07/18/leica_m4_zm_21.jpg" alt="↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435" data-caption="↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>M4搭配蔡司21mm取景器</strong>:
-    
-    ↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435
-    
+      <strong>M4搭配蔡司21mm取景器</strong>:
       
+      ↑ZEISS Biogon T* 21mm f/2.8 ZM和ZEISS IKON 21MM VIEWFINDER 435
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-</p>
+</figure></p>
 <h1 id="使用感受">使用感受</h1>
 <ul>
 <li>
@@ -2129,44 +2258,46 @@ if (!doNotTrack) {
 <p>缺点：</p>
 <ul>
 <li>掉漆！钛合金顶盖和底盖对漆面的吸附力有限。我这台刚拿到手，发现机顶有个沙砾大小的露白，以为是灰尘，就手贱的用指甲搓了一下，结果漆面就被剥开，漏出了底下更多的钛金属色。银色限量款机型应该不会有这么明显的掉漆问题<br />
-
-
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/18/peeling.jpg" alt="↑当时一拿到就掉漆，瞬间就想退货了" data-caption="↑当时一拿到就掉漆，瞬间就想退货了" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>掉漆问题</strong>:
-    
-    ↑当时一拿到就掉漆，瞬间就想退货了
-    
+      <strong>掉漆问题</strong>:
       
+      ↑当时一拿到就掉漆，瞬间就想退货了
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-<br />
-
-
+</figure><br />
 <figure >
   
+  
+  
     <img data-src="/images/2020/07/18/konica-hexar-rf-limited.jpg" alt="↑世界限量2001台" data-caption="↑世界限量2001台" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
+  
+
+  
   
     <figcaption style="text-align: ">
-    <strong>限量版巧思RF</strong>:
-    
-    ↑世界限量2001台
-    
+      <strong>限量版巧思RF</strong>:
       
+      ↑世界限量2001台
       
-    
-  </figcaption>
+        
+        
+      
+    </figcaption>
   
-</figure>
-</li>
+</figure></li>
 <li>快门毕竟是金属的，会比布帘的噪音更大；对比起来，徕卡M4的布帘快门声明显更短促爽快，这台RF大概跟手头的徕卡M9的快门声差不多。这也讲得通，毕竟M9用的也是最高快门速度1/4000秒的纵走式金属快门</li>
 <li>取景器黄斑可视角度相比徕卡的会小一些，正对时才看得清，虽然不影响对焦但体验确实有所下降</li>
 <li>电子快门，所以没有电就摁不动快门；快门时滞记得大概90ms，对比起来M7好像大概20ms</li>
@@ -2179,51 +2310,56 @@ if (!doNotTrack) {
 <p>总的来说，这是一台工具属性较强的旁轴相机，做工扎实但手感依然没法跟徕卡比，多了很多方便先进的电子功能，但少了很多精致的机械质感和细节：更适合拍照党图方便带出门去街拍，不太适合抚摸党放在家中干燥箱观赏把玩。我预感今后为了出图方便，这台作为“副机”的巧思RF会比M4有更多的出场机会，基本就是拿来当胶片版的M9来用。</p>
 <h1 id="样片">样片</h1>
 <p>样片均由Kodak Ektar 100拍摄。由于家里几个月前配好的C41药水已经洗过大概5次可能也快过期了，这次洗出来颜色可能因此有些怪。</p>
-<p>
-
-<figure >
+<p><figure >
+  
+  
   
     <img data-src="/images/2020/07/17/ektar_1.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
   
-</figure>
-<br />
 
-
+  
+  
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/17/ektar_2.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
   
-</figure>
-<br />
 
-
+  
+  
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/17/ektar_3.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
   
-</figure>
-<br />
 
-
+  
+  
+</figure><br />
 <figure >
+  
+  
   
     <img data-src="/images/2020/07/17/ektar_4.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
   
-</figure>
-<br />
 
-
+  
+  
+</figure><br />
 <figure >
   
-    <img data-src="/images/2020/07/17/ektar_5.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
-    
   
-</figure>
-</p>
+  
+    <img data-src="/images/2020/07/17/ektar_5.jpg"  data-caption="" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
+  
+
+  
+  
+</figure></p>
 <h1 id="参考">参考</h1>
 <p><a href="http://www3.xitek.com/bingqiku/konica/rangefinder/hexarrf.htm">色影无忌</a><br />
 <a href="https://sheying.sioe.cn/qicai/7448.html">摄影之友</a><br />
@@ -2231,6 +2367,119 @@ if (!doNotTrack) {
 
     </article>
     
+    
+<script defer src="/js/clipboard.min.1626706afc88d95ebe1173b553ec732c6dc82a576989315fdf5e7779af738a44.js"></script>
+
+<script defer src="/js/helper/prev.min.js"></script>
+
+<script defer src="/js/helper/prop.min.js"></script>
+<script>
+  'use strict';
+  document.addEventListener('DOMContentLoaded', function () {
+    
+    var clipInit = false;
+    var preChromaElem = document.querySelectorAll('pre.chroma');
+    var langCodeElem = document.querySelectorAll('.language-code');
+    var dollarCodeElem = document.querySelectorAll('div.language-\\$');
+    var gtCodeElem = document.querySelectorAll('div.language-\\>');
+
+    var makeClipboard = function(elem) {
+      var code = elem,
+          text = elem.textContent;
+        
+      if (text.length > 15) {
+        if (!clipInit) {
+          var text, clip = new ClipboardJS('.copy-to-clipboard', {
+            text: function (trigger) {
+              var codeElem = prev(trigger).querySelectorAll('code');
+              if (codeElem.length > 1) {
+                text = prev(trigger).querySelector('code[class^="language-"]').textContent;
+              } else {
+                text = prev(trigger).querySelector('code').textContent;
+              }
+
+              return text.replace(/^\$\s/gm, '');
+            }
+          });
+
+          var inPre;
+          clip.on('success', function (e) {
+            e.clearSelection();
+            inPre = prop(e.trigger.parentNode, 'tagName') == 'PRE';
+            e.trigger.setAttribute('aria-label', 'Copied to clipboard!');
+            e.trigger.classList.add('tooltipped');
+            e.trigger.classList.add('tooltipped-w');
+          });
+
+          clip.on('error', function (e) {
+            inPre = prop(e.trigger.parentNode, 'tagName') == 'PRE';
+            e.trigger.setAttribute('aria-label', e.action.toString());
+            e.trigger.classList.add('tooltipped');
+            e.trigger.classList.add('tooltipped-w');
+          });
+
+          clipInit = true;
+        }
+
+        var notAllowedClass = ['language-mermaid', 'language-viz', 'language-wave', 'language-chart', 'language-msc', 'language-flowchart'];
+        var isNotAllowedIncluded = false;
+        var curClassName = code.getAttribute('class');
+
+        for (var i = 0; i < notAllowedClass.length; i++) {
+          if (curClassName && curClassName.startsWith(notAllowedClass[i])) {
+            isNotAllowedIncluded = true;
+            break;
+          }
+        }
+
+        if (!isNotAllowedIncluded) {
+          if (curClassName) {
+            var newClipboardElem = document.createElement('span');
+            newClipboardElem.setAttribute('class', 'copy-to-clipboard');
+            newClipboardElem.setAttribute('title', 'Copy to clipboard');
+            elem.parentNode.parentNode.insertBefore(newClipboardElem, elem.parentNode.nextElementSibling);
+          }
+        }
+      }
+    }
+
+    var makeSymbolClipboard = function(elem) {
+      var clipboardSpan = document.createElement('span');
+      clipboardSpan.setAttribute('class', 'copy-to-clipboard');
+      clipboardSpan.setAttribute('title', 'Copy to clipboard');
+      elem.parentNode.parentNode.insertBefore(clipboardSpan, elem.parentNode.nextElementSibling);
+    }
+
+    preChromaElem ? 
+    preChromaElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function(codeElem) {
+        makeClipboard(codeElem);
+      });
+    }) : null;
+    
+    langCodeElem ? 
+    langCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeClipboard(codeElem);
+      });
+    }) : null;
+
+    dollarCodeElem ? 
+    dollarCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+
+    gtCodeElem ?
+    gtCodeElem.forEach(function(elem) {
+      elem.querySelectorAll('code').forEach(function (codeElem) {
+        makeSymbolClipboard(codeElem);
+      });
+    }) : null;
+    
+  });
+</script>
     <script>
   'use strict';
   
@@ -2276,6 +2525,31 @@ if (!doNotTrack) {
     newElem.className = 'copy-to-clipboard';
     newElem.setAttribute('title', 'Copy to clipboard');
     elem.append(newElem);
+  }) : null;
+  
+
+  
+
+  
+  var dollarCodeElem = document.querySelectorAll('div.language-\\$');
+  var gtCodeElem = document.querySelectorAll('div.language-\\>');
+
+  dollarCodeElem ?
+  dollarCodeElem.forEach(function(elem) {
+    var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+    lnts ? 
+    lnts.forEach(function(lnt) {
+      lnt.innerHTML = '$<br/>';
+    }) : null;
+  }) : null;
+
+  gtCodeElem ?
+  gtCodeElem.forEach(function(elem) {
+    var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
+    lnts ? 
+    lnts.forEach(function(lnt) {
+      lnt.innerHTML = '><br/>';
+    }) : null;
   }) : null;
   
 </script>
@@ -2390,11 +2664,13 @@ if (!doNotTrack) {
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     function checkTheme(local, base) {
-      if (local === "dark" || base === "dark") {
+      var currentTheme = local || base;
+
+      if (currentTheme === "dark") {
         return "photon-dark";
-      } else if (local === "hacker" || base === "hacker") {
+      } else if (currentTheme === "hacker") {
         return "photon-dark";
-      } else if (local === "kimbie" || base === "kimbie") {
+      } else if (currentTheme === "kimbie") {
         return "github-dark-orange";
       } else {
         return "github-light";
@@ -2417,7 +2693,6 @@ if (!doNotTrack) {
       myScript.setAttribute('theme', utterTheme);
       myScript.setAttribute('crossorigin', 'anonymous');
       myScript.setAttribute('async', '');
-
       myScript.onload = function() {
       }
 
@@ -2486,7 +2761,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.08ff2be1b74347bad9e267f732f1388d271b2f9d97b6a8a87bd6a510f17c5ad2.js"></script>
+<script defer src="/js/swipe.min.b4b82839155519d9ca67746615a4c86ccbc1061c196fe6d8aa26e4fe22902718.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
@@ -2881,8 +3156,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-<script defer src="/js/clipboard.min.1626706afc88d95ebe1173b553ec732c6dc82a576989315fdf5e7779af738a44.js"></script>
-
 <script defer src="/js/helper/getParents.min.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
@@ -2929,6 +3202,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 
+
     
     
     
@@ -2944,6 +3218,18 @@ document.addEventListener('DOMContentLoaded', function () {
     
     if ((enableToc || toc) && document.querySelector('.toc')) {
       var tableOfContentsElem = document.querySelector('.toc').querySelector('#TableOfContents');
+
+      tableOfContentsElem.onmouseenter = function() {
+        if (navbar.classList.contains('scrolling')) {
+          navbar.classList.remove('scrolling');
+        }
+      }
+
+      tableOfContentsElem.onmouseleave = function() {
+        if (!navbar.classList.contains('scrolling')) {
+          navbar.classList.add('scrolling');
+        }
+      }
 
       if (false === tocFolding) {
 
@@ -2963,10 +3249,13 @@ document.addEventListener('DOMContentLoaded', function () {
           tableOfContentsElem.querySelectorAll('a').forEach(function (elem) {
             elem.addEventListener('click', function () {
               var id = elem.getAttribute('id');
-              navbar.classList.remove('navbar--show');
-              navbar.classList.remove('navbar--hide');
-              navbar.classList.add('navbar--hide');
 
+              if (!navbar.classList.contains('scrolling')) {
+                navbar.classList.remove('navbar--show');
+                navbar.classList.remove('navbar--hide');
+                navbar.classList.add('navbar--hide');
+              }
+              
               document.querySelector('.toc').querySelectorAll('a').forEach(function (elem) {
                 elem.classList.remove('active');
               });
@@ -3061,17 +3350,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 
-    
-    var tables = document.querySelectorAll('.single__contents > table');
-    for (let i = 0; i < tables.length; i++) {
-      var table = tables[i];
-      var wrapper = document.createElement('div');
-      wrapper.className = 'table-wrapper';
-      table.parentElement.replaceChild(wrapper, table);
-      wrapper.appendChild(table);
-    }
-    
-
 
     
     var text, clip = new ClipboardJS('.anchor');
@@ -3082,6 +3360,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     headers ? 
     headers.forEach(function (elem) {
+      var size = parseInt(elem.tagName.substr(1), 10) * 2;
       var url = encodeURI(document.location.origin + document.location.pathname);
       var link = url + "#" + elem.getAttribute('id');
       var newElemOuter = document.createElement('span');
@@ -3091,11 +3370,12 @@ document.addEventListener('DOMContentLoaded', function () {
       newElemOuter.style.position = 'relative';
 
       var newElemInner = document.createElement('span');
-      newElemInner.style.fontSize = '1rem';
       newElemInner.style.position = 'absolute';
       newElemInner.style.top = '50%';
+      newElemInner.style.left = '0.75rem';
       newElemInner.style.transform = 'translateY(-50%)';
-      newElemInner.innerText = "🔗";
+      newElemInner.innerHTML = `
+<svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${32 - size}px" height="${32 - size}px"><path d="M 5.5625 0 C 4.136719 0 2.707031 0.542969 1.625 1.625 C -0.539063 3.789063 -0.539063 7.335938 1.625 9.5 L 5.28125 13.15625 C 5.667969 13.554688 6.304688 13.558594 6.703125 13.171875 C 7.101563 12.785156 7.105469 12.148438 6.71875 11.75 L 3.03125 8.0625 C 1.632813 6.664063 1.632813 4.429688 3.03125 3.03125 C 4.429688 1.632813 6.664063 1.632813 8.0625 3.03125 L 12.96875 7.9375 C 14.367188 9.335938 14.367188 11.570313 12.96875 12.96875 C 12.804688 13.132813 12.621094 13.25 12.4375 13.375 C 11.980469 13.6875 11.859375 14.308594 12.171875 14.765625 C 12.484375 15.222656 13.105469 15.34375 13.5625 15.03125 C 13.847656 14.835938 14.125 14.625 14.375 14.375 C 16.539063 12.210938 16.539063 8.664063 14.375 6.5 L 9.5 1.625 C 8.417969 0.542969 6.988281 0 5.5625 0 Z M 10.78125 8.875 C 10.738281 8.882813 10.695313 8.894531 10.65625 8.90625 C 10.507813 8.9375 10.371094 9 10.25 9.09375 C 10.039063 9.253906 9.820313 9.429688 9.625 9.625 C 7.460938 11.789063 7.460938 15.335938 9.625 17.5 L 14.5 22.375 C 16.664063 24.539063 20.210938 24.539063 22.375 22.375 C 24.539063 20.210938 24.539063 16.664063 22.375 14.5 L 18.71875 10.875 C 18.476563 10.578125 18.089844 10.441406 17.714844 10.527344 C 17.34375 10.613281 17.050781 10.90625 16.964844 11.277344 C 16.878906 11.652344 17.015625 12.039063 17.3125 12.28125 L 20.96875 15.9375 C 22.367188 17.335938 22.367188 19.570313 20.96875 20.96875 C 19.570313 22.367188 17.335938 22.367188 15.9375 20.96875 L 11.03125 16.0625 C 9.632813 14.664063 9.632813 12.429688 11.03125 11.03125 C 11.152344 10.90625 11.300781 10.820313 11.4375 10.71875 C 11.839844 10.472656 12.015625 9.976563 11.855469 9.53125 C 11.699219 9.085938 11.25 8.8125 10.78125 8.875 Z"/></svg>`;
 
       if (languagedir === "rtl") {
         newElemInner.style.left = '-2rem';
@@ -3129,132 +3409,8 @@ document.addEventListener('DOMContentLoaded', function () {
       e.trigger.classList.add('tooltipped');
       e.trigger.classList.add('tooltipped-s');
     });
-    
+    // =================================================================
 
-
-    
-    var clipInit = false;
-    var preChromaElem = document.querySelectorAll('pre.chroma');
-    var langCodeElem = document.querySelectorAll('.language-code');
-    var dollarCodeElem = document.querySelectorAll('div.language-\\$');
-    var gtCodeElem = document.querySelectorAll('div.language-\\>');
-
-    var makeClipboard = function(elem) {
-      var code = elem,
-        text = elem.textContent;
-        
-      if (text.length > 15) {
-        if (!clipInit) {
-          var text, clip = new ClipboardJS('.copy-to-clipboard', {
-            text: function (trigger) {
-              var codeElem = prev(trigger).querySelectorAll('code');
-              if (codeElem.length > 1) {
-                text = prev(trigger).querySelector('code[class^="language-"]').textContent;
-              } else {
-                text = prev(trigger).querySelector('code').textContent;
-              }
-
-              return text.replace(/^\$\s/gm, '');
-            }
-          });
-
-          var inPre;
-          clip.on('success', function (e) {
-            e.clearSelection();
-            inPre = prop(e.trigger.parentNode, 'tagName') == 'PRE';
-            e.trigger.setAttribute('aria-label', 'Copied to clipboard!');
-            e.trigger.classList.add('tooltipped');
-            e.trigger.classList.add('tooltipped-w');
-          });
-
-          clip.on('error', function (e) {
-            inPre = prop(e.trigger.parentNode, 'tagName') == 'PRE';
-            e.trigger.setAttribute('aria-label', e.action.toString());
-            e.trigger.classList.add('tooltipped');
-            e.trigger.classList.add('tooltipped-w');
-          });
-
-          clipInit = true;
-        }
-
-        var notAllowedClass = ['language-mermaid', 'language-viz', 'language-wave', 'language-chart', 'language-msc', 'language-flowchart'];
-        var isNotAllowedIncluded = false;
-        var curClassName = code.getAttribute('class');
-
-        for (var i = 0; i < notAllowedClass.length; i++) {
-          if (curClassName && curClassName.startsWith(notAllowedClass[i])) {
-            isNotAllowedIncluded = true;
-            break;
-          }
-        }
-
-        if (!isNotAllowedIncluded) {
-          if (curClassName) {
-            var newClipboardElem = document.createElement('span');
-            newClipboardElem.setAttribute('class', 'copy-to-clipboard');
-            newClipboardElem.setAttribute('title', 'Copy to clipboard');
-            elem.parentNode.parentNode.insertBefore(newClipboardElem, elem.parentNode.nextElementSibling);
-          }
-        }
-      }
-    }
-
-    var makeSymbolClipboard = function(elem) {
-      var clipboardSpan = document.createElement('span');
-      clipboardSpan.setAttribute('class', 'copy-to-clipboard');
-      clipboardSpan.setAttribute('title', 'Copy to clipboard');
-      elem.parentNode.parentNode.insertBefore(clipboardSpan, elem.parentNode.nextElementSibling);
-    }
-
-    preChromaElem ? 
-    preChromaElem.forEach(function(elem) {
-      elem.querySelectorAll('code').forEach(function(codeElem) {
-        makeClipboard(codeElem);
-      });
-    }) : null;
-    
-    langCodeElem ? 
-    langCodeElem.forEach(function(elem) {
-      elem.querySelectorAll('code').forEach(function (codeElem) {
-        makeClipboard(codeElem);
-      });
-    }) : null;
-
-    dollarCodeElem ? 
-    dollarCodeElem.forEach(function(elem) {
-      elem.querySelectorAll('code').forEach(function (codeElem) {
-        makeSymbolClipboard(codeElem);
-      });
-    }) : null;
-
-    gtCodeElem ?
-    gtCodeElem.forEach(function(elem) {
-      elem.querySelectorAll('code').forEach(function (codeElem) {
-        makeSymbolClipboard(codeElem);
-      });
-    }) : null;
-    
-
-
-    
-    dollarCodeElem ?
-    dollarCodeElem.forEach(function(elem) {
-      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
-      lnts ? 
-      lnts.forEach(function(lnt) {
-        lnt.innerHTML = '$<br/>';
-      }) : null;
-    }) : null;
-
-    gtCodeElem ?
-    gtCodeElem.forEach(function(elem) {
-      var lnts = elem.parentNode.parentNode ? elem.parentNode.parentNode.querySelectorAll('.lnt') : null;
-      lnts ? 
-      lnts.forEach(function(lnt) {
-        lnt.innerHTML = '><br/>';
-      }) : null;
-    }) : null;
-    
 
 
     
@@ -3289,6 +3445,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     
+
     
 
     
@@ -3306,6 +3463,7 @@ document.addEventListener('DOMContentLoaded', function () {
       renderMathInElement(document.querySelector('.single__contents'), options);
     }
     
+
 
 
     
@@ -3333,12 +3491,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 
+    
 
     
     document.querySelectorAll("mjx-container").forEach(function (x) {
       x.parentElement.classList += 'has-jax'
     });
     
+
 
 
     
@@ -3362,6 +3522,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     
+
 
 
     
@@ -3405,6 +3566,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 
+
     
     if (lib && lib.includes('wavedrom')) {
       var wavePrefix = "language-wave";
@@ -3425,6 +3587,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     
+
 
 
     
@@ -3457,7 +3620,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <footer class="footer">
     
 <div class="dropdown">
-  <button class="dropdown-trigger" aria-label="Select Theme Button">
+  <button class="dropdown-trigger" aria-label="Select Language Button">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path fill="currentColor" d="M12.65 15.67c.14-.36.05-.77-.23-1.05l-2.09-2.06.03-.03c1.74-1.94 2.98-4.17 3.71-6.53h1.94c.54 0 .99-.45.99-.99v-.02c0-.54-.45-.99-.99-.99H10V3c0-.55-.45-1-1-1s-1 .45-1 1v1H1.99c-.54 0-.99.45-.99.99 0 .55.45.99.99.99h10.18C11.5 7.92 10.44 9.75 9 11.35c-.81-.89-1.49-1.86-2.06-2.88-.16-.29-.45-.47-.78-.47-.69 0-1.13.75-.79 1.35.63 1.13 1.4 2.21 2.3 3.21L3.3 16.87c-.4.39-.4 1.03 0 1.42.39.39 1.02.39 1.42 0L9 14l2.02 2.02c.51.51 1.38.32 1.63-.35zM17.5 10c-.6 0-1.14.37-1.35.94l-3.67 9.8c-.24.61.22 1.26.87 1.26.39 0 .74-.24.88-.61l.89-2.39h4.75l.9 2.39c.14.36.49.61.88.61.65 0 1.11-.65.88-1.26l-3.67-9.8c-.22-.57-.76-.94-1.36-.94zm-1.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
   </button>
   <div class="dropdown-content">
@@ -3587,7 +3750,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <hr />
 
-    <div class="basicflex">
+    <div class="basicflex flexwrap">
         
     </div>
 
