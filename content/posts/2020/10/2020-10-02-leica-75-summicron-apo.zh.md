@@ -33,16 +33,16 @@ featured_image: 2020/10/02/engineer-draw.JPG
 
 # 镜头
 
-{{< img src="/images/2020/10/02/lens-1.JPG" title="装镜头的软袋" caption="↑比35 2A高" >}}
-{{< img src="/images/2020/10/02/lens-2.JPG" title="镜头底盖" caption="↑" >}}
-{{< img src="/images/2020/10/02/lens-3.JPG" title="镜头顶盖" caption="↑" >}}
-{{< img src="/images/2020/10/02/lens-4.JPG" title="自带遮光罩" caption="↑遮光罩可以抽出并旋转锁定" >}}
-{{< img src="/images/2020/10/02/lens-5.JPG" title="底部接口" caption="↑这枚是无6 bits编码的" >}}
-{{< img src="/images/2020/10/02/lens-6.JPG" title="蓝色镀膜和光圈叶片" caption="↑只有9片，小光圈时光斑会呈现多边形" >}}
-{{< img src="/images/2020/10/02/lens-7.JPG" title="转接在SL上" caption="↑还是比较和谐的" >}}
-{{< img src="/images/2020/10/02/lens-10.JPG" title="转接在SL上" caption="↑顶视图" >}}
-{{< img src="/images/2020/10/02/lens-8.JPG" title="接在巧思RF上" caption="↑重心在镜头前部，机身无法放平" >}}
-{{< img src="/images/2020/10/02/lens-9.JPG" title="接在巧思RF上" caption="↑镜头较长不如35 2A来的和谐" >}}
+{{< img src="/images/2020/10/02/lens-10.JPG" title="装镜头的软袋" caption="↑比35 2A高" >}}
+{{< img src="/images/2020/10/02/lens-1.JPG" title="镜头底盖" caption="↑" >}}
+{{< img src="/images/2020/10/02/lens-2.JPG" title="镜头顶盖" caption="↑" >}}
+{{< img src="/images/2020/10/02/lens-3.JPG" title="自带遮光罩" caption="↑遮光罩可以抽出并旋转锁定" >}}
+{{< img src="/images/2020/10/02/lens-4.JPG" title="底部接口" caption="↑这枚是无6 bits编码的" >}}
+{{< img src="/images/2020/10/02/lens-5.JPG" title="蓝色镀膜和光圈叶片" caption="↑只有9片，小光圈时光斑会呈现多边形" >}}
+{{< img src="/images/2020/10/02/lens-6.JPG" title="转接在SL上" caption="↑还是比较和谐的" >}}
+{{< img src="/images/2020/10/02/lens-9.JPG" title="转接在SL上" caption="↑顶视图" >}}
+{{< img src="/images/2020/10/02/lens-7.JPG" title="接在巧思RF上" caption="↑重心在镜头前部，机身无法放平" >}}
+{{< img src="/images/2020/10/02/lens-8.JPG" title="接在巧思RF上" caption="↑镜头较长不如35 2A来的和谐" >}}
 
 
 # 测试
