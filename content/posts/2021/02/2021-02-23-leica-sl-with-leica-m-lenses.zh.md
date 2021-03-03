@@ -10,7 +10,7 @@ tags:
 - leica
 - chinese
 slug: "Leica SL With Leica M Lenses"
-featured_image: 2021/02/23/sl.jpg
+featured_image: 2021/02/23/SL-front.JPG
 ---
 
 用徕卡出品的第一代全幅无反万能插转接手动对焦的M口旁轴镜头是怎样的体验？
@@ -79,6 +79,26 @@ SL一代的机身是一整块阳极氧化工艺处理过的铝铣出来的，极
 # 拍照
 
 低感光度下SL的出片非常通透细腻。高感一般但够用。巨大明亮的取景器大部分时候使用峰值对焦就足够。如果想要精确对焦，配合对焦拨杆的放大对焦体验也非常优秀，操作逻辑比之前我用索尼A7转接时要简单很多：举起相机，右手拇指点按一下对焦拨杆，取景器中心就会100%放大到全屏，拇指上下左右移动对焦拨杆便可进一步选择放大区域。整个过程右手握姿没有变化，一气呵成。这种把AF键和对焦拨杆合二为一的设计既简化了机身按键又提高了操作效率。类似设计的还有后拨轮，也是让拨动和点按两种操作合为一键，把普通相机上的曝光模式转盘集成到了后拨轮里，让右手无须改变握姿即可调整相机的曝光模式。
+
+{{< img src="/images/2021/02/23/sl-21-1.jpg" title="zm21 2.8" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-21-2.jpg" title="zm21 2.8" caption="↑" >}}
+
+{{< img src="/images/2021/02/23/sl-35-1.jpg" title="zm35 1.4" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-35-2.jpg" title="zm35 1.4" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-35-3.jpg" title="zm35 1.4" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-35-4.jpg" title="zm35 1.4" caption="↑" >}}
+
+{{< img src="/images/2021/02/23/sl-50-1.jpg" title="vm50 1.2" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-50-2.jpg" title="vm50 1.2" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-50-3.jpg" title="vm50 1.2" caption="↑" >}}
+
+{{< img src="/images/2021/02/23/sl-75-1.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-75-2.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-75-3.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-75-4.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-75-5.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-75-6.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/02/23/sl-75-7.jpg" title="lm75 2 apo" caption="↑" >}}
 
 # 录像
 
