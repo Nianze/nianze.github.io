@@ -55,7 +55,7 @@ Virtualizing static fields in 3rd-party Java library during runtime to improve m
 
 My current gears:
 
-* iPhone X (mostly used one)
+* iPhone SE 2
 * Leica SL
 * Hexar RF
 * ZEISS Biogon T* 21mm f/2.8 ZM
@@ -69,5 +69,5 @@ Some of my photos:
 
 * [Flickr](https://www.flickr.com/photos/129774362@N07/)
 * [Instagram](https://www.instagram.com/eznain/)
-* [Weekly Visual Project](http://nianze.tk/en/gallery/)
+* [Weekly Visual Project](/en/gallery/)
 {{< /boxmd >}}
