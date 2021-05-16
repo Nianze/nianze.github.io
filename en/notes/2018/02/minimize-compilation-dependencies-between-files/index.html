@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
+<script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
+<script defer src="/js/helper/fadeinout.min.efa35f4c090622130b3f4cfae6971448b5ffb61c5f0a8f21cdfd157fa712abc4.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1348,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.67.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1415,6 +1415,7 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
+
   
 <script type="application/javascript">
 var doNotTrack = false;
@@ -1819,7 +1820,7 @@ if (!doNotTrack) {
 </span><span class="cp">#include</span> <span class="cpf">&#34;address.h&#34;</span><span class="cp">
 </span></code></pre></td></tr></table>
 </div>
-</div><p>Unfortunately, this inclusion sets up a compilation dependency between the file defining <code>Person</code> and these header files. If any of these header files or the header files' dependent header files is changed, the file containing the <code>Person</code> class must be recompiled, as must any files that use <code>Person</code>. Such cascading compilation dependencies are annoying, but C++ insists on putting the implementation details of a class in the class definition - we can&rsquo;t separate the implementation details of the class definition simply by forward-declaring everything like this:</p>
+</div><p>Unfortunately, this inclusion sets up a compilation dependency between the file defining <code>Person</code> and these header files. If any of these header files or the header files&rsquo; dependent header files is changed, the file containing the <code>Person</code> class must be recompiled, as must any files that use <code>Person</code>. Such cascading compilation dependencies are annoying, but C++ insists on putting the implementation details of a class in the class definition - we can&rsquo;t separate the implementation details of the class definition simply by forward-declaring everything like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -1941,7 +1942,7 @@ if (!doNotTrack) {
 </span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>This design is often said to be using the <em>pimpl idiom</em> (&ldquo;pointer to implementation&rdquo;). With such a design, clients of <code>Person</code> are divorced from the details of dates, address, and persons. Now, even if the implementations of those classes have been modified, <code>Person</code>&rsquo;s clients need not recompile.</p>
+</div><p>This design is often said to be using the <em>pimpl idiom</em> (&ldquo;pointer to implementation&rdquo;). With such a design, clients of <code>Person</code> are divorced from the details of dates, address, and persons. Now, even if the implementations of those classes have been modified, <code>Person</code>'s clients need not recompile.</p>
 <p>In summary:</p>
 <ul>
 <li>
@@ -1961,8 +1962,8 @@ if (!doNotTrack) {
 </span><span class="c1"></span><span class="kt">void</span> <span class="nf">clearAppointments</span><span class="p">(</span><span class="n">Date</span> <span class="n">d</span><span class="p">);</span> <span class="c1">// fine. No definition of Date is needed
 </span></code></pre></td></tr></table>
 </div>
-</div><p>Of course, if anybody <em>calls</em> function <code>today</code> or <code>clearAppointments</code>, <code>Date</code>&rsquo;s definition must have been seen prior to the call. But the point here is:</p>
-<p>By moving the onus of providing class definitions from our library header file of function <em>declarations</em> to clients' files containing function <em>calls</em>, the client dependiencies on type definitions they don&rsquo;t really need could be eliminated (especially when we have a library containing dozens of function declarations that not everybody calls all of them).</p>
+</div><p>Of course, if anybody <em>calls</em> function <code>today</code> or <code>clearAppointments</code>, <code>Date</code>'s definition must have been seen prior to the call. But the point here is:</p>
+<p>By moving the onus of providing class definitions from our library header file of function <em>declarations</em> to clients&rsquo; files containing function <em>calls</em>, the client dependiencies on type definitions they don&rsquo;t really need could be eliminated (especially when we have a library containing dozens of function declarations that not everybody calls all of them).</p>
 </li>
 <li>
 <p>Provide separate header files for declarations and definitions.</p>
@@ -1982,7 +1983,7 @@ if (!doNotTrack) {
 </div><p>Here, the name of the declaration-only header file &ldquo;datefwd.h&rdquo; is based on the header <iosfwd><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> from the standard C++ library (item 54).</p>
 </li>
 </ul>
-<p>To employ the pimpl idiom, we just let forward all the function calls in the <em>handle class</em> <code>Person</code> to the corresponding implementation class <code>PersonImpl</code>, which will do the real work. Below is the implementation of <code>Person</code>&rsquo;s member functions:</p>
+<p>To employ the pimpl idiom, we just let forward all the function calls in the <em>handle class</em> <code>Person</code> to the corresponding implementation class <code>PersonImpl</code>, which will do the real work. Below is the implementation of <code>Person</code>'s member functions:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -2192,13 +2193,13 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>The proper forward declaration of <code>string</code> is substantiallly complex, because it involves additional templates. Anyway, we shouldn&rsquo;t manually decalre parts of the standard library. Instead, user the proper <code>#include</code>s and be done with it.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>The proper forward declaration of <code>string</code> is substantiallly complex, because it involves additional templates. Anyway, we shouldn&rsquo;t manually decalre parts of the standard library. Instead, user the proper <code>#include</code>s and be done with it. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p><iosfwd> contains declarations of iostream components whose corresponding definitions are in several different headers, including <sstream>, <streambuf>, <fstream>, and <iostream>. Note that it still makes sense to provide declaration-only headers for templates: although in many build environments, template definitions are typically found in header files (item 30), some build environments still allow template definitons to be in non-headre files; and C++ also offers the <code>export</code> keyword to allow the separation of template declarations from template definitions (unfortunately compiler support for <code>export</code> is scanty).&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p><iosfwd> contains declarations of iostream components whose corresponding definitions are in several different headers, including <sstream>, <streambuf>, <fstream>, and <iostream>. Note that it still makes sense to provide declaration-only headers for templates: although in many build environments, template definitions are typically found in header files (item 30), some build environments still allow template definitons to be in non-headre files; and C++ also offers the <code>export</code> keyword to allow the separation of template declarations from template definitions (unfortunately compiler support for <code>export</code> is scanty). <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Neither Java nor .NET allow data members or function implementations in Interfaces, but C++ allows so, which could be useful in flexibility. For example, as item 36 explains, the implementation of non-virtual functions should be the same for all classes in a hierarchy, so it makes sense to implement such functions as part of the Interface class.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Neither Java nor .NET allow data members or function implementations in Interfaces, but C++ allows so, which could be useful in flexibility. For example, as item 36 explains, the implementation of non-virtual functions should be the same for all classes in a hierarchy, so it makes sense to implement such functions as part of the Interface class. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -2646,7 +2647,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
+<script defer src="/js/swipe.min.b4b82839155519d9ca67746615a4c86ccbc1061c196fe6d8aa26e4fe22902718.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
