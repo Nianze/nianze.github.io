@@ -33,7 +33,7 @@ Due to the requirement that if the destructor for a joinable thread is invoked, 
 
 The Standardization Committee decided this program termination behavior just to tell us that we need to ensure a `std::thread` object is made unjoinable on every path out of the scope in which it's defined. That is, we can use _RAII_ technique to take care of that.
 
-{{< codeblock "" "cpp"  "http://underscorejs.org/#compact" "">}}
+```cpp
 class ThreadRAII {
 public:
     enum class DtorAction { join, detach };
@@ -58,7 +58,7 @@ private:
     DtorAction action;
     std::thread t;
 };
-{{< /codeblock >}}
+```
 
 A few points:
 
