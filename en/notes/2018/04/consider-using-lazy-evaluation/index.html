@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.efa35f4c090622130b3f4cfae6971448b5ffb61c5f0a8f21cdfd157fa712abc4.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1408,7 +1415,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
   
 <script type="application/javascript">
 var doNotTrack = false;
@@ -1787,7 +1793,7 @@ if (!doNotTrack) {
 <span class="n">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>  <span class="c1">// call String copy ctor
 </span></code></pre></td></tr></table>
 </div>
-</div><p>The lazy approach: instead of giving <code>s2</code> a copy of <code>s1</code>'s value, we have <code>s2</code> share <code>s1</code>'s value to save the cost of a call to <code>new</code> and the expense of copying anything, until any one is modified (i.e., <code>s2.convertToUpperCase();</code> will change only <code>s2</code>'s value by making a private copy of shared value before modification). Refer to MECpp item 29 for implementation details.</p>
+</div><p>The lazy approach: instead of giving <code>s2</code> a copy of <code>s1</code>&rsquo;s value, we have <code>s2</code> share <code>s1</code>&rsquo;s value to save the cost of a call to <code>new</code> and the expense of copying anything, until any one is modified (i.e., <code>s2.convertToUpperCase();</code> will change only <code>s2</code>&rsquo;s value by making a private copy of shared value before modification). Refer to MECpp item 29 for implementation details.</p>
 <h1 id="distinguishing-reads-from-writes">Distinguishing Reads from Writes</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1891,7 +1897,7 @@ if (!doNotTrack) {
 <span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span> <span class="o">+</span> <span class="n">m2</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Instead of compute and return the sum of <code>m1</code> and <code>m2</code> (which cost 1,000,000 additions and corresponding memory allocation), lazy evaluation sets up a data structure inside <code>m3</code> indicating that <code>m3</code>'s value is the sum of <code>m1</code> and <code>m2</code> (which may just consisting of two pointers to each of <code>m1</code> and <code>m2</code> and an enum indicating the additional operation). In most scenarios, we need only <em>part</em> of a computation (i.e., <code>cout &lt;&lt; m3[4];</code> instead of <code>cout &lt;&lt; m3;</code>), so laziness generally pays off.</p>
+</div><p>Instead of compute and return the sum of <code>m1</code> and <code>m2</code> (which cost 1,000,000 additions and corresponding memory allocation), lazy evaluation sets up a data structure inside <code>m3</code> indicating that <code>m3</code>&rsquo;s value is the sum of <code>m1</code> and <code>m2</code> (which may just consisting of two pointers to each of <code>m1</code> and <code>m2</code> and an enum indicating the additional operation). In most scenarios, we need only <em>part</em> of a computation (i.e., <code>cout &lt;&lt; m3[4];</code> instead of <code>cout &lt;&lt; m3;</code>), so laziness generally pays off.</p>
 <p>However, due to these dependencies between values, there are extra maintainence to notice: when one of the matrices on which <code>m3</code> is dependent is to be modified, we have to make sure the correctness:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1903,7 +1909,7 @@ if (!doNotTrack) {
 <span class="n">m1</span> <span class="o">=</span> <span class="n">m4</span><span class="p">;</span> <span class="c1">// m3 is the sum of m2 and the old value of m1
 </span></code></pre></td></tr></table>
 </div>
-</div><p>Inside the <code>Matrix&lt;int&gt;</code> assignment opertaor, we might compute <code>m3</code>'s value prior to changing <code>m1</code> or we may take a copy of the old value of <code>m1</code> and make <code>m3</code> dependent on that.</p>
+</div><p>Inside the <code>Matrix&lt;int&gt;</code> assignment opertaor, we might compute <code>m3</code>&rsquo;s value prior to changing <code>m1</code> or we may take a copy of the old value of <code>m1</code> and make <code>m3</code> dependent on that.</p>
 <p>Those extra mentainence efforts often ends up saving significant amounts of time and space during program runs, which is a payoff that justifies the lazy evaluation.</p>
     </article>
     
@@ -2349,7 +2355,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.b4b82839155519d9ca67746615a4c86ccbc1061c196fe6d8aa26e4fe22902718.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 

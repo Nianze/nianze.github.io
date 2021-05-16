@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.1618c696be7c98933f9a92677f518b512a74e55bdbb976b09936b4182e93181b.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.efa35f4c090622130b3f4cfae6971448b5ffb61c5f0a8f21cdfd157fa712abc4.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1408,7 +1415,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
   
 <script type="application/javascript">
 var doNotTrack = false;
@@ -1823,7 +1829,7 @@ if (!doNotTrack) {
 </span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>After private inheritance, <code>Timer</code>'s public <code>onTick</code> function becomes private in <code>Widget</code>, so keep it as private when we redeclare it<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
+</div><p>After private inheritance, <code>Timer</code>&rsquo;s public <code>onTick</code> function becomes private in <code>Widget</code>, so keep it as private when we redeclare it<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
 <h2 id="alternatives">Alternatives</h2>
 <p>This is a nice design, but it&rsquo;s worth noting that private inheritance isn&rsquo;t strictly necessary - we could use composition instead:</p>
 <div class="highlight"><div class="chroma">
@@ -1854,8 +1860,8 @@ if (!doNotTrack) {
 </div>
 </div><p>This design is more complicated involving both (public) inheritance and composition, but we do get two more advantages from its complixity:</p>
 <ol>
-<li>Because <code>Widget</code>'s derived classes have no access to the private <code>WidgetTimer</code> data member, we prevent derived classes from redefining <code>onTick</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</li>
-<li>We&rsquo;ve minimized <code>Widget</code>'s compilation dependencies: if <code>Widget</code> inherits from <code>Timer</code>, <code>Timer</code>'s definition must be available when <code>Widget</code> is compiled, so we probably has to <code>#include Timer.h</code>. If <code>WidgetTimer</code> is moved out of <code>Widget</code> and <code>Widget</code> only contains a pointer to  a <code>WidgetTimer</code>, we only need to simply forward decalare the <code>WidgetTimer</code> class without <code>#include</code> anything. Such decouplings can be important for large systems (details in item 31).</li>
+<li>Because <code>Widget</code>&rsquo;s derived classes have no access to the private <code>WidgetTimer</code> data member, we prevent derived classes from redefining <code>onTick</code><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>.</li>
+<li>We&rsquo;ve minimized <code>Widget</code>&rsquo;s compilation dependencies: if <code>Widget</code> inherits from <code>Timer</code>, <code>Timer</code>&rsquo;s definition must be available when <code>Widget</code> is compiled, so we probably has to <code>#include Timer.h</code>. If <code>WidgetTimer</code> is moved out of <code>Widget</code> and <code>Widget</code> only contains a pointer to  a <code>WidgetTimer</code>, we only need to simply forward decalare the <code>WidgetTimer</code> class without <code>#include</code> anything. Such decouplings can be important for large systems (details in item 31).</li>
 </ol>
 <h1 id="edge-case">Edge case</h1>
 <p>The edge case, as the name suggests, is edgy indeed: it applies only when we&rsquo;re dealing with a class that has no data in it: no non-static data members; no virtual functions (which introduces <code>vptr</code> to each object, item 7); and no virual base classes (which also incurs a size overhead, item 40). Conceptually, such an <em>empty</em> class should use no space, but C++ requires that freestanding objects must have non-zero size for some technical reasons. That being said,</p>
@@ -1879,7 +1885,7 @@ if (!doNotTrack) {
 </span><span class="c1"></span><span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>We&rsquo;ll find that  <code>sizeof(HoldsAnInt) &gt; sizeof(int)</code>, so <code>Empty</code> data member does require extra memory. With most compilers, <code>sizeof(Empty)</code> is 1, which is a silently inserted <code>char</code> inside the <code>Empty</code> objects to satisfy C++'s requirements. However, alignment requirements (see item 50) may casue compilers to add padding to <code>HoldsAnInt</code> classes, so the objects of <code>HoldsAnInt</code> may gain more than just the size of a char - they would actually enlarge enough to hold a second int.</p>
+</div><p>We&rsquo;ll find that  <code>sizeof(HoldsAnInt) &gt; sizeof(int)</code>, so <code>Empty</code> data member does require extra memory. With most compilers, <code>sizeof(Empty)</code> is 1, which is a silently inserted <code>char</code> inside the <code>Empty</code> objects to satisfy C++&rsquo;s requirements. However, alignment requirements (see item 50) may casue compilers to add padding to <code>HoldsAnInt</code> classes, so the objects of <code>HoldsAnInt</code> may gain more than just the size of a char - they would actually enlarge enough to hold a second int.</p>
 <p>Now comes the point of using private inheritance: rather than containing &ldquo;freestanding&rdquo; objects that can not have zero size, we could inherit from <code>Empty</code> type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1905,16 +1911,16 @@ if (!doNotTrack) {
 <hr />
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Allowing adding <code>onTick</code> into the conceptual <code>Widget</code> interface would make it easy for clients to use the <code>Widget</code> interface incorrectly, a clear violation of item 18&rsquo;s advice to make interfaces easy to use correctly and hard to use incorrectly. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Allowing adding <code>onTick</code> into the conceptual <code>Widget</code> interface would make it easy for clients to use the <code>Widget</code> interface incorrectly, a clear violation of item 18&rsquo;s advice to make interfaces easy to use correctly and hard to use incorrectly.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>Putting <code>onTick</code> in the public side will not change its accessibility, only to mislead clients into thinking they could call it, and this, again, violates item 18&rsquo;s advice. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Putting <code>onTick</code> in the public side will not change its accessibility, only to mislead clients into thinking they could call it, and this, again, violates item 18&rsquo;s advice.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>If <code>Widget</code> inherits directly from <code>Timer</code>, <code>Widget</code>'s derived classes may redefine <code>onTick</code> even if <code>onTick</code> is private (recall item 35 that derived classes may redefine virtual functions even if they are not permitted to call them). By the way, Java or C# would not have such trouble due to their keyword <code>final</code> or <code>sealed</code>. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>If <code>Widget</code> inherits directly from <code>Timer</code>, <code>Widget</code>&rsquo;s derived classes may redefine <code>onTick</code> even if <code>onTick</code> is private (recall item 35 that derived classes may redefine virtual functions even if they are not permitted to call them). By the way, Java or C# would not have such trouble due to their keyword <code>final</code> or <code>sealed</code>.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p>It is worth knowing that the EBO is generally viable only under insgle inheritance, and can&rsquo;t be applied to derived classes taht have more than one base. <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>It is worth knowing that the EBO is generally viable only under insgle inheritance, and can&rsquo;t be applied to derived classes taht have more than one base.&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </div>
@@ -2362,7 +2368,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.b4b82839155519d9ca67746615a4c86ccbc1061c196fe6d8aa26e4fe22902718.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
