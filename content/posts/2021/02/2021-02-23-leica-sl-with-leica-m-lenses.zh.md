@@ -107,10 +107,14 @@ SL一代的机身是一整块阳极氧化工艺处理过的铝铣出来的，让
 {{< img src="/images/2021/05/15/scooter.jpg" title="zm35 1.4" caption="↑" >}}
 {{< img src="/images/2021/05/15/sunbathing.jpg" title="zm35 1.4" caption="↑" >}}
 {{< img src="/images/2021/05/15/center_way.jpg" title="zm35 1.4" caption="↑" >}}
-{{< img src="/images/2021/05/15/scooter.jpg" title="zm35 1.4" caption="↑" >}}
 {{< img src="/images/2021/06/05/flamingo.jpg" title="zm35 1.4" caption="↑" >}}
 {{< img src="/images/2021/06/05/hudson_river_sunset_1.jpg" title="zm35 1.4" caption="↑" >}}
 {{< img src="/images/2021/06/05/hudson_river_sunset_2.jpg" title="zm35 1.4" caption="↑" >}}
+{{< img src="/images/2021/04/11/childhood.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/04/11/waves.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/04/11/goose_1.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/04/11/grass.jpg" title="lm75 2 apo" caption="↑" >}}
+{{< img src="/images/2021/04/11/white.jpg" title="lm75 2 apo" caption="↑" >}}
 {{< img src="/images/2021/05/15/wall_street.jpg" title="lm75 2 apo" caption="↑" >}}
 
 # 录像
