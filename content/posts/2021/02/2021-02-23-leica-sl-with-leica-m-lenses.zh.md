@@ -122,7 +122,6 @@ SL一代的机身是一整块阳极氧化工艺处理过的铝铣出来的，让
 SL录像4K时是Super 35mm传感器尺寸，规格是8 bit 4:2:0，最高支持UHD 4k 30fps或者DCI 4k 24fps，内录码率大概在100Mbits/sec。用全尺寸HDMI接口外录的话规格上升到10 bit 4:2:2。下面的录像由zm 35和75 summicron apo拍摄，后期软件裁切防抖，仅供参考:
 
 {{< youtube iH4ex4DJgqY >}}
-{{< youtube dAI65m5TcLs >}}
 {{< youtube nxX2b8jOfjI >}}
 {{< youtube J138BC1QnmM >}}
 
