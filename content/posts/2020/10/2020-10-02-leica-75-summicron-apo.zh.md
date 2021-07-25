@@ -2,7 +2,7 @@
 title: "徕卡 APO Summicron-M 75 ASPH （11637）"
 date: 2020-10-02T15:04:30-04:00
 series:
-- camera
+- lens
 categories:
 - visual
 tags:
