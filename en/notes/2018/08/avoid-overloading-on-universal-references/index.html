@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1779,7 +1772,7 @@ if (!doNotTrack) {
 <p>We want to introduce universal references because we can eliminate some inefficiencies via it. For example,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1788,7 +1781,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">multiset</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">names</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">multiset</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">names</span><span class="p">;</span>
 <span class="kt">void</span> <span class="nf">logAndAdd</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
@@ -1799,13 +1792,13 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">petName</span><span class="p">(</span><span class="s">&#34;Amy&#34;</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">petName</span><span class="p">(</span><span class="s">&#34;Amy&#34;</span><span class="p">);</span>
 <span class="n">logAndAdd</span><span class="p">(</span><span class="n">petName</span><span class="p">);</span>  <span class="c1">// passing lvalue
 </span><span class="c1"></span><span class="n">logAndAdd</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&#34;Ben&#34;</span><span class="p">));</span>  <span class="c1">// passing rvalue
 </span><span class="c1"></span><span class="n">logAndAdd</span><span class="p">(</span><span class="s">&#34;Candice&#34;</span><span class="p">);</span>  <span class="c1">// passing string literal
@@ -1819,7 +1812,7 @@ if (!doNotTrack) {
 <p>To achieve such optimization, we find universal reference, accompany with <code>std::forward</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1828,7 +1821,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">logAndAdd</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">name</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>  
@@ -1841,7 +1834,7 @@ if (!doNotTrack) {
 <p>Functions taking universal references are the greediest functions in C++, so the usually overload more argument types than the developer generally expects. Suppose there&rsquo;s another function overloading for the type of <code>int</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1850,7 +1843,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">nameFromIdx</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">);</span> <span class="c1">// return name corresponding to idx
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">nameFromIdx</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">);</span> <span class="c1">// return name corresponding to idx
 </span><span class="c1"></span><span class="kt">void</span> <span class="nf">logAndAdd</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>  
@@ -1861,14 +1854,14 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">logAndAdd</span><span class="p">(</span><span class="mi">22</span><span class="p">);</span>  <span class="c1">// calls int overload
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">logAndAdd</span><span class="p">(</span><span class="mi">22</span><span class="p">);</span>  <span class="c1">// calls int overload
 </span><span class="c1"></span><span class="n">logAndAdd</span><span class="p">(</span><span class="s">&#34;David&#34;</span><span class="p">);</span>  <span class="c1">// calls T&amp;&amp; overload
 </span><span class="c1"></span><span class="kt">short</span> <span class="n">nameIdx</span><span class="p">;</span>
 <span class="p">...</span>
@@ -1880,7 +1873,7 @@ if (!doNotTrack) {
 <p>Perfect-forwarding constructors are typically better matches than copy constructors for non-<code>const</code> lvalues, and they can hijack derived class calls to base class copy and move constructors, which makes them problematic. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1894,7 +1887,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
     <span class="k">explicit</span> <span class="n">Person</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">n</span><span class="p">)</span>
@@ -1911,25 +1904,25 @@ if (!doNotTrack) {
 </div><p>Remember in EMCpp item 17 we mensioned that, under appropriate conditions, the compiler will generate copy and move constructors for us, even if the class contains a templatized constructor that could be instantiated to produce the signature of the copy or move constructor. In that case, we get following two compiler-generated member functions:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Person</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// copy ctor generated by compiler
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Person</span><span class="p">(</span><span class="k">const</span> <span class="n">Person</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// copy ctor generated by compiler
 </span><span class="c1"></span><span class="n">Person</span><span class="p">(</span><span class="n">Person</span><span class="o">&amp;&amp;</span> <span class="n">rhs</span><span class="p">);</span> <span class="c1">// move ctor generated by compiler
 </span></code></pre></td></tr></table>
 </div>
 </div><p>And now comes the problem: these two member functions will easily get shadowed by the universal reference constructor:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Person</span> <span class="nf">p1</span><span class="p">(</span><span class="s">&#34;Edward&#34;</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Person</span> <span class="nf">p1</span><span class="p">(</span><span class="s">&#34;Edward&#34;</span><span class="p">);</span>
 <span class="k">auto</span> <span class="nf">cloneOfP1</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>  <span class="c1">// create new Person from p; 
 </span><span class="c1"></span>                     <span class="c1">// T&amp;&amp; ctor get invoked: T is deduces as &#34;Person&amp;&#34;, better than copy ctor&#39;s type &#34;const Person&amp;&#34;
 </span><span class="c1"></span><span class="k">const</span> <span class="n">Person</span> <span class="nf">p2</span><span class="p">(</span><span class="s">&#34;Fernando&#34;</span><span class="p">);</span>
@@ -1939,7 +1932,7 @@ if (!doNotTrack) {
 </div><p>Moreover, the inheritance makes the mess even worse:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1950,7 +1943,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SpecialPerson</span><span class="o">:</span> <span class="k">public</span> <span class="n">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SpecialPerson</span><span class="o">:</span> <span class="k">public</span> <span class="n">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">SpecialPerson</span><span class="p">(</span><span class="k">const</span> <span class="n">SpecialPerson</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">Person</span><span class="p">(</span><span class="n">rhs</span><span class="p">)</span>  <span class="c1">// calls base class forwarding ctor

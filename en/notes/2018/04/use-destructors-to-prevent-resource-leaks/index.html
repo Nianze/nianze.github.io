@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1780,7 +1773,7 @@ if (!doNotTrack) {
 <p>A reasonable design will use polymorphism: an abstract base class <code>ALA</code> (&ldquo;adorable little animal&rdquo;), with two concrete derived classes for puppies and kittens, and a virtual function <code>processAdoption</code> to handle the necessary species-specific processing:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1799,7 +1792,7 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ALA</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ALA</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">processAdoption</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">...</span>
@@ -1821,16 +1814,16 @@ if (!doNotTrack) {
 </div><p>Another thing we need is a <em>virtual constructor</em> (MECpp item 25), which reads information from a file and produce either a <code>Puppy</code> object or a <code>Kitten</code> object, depending on the information in the file:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ALA</span> <span class="o">*</span> <span class="nf">readALA</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ALA</span> <span class="o">*</span> <span class="nf">readALA</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Finally, the key processing part of the program looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1840,7 +1833,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processAdoptions</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">dataSource</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processAdoptions</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">dataSource</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">while</span> <span class="p">(</span><span class="n">dataSource</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">ALA</span> <span class="o">*</span><span class="n">pa</span> <span class="o">=</span> <span class="n">readALA</span><span class="p">(</span><span class="n">dataSource</span><span class="p">);</span>
@@ -1853,7 +1846,7 @@ if (!doNotTrack) {
 </div><p>However, there&rsquo;s a potential resource leak: if <code>pa-&gt;processAdoption</code> threw an exception, all statements in <code>processAdoptions</code> after this statement would be skipped, ending up with <code>pa</code> never getting deleted. To solve it, an ungly design would be:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1869,7 +1862,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processAdoptions</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">dataSource</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processAdoptions</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">dataSource</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">while</span> <span class="p">(</span><span class="n">dataSource</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">ALA</span> <span class="o">*</span><span class="n">pa</span> <span class="o">=</span> <span class="n">readALA</span><span class="p">(</span><span class="n">dataSource</span><span class="p">);</span>
@@ -1892,7 +1885,7 @@ if (!doNotTrack) {
 <p>So we can move the <code>delete</code> into a destructor for an object local to <code>processAdoptions</code>, which is exactly the functionaltity smart pointers in standard C++ library provide. For example, the essential of <code>auto_ptr</code> (item 13, MECpp item 28) boils down to following definition:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1902,7 +1895,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">auto_ptr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">auto_ptr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">:</span> <span class="n">ptr</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">{}</span>  <span class="c1">// save ptr to object
@@ -1915,7 +1908,7 @@ if (!doNotTrack) {
 </div><p>New <code>processAdoptions</code> using an <code>auto_ptr</code> object instead of a raw pointer:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1924,7 +1917,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processAdoptions</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">dataSource</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processAdoptions</span><span class="p">(</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">dataSource</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">while</span> <span class="p">(</span><span class="n">dataSource</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">ALA</span><span class="o">&gt;</span> <span class="n">pa</span><span class="p">(</span><span class="n">readALA</span><span class="p">(</span><span class="n">dataSource</span><span class="p">));</span>
@@ -1938,7 +1931,7 @@ if (!doNotTrack) {
 <p>The idea behind <code>auto_ptr</code> is to use an object to store a resource that needs to be automatically released via the object&rsquo;s destructor, which applis to broader ranges of resource types as well. For example, in a GUI application that needs to create a window to display some information:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1946,7 +1939,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">displayInfo</span><span class="p">(</span><span class="k">const</span> <span class="n">Information</span><span class="o">&amp;</span> <span class="n">info</span><span class="p">)</span> 
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">displayInfo</span><span class="p">(</span><span class="k">const</span> <span class="n">Information</span><span class="o">&amp;</span> <span class="n">info</span><span class="p">)</span> 
 <span class="p">{</span>
     <span class="n">WINDOW_HANDLE</span> <span class="n">w</span><span class="p">(</span><span class="n">createWindow</span><span class="p">());</span>
     <span class="n">display</span> <span class="s">&#34;info&#34;</span> <span class="n">in</span> <span class="n">window</span> <span class="n">corresponding</span> <span class="n">to</span> <span class="s">&#34;w&#34;</span><span class="p">;</span>
@@ -1957,7 +1950,7 @@ if (!doNotTrack) {
 </div><p>The functions <code>createWindow</code> and <code>destroyWindow</code> for acquiring and releasing window resources should be packaged in an object to avoid resource leak in the situations where an exception is thrown during process of displaying <code>info</code> in <code>w</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1971,7 +1964,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// class for acquiring and releasing a window handle
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// class for acquiring and releasing a window handle
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">WindowHandle</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">WindowHandle</span><span class="p">(</span><span class="n">WINDOW_HANDLE</span> <span class="n">handle</span><span class="p">)</span><span class="o">:</span> <span class="n">w</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span> <span class="p">{}</span>
@@ -1989,14 +1982,14 @@ if (!doNotTrack) {
 <p>Given this <code>WindowHandle</code> class, we can rewrite <code>desplayInfo</code> as follows:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">displayInfo</span><span class="p">(</span><span class="k">const</span> <span class="n">Information</span><span class="o">&amp;</span> <span class="n">info</span><span class="p">)</span> 
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">displayInfo</span><span class="p">(</span><span class="k">const</span> <span class="n">Information</span><span class="o">&amp;</span> <span class="n">info</span><span class="p">)</span> 
 <span class="p">{</span>
     <span class="n">WindowHandle</span> <span class="n">w</span><span class="p">(</span><span class="n">createWindow</span><span class="p">());</span>
     <span class="n">display</span> <span class="s">&#34;info&#34;</span> <span class="n">in</span> <span class="n">window</span> <span class="n">corresponding</span> <span class="n">to</span> <span class="s">&#34;w&#34;</span><span class="p">;</span>

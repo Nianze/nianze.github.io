@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1786,7 +1779,7 @@ if (!doNotTrack) {
 <p>Consider a distributed system in which some objects are local and some are remote. We can use smart pointer to manage the local and remote objects handling in order to offer such an illusion that all objects appear to be located in the same place.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1819,7 +1812,7 @@ if (!doNotTrack) {
 </span><span class="lnt">31
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>            <span class="c1">// template for smart ptrs
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>            <span class="c1">// template for smart ptrs
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">DBPtr</span> <span class="p">{</span>                <span class="c1">// to obj. in a distributed DB
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
 	<span class="n">DBPtr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">realPtr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>   <span class="c1">// create a smart ptr to a DB obj given a local dumb pointer
@@ -1869,7 +1862,7 @@ if (!doNotTrack) {
 <p>The problem would vanish if we prohibit copying and assignment, but a more flexible solution was adopted by the <code>auto_ptr</code> template from the standard C++ library: object ownership is <em>transferred</em> when an <code>auto_ptr</code> is copied or assigned:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1901,7 +1894,7 @@ if (!doNotTrack) {
 </span><span class="lnt">30
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">auto_ptr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 	<span class="n">auto_ptr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">:</span> <span class="n">pointee</span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{}</span>
@@ -1938,7 +1931,7 @@ if (!doNotTrack) {
 <p>Because object ownership is transferred when <code>auto_ptr</code>&rsquo;s copy constructor is called, passing <code>auto_ptr</code>s by value is often a very bad idea:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1949,7 +1942,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printTreeNode</span><span class="p">(</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printTreeNode</span><span class="p">(</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">)</span>
 <span class="p">{</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
@@ -1964,12 +1957,12 @@ if (!doNotTrack) {
 <p>Instead, pass-by-reference-to-const:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// this function behaves much more intuitively
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// this function behaves much more intuitively
 </span><span class="c1"></span><span class="kt">void</span> <span class="nf">printTreeNode</span><span class="p">(</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;&amp;</span> <span class="n">p</span><span class="p">)</span>
 <span class="p">{</span> <span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span> <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -1981,7 +1974,7 @@ if (!doNotTrack) {
 <p>An <code>auto_ptr</code> always owns what it points to, so there is no need for the ownership test in destructor. However, a smart pointers that employs reference counting (MECpp item 29) must adjust a reference count before detrmining whether it has the right to delete what it points to, so their destructor often looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1990,7 +1983,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">tempalte</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">tempalte</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::~</span><span class="n">SmartPtr</span><span class="p">()</span>
 <span class="p">{</span>
 	<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="k">this</span> <span class="n">owns</span> <span class="o">*</span><span class="n">pointee</span><span class="p">)</span> <span class="p">{</span>
@@ -2003,7 +1996,7 @@ if (!doNotTrack) {
 <h2 id="operator"><code>operator*</code></h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2011,7 +2004,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">T</span><span class="o">&amp;</span> <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
 	<span class="n">perform</span> <span class="s">&#34;smart pointer&#34;</span> <span class="n">processing</span><span class="p">;</span>
@@ -2034,10 +2027,10 @@ if (!doNotTrack) {
 <p>When we call <code>operator-&gt;</code> in the statement <code>pt-&gt;displayEditDialog();</code>, the compilers treat it as:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">(</span><span class="n">pt</span><span class="p">.</span><span class="k">operator</span><span class="o">-&gt;</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">displayEditDialog</span><span class="p">();</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">(</span><span class="n">pt</span><span class="p">.</span><span class="k">operator</span><span class="o">-&gt;</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">displayEditDialog</span><span class="p">();</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>This means it must be legal to apply the member-selection operator(-&gt;) to whatever <code>operator-&gt;</code> returns, leading to only two options:</p>
@@ -2048,7 +2041,7 @@ if (!doNotTrack) {
 <p>Most of the time we want to return an ordinary dumb pointer, so the implementation for <code>operator-&gt;</code> is:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2056,7 +2049,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">T</span><span class="o">*</span> <span class="n">SmartPtr</span><span class="o">::</span><span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="k">const</span>
 <span class="p">{</span>
 	<span class="n">perform</span> <span class="s">&#34;smart pointer&#34;</span> <span class="n">processing</span>
@@ -2069,14 +2062,14 @@ if (!doNotTrack) {
 <p>So far we can not do the following operation to find out if a smart pointer is null:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">ptn</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">ptn</span><span class="p">;</span>
 <span class="p">...</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">ptn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// error!
 </span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">ptn</span><span class="p">)</span> <span class="p">...</span>      <span class="c1">// error!
@@ -2086,13 +2079,13 @@ if (!doNotTrack) {
 </div><p>If we want to make smart pointer act like dumb pointers when testing for nullness, an additional <code>isNull</code> member function will not be ideal solution. We may be attempted to provide an implicit conversion operator: <code>operator void*()</code>, but this will also introduce the draback of letting function calls succeed that most programmers would expect to fail (see MECpp item 5). In particular, it allows comparisons of smart pointers of completely different types:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">Apple</span><span class="o">&gt;</span> <span class="n">pa</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">Apple</span><span class="o">&gt;</span> <span class="n">pa</span><span class="p">;</span>
 <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">Orange</span><span class="o">&gt;</span> <span class="n">po</span><span class="p">;</span>
 <span class="p">...</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">pa</span> <span class="o">==</span> <span class="n">po</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// this compiles!
@@ -2102,7 +2095,7 @@ if (!doNotTrack) {
 <p>There is a middle middle ground that allows us to offer a reasonable syntactic form for testing for nullness while minimizing the chances of accidentally comparing smart pointers of of different types. That is to overload <code>operator!</code> to return true if and only if the smart pointer on which it&rsquo;s invoked is null:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2110,7 +2103,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">SmartPtr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 	<span class="p">...</span>
@@ -2121,12 +2114,12 @@ if (!doNotTrack) {
 </div><p>This will lead to:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ptn</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// fine
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ptn</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// fine
 </span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">ptn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  <span class="p">...</span>  <span class="c1">// still an error
 </span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">ptn</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// still an error
 </span></code></pre></td></tr></table>
@@ -2134,11 +2127,11 @@ if (!doNotTrack) {
 </div><p>And the only risk for mixed-type comparisons is statements such as this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">...</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">...</span>
 <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">pa</span> <span class="o">==</span> <span class="o">!</span><span class="n">po</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// this still compiles
 </span></code></pre></td></tr></table>
 </div>
@@ -2147,17 +2140,17 @@ if (!doNotTrack) {
 <p>When a dump pointer is expected for some lagacy libraries (say <code>normalize(Tuple *pt);</code>), we can not simply call the library function with a smart pointer-to-<code>Tuple</code>, because there is no way to convert a <code>DBPtr&lt;Tuple&gt;</code> to a <code>Tuple*</code>. We can make it work by doing this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">normalize</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">pt</span><span class="p">);</span>  <span class="c1">// gross, but legal
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">normalize</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">pt</span><span class="p">);</span>  <span class="c1">// gross, but legal
 </span></code></pre></td></tr></table>
 </div>
 </div><p>but apparently this is not elegant.</p>
 <p>A dangerous solution will be to add to the smart pointer-to-T template an implicit conversion operator to a dumb pointer-to-T:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2173,7 +2166,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">DBPtr</span><span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>	
 	<span class="p">...</span>
@@ -2192,14 +2185,14 @@ if (!doNotTrack) {
 </div><p>However, as stated in MECpp item 5, there&rsquo;s dark side to such conversion function: it&rsquo;s so easy for clients to get access to dumb pointers that they bypass all the smart behavior (such as reference-counting ability) our pointer-like objects designed to provide, which will almost certainly lead to disaster (such as bookkeeping errors that corrupt the reference-counting data structures):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processTuple</span><span class="p">(</span><span class="n">DBPtr</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;&amp;</span> <span class="n">pt</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">processTuple</span><span class="p">(</span><span class="n">DBPtr</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;&amp;</span> <span class="n">pt</span><span class="p">)</span>
 <span class="p">{</span>
 	<span class="n">Tuple</span> <span class="o">*</span><span class="n">rawTuplePtr</span> <span class="o">=</span> <span class="n">pt</span><span class="p">;</span>  <span class="c1">// convert DBPtr&lt;Tuple&gt; to Tuple*
 </span><span class="c1"></span>	<span class="n">use</span> <span class="n">rawTuplePtr</span> <span class="n">to</span> <span class="n">modify</span> <span class="n">the</span> <span class="n">tuple</span><span class="p">;</span>
@@ -2209,7 +2202,7 @@ if (!doNotTrack) {
 </div><p>Besides, even we provide such implicit conversion operator, our smart pointer will never be truly interchangeable with the dumb pointer: the conversion from a smart pointer to a dumb pointer is a user-defined conversion, and compilers are forbidden from applying more than one user-defined conversion at a time. Following example shows this difference, where conversion from <code>DBPtr&lt;Tuple&gt;</code> to <code>TupleAccessors</code> calls for two user-defined conversions (1. <code>DBTpr&lt;Tuple&gt;</code> -&gt; <code>Tuple*</code>; 2. <code>Tuple*</code> -&gt; <code>TupleAccessors</code>), which are prohibited by the language:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2223,7 +2216,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">TupleAccessors</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">TupleAccessors</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 	<span class="n">TupleAccessors</span><span class="p">(</span><span class="k">const</span> <span class="n">Tuple</span> <span class="o">*</span><span class="n">pt</span><span class="p">);</span> <span class="c1">// this ctor also acts as a type-conversion operator
 </span><span class="c1"></span>	<span class="p">...</span>
@@ -2240,12 +2233,12 @@ if (!doNotTrack) {
 </div><p>Moreover, implicit conversion functino makes it possible to let evil statement compile, which will almost certainly break our program later<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBPtr</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;</span> <span class="n">pt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tuple</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBPtr</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;</span> <span class="n">pt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tuple</span><span class="p">;</span>
 <span class="p">...</span>
 <span class="k">delete</span> <span class="n">pt</span><span class="p">;</span>  <span class="c1">// this compiles
 </span></code></pre></td></tr></table>
@@ -2255,7 +2248,7 @@ if (!doNotTrack) {
 <p>Given the following public inheritance hierarchy:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2277,7 +2270,7 @@ if (!doNotTrack) {
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">MusicProduct</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">MusicProduct</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 	<span class="n">MusicProduct</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">title</span><span class="p">);</span>
 	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">play</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -2302,7 +2295,7 @@ if (!doNotTrack) {
 </div><p>It is expected that the virtual function will work properly with dumb pointers:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2318,7 +2311,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">displayAndPlay</span><span class="p">(</span><span class="k">const</span> <span class="n">MusicProduct</span><span class="o">*</span> <span class="n">pmp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTimes</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">displayAndPlay</span><span class="p">(</span><span class="k">const</span> <span class="n">MusicProduct</span><span class="o">*</span> <span class="n">pmp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numTimes</span><span class="p">)</span>
 <span class="p">{</span>
 	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numTimes</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
 	<span class="p">{</span>
@@ -2339,7 +2332,7 @@ if (!doNotTrack) {
 <p>A naive solution: adding into each smart pointer class an implicit type conversion operator. Take <code>SmartPtr&lt;Cassette&gt;</code> for example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2347,7 +2340,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SmartPtr</span><span class="o">&lt;</span><span class="n">Cassette</span><span class="o">&gt;</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SmartPtr</span><span class="o">&lt;</span><span class="n">Cassette</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 	<span class="k">operator</span> <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">MusicProduct</span><span class="o">&gt;</span><span class="p">()</span>
 	<span class="p">{</span> <span class="k">return</span> <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">MusicProduct</span><span class="o">&gt;</span><span class="p">(</span><span class="n">pointee</span><span class="p">);</span> <span class="p">}</span>
@@ -2364,7 +2357,7 @@ if (!doNotTrack) {
 <p>The right way to take is to take advantage of <em>member function templates</em> (or just <em>member templates</em>):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2379,7 +2372,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">SmartPtr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 	<span class="n">SmartPtr</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">realPtr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
@@ -2418,7 +2411,7 @@ if (!doNotTrack) {
              └───────────┘
 </code></pre><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2428,7 +2421,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>      <span class="c1">// as above, including member tempate
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>      <span class="c1">// as above, including member tempate
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">SmartPtr</span> <span class="p">{...};</span>
 
 <span class="kt">void</span> <span class="nf">displayAndPlay</span><span class="p">(</span><span class="k">const</span> <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">MusicProduct</span><span class="o">&gt;&amp;</span> <span class="n">pmp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">howMany</span><span class="p">);</span>
@@ -2443,14 +2436,14 @@ if (!doNotTrack) {
 <p>To mimic the flexibility of constness in terms of smart pointers, we use follwoing ways to create four combinations of <code>const</code> and non-<code>const</code> objects and pointers:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">CD</span> <span class="nf">goodCD</span><span class="p">(</span><span class="s">&#34;Flood&#34;</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">CD</span> <span class="nf">goodCD</span><span class="p">(</span><span class="s">&#34;Flood&#34;</span><span class="p">);</span>
 <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">CD</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>  <span class="c1">// non-const object, non-const pointer
 </span><span class="c1"></span><span class="n">SmartPtr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">CD</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">;</span>  <span class="c1">// const object, non-const pointer
 </span><span class="c1"></span><span class="k">const</span> <span class="n">SmartPtr</span><span class="o">&lt;</span><span class="n">CD</span><span class="o">&gt;</span> <span class="n">p</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">goodCD</span><span class="p">;</span>  <span class="c1">// non-const object, const pointer

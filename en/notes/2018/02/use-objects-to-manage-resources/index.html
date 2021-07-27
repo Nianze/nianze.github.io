@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1786,7 +1779,7 @@ if (!doNotTrack) {
 <p>We can use <code>auto_ptr</code> to manage a class <code>Investment</code> that comes with a factory function (item 7) without worrying about resource leak:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1795,7 +1788,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Investment</span><span class="o">*</span> <span class="nf">createInvestment</span><span class="p">();</span>  <span class="c1">// factory function, return ptr to dynamically allocated object
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Investment</span><span class="o">*</span> <span class="nf">createInvestment</span><span class="p">();</span>  <span class="c1">// factory function, return ptr to dynamically allocated object
 </span><span class="c1"></span>
 <span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> 
 <span class="p">{</span>
@@ -1812,14 +1805,14 @@ if (!doNotTrack) {
 <p>Pay attention to the limitation of <code>auto_ptr</code>: its <strong>sole ownership of the resource policy</strong> requires that copying <code>auto_ptr</code>s via copy constructor or copy assignment operator sets them to null:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv1</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// pInv1 points to the object returned from the factory function
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv1</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// pInv1 points to the object returned from the factory function
 </span><span class="c1"></span>
 <span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv2</span><span class="p">(</span><span class="n">pInv1</span><span class="p">);</span>  <span class="c1">// pInv2 now points to the object; pInv1 is null 
 </span><span class="c1"></span>
@@ -1830,7 +1823,7 @@ if (!doNotTrack) {
 <p>An alternative <strong>RAII</strong> object, <code>shared_ptr</code>, is an RCSP(reference-counting smart pointer), which is a smart pointer that keeps track of how many objects point to a particular resource and automatically deletes  the resource when nobody is pointing to it any longer. The code above is almost the same as with <code>shared_ptr</code>, but copying behavior is much more natural:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1844,7 +1837,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// call factory function
 </span><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// use pInv as before
@@ -1861,12 +1854,12 @@ if (!doNotTrack) {
 </div><p>There is more information on <code>tr1::shared_ptr</code> in item 14, item 18, and item 54. For now, another point worth noting is that, since both <code>auto_ptr</code> and <code>tr1::shared_ptr</code> use <code>delete</code> in their destructors rather than <code>delete []</code> (item 16), it is a bad idea to wrap dynamically allocated arrays with <code>auto_ptr</code> or <code>tr1::shared_ptr</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pStr</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span> <span class="c1">// wrong delete form will be used, bad idea!
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pStr</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span> <span class="c1">// wrong delete form will be used, bad idea!
 </span><span class="c1"></span>
 <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pInt</span><span class="p">(</span><span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="mi">1024</span><span class="p">]);</span> <span class="c1">// same problem
 </span></code></pre></td></tr></table>
