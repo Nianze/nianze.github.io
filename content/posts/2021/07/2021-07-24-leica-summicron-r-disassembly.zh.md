@@ -55,7 +55,7 @@ featured_image: 2021/07/24/disassembly-front-8.jpg
 
 两天后的后记：
 
-手痒又花$30收了台施耐德dkl口的28/4（前期0.9米版），也是前景组内测有点起雾。拆解起来异常简单，靠井字扳手就可以解决。糟糕。。突然发现新世界的大门已经向我打开。。。
+手痒又花$30收了枚施耐德dkl口的28/4（前期0.9米版），也是前景组内测有点起雾。拆解起来异常简单，靠井字扳手就可以解决。糟糕。。突然发现新世界的大门已经向我打开。。。
 
 {{< img src="/images/2021/07/24/schneider-origin-flash-test-front.jpg" title="闪光灯测试施耐德28/4" caption="↑前镜组（清理前）" >}}
 {{< img src="/images/2021/07/24/schneider-cleared-flash-test-front.jpg" title="闪光灯测试施耐德28/4" caption="↑前镜组（清理后）" >}}
