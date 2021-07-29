@@ -9,7 +9,7 @@ tags:
 - leica
 - lens
 - chinese
-slug: "2021 07 24 Leica Summicron R Disassembly"
+slug: "Leica Summicron R Disassembly"
 featured_image: 2021/07/24/disassembly-front-8.jpg
 ---
 
@@ -53,9 +53,14 @@ featured_image: 2021/07/24/disassembly-front-8.jpg
 
 以后要是遇到白菜价拍卖有瑕疵的镜头时可以考虑收来玩玩了。
 
-两天后的后记：
+20210727update:两天后的后记：
 
 手痒又花$30收了枚施耐德dkl口的28/4（前期0.9米版），也是前景组内测有点起雾。拆解起来异常简单，靠井字扳手就可以解决。糟糕。。突然发现新世界的大门已经向我打开。。。
 
 {{< img src="/images/2021/07/24/schneider-origin-flash-test-front.jpg" title="闪光灯测试施耐德28/4" caption="↑前镜组（清理前）" >}}
 {{< img src="/images/2021/07/24/schneider-cleared-flash-test-front.jpg" title="闪光灯测试施耐德28/4" caption="↑前镜组（清理后）" >}}
+
+20210729update：今天转接环寄到了，改口之后终于合体了：
+
+{{< img src="/images/2021/07/24/FE2_E55.JPG" title="转接" caption="↑FE2合体" >}}
+{{< img src="/images/2021/07/24/FE2_E43.jpeg" title="转接" caption="↑对比之前我转接过的一只初代R50 E43，自带遮光罩的E55看起来大了不少，但其实反而比E43轻了近400克" >}}
