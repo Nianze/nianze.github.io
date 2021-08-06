@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1771,7 +1778,7 @@ if (!doNotTrack) {
 <p>Suppose we want to implement a member function named <code>healthValue</code>, which will calculate the health value for different characters in differen ways in a video game. Declaring <code>healthValue</code> virtual seems the obvious way to design things:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1780,7 +1787,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="c1">// return character&#39;s health value rating; derived classes may redefine this
 </span><span class="c1"></span>    <span class="c1">// impure virtual suggests there&#39;s a default impl. (item 34)
@@ -1805,7 +1812,7 @@ if (!doNotTrack) {
 <p>The <em>non-virtual interface (NVI) idiom</em> argues that clients should call private virtual functions indirectly through public non-virtual member functions, which act like a <em>wrapper</em> around the virtual functions. This is a particular manifestation of the more general design pattern known as Template Method<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1823,7 +1830,7 @@ if (!doNotTrack) {
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">healthValue</span><span class="p">()</span> <span class="k">const</span>  <span class="c1">// derived classes do not redefine
 </span><span class="c1"></span>    <span class="p">{</span>
@@ -1850,7 +1857,7 @@ if (!doNotTrack) {
 <h2 id="the-strategy-pattern-via-function-pointers">The strategy pattern via function pointers</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1871,7 +1878,7 @@ if (!doNotTrack) {
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span><span class="p">;</span> <span class="c1">// forward declaration
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span><span class="p">;</span> <span class="c1">// forward declaration
 </span><span class="c1"></span>
 <span class="c1">// function for default health calculation algorithm
 </span><span class="c1"></span><span class="kt">int</span> <span class="nf">defaultHealthCalc</span><span class="p">(</span><span class="k">const</span> <span class="n">GameCharacter</span><span class="o">&amp;</span><span class="p">);</span>
@@ -1901,7 +1908,7 @@ if (!doNotTrack) {
 <p>To generalized the approach above, we could replace the function pointer <code>healthFunc</code> with an object of type <code>tr1::function</code>. As item 54 explains, such objects may hold <em>any callable entity</em> (e.g., function pointer, function object, member function pointer) whose signature is compatible<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup> with the given target signature:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1925,7 +1932,7 @@ if (!doNotTrack) {
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span><span class="p">;</span> <span class="c1">// forward declaration
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span><span class="p">;</span> <span class="c1">// forward declaration
 </span><span class="c1"></span>
 <span class="c1">// function for default health calculation algorithm
 </span><span class="c1"></span><span class="kt">int</span> <span class="nf">defaultHealthCalc</span><span class="p">(</span><span class="k">const</span> <span class="n">GameCharacter</span><span class="o">&amp;</span><span class="p">);</span>
@@ -1952,7 +1959,7 @@ if (!doNotTrack) {
 </div><p>The advantage of this approach is that clients may have more flexibility in specifying health calculation functions with various compatible callable entities:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1963,7 +1970,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">short</span> <span class="nf">calcHealth</span><span class="p">(</span><span class="k">const</span> <span class="n">GameCharacter</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">// function; non-int return type
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">short</span> <span class="nf">calcHealth</span><span class="p">(</span><span class="k">const</span> <span class="n">GameCharacter</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">// function; non-int return type
 </span><span class="c1"></span><span class="k">struct</span> <span class="nc">HealthCalculator</span> <span class="p">{</span> <span class="c1">// class for health calculation function objects
 </span><span class="c1"></span>    <span class="p">...</span>
 <span class="p">};</span>
@@ -1977,7 +1984,7 @@ if (!doNotTrack) {
 </div><p>To use these callable entities:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2001,7 +2008,7 @@ if (!doNotTrack) {
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EvilBadGuy</span><span class="o">:</span> <span class="k">public</span> <span class="n">GameCharacter</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EvilBadGuy</span><span class="o">:</span> <span class="k">public</span> <span class="n">GameCharacter</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">EvilBadGuy</span><span class="p">(</span><span class="n">HealthCalcFunc</span> <span class="n">hcf</span> <span class="o">=</span> <span class="n">defaultHealthCalc</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">GameCharacter</span><span class="p">(</span><span class="n">hcf</span><span class="p">)</span>
@@ -2034,7 +2041,7 @@ if (!doNotTrack) {
 <p>The conventional approach to Strategy design pattern would be to make the health-calculation function a virtual member function of a separate health-calculation hierarchy with root being <code>HealthCalcFunc</code>, so that different health calculation algorithm could be implemented in the derived classes in this inheritance hierarchy. Each object of type <code>GameCharacter</code> just contains a pointer to an object from the <code>HealthCalcFunc</code> hierarchy:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2057,7 +2064,7 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span><span class="p">;</span>  <span class="c1">// forward declaration
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameCharacter</span><span class="p">;</span>  <span class="c1">// forward declaration
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">HealthCalcFunc</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>

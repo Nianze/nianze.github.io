@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1775,10 +1782,10 @@ if (!doNotTrack) {
 <p>C-style casts:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="n">expression</span> <span class="c1">// cast expression to be of type T
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="n">expression</span> <span class="c1">// cast expression to be of type T
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1786,11 +1793,11 @@ if (!doNotTrack) {
 <p>Function-style casts</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">T</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>  <span class="c1">// There&#39;s no difference in meaning between C-style and function-style casts. 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">T</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>  <span class="c1">// There&#39;s no difference in meaning between C-style and function-style casts. 
 </span><span class="c1"></span>               <span class="c1">// Both of them are old-style casts
 </span></code></pre></td></tr></table>
 </div>
@@ -1799,13 +1806,13 @@ if (!doNotTrack) {
 <p>C++-style casts (new-style casts)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
@@ -1828,7 +1835,7 @@ if (!doNotTrack) {
 <p>Sometimes an old-style cast may &ldquo;feel&rdquo; better: suppose we want to call an <code>explicit</code> constructor to pass an object to a function:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1839,7 +1846,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">Widget</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>
     <span class="p">...</span>
@@ -1855,12 +1862,12 @@ if (!doNotTrack) {
 <p>Type conversions often lead to code that is executed at runtime, more than simply telling compilters to treat one type as another:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
 <span class="p">...</span>
 <span class="kt">double</span> <span class="n">d</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">y</span><span class="p">;</span>  <span class="c1">// divide x by y using floating point division
 </span></code></pre></td></tr></table>
@@ -1869,14 +1876,14 @@ if (!doNotTrack) {
 <p>Let&rsquo;s see another example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Base</span> <span class="p">{...};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Base</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">Derived</span><span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{...};</span>
 
 <span class="n">Derived</span> <span class="n">d</span><span class="p">;</span>
@@ -1892,7 +1899,7 @@ if (!doNotTrack) {
 <p>Another lesson we may learn from: many application frameworks requires that virtual member function implementations in derived classes call their base class conterparts first, and below is a wrong version to make the <code>SpecialWindow::onResize()</code> (derived class virtual function) to invoke its base class <code>Window</code>&rsquo;s conterparts:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1907,7 +1914,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>  <span class="c1">// baes class
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>  <span class="c1">// baes class
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onResize</span><span class="p">();</span>  <span class="c1">// base on Resize impl
 </span><span class="c1"></span>    <span class="p">...</span>
@@ -1926,7 +1933,7 @@ if (!doNotTrack) {
 <p>The solution is to eliminate the cast, and call the base class version of <code>onResize</code> on the current object:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1936,7 +1943,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SpecialWindow</span><span class="o">:</span> <span class="k">public</span> <span class="n">Window</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SpecialWindow</span><span class="o">:</span> <span class="k">public</span> <span class="n">Window</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onResize</span><span class="p">()</span> <span class="p">{</span>
         <span class="n">Window</span><span class="o">::</span><span class="n">onResize</span><span class="p">();</span>  <span class="c1">// call Window::onResize on *this
@@ -1951,7 +1958,7 @@ if (!doNotTrack) {
 <p>When we need <code>dynamic_cast</code>? Generally, the need arises because we want to perform derived class operations on a derived class object via a base pointer or base reference. Say in our <code>Window</code>/<code>SpecialWindow</code> hierarchy, only <code>SpecialWindow</code> supports blinking, so we may use <code>dynamic_cast</code> this way:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1970,7 +1977,7 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{...};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">SpecialWindow</span><span class="o">:</span> <span class="k">public</span> <span class="n">Window</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="kt">void</span> <span class="n">blink</span><span class="p">();</span>
@@ -1996,7 +2003,7 @@ if (!doNotTrack) {
 We could use containers that store pointers to derived class objects directly, so that there&rsquo;s no need to manipulate derived class through base class interfaces:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2007,7 +2014,7 @@ We could use containers that store pointers to derived class objects directly, s
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">SpecialWindow</span><span class="o">&gt;&gt;</span> <span class="n">VPSW</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">SpecialWindow</span><span class="o">&gt;&gt;</span> <span class="n">VPSW</span><span class="p">;</span>
 
 <span class="n">VPSW</span> <span class="n">winPtrs</span><span class="p">;</span>
 <span class="p">...</span>
@@ -2025,7 +2032,7 @@ We could use containers that store pointers to derived class objects directly, s
 If we insist on manipulating all possible <code>Window</code> derivatives through a base class interface, we could declare a useless <code>blink</code> as a virtual functions in base class (if it makes sense):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2046,7 +2053,7 @@ If we insist on manipulating all possible <code>Window</code> derivatives throug
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">blink</span><span class="p">()</span> <span class="p">{}</span>  <span class="c1">// default impl is no-op; see item 34 for why a default impl may be a bad idea
 </span><span class="c1"></span>    <span class="p">...</span>
@@ -2073,7 +2080,7 @@ If we insist on manipulating all possible <code>Window</code> derivatives throug
 <p>Another thing we want to avoid about <code>dynamic_casts</code> is designs that involve cascading <code>dynamic_casts</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2092,7 +2099,7 @@ If we insist on manipulating all possible <code>Window</code> derivatives throug
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{...};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{...};</span>
 <span class="p">...</span>  <span class="c1">// derived clases
 </span><span class="c1"></span><span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shard_ptr</span><span class="o">&lt;</span><span class="n">Window</span><span class="o">&gt;&gt;</span> <span class="n">VPW</span><span class="p">;</span>
 

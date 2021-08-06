@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,12 +1779,12 @@ if (!doNotTrack) {
 <p>Consider this statement:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">data</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">20</span><span class="p">];</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">data</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">20</span><span class="p">];</span>
 <span class="p">...</span>
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">6</span><span class="p">];</span> <span class="c1">// fine
 </span></code></pre></td></tr></table>
@@ -1786,7 +1793,7 @@ if (!doNotTrack) {
 <p>Playing the same trick as above, we can define our <code>Array2D</code> class by overloading <code>operator[]</code> to return an object of a new class, <code>Array1D</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1801,7 +1808,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Array2D</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">Array1D</span> <span class="p">{</span>
@@ -1819,12 +1826,12 @@ if (!doNotTrack) {
 </div><p>Then it is legal to write code like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Array2D</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Array2D</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
 <span class="p">...</span>
 <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">6</span><span class="p">];</span>
 </code></pre></td></tr></table>
@@ -1841,7 +1848,7 @@ if (!doNotTrack) {
 <p>The solution: we <em>delay</em> our lvalue-vs-rvalue actions until we see how the result of <code>operator[]</code> is used - by using proxy class to postpone our decision until <em>after</em> <code>operator[]</code> has returned (lazy evaluation, see MECpp item 7):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1864,7 +1871,7 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>   <span class="c1">// reference-counted strings
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>   <span class="c1">// reference-counted strings
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
 
     <span class="k">class</span> <span class="nc">CharProxy</span> <span class="p">{</span>   <span class="c1">// proxy fro string chars
@@ -1897,7 +1904,7 @@ if (!doNotTrack) {
 <p>Now that we know exactly the context in which caller invokes the <code>operator[]</code>, it is easy to implement them:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1911,7 +1918,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
 <span class="p">{</span>
     <span class="c1">// return a const proxy
 </span><span class="c1"></span>    <span class="c1">// Because CharProxy::operator= isn&#39;t a const member function,
@@ -1927,7 +1934,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1957,7 +1964,7 @@ if (!doNotTrack) {
 </span><span class="lnt">28
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="n">CharProxy</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="n">CharProxy</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
 <span class="o">:</span> <span class="n">theString</span><span class="p">(</span><span class="n">str</span><span class="p">),</span> <span class="n">charIndex</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="p">{}</span>
 
 <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span> <span class="kt">char</span><span class="p">()</span> <span class="k">const</span>
@@ -1996,7 +2003,7 @@ if (!doNotTrack) {
 <p>In general, taking the address of a proxy yields a different type of pointer than does taking the address of a real object. Thus, the statement <code>char *p = &amp;s1[1];</code> will cause error. To eliminate the problem, we&rsquo;ll have to overload the address-of operators for <code>CharProxy</code> class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2008,7 +2015,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="k">class</span> <span class="nc">CharProxy</span> <span class="p">{</span>
@@ -2022,7 +2029,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2037,7 +2044,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]);</span>
 <span class="p">}</span>
@@ -2058,7 +2065,7 @@ if (!doNotTrack) {
 <p>If we have a template for reference-counted arrays that use proxy classes to distringuish lvalue and rvalue invocations of operator[]:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2074,7 +2081,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Array</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">Proxy</span> <span class="p">{</span>
@@ -2094,11 +2101,11 @@ if (!doNotTrack) {
 <p>Similarly, we can&rsquo;t invoke member functions on real objects through  proxies. For an array taking <code>Rational</code> as elements (<code>Array&lt;Rational&gt; array;</code>), there is no way to invoke <code>Rational</code>&rsquo;s member function like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">array</span><span class="p">[</span><span class="mi">4</span><span class="p">].</span><span class="n">numerator</span><span class="p">();</span>  <span class="c1">// error!
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">array</span><span class="p">[</span><span class="mi">4</span><span class="p">].</span><span class="n">numerator</span><span class="p">();</span>  <span class="c1">// error!
 </span><span class="c1"></span><span class="kt">int</span> <span class="n">denom</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="mi">22</span><span class="p">].</span><span class="n">denominator</span><span class="p">();</span>  <span class="c1">// error!
 </span></code></pre></td></tr></table>
 </div>
@@ -2108,12 +2115,12 @@ if (!doNotTrack) {
 <p>Passed to functions taking references to non-const objects</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">swap</span><span class="p">(</span><span class="kt">char</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">swap</span><span class="p">(</span><span class="kt">char</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">);</span>
 <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#34;+C+&#34;</span><span class="p">;</span>
 <span class="n">swap</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>  <span class="c1">// won&#39;t compile
 </span></code></pre></td></tr></table>

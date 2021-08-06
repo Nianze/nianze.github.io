@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1770,7 +1777,7 @@ if (!doNotTrack) {
 <p>The Pimpl Idiom decreases build times by reducing compilation dependeencies between class clients and class implementation. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1781,7 +1788,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// header file
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// header file
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Widget</span><span class="p">();</span>
@@ -1794,7 +1801,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1811,7 +1818,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// impl. file
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// impl. file
 </span><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&#34;Widget.h&#34;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&#34;gadget.h&#34;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
@@ -1831,11 +1838,11 @@ if (!doNotTrack) {
 </div><p>However, even though the code above compiles, client code below won&rsquo;t compile:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;Widget.h&#34;</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;Widget.h&#34;</span><span class="cp">
 </span><span class="cp"></span><span class="n">Widget</span> <span class="n">w</span><span class="p">;</span> <span class="c1">// error!
 </span></code></pre></td></tr></table>
 </div>
@@ -1849,7 +1856,7 @@ if (!doNotTrack) {
 <p>To solve the problem, we need to let the compiler see the body of <code>Widget</code>&rsquo;s destructor only inside the implementation file after <code>Widget::Impl</code> has been defined:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1861,7 +1868,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// header file
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// header file
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Widget</span><span class="p">();</span>
@@ -1875,7 +1882,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1895,7 +1902,7 @@ if (!doNotTrack) {
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// impl. file
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// impl. file
 </span><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&#34;Widget.h&#34;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&#34;gadget.h&#34;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
@@ -1918,10 +1925,10 @@ if (!doNotTrack) {
 </div><p>To emphasize the fact that the compiler-generated destructor would do the right thing, we can also write like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">::~</span><span class="n">Widget</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">::~</span><span class="n">Widget</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span> 
 </code></pre></td></tr></table>
 </div>
 </div><p>The same reasoning goes with move operation:</p>
@@ -1932,7 +1939,7 @@ if (!doNotTrack) {
 <p>Once we added the move-related functions, compilers won&rsquo;t generate copy operations for us. So to support a well-defined deep copy, we need to write our own version.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1946,7 +1953,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Widget</span><span class="p">();</span>
     <span class="o">~</span><span class="n">Widget</span><span class="p">();</span>
@@ -1962,7 +1969,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1980,7 +1987,7 @@ if (!doNotTrack) {
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">...</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">...</span>
 <span class="n">Widget</span><span class="o">::~</span><span class="n">Widget</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 <span class="n">Widget</span><span class="o">::</span><span class="n">Widget</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
@@ -2001,7 +2008,7 @@ if (!doNotTrack) {
 </div><p>On the other hand, the above advice does not apply to <code>std::shared_ptr</code>, because in <code>std::shared_ptr</code>, the type of the deleter is not part of the type of the smart pointer, and pointed-to types need not be complete when compiler-generated special functions are employed:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2011,7 +2018,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Widget</span><span class="p">();</span>
     <span class="p">...</span>  <span class="c1">// no declaration for dtor or move operations
@@ -2023,13 +2030,13 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// client code compiles without problem
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// client code compiles without problem
 </span><span class="c1"></span><span class="n">Widget</span> <span class="n">w1</span><span class="p">;</span>
 <span class="k">auto</span> <span class="nf">w2</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">w1</span><span class="p">));</span>  <span class="c1">// move-construct w2
 </span><span class="c1"></span><span class="n">w1</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">w2</span><span class="p">);</span>  <span class="c1">// move-assign w1

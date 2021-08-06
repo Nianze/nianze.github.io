@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1788,7 +1795,7 @@ if (!doNotTrack) {
 <p>Example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1810,7 +1817,7 @@ if (!doNotTrack) {
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">PrintingStuff</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">PrintingStuff</span> <span class="p">{</span>
 <span class="k">class</span> <span class="nc">Printer</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="kt">void</span> <span class="n">submitJob</span><span class="p">(</span><span class="k">const</span> <span class="n">PrintJob</span><span class="o">&amp;</span> <span class="n">job</span><span class="p">);</span>
@@ -1835,13 +1842,13 @@ if (!doNotTrack) {
 </div><p>Since the accessor returns a reference to a <code>Printer</code> object, clients may use <code>thePrinter</code> in any context where a <code>Printer</code> object itself is expected:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">PrintingStuff</span><span class="o">::</span><span class="n">thePrinter</span><span class="p">;</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">PrintingStuff</span><span class="o">::</span><span class="n">thePrinter</span><span class="p">;</span> 
 
 <span class="n">thePrinter</span><span class="p">().</span><span class="n">reset</span><span class="p">();</span>
 <span class="n">thePrinter</span><span class="p">().</span><span class="n">submitJob</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
@@ -1850,7 +1857,7 @@ if (!doNotTrack) {
 </div><p>However, there&rsquo;s still an inconvenience in this design: we&rsquo;re limited to a single <code>Printer</code> object for each run of the program. As a result, it&rsquo;s not possible to write code like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1858,7 +1865,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">create</span> <span class="n">Printer</span> <span class="n">object</span> <span class="n">p1</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">create</span> <span class="n">Printer</span> <span class="n">object</span> <span class="n">p1</span><span class="p">;</span>
 <span class="n">use</span> <span class="n">p1</span><span class="p">;</span>
 <span class="n">destroy</span> <span class="n">p1</span><span class="p">;</span>
 <span class="n">create</span> <span class="n">Printer</span> <span class="n">object</span> <span class="n">p2</span><span class="p">;</span>
@@ -1873,7 +1880,7 @@ if (!doNotTrack) {
 <p>The good point of object-counting is that, it provides us with more flexibility than the function static, and makes it easier to generalize the limit number to more than one. However, object-counting alone will not work. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1886,7 +1893,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Printer</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Printer</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">TooManyObjects</span><span class="p">{};</span>  <span class="c1">// exception class for use when too many obj. are requested; may also returning null for too-many-object cases
 </span><span class="c1"></span>    <span class="n">Printer</span><span class="p">();</span>
@@ -1901,7 +1908,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1930,7 +1937,7 @@ if (!doNotTrack) {
 </span><span class="lnt">27
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// Obligatory definitions of class statics
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// Obligatory definitions of class statics
 </span><span class="c1"></span><span class="n">size_t</span> <span class="n">Printer</span><span class="o">::</span><span class="n">numObjects</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="k">const</span> <span class="n">size_t</span> <span class="n">Printer</span><span class="o">::</span><span class="n">maxObjets</span><span class="p">;</span>
 
@@ -1962,23 +1969,23 @@ if (!doNotTrack) {
 </div><p>The problem here is that, in order to set a limit on the number of instantiations,  we should not declare the class constructor <code>public</code>, because that will allow clients to put the class as base class parts of more derived objects, or embedded inside larger objects, which is totally different usage context, and the presence of these different contexts significantly muddies the waters regarding what it means to keep track of the &ldquo;number of objects in existence.&rdquo; For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ColorPrinter</span><span class="o">:</span> <span class="k">public</span> <span class="n">Printer</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ColorPrinter</span><span class="o">:</span> <span class="k">public</span> <span class="n">Printer</span> <span class="p">{</span>
     <span class="p">...</span>
 <span class="p">}</span>
 </code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Printer</span> <span class="n">p</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Printer</span> <span class="n">p</span><span class="p">;</span>
 <span class="n">ColorPrinter</span> <span class="n">cp</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
@@ -1989,7 +1996,7 @@ if (!doNotTrack) {
 <p>That is, we combine the object-counting with pseudo-consturctors:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2005,7 +2012,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Printer</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Printer</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">TooManyObjects</span><span class="p">{};</span>  <span class="c1">// exception class for use when too many obj. are requested; may also returning null for too-many-object cases
 </span><span class="c1"></span>    <span class="c1">// pseudo-constructor
@@ -2023,7 +2030,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2058,7 +2065,7 @@ if (!doNotTrack) {
 </span><span class="lnt">33
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// Obligatory definitions of class statics
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// Obligatory definitions of class statics
 </span><span class="c1"></span><span class="n">size_t</span> <span class="n">Printer</span><span class="o">::</span><span class="n">numObjects</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="k">const</span> <span class="n">size_t</span> <span class="n">Printer</span><span class="o">::</span><span class="n">maxObjets</span><span class="p">;</span>
 
@@ -2097,7 +2104,7 @@ if (!doNotTrack) {
 <p>We can split the instance counting ability apart from the <code>Printer</code> class to reuse the limited-number-of-instance functionality.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2131,7 +2138,7 @@ if (!doNotTrack) {
 </span><span class="lnt">32
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">BeingCounted</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">BeingCounted</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Counted</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">TooManyObjects</span><span class="p">{};</span> <span class="c1">// for throwing exceptions
@@ -2168,7 +2175,7 @@ if (!doNotTrack) {
 </div><p>Now modify the <code>Printer</code> class to use the <code>Counted</code> template:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2186,7 +2193,7 @@ if (!doNotTrack) {
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Printer</span><span class="o">:</span> <span class="k">private</span> <span class="n">Counted</span><span class="o">&lt;</span><span class="n">Printer</span><span class="o">&gt;</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Printer</span><span class="o">:</span> <span class="k">private</span> <span class="n">Counted</span><span class="o">&lt;</span><span class="n">Printer</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="c1">// pseudo-constructors
 </span><span class="c1"></span>    <span class="k">static</span> <span class="n">Printer</span> <span class="o">*</span> <span class="n">makePrinter</span><span class="p">();</span>
@@ -2216,13 +2223,13 @@ if (!doNotTrack) {
 <p>After inheritance, <code>Printer</code> can forget about counting objects, so the <code>Printer</code> constructor now looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Printer</span><span class="o">::</span><span class="n">Printer</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Printer</span><span class="o">::</span><span class="n">Printer</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">proceed</span> <span class="n">with</span> <span class="n">normal</span> <span class="n">object</span> <span class="n">construction</span><span class="p">;</span>
 <span class="p">}</span>
@@ -2239,10 +2246,10 @@ if (!doNotTrack) {
 <p>Clients of the <code>Printer</code> class are required to initialize <code>maxObjects</code>, or there will be an error during linking for undefined <code>maxObjects</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">size_t</span> <span class="n">Counted</span><span class="o">&lt;</span><span class="n">Printer</span><span class="o">&gt;::</span><span class="n">maxObjects</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">size_t</span> <span class="n">Counted</span><span class="o">&lt;</span><span class="n">Printer</span><span class="o">&gt;::</span><span class="n">maxObjects</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
 </div></li>

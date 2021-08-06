@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1773,7 +1780,7 @@ if (!doNotTrack) {
 <p>By default, swapping is accomplished via the standard <code>swap</code> algorithm:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1784,7 +1791,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">namesapce</span> <span class="n">std</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">namesapce</span> <span class="n">std</span> <span class="p">{</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>    <span class="c1">// typical implementation of std::swap
 </span><span class="c1"></span>    <span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span>   <span class="c1">// swaps a&#39;s and b&#39;s values
 </span><span class="c1"></span>    <span class="p">{</span>
@@ -1798,7 +1805,7 @@ if (!doNotTrack) {
 </div><p>As long as our types support copying (via copy constructor and copy assignment operator), the default <code>swap</code> implementation will work. However, for some types, none of these copies are really necessary. For example: there&rsquo;s a common design manifestation called &ldquo;pimpl idiom&rdquo; (&ldquo;pointer to implementation&rdquo;, item 31) that consisting primarily of a pointer to another type that contains the real data:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1808,7 +1815,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">WidgetImpl</span> <span class="p">{</span>            <span class="c1">// class for Widget data
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">WidgetImpl</span> <span class="p">{</span>            <span class="c1">// class for Widget data
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
@@ -1820,7 +1827,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1835,7 +1842,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>                    <span class="c1">// class using the pimpl idiom
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>                    <span class="c1">// class using the pimpl idiom
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="n">Widget</span><span class="p">(</span><span class="k">const</span> <span class="n">Widgtet</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
     <span class="n">Widget</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>  <span class="c1">//to copy a Widget,
@@ -1862,7 +1869,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 <p>However, this implementation won&rsquo;t compile, because we can&rsquo;t access the private <code>pImpl</code> pointers inside <code>a</code> and <code>b</code>. To solve the problem, we declare a public member function called <code>swap</code> that does the actual swapping, then specialize <code>std::swap</code> to call the member function:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1882,7 +1889,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span> <span class="c1">// same as above except for the addition of the swap mem func
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span> <span class="c1">// same as above except for the addition of the swap mem func
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
@@ -1905,14 +1912,14 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 </div><p>This implementation will compile and be consistent with the STL container. However, if the <code>Widget</code> and <code>WidgetImpl</code> were class <em>template</em> instead of classes (so that we could parameterize the type of the data stored in <code>WidgetImpl</code>), things get more complicated:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">WidgetImpl</span> <span class="p">{...};</span>
 
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
@@ -1922,7 +1929,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 </div><p>It is still easy to put a <code>swap</code> member function inside <code>Widget</code> the same way as before, but there&rsquo;s a trouble with the specialization for <code>std::swap</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1931,7 +1938,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">swap</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">Widget</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="n">Widget</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span>  <span class="c1">// illegal code!
 </span><span class="c1"></span><span class="p">{</span>
@@ -1944,7 +1951,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 <p>The usual approach to &ldquo;partially specialize&rdquo; a function template is to add an overload like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1953,7 +1960,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>   <span class="c1">// an overloading of std::swap
 </span><span class="c1"></span>    <span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="n">Widget</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="n">Widget</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span>  <span class="c1">// note the lack of &#34;&lt;...&gt;&#34;
 </span><span class="c1"></span>    <span class="p">{</span>                                      <span class="c1">// after &#34;swap&#34;
@@ -1966,7 +1973,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 <p>Thus in this case, not to declare the non-member function to be a specialization or overloading of <code>std::swap</code>, we just make a normal non-member <code>swap</code> function in <code>Widget</code>-related namespace:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1980,7 +1987,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">WidgetStuff</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">WidgetStuff</span> <span class="p">{</span>
     <span class="p">...</span>  <span class="c1">// templatized WidgetImpl, etc.
 </span><span class="c1"></span>    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
     <span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...};</span> <span class="c1">// including the swap member function
@@ -1999,7 +2006,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 <p>Let&rsquo;s look from a client&rsquo;s point of view and see how to use the <code>swap</code>. Ideally, we want to call a T-specific version of <code>swap</code> if there is one, but to fall back on the general version in <code>std</code> if there&rsquo;s not. To fulfill this idea:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2009,7 +2016,7 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">doSomething</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">obj1</span><span class="p">,</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">obj2</span><span class="p">)</span> 
 <span class="p">{</span>
     <span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">;</span>  <span class="c1">// make std::swap available in this function
@@ -2032,10 +2039,10 @@ swap(a.pImpl, b.pImpl);       // won&rsquo;t compile here<br />
 <p>One thing worth noting is to not qualify the call like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">obj1</span><span class="p">,</span> <span class="n">obj2</span><span class="p">);</span>  <span class="c1">// the wrong way to call swap
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">obj1</span><span class="p">,</span> <span class="n">obj2</span><span class="p">);</span>  <span class="c1">// the wrong way to call swap
 </span></code></pre></td></tr></table>
 </div>
 </div><p>here we force compilers to consider only the <code>swap</code> in <code>std</code> (including any template specializations), thus eliminating the possibility of getting a more appropriate T-specific version defined elsewhere. Alas, some misguided programmers (or even some standard library) <em>do</em> qualify calls to <code>swap</code> in this way. To make code work as efficiently as possible, we&rsquo;d better totally specialize <code>std::swap</code> for our classes.</p>

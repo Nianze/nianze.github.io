@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1774,7 +1781,7 @@ if (!doNotTrack) {
 <p>Example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1788,7 +1795,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{</span> <span class="c1">// unlimited precision numbers that should only exist on the heap
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{</span> <span class="c1">// unlimited precision numbers that should only exist on the heap
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="n">UPNumber</span><span class="p">();</span>
     <span class="n">UPNumber</span><span class="p">(</span><span class="kt">int</span> <span class="n">initValue</span><span class="p">);</span>
@@ -1805,14 +1812,14 @@ if (!doNotTrack) {
 </div><p>Clients would program like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">UPNumber</span> <span class="n">n</span><span class="p">;</span> <span class="c1">// error! (legal here, but illegal when n&#39;s dtor is implicitly invoked later)
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">UPNumber</span> <span class="n">n</span><span class="p">;</span> <span class="c1">// error! (legal here, but illegal when n&#39;s dtor is implicitly invoked later)
 </span><span class="c1"></span><span class="n">UPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UPNumber</span><span class="p">;</span> <span class="c1">// fine
 </span><span class="c1"></span><span class="p">...</span>
 <span class="k">delete</span> <span class="n">p</span><span class="p">;</span> <span class="c1">// error! attempt to call private dtor
@@ -1827,7 +1834,7 @@ if (!doNotTrack) {
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1847,7 +1854,7 @@ if (!doNotTrack) {
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumer</span> <span class="p">{...};</span>  <span class="c1">// declare dtor protected
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumer</span> <span class="p">{...};</span>  <span class="c1">// declare dtor protected
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">NonNegativeUPNumber</span><span class="o">:</span> <span class="k">public</span> <span class="n">UPNumber</span> <span class="p">{...};</span> <span class="c1">// okay to access protected members
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">Asset</span> <span class="p">{</span>
@@ -1871,11 +1878,11 @@ if (!doNotTrack) {
 <p>It&rsquo;s hard to tell whether an object is on the heap. For example, given the class definition above, it&rsquo;s ligal to define a non-heap <code>NonNegativeUPNumber</code> object, which will not construct its base <code>UPNumber</code> part on the heap. There is no way to detect whether a constructor is being invoked as the base class part of a heap-based object, which means for the following contexts, it is not possible for the <code>UPNumber</code> constructor to detect the difference:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">NonNegativeUPNumber</span> <span class="o">*</span><span class="n">n1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NonNegativeUPNumber</span><span class="p">;</span> <span class="c1">// on heap
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">NonNegativeUPNumber</span> <span class="o">*</span><span class="n">n1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NonNegativeUPNumber</span><span class="p">;</span> <span class="c1">// on heap
 </span><span class="c1"></span><span class="n">NonNegativeUPNumber</span> <span class="n">n2</span><span class="p">;</span> <span class="c1">// not on heap
 </span></code></pre></td></tr></table>
 </div>
@@ -1885,7 +1892,7 @@ if (!doNotTrack) {
 <p>To answer this easier question, all we need to do is to create a collection of addresses that have been returned by <code>operator new</code>. One possible solution is to provide an abstract mixin base class that offers derived classes the ability to determine whether a pointer was allocated from <code>operator new</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1900,7 +1907,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">HeapTracked</span> <span class="p">{</span> <span class="c1">// mixin class; keeps track of ptrs returned from op. new
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">HeapTracked</span> <span class="p">{</span> <span class="c1">// mixin class; keeps track of ptrs returned from op. new
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">MissingAddress</span><span class="p">();</span>  <span class="c1">// exception class
 </span><span class="c1"></span>    <span class="k">virtual</span> <span class="o">~</span><span class="n">HeapTracked</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -1917,7 +1924,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1953,7 +1960,7 @@ if (!doNotTrack) {
 </span><span class="lnt">34
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// mandatory definition of static class member
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// mandatory definition of static class member
 </span><span class="c1"></span><span class="n">list</span><span class="o">&lt;</span><span class="n">RawAddress</span><span class="o">&gt;</span> <span class="n">HeapTracked</span><span class="o">::</span><span class="n">address</span><span class="p">;</span>
 <span class="c1">// tho being pure virtual, dtor still needs to be defined
 </span><span class="c1"></span><span class="n">HEapTracked</span><span class="o">::~</span><span class="n">HeapTracked</span><span class="p">()</span> <span class="p">{}</span>
@@ -1993,14 +2000,14 @@ if (!doNotTrack) {
 <p>To use this basic class, say we want to be able to determine whether a pointer to an <code>Asset</code> object points to a heap-based object, simply modify <code>Asset</code>&rsquo;s class definition to specify <code>HeapTracked</code> as a base class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Asset</span><span class="o">:</span> <span class="k">public</span> <span class="n">HeapTracked</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Asset</span><span class="o">:</span> <span class="k">public</span> <span class="n">HeapTracked</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="n">UPNumber</span> <span class="n">value</span><span class="p">;</span>
     <span class="p">...</span>
@@ -2010,7 +2017,7 @@ if (!doNotTrack) {
 </div><p>And we could query <code>Asset*</code> pointers as follows:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2021,7 +2028,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">inventoryAsset</span><span class="p">(</span><span class="k">const</span> <span class="n">Asset</span> <span class="o">*</span><span class="n">ap</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">inventoryAsset</span><span class="p">(</span><span class="k">const</span> <span class="n">Asset</span> <span class="o">*</span><span class="n">ap</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">isOnHeap</span><span class="p">())</span> <span class="p">{</span>
         <span class="n">as</span> <span class="n">is</span> <span class="n">a</span> <span class="n">heap</span><span class="o">-</span><span class="n">based</span> <span class="n">asset</span> <span class="o">--</span> <span class="n">inventory</span> <span class="n">it</span> <span class="n">as</span> <span class="n">such</span>
@@ -2044,7 +2051,7 @@ if (!doNotTrack) {
 <p>To prevent clients from directly instantiating objects on the heap: we can declare <code>operator new</code> (and possibly <code>operator new[]</code>) as <code>private</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2052,7 +2059,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">);</span>
     <span class="k">static</span> <span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">);</span>
@@ -2062,12 +2069,12 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">UPNumber</span> <span class="n">n1</span><span class="p">;</span>  <span class="c1">// okay
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">UPNumber</span> <span class="n">n1</span><span class="p">;</span>  <span class="c1">// okay
 </span><span class="c1"></span><span class="k">static</span> <span class="n">UPNumber</span> <span class="n">n2</span><span class="p">;</span>  <span class="c1">// okay
 </span><span class="c1"></span><span class="n">UPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UPNumber</span><span class="p">;</span> <span class="c1">// error! attempt to call private operator new
 </span></code></pre></td></tr></table>
@@ -2075,7 +2082,7 @@ if (!doNotTrack) {
 </div><p>Declaring <code>operator new</code> private often also prevents <code>UPNumber</code> objects from being instantiated as base class parts of heap-based derived class objects, because <code>operator new</code> and <code>operator delete</code> are inherited, so if these functions aren&rsquo;t declared public in a derived class, that class inherits the private versions declared in its base(s):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2085,7 +2092,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{...};</span> <span class="c1">// as above
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{...};</span> <span class="c1">// as above
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">NonNegativeUPNumber</span><span class="o">:</span> <span class="k">public</span> <span class="n">UPNumber</span> <span class="p">{</span> <span class="c1">// declares no operator new
 </span><span class="c1"></span>    <span class="p">...</span>
 <span class="p">};</span>
@@ -2101,7 +2108,7 @@ if (!doNotTrack) {
 <p>Similarly, the fact that <code>UPNumber</code>&rsquo;s <code>operator new</code> is private has no effect on attempts to allocate objects containing <code>UPNumber</code> objects as members:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2113,7 +2120,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Asset</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Asset</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Asset</span><span class="p">(</span><span class="kt">int</span> <span class="n">initValue</span><span class="p">);</span>
     <span class="p">...</span>

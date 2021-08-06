@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1778,7 +1785,7 @@ if (!doNotTrack) {
 <p>Factory functions and Pimpl Idiom are two common use case for <code>std::ptr</code>s. For example, supporse we have a hierarchy for types of investments (e.g., stocks, bonds, real estate, etc.) with a factory function alllocating an object on the heap and returning a pointer to it:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1794,7 +1801,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Investment</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Investment</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">Investment</span><span class="p">();</span>
@@ -1813,14 +1820,14 @@ if (!doNotTrack) {
 </div><p>By the help of <code>std::unique_ptr</code>, clients will no longer worry about deleting it:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="p">{</span>
     <span class="p">...</span>
     <span class="k">auto</span> <span class="n">pInvestment</span> <span class="o">=</span> <span class="n">makeInvestment</span><span class="p">(</span> <span class="n">arguments</span> <span class="p">);</span>
     <span class="p">...</span>
@@ -1830,17 +1837,17 @@ if (!doNotTrack) {
 </div><p>Callers can also take use of <code>std::unique_ptr</code>&rsquo;s feature to adapt it to its more flexible sibling <code>std::shared_ptr</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">sp</span> <span class="o">=</span> <span class="n">makeInvestment</span><span class="p">(</span> <span class="n">arguments</span> <span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">sp</span> <span class="o">=</span> <span class="n">makeInvestment</span><span class="p">(</span> <span class="n">arguments</span> <span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><h4 id="implementation">Implementation</h4>
 <p>For C++11, we can implement the factory function this way:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1868,7 +1875,7 @@ if (!doNotTrack) {
 </span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">delInvmt</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Investment</span><span class="o">*</span> <span class="n">pInvestment</span><span class="p">)</span>       <span class="c1">// custom deleter
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">delInvmt</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Investment</span><span class="o">*</span> <span class="n">pInvestment</span><span class="p">)</span>       <span class="c1">// custom deleter
 </span><span class="c1"></span>                <span class="p">{</span>                                 <span class="c1">// (a lambda expression)
 </span><span class="c1"></span>                    <span class="n">makeLogEntry</span><span class="p">(</span><span class="n">pInvestment</span><span class="p">);</span>   
                     <span class="k">delete</span> <span class="n">pInvestment</span><span class="p">;</span>
@@ -1899,7 +1906,7 @@ if (!doNotTrack) {
 </div><p>In C++14, we could use function return type deduction to make it simpler and more encapsulated:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1912,7 +1919,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
 <span class="k">auto</span> <span class="n">makeInvestment</span><span class="p">(</span><span class="n">Ts</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">params</span><span class="p">)</span> <span class="c1">// C++14
 </span><span class="c1"></span><span class="p">{</span>
     <span class="k">auto</span> <span class="n">delInvmt</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Investment</span><span class="o">*</span> <span class="n">pInvestment</span><span class="p">)</span>     <span class="c1">// now inside makeInvestment

@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1811,10 +1818,10 @@ if (!doNotTrack) {
 <p>如果Mac上已经装上了<a href="https://brew.sh/">Homebrew</a>，在命令行中直接敲下面的命令安装：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">brew install hugo
+<pre class="chroma"><code class="language-shell" data-lang="shell">brew install hugo
 </code></pre></td></tr></table>
 </div>
 </div><p>如果Mac上没有安装<code>Homebrew</code>，可以考虑先装<code>Homebrew</code>再按上述步骤安装<code>Hugo</code>；也可以在<a href="https://github.com/gohugoio/hugo/releases">Hugo官网</a>直接下载使用可运行文件。</p>
@@ -1823,10 +1830,10 @@ if (!doNotTrack) {
 <p>在硬盘中选取合适的存储路径，然后命令行中使用如下指令生成网页本地文档：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">hugo new site personal-site
+<pre class="chroma"><code class="language-shell" data-lang="shell">hugo new site personal-site
 </code></pre></td></tr></table>
 </div>
 </div><p>由此可得到如下文件目录：</p>
@@ -1876,10 +1883,10 @@ if (!doNotTrack) {
 <p>使用下面的命令生成新的文章草稿：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">hugo new posts/first-post.md
+<pre class="chroma"><code class="language-shell" data-lang="shell">hugo new posts/first-post.md
 </code></pre></td></tr></table>
 </div>
 </div><p>在content目录中会自动以<code>archetypes/default.md</code>为模板在<code>content/posts</code>目录下生成一篇名为<code>first-post.md</code>的文章草稿：</p>
@@ -1900,7 +1907,7 @@ date: 2017-12-27T23:15:53-05:00
 </code></pre><p>然后随便下载一个主题并加载到<code>config.toml</code>文件中：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1908,7 +1915,7 @@ date: 2017-12-27T23:15:53-05:00
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">git init
+<pre class="chroma"><code class="language-shell" data-lang="shell">git init
 git submodule add https://github.com/budparr/gohugo-theme-ananke.git themes/ananke
 
 <span class="c1"># Edit your config.toml configuration file</span>
@@ -1919,10 +1926,10 @@ git submodule add https://github.com/budparr/gohugo-theme-ananke.git themes/anan
 </div><p>现在使用如下命令建立本地服务器：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">hugo server
+<pre class="chroma"><code class="language-shell" data-lang="shell">hugo server
 </code></pre></td></tr></table>
 </div>
 </div><p>并在浏览器中输入网址<code>http://localhost:1313/</code>就可以在浏览器中查看网页效果了：</p>
@@ -1930,10 +1937,10 @@ git submodule add https://github.com/budparr/gohugo-theme-ananke.git themes/anan
 <p>如果觉得没有问题了便可以使用如下命令：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">hugo
+<pre class="chroma"><code class="language-shell" data-lang="shell">hugo
 </code></pre></td></tr></table>
 </div>
 </div><p>如此一来网页便生成在默认的public子目录中了。</p>
@@ -1943,14 +1950,14 @@ git submodule add https://github.com/budparr/gohugo-theme-ananke.git themes/anan
 <p>复制该网址后，在网站本地文档根目录中初始化git：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">git init
+<pre class="chroma"><code class="language-shell" data-lang="shell">git init
 git add .
 git commit -m <span class="s2">&#34;first commit&#34;</span>
 git remote add origin https://github.com/Nianze/personal-site.git
@@ -1967,10 +1974,10 @@ git push -u origin master
 <p>第一种方案的好处在于一次push即可将源文档和对应生成的网页文档都发布到Github，操作非常简单。所需要的仅是在config.toml中添加如下一行配置，使得生成的网页默认保存在<code>/docs</code>子目录下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="nv">publishDir</span> <span class="o">=</span> docs
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nv">publishDir</span> <span class="o">=</span> docs
 </code></pre></td></tr></table>
 </div>
 </div><p>自此运行<code>hugo</code>命令后生成的网页文件将保存在<code>/docs</code>子目录下。将所有文档push到Github的<code>master branch</code>，进入Github对应repository的Settings标签菜单，在<code>GitHub Pages</code>选项的Source栏选择<code>master branch /docs folder</code>:</p>
@@ -1980,7 +1987,7 @@ git push -u origin master
 <p>如果希望单独控制源文档和生成的网页文档的版本历史，可以使用单独建立一个<code>gh-pages branch</code>的方法托管到<code>Github Pages</code>——先将<code>/public</code>子目录添加到<code>.gitignore</code>中，让<code>master branch</code>忽略其更新，然后在本地和Github端添加一个名为<code>gh-pages</code>的branch：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1990,7 +1997,7 @@ git push -u origin master
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell">//忽略public子目录
+<pre class="chroma"><code class="language-shell" data-lang="shell">//忽略public子目录
 <span class="nb">echo</span> <span class="s2">&#34;public&#34;</span> &gt;&gt; .gitignore
 //初始化gh-pages branch
 git checkout --orphan gh-pages
@@ -2003,7 +2010,7 @@ git checkout master
 </div><p>为了提高每次发布的效率，可以将下述命令存在脚本中，每次只需要运行该脚本即可将<code>gh-pages branch</code>中的文章发布到Github的repo中：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2033,7 +2040,7 @@ git checkout master
 </span><span class="lnt">28
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="cp">#!/bin/sh
+<pre class="chroma"><code class="language-shell" data-lang="shell"><span class="cp">#!/bin/sh
 </span><span class="cp"></span>
 <span class="k">if</span> <span class="o">[[</span> <span class="k">$(</span>git status -s<span class="k">)</span> <span class="o">]]</span>
 <span class="k">then</span>

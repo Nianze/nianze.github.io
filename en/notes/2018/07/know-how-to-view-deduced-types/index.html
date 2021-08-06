@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1774,17 +1781,17 @@ if (!doNotTrack) {
 <p>We can get a compiler to show what it deduced for a type by causing a compilation problem using that type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="c1">// Declaration only.
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="c1">// Declaration only.
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">TD</span><span class="p">;</span> <span class="c1">// TD == &#34;Type Displayer&#34;. 
 </span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1792,7 +1799,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">int</span> <span class="n">theAnser</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">int</span> <span class="n">theAnser</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
 <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">theAnswer</span><span class="p">;</span>
 <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">theAnswer</span><span class="p">;</span>
 
@@ -1803,11 +1810,11 @@ if (!doNotTrack) {
 </div><p>For the code above, since there&rsquo;s no template definition to instantiate, compiler will yield the error messages like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="nl">error</span><span class="p">:</span> <span class="err">&#39;</span><span class="n">xType</span><span class="err">&#39;</span> <span class="n">uses</span> <span class="n">undefined</span> <span class="k">class</span> <span class="err">&#39;</span><span class="nc">TD</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="err">&#39;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="nl">error</span><span class="p">:</span> <span class="err">&#39;</span><span class="n">xType</span><span class="err">&#39;</span> <span class="n">uses</span> <span class="n">undefined</span> <span class="k">class</span> <span class="err">&#39;</span><span class="nc">TD</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="err">&#39;</span>
 <span class="nl">error</span><span class="p">:</span> <span class="err">&#39;</span><span class="n">yType</span><span class="err">&#39;</span> <span class="n">uses</span> <span class="n">undefined</span> <span class="k">class</span> <span class="err">&#39;</span><span class="nc">TD</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">int</span> <span class="o">*&gt;</span><span class="err">&#39;</span>
 </code></pre></td></tr></table>
 </div>
@@ -1816,7 +1823,7 @@ if (!doNotTrack) {
 <p>Consider a more complex example involving a user-defined type (<code>Widget</code>), an STL container(<code>std::vector</code>), and an <code>auto</code> variable (<code>vm</code>), which is more representative of the situation where we want to see deduced type information:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1828,7 +1835,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>               <span class="c1">// template function to
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>               <span class="c1">// template function to
 </span><span class="c1"></span><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">);</span>            <span class="c1">// be called
 </span><span class="c1"></span>
 <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">createVec</span><span class="p">();</span>   <span class="c1">// factory function
@@ -1843,25 +1850,25 @@ if (!doNotTrack) {
 </div><p>This time, if we want to see what type is deduced for <code>T</code> and <code>param</code>, the type information displayed by IDE editors is not reliably useful. For example, the deduced type for <code>T</code> is shown as:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">conststd</span><span class="o">::</span><span class="n">_Simple_types</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">_Wrap_alloc</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">_Vec_base_types</span><span class="o">&lt;</span><span class="n">Widget</span><span class="p">,</span><span class="n">std</span><span class="o">::</span><span class="n">allocator</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="o">&gt;::</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="o">&gt;::</span><span class="n">value_type</span> <span class="o">*</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">conststd</span><span class="o">::</span><span class="n">_Simple_types</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">_Wrap_alloc</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">_Vec_base_types</span><span class="o">&lt;</span><span class="n">Widget</span><span class="p">,</span><span class="n">std</span><span class="o">::</span><span class="n">allocator</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="o">&gt;::</span><span class="n">_Alloc</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="o">&gt;::</span><span class="n">value_type</span> <span class="o">*</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>and the <code>param</code>&rsquo;s type is:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">_Simple_types</span><span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;::</span><span class="n">value_type</span> <span class="o">*</span><span class="k">const</span> <span class="o">&amp;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">_Simple_types</span><span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;::</span><span class="n">value_type</span> <span class="o">*</span><span class="k">const</span> <span class="o">&amp;</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>In order to create a textual representation of the type we care about and print it out on screen, we might consider the Boost TypeIndex library<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1880,7 +1887,7 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;boost/type_index.hpp&gt;</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;boost/type_index.hpp&gt;</span><span class="cp">
 </span><span class="cp"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span>
 <span class="p">{</span>  
@@ -1902,11 +1909,11 @@ if (!doNotTrack) {
 </div><p>Under compilers from GNU and Clang, Boost.TypeIndex produces this accurate output:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">T</span> <span class="o">=</span>     <span class="n">Widget</span> <span class="k">const</span><span class="o">*</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">T</span> <span class="o">=</span>     <span class="n">Widget</span> <span class="k">const</span><span class="o">*</span>
 <span class="n">param</span> <span class="o">=</span> <span class="n">Widget</span> <span class="k">const</span><span class="o">*</span> <span class="k">const</span><span class="o">&amp;</span>
 </code></pre></td></tr></table>
 </div>

@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1770,13 +1777,13 @@ if (!doNotTrack) {
 <p>For example, considering we are writing a video game involving space ships, space stations, and asteroids:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameObject</span> <span class="p">{...};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameObject</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">SpaceShip</span><span class="o">:</span> <span class="k">public</span> <span class="n">GameObject</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">SpaceStation</span><span class="o">:</span> <span class="k">public</span> <span class="n">GameObject</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">Asteroid</span><span class="o">:</span> <span class="k">public</span> <span class="n">GameObjecct</span> <span class="p">{...};</span>
@@ -1785,7 +1792,7 @@ if (!doNotTrack) {
 </div><p>When one <code>GameObject</code> collides with another, we call a function depending on <em>both</em> their dynamic types:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1796,7 +1803,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">checkForCollision</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">object1</span><span class="p">,</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">object2</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">checkForCollision</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">object1</span><span class="p">,</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">object2</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">theyJustCollided</span><span class="p">(</span><span class="n">object1</span><span class="p">,</span> <span class="n">object2</span><span class="p">))</span> <span class="p">{</span>
         <span class="n">processCollision</span><span class="p">(</span><span class="n">object1</span><span class="p">,</span> <span class="n">object2</span><span class="p">);</span>
@@ -1812,7 +1819,7 @@ if (!doNotTrack) {
 <p>We need double dispatch, so we can use virtual functions for first half of what we need, and use chains of <code>if-then-else</code>s for rest half:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1825,7 +1832,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameObject</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameObject</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">collide</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">...</span>
@@ -1840,7 +1847,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1869,7 +1876,7 @@ if (!doNotTrack) {
 </span><span class="lnt">27
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// if colliding with an object of unknown type
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// if colliding with an object of unknown type
 </span><span class="c1">// throw an exception of this type:
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">CollisionWithUnknownObject</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
@@ -1903,7 +1910,7 @@ if (!doNotTrack) {
 <p>We can also implement double-dispatching as two separate virtual function calls:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1926,7 +1933,7 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// forward declarations
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// forward declarations
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">SpaceShip</span><span class="p">;</span>
 <span class="k">class</span> <span class="nc">SpaceStation</span><span class="p">;</span>
 <span class="k">class</span> <span class="nc">Asteroid</span><span class="p">;</span>
@@ -1951,13 +1958,13 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">SpaceShip</span><span class="o">::</span><span class="n">collide</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">SpaceShip</span><span class="o">::</span><span class="n">collide</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">otherObject</span><span class="p">.</span><span class="n">collide</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
 <span class="p">}</span>
@@ -1966,7 +1973,7 @@ if (!doNotTrack) {
 </div><p>Note that this implementation is not a resursive call: being inside a member function of the class <code>Spaceship</code>, the static type of <code>*this</code> is of type <code>SpaceShip</code>, so the call is routed to the <code>collide(SpaceShip&amp;)</code> instead of going back to <code>collide(GameObject&amp;)</code>. All the <code>collide</code> functions are virtual, so finally this call will resolve to the implementation of <code>collide</code> corresponding to the real type of <code>otherObject</code>, where both types are known. So the implementation is simply:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1980,7 +1987,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">SpaceShip</span><span class="o">::</span><span class="n">collide</span><span class="p">(</span><span class="n">SpaceShip</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">SpaceShip</span><span class="o">::</span><span class="n">collide</span><span class="p">(</span><span class="n">SpaceShip</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">process</span> <span class="n">a</span> <span class="n">SpaceShip</span><span class="o">-</span><span class="n">SpaceShip</span> <span class="n">collision</span><span class="p">;</span>
 <span class="p">}</span>
@@ -2005,7 +2012,7 @@ if (!doNotTrack) {
 <p>Actually, we can build our own virtual function tables, similar to how compilers implement virtual functions by creating an array of function pointers (the vtbl) and then indexing into that array when a virtual function is called, except that this customized version support double-dispatching. Moreover, the virtual function tables is more efficient than the RTTI-based code (indexing into an array and following a function pointer vs running through a series of <code>if-then-else</code> tests), and we isolate the use of RTTI to a single location where the array of function pointers is initialized.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2027,7 +2034,7 @@ if (!doNotTrack) {
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameObject</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GameObject</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">collide</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">...</span>
@@ -2051,7 +2058,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2098,7 +2105,7 @@ if (!doNotTrack) {
 </span><span class="lnt">45
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">SpaceShip</span><span class="o">::</span><span class="n">HitMap</span> <span class="o">*</span> <span class="n">SpaceShip</span><span class="o">::</span><span class="n">initializeCollisionMap</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">SpaceShip</span><span class="o">::</span><span class="n">HitMap</span> <span class="o">*</span> <span class="n">SpaceShip</span><span class="o">::</span><span class="n">initializeCollisionMap</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">HitMap</span> <span class="o">*</span><span class="n">phm</span> <span class="o">=</span> <span class="n">newHitMap</span><span class="p">;</span>
     <span class="p">(</span><span class="o">*</span><span class="n">phm</span><span class="p">)[</span><span class="s">&#34;SpaceShip&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">hitSpaceShip</span><span class="p">;</span>
@@ -2148,7 +2155,7 @@ if (!doNotTrack) {
 </div><p>Note that there&rsquo;s another design which seems doable but is actually error-prone:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2167,7 +2174,7 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SpaceShip</span><span class="o">:</span> <span class="k">public</span> <span class="n">GameObject</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">SpaceShip</span><span class="o">:</span> <span class="k">public</span> <span class="n">GameObject</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">collide</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">);</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">hitSpaceShip</span><span class="p">(</span><span class="n">SpaceShip</span><span class="o">&amp;</span> <span class="n">otherObject</span><span class="p">);</span>
@@ -2192,7 +2199,7 @@ if (!doNotTrack) {
 <p>To solve this problem, we change the associative array so that it contains pointers to <em>non-member functions</em>. This update also helps us address a design question before: a collision between objects of types A and B should be handles by neither A nor B (depending on whichever is the left-hand argument to <code>processCollision</code>) but instead in some neutral location outside both classes.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2254,7 +2261,7 @@ if (!doNotTrack) {
 </span><span class="lnt">60
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;SpaceShip.h&#34;</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;SpaceShip.h&#34;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&#34;SpaceStation.h&#34;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&#34;Asteroid.h&#34;</span><span class="cp">
 </span><span class="cp"></span>
@@ -2324,7 +2331,7 @@ if (!doNotTrack) {
 <p>If we&rsquo;d like to add, remove, or change collision-processing functions as the game proceeds, the static <code>collisionMap</code> will not meet this requirement. In this case, we can turn the concept of a static map into a class that offers member functions allowing us to modify the contents of the map dynamically:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2342,7 +2349,7 @@ if (!doNotTrack) {
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">CollisionMap</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">CollisionMap</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">HitFunctionPtr</span><span class="p">)(</span><span class="n">GameObject</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">GameObject</span><span class="o">&amp;</span><span class="p">);</span>
     <span class="kt">void</span> <span class="nf">addEntry</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">type1</span><span class="p">,</span>
@@ -2363,18 +2370,18 @@ if (!doNotTrack) {
 </div><p>Clients wishing to add an entry to the map simply do the following step:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">shipAsteroid</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">spaceShip</span><span class="p">,</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">asteroid</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">shipAsteroid</span><span class="p">(</span><span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">spaceShip</span><span class="p">,</span> <span class="n">GameObject</span><span class="o">&amp;</span> <span class="n">asteroid</span><span class="p">);</span>
 <span class="n">CollisionMap</span><span class="o">::</span><span class="n">theCollisionMap</span><span class="p">().</span><span class="n">addEntry</span><span class="p">(</span><span class="s">&#34;SpaceShip&#34;</span><span class="p">,</span> <span class="s">&#34;Asteroid&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">shipAsteroid</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>We must take care to ensure that these map entries are added to the map before any collisions occurs. One way is to have constructors in <code>GameObject</code> subclasses check to make sure the appropriate mappings had been added each time an object was created, but then we have to pay a small performance penalty at runtime. An alternative would be to create a <code>RegisterCollisionFunction</code> class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2386,7 +2393,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RegisterCollisionFunction</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RegisterCollisionFunction</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">RegisterCollisionFunction</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">type1</span><span class="p">,</span>
                               <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">type2</span><span class="p">,</span>
@@ -2401,7 +2408,7 @@ if (!doNotTrack) {
 </div><p>Clients then use global objects of this type to automatically register the functions before <code>main</code> is invoked to insure the map is initialized properly before any collision occurs:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2411,7 +2418,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RegisterCollisionFunction</span> <span class="nf">cf1</span><span class="p">(</span><span class="s">&#34;SpaceShip&#34;</span><span class="p">,</span> <span class="s">&#34;Asteroid&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">shipAsteroid</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RegisterCollisionFunction</span> <span class="nf">cf1</span><span class="p">(</span><span class="s">&#34;SpaceShip&#34;</span><span class="p">,</span> <span class="s">&#34;Asteroid&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">shipAsteroid</span><span class="p">);</span>
 <span class="n">RegisterCollisionFunction</span> <span class="nf">cf2</span><span class="p">(</span><span class="s">&#34;SpaceShip&#34;</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">SpaceStation</span><span class="err">&#39;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">shipStation</span><span class="p">);</span>
 <span class="p">...</span>
 
@@ -2424,11 +2431,11 @@ if (!doNotTrack) {
 </div><p>If, later, a new derived <code>class Satellite: public GameObject {...};</code> is added, and one or more new collision-processing functions are written (say, <code>void satelliteShip(GameObject&amp;, GameObject&amp;)</code>, and <code>void satelliteAsteroid(GameObject&amp;,GameObject&amp;)</code>, etc), we can simply add them to the map without disturbing existing code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RegisterCollisionFunction</span> <span class="nf">cf4</span><span class="p">(</span><span class="s">&#34;Satellite&#34;</span><span class="p">,</span> <span class="s">&#34;SpaceShip&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">satelliteShip</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RegisterCollisionFunction</span> <span class="nf">cf4</span><span class="p">(</span><span class="s">&#34;Satellite&#34;</span><span class="p">,</span> <span class="s">&#34;SpaceShip&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">satelliteShip</span><span class="p">);</span>
 <span class="n">RegisterCollisionFunction</span> <span class="nf">cf5</span><span class="p">(</span><span class="s">&#34;Satellite&#34;</span><span class="p">,</span> <span class="s">&#34;Asteroid&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">satelliteAsteroid</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>

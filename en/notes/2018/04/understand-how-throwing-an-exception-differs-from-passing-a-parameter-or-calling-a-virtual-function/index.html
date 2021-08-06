@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,7 +1779,7 @@ if (!doNotTrack) {
 <p>There is similarity between passing an argument from a function call site to the function&rsquo;s parameter and passing an exception from a <code>throw</code> site to a <code>catch</code> clause:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1787,7 +1794,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...}</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...}</span>
 
 <span class="kt">void</span> <span class="nf">f1</span><span class="p">(</span><span class="n">Widget</span> <span class="n">w</span><span class="p">);</span>
 <span class="kt">void</span> <span class="nf">f2</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">);</span>
@@ -1813,14 +1820,14 @@ if (!doNotTrack) {
 <p>The first difference essentially grows out of the fact that when we call a function, control eventually returns to the call site, but when we throw an exception, constrol does <em>not</em> return to the <code>throw</code> site. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">throwWidget</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">throwWidget</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">Widget</span> <span class="n">localWidget</span><span class="p">;</span>
     <span class="k">throw</span> <span class="n">localWidget</span><span class="p">;</span> <span class="c1">// throw localWidget as an exception
@@ -1836,7 +1843,7 @@ if (!doNotTrack) {
 <p>It is worth noting that in C++ copying is always based on an object&rsquo;s static type (MECpp item 25 shows a technique to copy based on dynamic type). Thus,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1847,7 +1854,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">SpecialWidget</span><span class="o">:</span> <span class="k">public</span> <span class="n">Widget</span> <span class="p">{...};</span>
 
 <span class="kt">void</span> <span class="nf">throwWidget</span><span class="p">()</span>
@@ -1862,7 +1869,7 @@ if (!doNotTrack) {
 <p>Another impact caused from copying exceptions objects is that there&rsquo;s difference between different rethrow statements:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1875,7 +1882,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span>  <span class="c1">// catch Widget exceptions
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span>  <span class="c1">// catch Widget exceptions
 </span><span class="c1"></span><span class="p">{</span>
     <span class="p">...</span>
     <span class="k">throw</span><span class="p">;</span>  <span class="c1">// rethrow the exception so it continues to propagate
@@ -1892,10 +1899,10 @@ if (!doNotTrack) {
 <p>In general, we&rsquo;ll want to use the</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">throw</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">throw</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>syntax to rethrow the current exception for its consistency and efficiency.</p>
@@ -1903,12 +1910,12 @@ if (!doNotTrack) {
 <p>There are three kinds of <code>catch</code> clauses for exception of type <code>Widget</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// catch by value
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// catch by value
 </span><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// catch by reference
 </span><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// catch by reference-to-const
 </span></code></pre></td></tr></table>
@@ -1924,7 +1931,7 @@ if (!doNotTrack) {
 <p>Implicit conversions (such from <code>int</code> to <code>double</code>) are not applied when matching exceptions to <code>catch</code> clauses:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1939,7 +1946,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">someFunction</span><span class="p">())</span> <span class="p">{</span>
@@ -1962,7 +1969,7 @@ if (!doNotTrack) {
 For example, <code>range_error</code>, <code>underflow_error</code>, and <code>overflow_error</code> are derived types from <code>runtime_error</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1970,7 +1977,7 @@ For example, <code>range_error</code>, <code>underflow_error</code>, and <code>o
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="p">)</span> <span class="p">...</span>         <span class="c1">// can catch errors of type
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="p">)</span> <span class="p">...</span>         <span class="c1">// can catch errors of type
 </span><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">...</span>        <span class="c1">// runtime_error,
 </span><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">runtime_error</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// range_error, or overflow_error
 </span><span class="c1"></span>
@@ -1983,10 +1990,10 @@ For example, <code>range_error</code>, <code>underflow_error</code>, and <code>o
 <p>from a typed to an untyped pointer</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="p">...</span>   <span class="c1">// catches any exception that&#39;s a pointer
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="p">...</span>   <span class="c1">// catches any exception that&#39;s a pointer
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1995,7 +2002,7 @@ For example, <code>range_error</code>, <code>underflow_error</code>, and <code>o
 <p>Catch clauses are always tried in the order of their appearance (employing a &ldquo;first fit&rdquo; strategy). For exampel:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2006,7 +2013,7 @@ For example, <code>range_error</code>, <code>underflow_error</code>, and <code>o
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">try</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">try</span> <span class="p">{</span>
     <span class="p">...</span>
 <span class="p">}</span>
 <span class="k">catch</span> <span class="p">(</span><span class="n">logic_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// this block will catch all logic_error exceptions

@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1771,7 +1778,7 @@ if (!doNotTrack) {
 <p>C++ doesn&rsquo;t do a very good job of separating interfaces from implementations. A  class definition specifies not only a class interface but also a fair number of implementation details. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1785,7 +1792,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Person</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="n">cnost</span> <span class="n">Data</span><span class="o">&amp;</span> <span class="n">birthday</span><span class="p">,</span> <span class="k">const</span> <span class="n">Address</span><span class="o">&amp;</span> <span class="n">addr</span><span class="p">);</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
@@ -1802,12 +1809,12 @@ if (!doNotTrack) {
 </div><p>Here, to compile <code>Person</code>, definitions for the data members <code>string</code>, <code>Date</code>, and <code>Address</code> that <code>Person</code> uses must be provided, typically through <code>#include</code> directives:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&#34;date.h&#34;</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&#34;address.h&#34;</span><span class="cp">
 </span></code></pre></td></tr></table>
@@ -1815,7 +1822,7 @@ if (!doNotTrack) {
 </div><p>Unfortunately, this inclusion sets up a compilation dependency between the file defining <code>Person</code> and these header files. If any of these header files or the header files' dependent header files is changed, the file containing the <code>Person</code> class must be recompiled, as must any files that use <code>Person</code>. Such cascading compilation dependencies are annoying, but C++ insists on putting the implementation details of a class in the class definition - we can&rsquo;t separate the implementation details of the class definition simply by forward-declaring everything like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1831,7 +1838,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">string</span><span class="p">;</span> <span class="c1">// incorrect way of forward declaration
 </span><span class="c1"></span><span class="p">}</span>
 <span class="k">class</span> <span class="nc">Date</span><span class="p">;</span>  <span class="c1">// forward declaration
@@ -1856,7 +1863,7 @@ if (!doNotTrack) {
 <p>The more significant one: compilers need to know the size of objects to allocate enough space (typically on the stack) when they see a difinition for object <code>p</code>, so the implementation details can not be omited:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1864,7 +1871,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="p">...</span>
     <span class="n">Person</span> <span class="n">p</span><span class="p">(</span><span class="n">params</span><span class="p">);</span>  <span class="c1">// define a Person
@@ -1879,7 +1886,7 @@ if (!doNotTrack) {
 <p>One way to hide the object implementation is through a pointer, in which case compilers allocate only enough space for a <code>pointer</code> when an object is defined:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1887,7 +1894,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="p">...</span>
     <span class="n">Person</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>  <span class="c1">// define a pointer to a Person
@@ -1898,7 +1905,7 @@ if (!doNotTrack) {
 </div><p>This is how languages like Smaltalk and Java deal with the object difinition, which is also totally legal in C++: we simply separate <code>Person</code> into two classes, one offering only an interface, the other implementing that interface:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1916,7 +1923,7 @@ if (!doNotTrack) {
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;  // standard library components</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;  // standard library components</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;  // for tr1::shared_ptr</span><span class="cp">
 </span><span class="cp"></span><span class="k">class</span> <span class="nc">PersonImpl</span><span class="p">;</span>  <span class="c1">// forward decl of Person impl. class
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">Date</span><span class="p">;</span>        <span class="c1">// forward decls of classes used in Person interface
@@ -1944,12 +1951,12 @@ if (!doNotTrack) {
 <p>Depend on class declarations instead of class definitions whenever we can:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Date</span><span class="o">:</span>  <span class="c1">// class declaration
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Date</span><span class="o">:</span>  <span class="c1">// class declaration
 </span><span class="c1"></span><span class="n">Date</span> <span class="n">today</span><span class="p">();</span>  <span class="c1">// fine without class definition
 </span><span class="c1"></span><span class="kt">void</span> <span class="nf">clearAppointments</span><span class="p">(</span><span class="n">Date</span> <span class="n">d</span><span class="p">);</span> <span class="c1">// fine. No definition of Date is needed
 </span></code></pre></td></tr></table>
@@ -1962,12 +1969,12 @@ if (!doNotTrack) {
 <p>Instead of forward-declaring something, library clients should always <code>#include</code> a declaration file, so library authors should provide two header files: one for declarations, the other for definitions. For example,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;detefwd.h&#34;   // header file declaring (but not defining) class Date</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;detefwd.h&#34;   // header file declaring (but not defining) class Date</span><span class="cp">
 </span><span class="cp"></span><span class="n">Date</span> <span class="nf">today</span><span class="p">();</span>  <span class="c1">// as before
 </span><span class="c1"></span><span class="kt">void</span> <span class="nf">clearAppointments</span><span class="p">(</span><span class="n">Date</span> <span class="n">d</span><span class="p">);</span>
 </code></pre></td></tr></table>
@@ -1978,7 +1985,7 @@ if (!doNotTrack) {
 <p>To employ the pimpl idiom, we just let forward all the function calls in the <em>handle class</em> <code>Person</code> to the corresponding implementation class <code>PersonImpl</code>, which will do the real work. Below is the implementation of <code>Person</code>&rsquo;s member functions:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1992,7 +1999,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;Person.h&#34;      // #inclue Person&#39;s class definition</span><span class="cp">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;Person.h&#34;      // #inclue Person&#39;s class definition</span><span class="cp">
 </span><span class="cp">#include</span> <span class="cpf">&#34;PersonImpl.h&#34;  // #include PersonImpl&#39;s class definition to call its member functions;</span><span class="cp">
 </span><span class="cp"></span>                         <span class="c1">// note that interfaces of PersonImpl and Person are identical
 </span><span class="c1"></span><span class="n">Person</span><span class="o">::</span><span class="n">Person</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="k">const</span> <span class="n">Date</span><span class="o">&amp;</span> <span class="n">birthday</span><span class="p">,</span> <span class="k">const</span> <span class="n">Address</span><span class="o">&amp;</span> <span class="n">addr</span><span class="p">)</span>
@@ -2011,7 +2018,7 @@ if (!doNotTrack) {
 <p>An interface class for <code>Person</code> looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2022,7 +2029,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">Person</span><span class="p">();</span>
 
@@ -2043,7 +2050,7 @@ if (!doNotTrack) {
 <p>typically, clients create new <code>Person</code> objects by calling factory functions (item 13) or <em>virtual constructors</em>, which return pointers (preferably smart pointers, item 18) to dynamically allocated objects of derived classes that support the interface. Such functions are often declared <code>static</code> inside the Interface class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2054,7 +2061,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span>  <span class="c1">// return a tr1::shared_ptr to a new
@@ -2067,7 +2074,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2076,7 +2083,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
 <span class="n">Date</span> <span class="n">dateOfBirth</span><span class="p">;</span>
 <span class="n">Address</span> <span class="n">address</span><span class="p">;</span>
 <span class="p">...</span>
@@ -2090,7 +2097,7 @@ if (!doNotTrack) {
 <p>one way to implement the Interface class <code>Person</code> is to define a concrete derived class that inherits interface specification from <code>Person</code>, and then implement the functions in the interface:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2107,7 +2114,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RealPerson</span><span class="o">:</span> <span class="k">public</span> <span class="n">Person</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RealPerson</span><span class="o">:</span> <span class="k">public</span> <span class="n">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">RealPerson</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="k">const</span> <span class="n">Date</span><span class="o">&amp;</span> <span class="n">birthday</span><span class="p">,</span> <span class="k">const</span> <span class="n">Address</span><span class="o">&amp;</span> <span class="n">addr</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">theName</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">theBirthDate</span><span class="p">(</span><span class="n">birthday</span><span class="p">),</span> <span class="n">theAddress</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
@@ -2127,14 +2134,14 @@ if (!doNotTrack) {
 </div><p>Then it is trivial to write <code>Person::create</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> 
 <span class="n">Person</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span> <span class="k">const</span> <span class="n">Date</span><span class="o">&amp;</span> <span class="n">birthday</span><span class="p">,</span> <span class="k">const</span> <span class="n">Address</span><span class="o">&amp;</span> <span class="n">addr</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">RealPerson</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">birthday</span><span class="p">,</span> <span class="n">addr</span><span class="p">));</span>

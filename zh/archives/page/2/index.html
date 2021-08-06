@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Archive Page">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1719,6 +1726,16 @@ if (!doNotTrack) {
           <span class="archive__meta" data-ani="true">
             
               <span class="archive__type">gallery</span>
+              <span class="archive__date">03-08</span>
+            
+          </span>
+          <a href="https://nianze.ml/zh/gallery/digital/2020/03/08/2020-03-08-weekly-visual-project/" class="archive__title" data-title-wrap="wrap" data-dir="ltr">[Weekly-45] 2020.03.08</a>        
+        </li>
+        
+        <li class="archive__li" data-dir="ltr">
+          <span class="archive__meta" data-ani="true">
+            
+              <span class="archive__type">gallery</span>
               <span class="archive__date">03-01</span>
             
           </span>
@@ -1908,16 +1925,6 @@ if (!doNotTrack) {
             
           </span>
           <a href="https://nianze.ml/zh/gallery/digital/2019/11/09/2019-11-09-weekly-visual-project/" class="archive__title" data-title-wrap="wrap" data-dir="ltr">[Weekly-28] 2019.11.09</a>        
-        </li>
-        
-        <li class="archive__li" data-dir="ltr">
-          <span class="archive__meta" data-ani="true">
-            
-              <span class="archive__type">gallery</span>
-              <span class="archive__date">11-02</span>
-            
-          </span>
-          <a href="https://nianze.ml/zh/gallery/digital/2019/11/02/2019-11-02-weekly-visual-project/" class="archive__title" data-title-wrap="wrap" data-dir="ltr">[Weekly-27] 2019.11.02</a>        
         </li>
         
       </ul>

@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1780,13 +1787,13 @@ if (!doNotTrack) {
 <p>Say we&rsquo;re designing the constructor for a class representing dates in time:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Date</span><span class="p">(</span><span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">,</span> <span class="kt">int</span> <span class="n">year</span><span class="p">);</span>
 <span class="p">};</span>
@@ -1798,10 +1805,10 @@ if (!doNotTrack) {
 <p>the parameters might be passed in the wrong order:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1995</span><span class="p">);</span>  <span class="c1">// Should be &#34;3, 30&#34;
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1995</span><span class="p">);</span>  <span class="c1">// Should be &#34;3, 30&#34;
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1809,10 +1816,10 @@ if (!doNotTrack) {
 <p>the parameters might be invalid &lt;month, day&gt; pair:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1995</span><span class="p">);</span>  <span class="c1">// In the keyboard, `2` is next to &#39;3&#39;, so this kind of silly error is not uncommon
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1995</span><span class="p">);</span>  <span class="c1">// In the keyboard, `2` is next to &#39;3&#39;, so this kind of silly error is not uncommon
 </span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1820,7 +1827,7 @@ if (!doNotTrack) {
 <p>To prevent such kind of client errors, we could introduce new types:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1845,7 +1852,7 @@ if (!doNotTrack) {
 </span><span class="lnt">23
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Day</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">Day</span> <span class="p">{</span>
     <span class="k">explicit</span> <span class="nf">Day</span><span class="p">(</span><span class="kt">int</span> <span class="n">d</span><span class="p">)</span>
     <span class="o">:</span><span class="n">val</span><span class="p">(</span><span class="n">d</span><span class="p">){}</span>
     
@@ -1873,12 +1880,12 @@ if (!doNotTrack) {
 </div><p>This will prevent some silly interface usage errors effectively:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1995</span><span class="p">);</span> <span class="c1">// error: wrong type!
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1995</span><span class="p">);</span> <span class="c1">// error: wrong type!
 </span><span class="c1"></span><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="n">Day</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">Month</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">Year</span><span class="p">(</span><span class="mi">1995</span><span class="p">));</span>  <span class="c1">// error: wrong type!
 </span><span class="c1"></span><span class="n">Date</span> <span class="nf">d</span><span class="p">(</span><span class="n">Month</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">Day</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">Year</span><span class="p">(</span><span class="mi">1995</span><span class="p">));</span>  <span class="c1">// fine
 </span></code></pre></td></tr></table>
@@ -1887,7 +1894,7 @@ if (!doNotTrack) {
 <p>Once the type is right, we may consider adding some restriction on the values of those types. The <code>Month</code> in example above only has 12 valid values, so the <code>Month</code> type should reflect this restriction. One way is to use an enum to represent the month, but considering enums can be used like <code>ints</code> (item 2), it is not as type-safe as we might like. A safer solution is to predefine the set of all valid <code>Month</code>s:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1902,7 +1909,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Month</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Month</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">static</span> <span class="n">Month</span> <span class="n">Jan</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="nf">Month</span><span class="p">(</span><span class="mi">1</span><span class="p">);}</span>  <span class="c1">// functions returning all
 </span><span class="c1"></span>    <span class="k">static</span> <span class="n">Month</span> <span class="nf">Feb</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">Month</span><span class="p">(</span><span class="mi">2</span><span class="p">);}</span>  <span class="c1">// valid Month values
@@ -1925,10 +1932,10 @@ if (!doNotTrack) {
 <p>A good example for restricting operations on types is in item 3 explaining how <code>const</code> qualifying the return type from <code>operator*</code> can prevent clients from making following errors for user-defined types:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">c</span><span class="p">)...</span> <span class="c1">// meant to do a comparison
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">c</span><span class="p">)...</span> <span class="c1">// meant to do a comparison
 </span></code></pre></td></tr></table>
 </div>
 </div><p>Again, it is always good to have our types behave consistently with the built-in types. Such kind of operation is illegal for <code>int</code> type, so unless there&rsquo;s a good reason, it should be illegal for our types, too.</p>
@@ -1936,20 +1943,20 @@ if (!doNotTrack) {
 <p>Any interface that requires that client remember to do something is prone to incorrect use. A bad example is function <code>createInvestment</code> in item 13, which returns pointers to dynamically allocated objeects in an <code>Investment</code> hierarchy.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Investment</span><span class="o">*</span> <span class="nf">createInvestment</span><span class="p">();</span>  <span class="c1">// parameters omitted for simplicity
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Investment</span><span class="o">*</span> <span class="nf">createInvestment</span><span class="p">();</span>  <span class="c1">// parameters omitted for simplicity
 </span></code></pre></td></tr></table>
 </div>
 </div><p>Needless to say, this is prone to resource leak, for chances are that clients either forget to manually <code>delete</code> the pointer, or delete the same pointer more than once</p>
 <p>Item 13 shows that we could preempt this problem by using smart pointers. But a better solution is to let the function <code>createInvestment</code> return a smart pointer in the first place:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">createInvestment</span><span class="p">();</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">createInvestment</span><span class="p">();</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Moreover, returning a <code>tr1::shared_ptr</code> makes it possible to prevent a host of other client errors regarding resource release, for  <code>tr1::shared_ptr</code> allows a resource-release function (called a &ldquo;deleter&rdquo;) to be bound to the smart pointer when the smart pointer is created (item 14, <code>auto_ptr</code> does not support this functionality).</p>
@@ -1957,7 +1964,7 @@ if (!doNotTrack) {
 <p>Thus, in order to bind the deleter, we could define a null <code>tr1::shared_ptr</code> with <code>getRidofInvestment</code> as its second argument (the first argument is null because we may not be sure the resource to be managed during initialization), and implement <code>createInvestment</code> like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1967,7 +1974,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">createInvestment</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">createInvestment</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span>      <span class="c1">// return a null shared_ptr
 </span><span class="c1"></span>    <span class="n">retVal</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">*&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>   <span class="c1">// see item 27 for static_cast
@@ -1981,13 +1988,13 @@ if (!doNotTrack) {
 <p>What&rsquo;s more, another nice feature of <code>tr1::shared_ptr</code> is that it automatically uses its per-pointer deleter to release resource, which eliminates the &ldquo;cross-DLL problem&rdquo; that shows up when an object its created using <code>new</code> in one dynamically linked library (DLL) but is <code>deleted</code> in a different DLL, leading to runtime errors. For example, if <code>Stock</code> is a class derived from <code>Investment</code> and <code>createInvestment</code> is implemented like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">createInvestment</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">createInvestment</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">Stock</span><span class="p">);</span>
 <span class="p">}</span>

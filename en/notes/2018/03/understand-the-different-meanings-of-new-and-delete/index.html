@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,10 +1779,10 @@ if (!doNotTrack) {
 <p>Consider the following code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;Memory Management&#34;</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">string</span><span class="p">(</span><span class="s">&#34;Memory Management&#34;</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>The <code>new</code> operator here is built into the language and always does the same two things:</p>
@@ -1786,13 +1793,13 @@ if (!doNotTrack) {
 <p>Thus, when compiler sees the code above, they must generate code equivalent to this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span><span class="n">memory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string</span><span class="p">));</span> <span class="c1">// get raw memory for a string object
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span><span class="n">memory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string</span><span class="p">));</span> <span class="c1">// get raw memory for a string object
 </span><span class="c1"></span><span class="n">call</span> <span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&#34;Memory Management&#34;</span><span class="p">)</span> <span class="n">on</span> <span class="o">*</span><span class="n">memory</span> <span class="c1">// init. the object in the memory. 
 </span><span class="c1"></span>                                                    <span class="c1">// as programmer, directly calling the ctor is prohibited
 </span><span class="c1"></span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">stirng</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">memory</span><span class="p">);</span>  <span class="c1">// make ps point to the new object
@@ -1805,10 +1812,10 @@ if (!doNotTrack) {
 <p>if we only want to allocate memory, just call <code>operator new</code> directly:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string</span><span class="p">));</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string</span><span class="p">));</span>
 </code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1820,7 +1827,7 @@ if (!doNotTrack) {
 <p>A special version of <code>oeprator new</code> called <em>placement <code>new</code></em> allows us to construct an object in the memory that&rsquo;s already been allocated, which is helpful for applications using shared memory or memory-mapped I/O, where objects must be placed at specific addresses or in memory allocated by special routines:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1832,7 +1839,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Widget</span><span class="p">(</span><span class="kt">int</span> <span class="n">widgetSize</span><span class="p">);</span>
     <span class="p">...</span>
@@ -1847,13 +1854,13 @@ if (!doNotTrack) {
 </div><p>Here, an additional argument (<code>buffer</code>) is being specified for the implicit call that the <code>new</code> operator makes to a special version of <code>operator new</code> known as placement <code>new</code> in standard C++ library<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">size_t</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">location</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">size_t</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">location</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="n">location</span><span class="p">;</span>
 <span class="p">}</span>
@@ -1866,20 +1873,20 @@ if (!doNotTrack) {
 <p>The <code>delete</code> operator also includes two steps: destructing the object and deallocating the memory occupied by that object. The second part of memory deallocation is performed by the <code>operator delete</code> function:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">memoryToBeDeallocated</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">memoryToBeDeallocated</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Hence, for a pointer to string <code>ps</code>, <code>delete ps;</code> causes compilers to generate code that approximately corresponds to this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ps</span><span class="o">-&gt;~</span><span class="n">string</span><span class="p">();</span>         <span class="c1">// call the object&#39;s dtor
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ps</span><span class="o">-&gt;~</span><span class="n">string</span><span class="p">();</span>         <span class="c1">// call the object&#39;s dtor
 </span><span class="c1"></span><span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="n">ps</span><span class="p">);</span>   <span class="c1">// deallocate the memory the object occupied
 </span></code></pre></td></tr></table>
 </div>
@@ -1889,12 +1896,12 @@ if (!doNotTrack) {
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span><span class="n">buffer</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span> <span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span> <span class="c1">// allocate enough memory to hold 50 chars, call no ctor
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="o">*</span><span class="n">buffer</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span> <span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span> <span class="c1">// allocate enough memory to hold 50 chars, call no ctor
 </span><span class="c1"></span><span class="p">...</span>
 <span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span> <span class="c1">// deallocate the memory; call no dtor
 </span></code></pre></td></tr></table>
@@ -1904,7 +1911,7 @@ if (!doNotTrack) {
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1916,7 +1923,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// function to allocating and deallocating memory in shared memory
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// function to allocating and deallocating memory in shared memory
 </span><span class="c1"></span><span class="kt">void</span> <span class="o">*</span> <span class="nf">mallocShared</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">);</span>
 <span class="kt">void</span> <span class="nf">freeShared</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">memory</span><span class="p">);</span>
 
@@ -1932,10 +1939,10 @@ if (!doNotTrack) {
 <p>For array allocation:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">string</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span> <span class="c1">// allocate an array of objects
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">string</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span> <span class="c1">// allocate an array of objects
 </span></code></pre></td></tr></table>
 </div>
 </div><p>The <code>new</code> being used is still the <code>new</code> operator, but the behavior here is slightly different from the case for single-object creation:</p>
