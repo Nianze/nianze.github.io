@@ -55,15 +55,24 @@ Virtualizing static fields in 3rd-party Java library during runtime to improve m
 
 My current gears:
 
-* iPhone SE 2
-* Leica SL
-* Hexar RF
-* ZEISS Biogon T* 21mm f/2.8 ZM
-* ZEISS Distagon T* 35mm f/1.4 ZM
-* Voigtländer Nokton 50mm f/1.2 Aspherical VM
-* LEICA APO-SUMMICRON-M 75 f/2 ASPH.
-* LightPix Labs FlashQ Q20II
-* Nikon COOLSCAN IV ED (LS-40 ED)
+* Cameras: 
+    * iPhone SE 2
+    * Leica SL
+    * Konica Hexar RF
+    * Nikon FE2
+* Lenses
+    * For Leica M-mount:
+        * ZEISS Distagon T* 35mm f/1.4 ZM
+        * Voigtländer Nokton 50mm f/1.2 Aspherical VM
+        * LEICA APO-SUMMICRON-M 75 f/2 ASPH.
+    * For Nikon F-mount (with DKL-to-Nikon adapter):
+        * Schneider-Kreuznach Retina-Curtagon 28mm f/4 DKL
+        * Leica Summicron-R 50mm f/2 (modified to Nikon F-mount)
+        * Voigtländer Septon 50mm f/2 DKL
+        * Voigtlander Super Dynarex 135mm f/4 DKL
+* Others:
+    * LightPix Labs FlashQ Q20II
+    * Nikon COOLSCAN IV ED (LS-40 ED)
 
 Some of my photos:
 
