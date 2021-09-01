@@ -67,7 +67,6 @@ My current gears:
         * LEICA APO-SUMMICRON-M 75 f/2 ASPH.
     * For Nikon F-mount (with DKL-to-Nikon adapter):
         * Schneider-Kreuznach Retina-Curtagon 28mm f/4 DKL
-        * Leica Summicron-R 50mm f/2 (modified to Nikon F-mount)
         * Voigtländer Septon 50mm f/2 DKL
         * Voigtlander Super Dynarex 135mm f/4 DKL
 * Others:
