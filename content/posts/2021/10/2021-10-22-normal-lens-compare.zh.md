@@ -71,20 +71,20 @@ featured_image: 2021/10/22/normal_lenses.jpg
 
 # 样片
 
-最后，放一点样片(主要是最爱的Septon）：
+最后，放一点样片：
 
 ## 数码（转接徕卡SL）
 
-* Nikkor-SC 5cm f/1.4 ltm
+### Nikkor-SC 5cm f/1.4 ltm
 
 {{< img src="/images/2021/10/22/SL_nikkor_5cm_ltm-1.jpg" title="Leica SL" caption="Nikkor 5cm 1.4 ltm" >}}
 {{< img src="/images/2021/10/22/SL_nikkor_5cm_ltm-2.jpg" title="Leica SL" caption="Nikkor 5cm 1.4 ltm" >}}
 
-* Voigtlander Nokton 50mm 1.2
+### Voigtlander Nokton 50mm 1.2
 
 {{< img src="/images/2021/10/22/SL_VM50.jpg" title="Leica SL" caption="VM50" >}}
 
-* Leica MACRO-ELMARIT-R 60mm f/2.8
+### Leica MACRO-ELMARIT-R 60mm f/2.8
 {{< img src="/images/2021/10/22/SL_R60.jpg" title="Leica SL" caption="Leica R60" >}}
 
 ## 胶片
