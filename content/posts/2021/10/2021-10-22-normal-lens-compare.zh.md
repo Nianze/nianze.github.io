@@ -99,7 +99,7 @@ featured_image: 2021/10/22/normal_lenses.jpg
 
 {{< img src="/images/2021/10/22/rf_nikkor.jpg" title="机身Hexar RF" caption="↑镜头nikkor 50 1.4 ltm" >}}
 
-目前我手上唯一的一枚Sonnar结构的标头。主要玩味道。这枚镜头是我无意间在eBay淘到的，最开始是想重温松纳头的味道，看上了Contax的原版50 1.5，后来懒得买contax口转接环，又去看佳能的50 1.5 ltm，突然发现这枚镜头在竞拍，才知道尼康原来也出过ltm口的镜头，顺便回顾了下当年战地记者David Douglas Duncan带着尼康的50 1.5去拍朝鲜战争的故事（[This is War](https://www.life.com/history/korean-war-photos-david-douglas-duncan/)）。真要讲起这枚镜头的故事可就太多了，估计可以单开一帖（全世界第一枚1.4光圈的标头，ltm自带独具匠心的1.5feet近摄功能，12片光圈叶片……）。还是看看第一卷样片吧。第一卷试拍卷配的是色彩浓郁的Ektar。
+目前我手上唯一的一枚Sonnar结构的标头。主要玩味道。这枚镜头是我无意间在eBay淘到的，最开始是想重温松纳头的味道，看上了Contax的原版50 1.5，后来懒得买contax口转接环，又去看佳能的50 1.5 ltm，突然发现这枚镜头在竞拍，才知道尼康原来也出过ltm口的镜头，顺便回顾了下当年战地记者David Douglas Duncan带着尼康的50 1.5去拍朝鲜战争的故事（[This is War](https://www.life.com/history/korean-war-photos-david-douglas-duncan/)）。真要讲起这枚镜头的故事可就太多了，估计可以单开一帖（全世界第一枚1.4光圈的标头，ltm版自带独具匠心的1.5feet近摄功能，12片光圈叶片……）。还是看看第一卷样片吧。第一卷试拍卷配的是色彩浓郁的Ektar。
 
 {{< img src="/images/2021/10/22/ektar100_nikkor_5cm_1_4_hexar_rf-0002-positive.jpg" title="Ektar 100" caption="↑Nikkor-sc 50 1.4 ltm" >}}
 {{< img src="/images/2021/10/22/ektar100_nikkor_5cm_1_4_hexar_rf-0003-positive.jpg" title="Ektar 100" caption="↑Nikkor-sc 50 1.4 ltm" >}}
