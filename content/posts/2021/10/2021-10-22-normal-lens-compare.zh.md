@@ -56,7 +56,7 @@ featured_image: 2021/10/22/normal_lenses.jpg
 {{< img src="/images/2021/10/22/comparison-nikkor_55.jpg" title="Nikon 55 Micro" caption="↑@2.8" >}}
 
 放大对比：
-{{< img src="/images/2021/10/22/comparison-enlarge.jpg" title="对比" caption="↑中心放大" >}}
+{{< img src="/images/2021/10/22/compare-enlarge.jpg" title="对比" caption="↑中心放大" >}}
 
 不出意外：解析上两枚微距头碾压其余四枚镜头。单独细品的话：
 
