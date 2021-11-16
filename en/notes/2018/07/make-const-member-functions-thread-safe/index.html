@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1778,7 +1771,7 @@ if (!doNotTrack) {
 <p>Due to <code>mutable</code> member datas, <code>const</code> member functions may not be thread safe. For a classic use case for <code>mutable</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1796,7 +1789,7 @@ if (!doNotTrack) {
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Polynomial</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Polynomial</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">using</span> <span class="n">RootsType</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// holding val. where poly. evals to zero
 </span><span class="c1"></span>    <span class="n">RootsType</span> <span class="nf">roots</span><span class="p">()</span> <span class="k">const</span>
@@ -1817,13 +1810,13 @@ if (!doNotTrack) {
 </div><p>Here <code>roots()</code> retrieves the roots of a polynomial without changing the value of the <code>Polynomial</code> object on which it operates, so <code>const</code> declaratoin is correct. However, <code>rootVals</code> and <code>rootsAreValid</code> might be modified for the purpose of caching. Seeing the <code>const</code> interface for <code>roots()</code>, clients are perfectly reasonable to do something like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Polynomial</span> <span class="n">p</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Polynomial</span> <span class="n">p</span><span class="p">;</span>
 <span class="p">...</span>
 <span class="c1">// thread 1                   // thread 2
 </span><span class="c1"></span><span class="k">auto</span> <span class="n">rootsOfP</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">roots</span><span class="p">();</span>    <span class="k">auto</span> <span class="n">valsGivingZero</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">roots</span><span class="p">();</span>
@@ -1833,7 +1826,7 @@ if (!doNotTrack) {
 <h1 id="solution-mutex">Solution: mutex</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1853,7 +1846,7 @@ if (!doNotTrack) {
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Polynomial</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Polynomial</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">using</span> <span class="n">RootsType</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>  <span class="c1">// holding val. where poly. evals to zero
 </span><span class="c1"></span>    <span class="n">RootsType</span> <span class="nf">roots</span><span class="p">()</span> <span class="k">const</span>
@@ -1879,7 +1872,7 @@ if (!doNotTrack) {
 <p>Sometimes when there&rsquo;s only one variable or memory location requiring synchronization, <code>mutex</code> might be overkill, and we might consider <code>std::atomic</code> counter (EMCpp item 40), which is often a less expensive way to go<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1893,7 +1886,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="kt">double</span> <span class="n">distanceFromOrigin</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span>

@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1778,14 +1771,14 @@ if (!doNotTrack) {
 <p>For many objects, there is no reasonable way to perform a complete initialization in the absence of outside information. Consider a class for company equipment in which the corporate ID number of the quipment is a mandatory constructor argument:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EquipmentPiece</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EquipmentPiece</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">EquipmentPiece</span><span class="p">(</span><span class="kt">int</span> <span class="n">IDNumber</span><span class="p">);</span>
     <span class="p">...</span>
@@ -1796,7 +1789,7 @@ if (!doNotTrack) {
 <p>Some people believe <em>all</em> classes should include a default constructors, even if a default constructor doesn&rsquo;t have enough information to fully initialize objects of the class. Adherents to this philosophy will modify <code>EquipmentPiece</code> as follows:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1805,7 +1798,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EquipmentPiece</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">EquipmentPiece</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">EquipmentPiece</span><span class="p">(</span><span class="kt">int</span> <span class="n">IDNumber</span> <span class="o">=</span> <span class="n">UNSPECIFIED</span><span class="p">);</span>
     <span class="p">...</span>
@@ -1830,11 +1823,11 @@ if (!doNotTrack) {
 <p>There is, in general, no way to specify constructor arguments for objects in arrays:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">EquipmentPiece</span> <span class="n">bestPieces</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>  <span class="c1">// error! No way to call EquipmentPiece ctors.
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">EquipmentPiece</span> <span class="n">bestPieces</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>  <span class="c1">// error! No way to call EquipmentPiece ctors.
 </span><span class="c1"></span><span class="n">EquipmentPiece</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EquipmentPiece</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>  <span class="c1">// error! same problem
 </span></code></pre></td></tr></table>
 </div>
@@ -1845,7 +1838,7 @@ if (!doNotTrack) {
 <p>This solution works only for non-heap arrays:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1855,7 +1848,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">ID1</span><span class="p">,</span> <span class="n">ID2</span><span class="p">,</span> <span class="n">ID3</span><span class="p">,</span> <span class="p">...,</span> <span class="n">ID10</span><span class="p">;</span>  <span class="c1">// variables to hold equipment ID numbers
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">ID1</span><span class="p">,</span> <span class="n">ID2</span><span class="p">,</span> <span class="n">ID3</span><span class="p">,</span> <span class="p">...,</span> <span class="n">ID10</span><span class="p">;</span>  <span class="c1">// variables to hold equipment ID numbers
 </span><span class="c1"></span><span class="p">...</span>
 <span class="n">EquipmentPiece</span> <span class="n">bestPieces</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1">// fine, ctor arguments are provided
 </span><span class="c1"></span>    <span class="n">EquipmentPiece</span><span class="p">(</span><span class="n">ID1</span><span class="p">);</span>
@@ -1870,7 +1863,7 @@ if (!doNotTrack) {
 <p>Use an array of <em>pointers</em> instead of an array of objects</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1879,7 +1872,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="n">EquipmentPiece</span><span class="o">*</span> <span class="n">PEP</span><span class="p">;</span>     <span class="c1">// a PEP is a pointer to an EuipmentPiece
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="n">EquipmentPiece</span><span class="o">*</span> <span class="n">PEP</span><span class="p">;</span>     <span class="c1">// a PEP is a pointer to an EuipmentPiece
 </span><span class="c1"></span><span class="n">PEP</span> <span class="n">bestPieces</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>              <span class="c1">// fine, no ctor called
 </span><span class="c1"></span><span class="n">PEP</span> <span class="o">*</span><span class="n">bestPieces</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PEP</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>   <span class="c1">// fine, no ctor called
 </span><span class="c1"></span>
@@ -1898,7 +1891,7 @@ if (!doNotTrack) {
 <p>Use &ldquo;placement <code>new</code>&rdquo; (item 8)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1910,7 +1903,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// allocate enough memory for an array of 10 EuipmentPiece obj.
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// allocate enough memory for an array of 10 EuipmentPiece obj.
 </span><span class="c1"></span><span class="kt">void</span> <span class="o">*</span><span class="n">rawMemory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">[](</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="n">EquipmentPiece</span><span class="p">));</span>
 
 <span class="c1">// make bestPieces point to the memory so it can be treated as an EquipmentPiece array
@@ -1925,7 +1918,7 @@ if (!doNotTrack) {
 </div><p>This design avoids the spece penalty of extra pointers, but the downside is that we must manually call destructors on the objects in the array, then manually deallocate the raw memory by calling <code>operator delete[]</code> (item 8), which is unfamiliar by most programmers<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1933,7 +1926,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// destruct the objects in bestPieces in the inverse order
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// destruct the objects in bestPieces in the inverse order
 </span><span class="c1"></span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">bestPieces</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="o">~</span><span class="n">EquipmentPiece</span><span class="p">();</span>    
 <span class="p">}</span>
@@ -1947,7 +1940,7 @@ if (!doNotTrack) {
 <p>Some templates requires that the type used to instantiate the template proved a default constructor for purpose such as createing an array of the template parameter type inside the template:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1964,7 +1957,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Array</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>

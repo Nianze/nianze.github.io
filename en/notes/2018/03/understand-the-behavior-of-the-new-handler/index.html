@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1779,13 +1772,13 @@ if (!doNotTrack) {
 <p>If <code>operator new</code> can&rsquo;t satisfy a memory allocation request, it will call a client-specifiable error-handling function called a <code>new-handler</code> before throwing a <code>bad_alloc</code> exception. To specify this out-of-memory-handling function, clients call <code>set_new_handler</code>, a standard library function declared in <code>&lt;new&gt;</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">namespace</span> <span class="n">std</span> <span class="p">{</span>
     <span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">new_handler</span><span class="p">)();</span>
     <span class="n">new_handler</span> <span class="nf">set_new_handler</span><span class="p">(</span><span class="n">new_handler</span> <span class="n">p</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
 <span class="p">}</span>
@@ -1803,7 +1796,7 @@ if (!doNotTrack) {
 <p>For example, to use <code>set-new-handler</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1817,7 +1810,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// new handler to install
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// new handler to install
 </span><span class="c1"></span><span class="kt">void</span> <span class="nf">outOfMem</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Unable to satisfy request for memory</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
@@ -1846,7 +1839,7 @@ if (!doNotTrack) {
 <p>To ensure that the original new-handler is always reinstalled, we can treat the global new-handler as a resource and follow the advice of item 13 to use resource-managing objects to prevent resource leaks:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1859,7 +1852,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">NewHandlerHolder</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">NewHandlerHolder</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">NewHandlerHolder</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">nh</span><span class="p">)</span> <span class="c1">// aquire the original new-handler
 </span><span class="c1"></span>    <span class="o">:</span><span class="n">handler</span><span class="p">(</span><span class="n">nh</span><span class="p">)</span> <span class="p">{}</span>
@@ -1875,7 +1868,7 @@ if (!doNotTrack) {
 </div><p>Since the behavior of setting a class-specific new-handler is the same regardless of the class, we can reuse the setting procedure by creating a &ldquo;mixin-style&rdquo; base class (i.e., a base class that&rsquo;s designed to allow derived classes to inherit a single specific capability), so that each derived class not only inherits the <code>set_new_handler</code> and <code>operator new</code> functions from the base class, but also gets a different class-specific <code>new-handler</code> from the template.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1886,7 +1879,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>      <span class="c1">// &#34;mixin-style&#34; base class 
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>      <span class="c1">// &#34;mixin-style&#34; base class 
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">NewHandlerSupport</span> <span class="p">{</span> <span class="c1">// for class-specific set_new_handler support
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">set_new_handler</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">p</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
@@ -1899,7 +1892,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1918,7 +1911,7 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">NewHandlerSupport</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">p</span><span class="p">)</span> <span class="k">throw</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">oldHandler</span> <span class="o">=</span> <span class="n">currentHandler</span><span class="p">;</span>
@@ -1940,13 +1933,13 @@ if (!doNotTrack) {
 </div><p>With this class template, adding <code>set_new_handler</code> support to <code>Widget</code> is easy: <code>Widget</code> just inherits from <code>NewHandlerSupport&lt;Widget&gt;</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">public</span> <span class="n">NewHandlerSupport</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">public</span> <span class="n">NewHandlerSupport</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span> <span class="c1">// without declaration for set_new_handler or operator new
 </span><span class="c1"></span><span class="p">};</span>
@@ -1957,7 +1950,7 @@ if (!doNotTrack) {
 <p>Finally, let&rsquo;s take a look at how to use the new-handling capabilities in <code>Widget</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1965,7 +1958,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">outOfMem</span><span class="p">();</span> <span class="c1">// decl. of class-specific new-handler func.
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">outOfMem</span><span class="p">();</span> <span class="c1">// decl. of class-specific new-handler func.
 </span><span class="c1"></span><span class="n">Widget</span><span class="o">::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="n">outOfMem</span><span class="p">);</span> <span class="c1">// set outOfMem as Widget&#39;s new-handler
 </span><span class="c1"></span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span> <span class="c1">// if mem. alloc. fails, call outOfMem
 </span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">;</span> <span class="c1">// if mem. alloc. fails, call the original global new-handler (if there is one)
@@ -1977,14 +1970,14 @@ if (!doNotTrack) {
 <p>Althought now it is specified to throw a <code>bad_alloc</code> exception, until 1993, C++ required that <code>operator new</code> return null when it way unable to allocate the requested memory. Unwilling to abandon the traditional behavior, the C++ standardization committee provided an alternative form of <code>operator new</code> called &ldquo;nothrow&rdquo; forms, in part because the forms employ <code>nothrow</code> objects defined in the header <code>&lt;new&gt;</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...};</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...};</span>
 <span class="n">Widget</span> <span class="o">*</span><span class="n">pw1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span>  <span class="c1">// throws bad_alloc if allocation fails
 </span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">pw1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// this test must fail
 </span><span class="c1"></span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw2</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Widget</span><span class="p">;</span> <span class="c1">// returns 0 if allocation fails

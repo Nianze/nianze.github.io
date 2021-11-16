@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1779,7 +1772,7 @@ if (!doNotTrack) {
 <p>假设我们想要构造一个类来记录股票交易的数据，每次有新交易都应把交易信息记录到文档里。由于交易种类多种多样，我们希望用一个统一的抽象基类<code>Transaction</code>里相同的接口<code>logTransaction()</code>来记录不同的派生类信息：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1793,7 +1786,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>   <span class="c1">// 所有交易记录的基类，含纯虚函数所以是抽象类
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>   <span class="c1">// 所有交易记录的基类，含纯虚函数所以是抽象类
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="n">Transaction</span><span class="p">();</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">logTransaction</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// 根据不同交易派生类的类型重载对应函数，此处定义为纯虚函数
@@ -1810,7 +1803,7 @@ if (!doNotTrack) {
 </div><p>对应不同交易的派生类定义如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1822,7 +1815,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BuyTransaction</span><span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BuyTransaction</span><span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">logTransaction</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// 记录买方交易信息
 </span><span class="c1"></span>    <span class="p">...</span>
@@ -1837,10 +1830,10 @@ if (!doNotTrack) {
 </div><p>按照上述函数申明和定义，如果我们构造一个买方派生类的实例：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">BuyTransaction</span> <span class="n">buy</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">BuyTransaction</span> <span class="n">buy</span><span class="p">;</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>此时<code>BuyTransaction</code>派生类的构造函数会被触发，但是在执行派生类构造函数之前，基类的构造函数会先被触发以构造新实例基类那部分的成员变量。当执行到基类构造函数最后一行的<code>logTransaction()</code>时，即使此时创建的实例属于派生类<code>BuyTransaction</code>，执行的虚函数依然是基类<code>Transaction</code>里面定义的版本。原因有二：</p>
@@ -1852,7 +1845,7 @@ if (!doNotTrack) {
 <p>接着讲上述的例子：如果按照上述定义编译，部分编译器会提出警告(某些则不会，见Item 53)；即使没有警告，由于<code>logTransaction()</code>是纯虚函数，没有定义函数体，所以即使通过了编译器这关，在下个阶段由于链接器找不到函数的定义所以也不会生成最终的可执行文件。但如果有人鸡贼的这样定义：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1865,7 +1858,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Transaction</span><span class="p">()</span>
     <span class="p">{</span> <span class="n">init</span><span class="p">();</span> <span class="p">}</span>   <span class="c1">// 构造函数里“没有”直接触发虚函数
@@ -1887,7 +1880,7 @@ if (!doNotTrack) {
 <p>方法有很多。讲一个常见的：既然不可以在基类构造函数中使用派生类版本的虚函数，那就让派生类在构造实例的时候把自己的交易信息传回基类的(非虚)构造函数中：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1910,7 +1903,7 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">Transaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">);</span> <span class="c1">// “explicit”关键词防止隐式转换
 </span><span class="c1"></span>    <span class="kt">void</span> <span class="nf">logTransaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// 不再是虚函数了

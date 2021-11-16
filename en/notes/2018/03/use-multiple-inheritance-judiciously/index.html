@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1779,7 +1772,7 @@ if (!doNotTrack) {
 <p>In the realm of MI, one thing worth noting is that it becomes possible to inherit the same name (e.g., function, typedef, etc.) from more than one base class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1797,7 +1790,7 @@ if (!doNotTrack) {
 </span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BorrowableItem</span> <span class="p">{</span>  <span class="c1">// something a library lets you borrow
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BorrowableItem</span> <span class="p">{</span>  <span class="c1">// something a library lets you borrow
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="kt">void</span> <span class="n">checkOut</span><span class="p">();</span>  <span class="c1">// check the item out from the library
 </span><span class="c1"></span>    <span class="p">...</span>
@@ -1817,11 +1810,11 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">MP3Player</span> <span class="n">mp</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">MP3Player</span> <span class="n">mp</span><span class="p">;</span>
 <span class="n">mp</span><span class="p">.</span><span class="n">checkOut</span><span class="p">();</span>  <span class="c1">// ambiguous!
 </span></code></pre></td></tr></table>
 </div>
@@ -1829,17 +1822,17 @@ if (!doNotTrack) {
 <p>To resolve the ambiguity, specify which base class&rsquo;s function to call:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">mp</span><span class="p">.</span><span class="n">BorrowableItem</span><span class="o">::</span><span class="n">checkOut</span><span class="p">();</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">mp</span><span class="p">.</span><span class="n">BorrowableItem</span><span class="o">::</span><span class="n">checkOut</span><span class="p">();</span>
 </code></pre></td></tr></table>
 </div>
 </div><h1 id="virtual-inheritance">Virtual inheritance</h1>
 <p>It is not uncommon in the world of MI to encounter the classical case of &ldquo;deadly MI diamond&rdquo;, where there are more than one path between a base class and a derived class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1847,7 +1840,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{...};</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">InputFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">OutputFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">IOFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">InputFile</span><span class="p">,</span>
@@ -1868,7 +1861,7 @@ InputFile       OutputFile
 <p>If this is not what we want, we must make the <code>File</code> a <em>virtual base class</em>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1876,7 +1869,7 @@ InputFile       OutputFile
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{...};</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">File</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">InputFile</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">OutputFile</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">File</span><span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">IOFile</span><span class="o">:</span> <span class="k">public</span> <span class="n">InputFile</span><span class="p">,</span>
@@ -1905,7 +1898,7 @@ InputFile       OutputFile
 <p>For example, we want to implement the following C++ Interface class (from item 31) to model persons:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1914,7 +1907,7 @@ InputFile       OutputFile
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">IPerson</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">IPerson</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span><span class="o">:</span> <span class="o">~</span><span class="n">IPerson</span><span class="p">();</span>
 
@@ -1926,7 +1919,7 @@ InputFile       OutputFile
 </div><p>We want to create a concrete class <code>CPerson</code>, and luckily, we find following old database-specific class <code>PersonInfo</code> offering the essense of what <code>CPerson</code> needs:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1968,7 +1961,7 @@ InputFile       OutputFile
 </span><span class="lnt">40
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PersonInfo</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PersonInfo</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">PersonInfo</span><span class="p">(</span><span class="n">DatabaseID</span> <span class="n">pid</span><span class="p">);</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">PersonInfo</span><span class="p">();</span>
@@ -2015,7 +2008,7 @@ InputFile       OutputFile
 <p>Thus, we could make following reasonable multiple inheritance:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2034,7 +2027,7 @@ InputFile       OutputFile
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">IPerson</span> <span class="p">{...};</span> <span class="c1">// the interface. same as above
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">IPerson</span> <span class="p">{...};</span> <span class="c1">// the interface. same as above
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">DatabaseID</span> <span class="p">{...};</span> <span class="c1">// used below
 </span><span class="c1"></span>

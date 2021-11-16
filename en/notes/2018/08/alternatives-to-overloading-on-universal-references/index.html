@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1783,7 +1776,7 @@ if (!doNotTrack) {
 <p>According to the advice in Item 41, we may consider passing objects by value when we know we&rsquo;ll copy them. Thus, the <code>Person</code> example may get revised like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1795,7 +1788,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">Person</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">n</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="p">{}</span>
@@ -1812,7 +1805,7 @@ if (!doNotTrack) {
 <p>Add another &ldquo;tag&rdquo; parameter to help compiler differentiate the overloading cases as we want:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1838,7 +1831,7 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">logAndAdd</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">name</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">logAndAddImpl</span><span class="p">(</span>
@@ -1872,7 +1865,7 @@ if (!doNotTrack) {
 <p>In the case of <code>Person</code>&rsquo;s perfect forwarding constructor, we want to enable its instantiation only if the type being passed isn&rsquo;t <code>Person</code>, so that the class&rsquo;s copy or move constructor my handle the calls where a <code>Person</code> object gets passed in. Specifically, when checking the type of the argument being passed, we want to ignore its referenceness, constness, and volatileness using <code>std::decay&lt;T&gt;</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1887,7 +1880,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">template</span><span class="o">&lt;</span>
         <span class="k">typename</span> <span class="n">T</span><span class="p">,</span>
@@ -1905,7 +1898,7 @@ if (!doNotTrack) {
 </div><p>Moreover, if we want to make sure the derived class work properly, the conditions for <code>std::enble_if</code> get more restricted: we want to enable it for any argument type other than <em><code>Person</code> or a type derived from <code>Person</code></em>. To determian whether one type is derived from another, we can use <code>std::is_base_of&lt;T1, T2&gt;</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1920,7 +1913,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">template</span><span class="o">&lt;</span>
         <span class="k">typename</span> <span class="n">T</span><span class="p">,</span>
@@ -1938,7 +1931,7 @@ if (!doNotTrack) {
 </div><p>In C++14, by employing alias templates, we can save some typing for <code>typename</code> and <code>::type</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1951,7 +1944,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">;</span>
     <span class="k">template</span><span class="o">&lt;</span>
         <span class="k">typename</span> <span class="n">T</span><span class="p">,</span>
@@ -1967,7 +1960,7 @@ if (!doNotTrack) {
 </div><p>Finally, to get our perfect forwarding constructor to work with the <code>int</code> overload, we have to add another constrain in <code>std::enbale_if</code> to check the integral arguments type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1991,7 +1984,7 @@ if (!doNotTrack) {
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">;</span>
     <span class="k">template</span><span class="o">&lt;</span>
         <span class="k">typename</span> <span class="n">T</span><span class="p">,</span>
@@ -2018,7 +2011,7 @@ if (!doNotTrack) {
 </div><p>To make even more effective code, considering some kinds of arguments can&rsquo;t be perfect-forwarded, as well as the fact that forwarding functions tend to create lengthy error messages, which is debug-unfriendly, we can use <code>static_assert</code>, accompanied with <code>std::is_constructible</code>, to perform a compile-time test to determine whether an object of one type can be constructed from an object (or a set of objects) of a different type (or set of types):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2041,7 +2034,7 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">;</span>
     <span class="k">template</span><span class="o">&lt;</span>
         <span class="k">typename</span> <span class="n">T</span><span class="p">,</span>

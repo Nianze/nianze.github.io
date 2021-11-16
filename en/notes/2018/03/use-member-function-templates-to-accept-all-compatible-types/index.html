@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1777,7 +1770,7 @@ if (!doNotTrack) {
 <p>Implicit conversion is a big convenient advantage offered by pointers: derived class pointers convert into base class pointers implicitly, pointers to non-<code>const</code> objects convert into pointers to <code>const</code> implicitly, etc. For a three-level hierarchy, following code makes perfect sense:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1785,7 +1778,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Top</span> <span class="p">{...};</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Top</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">Middle</span><span class="o">:</span> <span class="k">public</span> <span class="n">Top</span> <span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">Bottom</span><span class="o">:</span> <span class="k">public</span> <span class="n">Middle</span> <span class="p">{...};</span>
 <span class="n">Top</span> <span class="o">*</span><span class="n">pt1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Middle</span><span class="p">;</span>  <span class="c1">// convert Middle* -&gt; Top*
@@ -1796,7 +1789,7 @@ if (!doNotTrack) {
 </div><p>In the world of template, we&rsquo;d really like to emulate such conversions for our user-defined smart pointer classes:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1808,7 +1801,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">SmartPtr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">SmartPtr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">realPtr</span><span class="p">)</span> <span class="c1">// initialized by built-in pointers
@@ -1824,7 +1817,7 @@ if (!doNotTrack) {
 <p>Considering the fact that a template can be instantiated to generate an unlimited number of functions, what we need here is not a constructor <em>function</em>, but a constructor <em>template</em>, the <em>member function templates</em> (also known as <em>member templates</em>) that generate member functions of a class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1833,7 +1826,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">SmartPtr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span>  <span class="c1">// member template for a &#34;generalized copy constructor&#34;
@@ -1846,7 +1839,7 @@ if (!doNotTrack) {
 <p>However, this member template will generate more member functions than we need: as declared, it is possible to create a <code>SmartPtr&lt;Bottom&gt;</code> from a <code>SmartPtr&lt;Top&gt;</code>, which is contrary to the meaning of public inheritance (item 32). We need to restrict the conversions to those we want:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1859,7 +1852,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">SmartPtr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">U</span><span class="o">&gt;</span>
@@ -1876,7 +1869,7 @@ if (!doNotTrack) {
 <p>Apart from constructors, we can also apply member function tmeplates to assignment. A good example is from TR1&rsquo;s <code>shared_ptr</code> (item 13):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1897,7 +1890,7 @@ if (!doNotTrack) {
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">shared_ptr</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">shared_ptr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">shared_ptr</span><span class="p">(</span><span class="n">shared_ptr</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">);</span>  <span class="c1">// &#34;normal&#34; copy constructor
 </span><span class="c1"></span>    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Y</span><span class="o">&gt;</span>

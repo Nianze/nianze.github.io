@@ -663,12 +663,6 @@
     
     var enableSearch = JSON.parse("true");
     
-    var searchDistance = JSON.parse("null");
-    
-    var searchThreshold = JSON.parse("null");
-    
-    var searchContent = JSON.parse("null");
-    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -692,13 +686,12 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
-                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: searchThreshold ? searchThreshold : 0.4, 
+              threshold: 0.4, 
               location: 0, 
-              distance: searchDistance ? searchDistance : 100, 
+              distance: 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1348,7 +1341,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.86.0" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1777,7 +1770,7 @@ if (!doNotTrack) {
 <p>Pass-by-value can be an expensive operation. For example, consider the following class hierarchy:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1798,7 +1791,7 @@ if (!doNotTrack) {
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Person</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Person</span><span class="p">();</span>  <span class="c1">// parameters omitted for simplisity
 </span><span class="c1"></span>    <span class="k">virtual</span> <span class="o">~</span><span class="n">Person</span><span class="p">();</span>  <span class="c1">// item 7 explains why virtual
@@ -1822,12 +1815,12 @@ if (!doNotTrack) {
 </div><p>Now consider what will happen if we call a function <code>validateStudent</code>, which takes a <code>Student</code> argument (by value) and returns whether it is a real student:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="nf">validateStudent</span><span class="p">(</span><span class="n">Student</span> <span class="n">s</span><span class="p">);</span>  <span class="c1">// pass a Student object by value
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="nf">validateStudent</span><span class="p">(</span><span class="n">Student</span> <span class="n">s</span><span class="p">);</span>  <span class="c1">// pass a Student object by value
 </span><span class="c1"></span><span class="n">Student</span> <span class="n">plato</span><span class="p">;</span>
 <span class="kt">bool</span> <span class="n">platoIsOK</span> <span class="o">=</span> <span class="n">validateStudent</span><span class="p">(</span><span class="n">plato</span><span class="p">);</span> <span class="c1">// call the function
 </span></code></pre></td></tr></table>
@@ -1836,17 +1829,17 @@ if (!doNotTrack) {
 <p>It would be nice is there were a way to bypass all those constructions and destructions. The answer is: pass by reference-to-<code>const</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="nf">validateStudent</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="nf">validateStudent</span><span class="p">(</span><span class="k">const</span> <span class="n">Student</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>Since no new objects are being created, there&rsquo;s no constructor or destructor call. The <code>const</code> in the revised parameter declaration is important, for it guarantees that the callers would not worry about <code>validateStudent</code> making changes to the <code>Student</code> they passed in (when passing by value, <code>validateStudent</code> would be able to modify only a <em>copy</em> of the <code>Student</code> they passed in, so the callers know they are shielded from any changes the function might make to the <code>Student</code>).</p>
 <p>Apart from efficiency, passing parameters by reference also avoids the <code>slicing problem</code>: when a derived class object is passed (by value) as a base class object, the base class copy constructor is called, and the extra features in derived class object are &ldquo;sliced&rdquo; off. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1860,7 +1853,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>     <span class="c1">// return name of window
@@ -1877,14 +1870,14 @@ if (!doNotTrack) {
 </div><p>Below is a bad example if you want to write a function to print out a window&rsquo;s name and then display the window:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printNameAndDisplay</span><span class="p">(</span><span class="n">Window</span> <span class="n">w</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printNameAndDisplay</span><span class="p">(</span><span class="n">Window</span> <span class="n">w</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">name</span><span class="p">();</span>
     <span class="n">w</span><span class="p">.</span><span class="n">displey</span><span class="p">();</span>
@@ -1894,11 +1887,11 @@ if (!doNotTrack) {
 </div><p>When you call this functiona with a <code>WindowWithScrollBars</code> object:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">WindowWithScrollBars</span> <span class="n">wwsb</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">WindowWithScrollBars</span> <span class="n">wwsb</span><span class="p">;</span>
 <span class="n">printNameAndDisplay</span><span class="p">(</span><span class="n">wwsb</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
@@ -1906,14 +1899,14 @@ if (!doNotTrack) {
 <p>However, if we revised the function declaration like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printNameAndDisplay</span><span class="p">(</span><span class="k">const</span> <span class="n">Window</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span>  <span class="c1">// fine, parameter won&#39;t be sliced
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printNameAndDisplay</span><span class="p">(</span><span class="k">const</span> <span class="n">Window</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span>  <span class="c1">// fine, parameter won&#39;t be sliced
 </span><span class="c1"></span><span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">name</span><span class="p">();</span>
     <span class="n">w</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
