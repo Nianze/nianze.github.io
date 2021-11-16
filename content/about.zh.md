@@ -58,17 +58,21 @@ My current gears:
 * Cameras: 
     * iPhone SE 2
     * Leica SL
+    * Leica M9
     * Konica Hexar RF
     * Nikon FE2
+    * Rolleiflex 3.5E Planar
 * Lenses
     * For Leica M-mount:
-        * ZEISS Distagon T* 35mm f/1.4 ZM
+        * Zeiss Distagon T* 35mm f/1.4 ZM
         * Voigtländer Nokton 50mm f/1.2 Aspherical VM
-        * LEICA APO-SUMMICRON-M 75 f/2 ASPH.
-    * For Nikon F-mount (with DKL-to-Nikon adapter):
-        * Schneider-Kreuznach Retina-Curtagon 28mm f/4 DKL
-        * Voigtländer Septon 50mm f/2 DKL
-        * Voigtlander Super Dynarex 135mm f/4 DKL
+        * Nikkor-S.C. 5cm f/1.4 LTM
+    * For Nikon F-mount (with DKL-to-F adapter):
+        * Schneider-Kreuznach Retina-Curtagon 28mm f/4
+        * Voigtländer Septon 50mm f/2
+        * Schneider-Kreuznach Retina-Xenon 50mm f/1.9
+        * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
+        * Voigtlander Super Dynarex 135mm f/4
 * Others:
     * LightPix Labs FlashQ Q20II
     * Nikon COOLSCAN IV ED (LS-40 ED)
