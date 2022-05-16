@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1771,12 +1778,12 @@ if (!doNotTrack) {
 <p>From time to time, some APIs require access to raw resources, so it is a good habit to design the resource-managing classes in such a way that it provides access to raw resources. For example, suppose there&rsquo;s a function we&rsquo;d like to use with <code>Investment</code> objects, which is managed by smart pointer:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">daysHeld</span><span class="p">(</span><span class="k">const</span> <span class="n">Investment</span> <span class="o">*</span><span class="n">pi</span><span class="p">);</span>  <span class="c1">// return number of days investment has been held
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">daysHeld</span><span class="p">(</span><span class="k">const</span> <span class="n">Investment</span> <span class="o">*</span><span class="n">pi</span><span class="p">);</span>  <span class="c1">// return number of days investment has been held
 </span><span class="c1"></span>
 <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// item 13
 </span></code></pre></td></tr></table>
@@ -1784,10 +1791,10 @@ if (!doNotTrack) {
 </div><p>Since <code>dayHeld</code> wants a raw <code>Investment*</code> pointer, if passing an object of type <code>tr1::shared_ptr&lt;Investment&gt;</code>, the code won&rsquo;t compile:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ind</span> <span class="n">days</span> <span class="o">=</span> <span class="n">daysHeld</span><span class="p">(</span><span class="n">pInv</span><span class="p">);</span>  <span class="c1">// error
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ind</span> <span class="n">days</span> <span class="o">=</span> <span class="n">daysHeld</span><span class="p">(</span><span class="n">pInv</span><span class="p">);</span>  <span class="c1">// error
 </span></code></pre></td></tr></table>
 </div>
 </div><p>We need to find a way to get the access to the raw resources, and generally there are two ways:</p>
@@ -1799,12 +1806,12 @@ if (!doNotTrack) {
 <p>Pointer dereferencing operators (<code>operator-&gt;</code> and <code>operator*</code>) are implicit conversion to the underlying raw pointers, which is virtually provided by all smart pointer classes. Suppose there&rsquo;s a member function <code>bool isTaxFree()</code> inside the class <code>Investment</code>, and we can access the member function like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="n">taxable1</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">pInv</span><span class="o">-&gt;</span><span class="n">isTaxFree</span><span class="p">());</span>  <span class="c1">// access resource via operator-&gt;
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="n">taxable1</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">pInv</span><span class="o">-&gt;</span><span class="n">isTaxFree</span><span class="p">());</span>  <span class="c1">// access resource via operator-&gt;
 </span><span class="c1"></span>
 <span class="kt">bool</span> <span class="n">taxable2</span> <span class="o">=</span> <span class="o">!</span><span class="p">((</span><span class="o">*</span><span class="n">pInv</span><span class="p">).</span><span class="n">isTaxFree</span><span class="p">());</span>  <span class="c1">// access resource via operator*
 </span></code></pre></td></tr></table>
@@ -1812,7 +1819,7 @@ if (!doNotTrack) {
 </div><p>When it is necessary to get at the raw resource inside an RAII object, another way of conversion is through an <em>implicit conversion function</em>. Consider following RAII class for fonts:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1829,7 +1836,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">FontHandle</span> <span class="nf">getFont</span><span class="p">();</span>  <span class="c1">// from C API
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">FontHandle</span> <span class="nf">getFont</span><span class="p">();</span>  <span class="c1">// from C API
 </span><span class="c1"></span><span class="kt">void</span> <span class="nf">releaseFont</span><span class="p">(</span><span class="n">FontHandle</span> <span class="n">fh</span><span class="p">);</span>  <span class="c1">// from the same C API
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">Font</span> <span class="p">{</span>   <span class="c1">// self-defined RAII class
@@ -1849,7 +1856,7 @@ if (!doNotTrack) {
 </div><p>This makes calling into the following C API easy and natural:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1857,7 +1864,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">changeFontSize</span><span class="p">(</span><span class="n">FontHandle</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newSize</span><span class="p">);</span>  <span class="c1">// the C API
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">changeFontSize</span><span class="p">(</span><span class="n">FontHandle</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newSize</span><span class="p">);</span>  <span class="c1">// the C API
 </span><span class="c1"></span>
 <span class="n">Font</span> <span class="nf">f</span><span class="p">(</span><span class="n">getFont</span><span class="p">());</span>
 <span class="kt">int</span> <span class="n">newFontSize</span><span class="p">;</span>
@@ -1868,13 +1875,13 @@ if (!doNotTrack) {
 </div><p>However, the downsize is that implicit conversions increase the chance of errors - a <code>FontHandle</code> may be created when a <code>Font</code> is really intended:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Font</span> <span class="nf">f1</span><span class="p">(</span><span class="n">getFont</span><span class="p">());</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Font</span> <span class="nf">f1</span><span class="p">(</span><span class="n">getFont</span><span class="p">());</span>
 <span class="p">...</span>
 <span class="n">FontHandle</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">f1</span><span class="p">;</span>  <span class="c1">// meant to copy a Font object but implicitly converted f1 into 
 </span><span class="c1"></span>                     <span class="c1">// FontHandle, and copied the underlying resource
@@ -1884,7 +1891,7 @@ if (!doNotTrack) {
 <p>In order to avoid unintended implicit conversion, an explicit conversion function like <code>get</code> is a preferable path. We can exchange the implicit convertion function to following explicit one:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1894,7 +1901,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Font</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Font</span> <span class="p">{</span>
 <span class="p">...</span>
 <span class="n">FontHandle</span> <span class="n">get</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">f</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// explicit conversion function
 </span><span class="c1"></span><span class="p">...</span>
@@ -3413,7 +3420,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

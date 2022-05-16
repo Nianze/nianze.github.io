@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,13 +1779,13 @@ if (!doNotTrack) {
 <p>Suppose we want a function to set up an audible alarm that will go off an hour after it&rsquo;s set and that will stay on for 30 seconds, with the alarm sound remaining undecided.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">Time</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">time_point</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">Time</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">time_point</span><span class="p">;</span>
 <span class="k">enum</span> <span class="k">class</span> <span class="nc">Sount</span> <span class="p">{</span><span class="n">Beep</span><span class="p">,</span> <span class="n">Siren</span><span class="p">,</span> <span class="n">Whistle</span><span class="p">};</span>
 <span class="k">using</span> <span class="n">Duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">duration</span><span class="p">;</span>
 <span class="kt">void</span> <span class="nf">setAlarm</span><span class="p">(</span><span class="n">Time</span> <span class="n">t</span><span class="p">,</span> <span class="n">Sound</span> <span class="n">s</span><span class="p">,</span> <span class="n">Duration</span> <span class="n">d</span><span class="p">);</span> <span class="c1">// at time t, make sound s for duration d
@@ -1787,7 +1794,7 @@ if (!doNotTrack) {
 </div><p>In C++14, it is very easy to write a lambda version, which is also straight-forward to read:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1797,7 +1804,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">setSoundL</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Sound</span> <span class="n">s</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">setSoundL</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Sound</span> <span class="n">s</span><span class="p">)</span>
                  <span class="p">{</span>
                      <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="p">;</span>
                      <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="o">::</span><span class="n">literals</span><span class="p">;</span>
@@ -1810,7 +1817,7 @@ if (!doNotTrack) {
 </div><p>If we decide to use <code>std::bind</code>, it looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1819,7 +1826,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">setSoundB</span> <span class="o">=</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">setSoundB</span> <span class="o">=</span> 
     <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="n">setAlarm</span><span class="p">,</span>
               <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="o">&lt;&gt;</span><span class="p">(),</span>
                         <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="n">steady_clock</span><span class="o">::</span><span class="n">now</span><span class="p">),</span>
@@ -1831,7 +1838,7 @@ if (!doNotTrack) {
 </div><p>Here, we used two extra <code>bind</code> inside the outer <code>bind</code> instead of passing <code>now() + 1h</code> directly as an argument of <code>std::bind</code>, because we want to defer evaluation of the timestamp expression until when <code>setAlarm</code> is called, rather than when <code>std::bind</code> is called. In C++11, however, the template type argument for the standard operator tempaltes can not be omitted, so the C++11 <code>std::bind</code> equivalent look like this shxt:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1848,7 +1855,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">genericAdder</span> <span class="p">{</span>  
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">genericAdder</span> <span class="p">{</span>  
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T1</span><span class="p">,</span> <span class="k">typename</span> <span class="n">T2</span><span class="o">&gt;</span>  
     <span class="k">auto</span> <span class="k">operator</span><span class="p">()(</span><span class="n">T1</span><span class="o">&amp;&amp;</span> <span class="n">param1</span><span class="p">,</span> <span class="n">T2</span><span class="o">&amp;&amp;</span> <span class="n">param2</span><span class="p">)</span>    
         <span class="o">-&gt;</span> <span class="k">decltype</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">param1</span><span class="p">)</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">param2</span><span class="p">))</span>  
@@ -1868,11 +1875,11 @@ if (!doNotTrack) {
 </div><p>Moreover, if we have another overloaded function for <code>setAlarm</code>, which takes a new parameter specifying the alarm volume:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Volum</span> <span class="p">{</span><span class="n">Normal</span><span class="p">,</span> <span class="n">Loud</span><span class="p">,</span> <span class="n">VeryLoud</span><span class="p">};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Volum</span> <span class="p">{</span><span class="n">Normal</span><span class="p">,</span> <span class="n">Loud</span><span class="p">,</span> <span class="n">VeryLoud</span><span class="p">};</span>
 <span class="kt">void</span> <span class="nf">setAlarm</span><span class="p">(</span><span class="n">Time</span> <span class="n">t</span><span class="p">,</span> <span class="n">Sound</span> <span class="n">s</span><span class="p">,</span> <span class="n">Duration</span> <span class="n">d</span><span class="p">,</span> <span class="n">Volume</span> <span class="n">v</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
@@ -1881,7 +1888,7 @@ if (!doNotTrack) {
 <p>To specify the exactly which one we want, we need to cast <code>setAlarm</code> to the proper function pointer type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1891,7 +1898,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">SetAlarm3ParamType</span> <span class="o">=</span> <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">Time</span> <span class="n">t</span><span class="p">,</span> <span class="n">Sound</span> <span class="n">s</span><span class="p">,</span> <span class="n">Duration</span> <span class="n">d</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">using</span> <span class="n">SetAlarm3ParamType</span> <span class="o">=</span> <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="n">Time</span> <span class="n">t</span><span class="p">,</span> <span class="n">Sound</span> <span class="n">s</span><span class="p">,</span> <span class="n">Duration</span> <span class="n">d</span><span class="p">);</span>
 <span class="k">auto</span> <span class="n">setSoundB</span> <span class="o">=</span> 
     <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">SetAlarm3ParamType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">setAlarm</span><span class="p">),</span>
               <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">plus</span><span class="o">&lt;&gt;</span><span class="p">(),</span>
@@ -1911,7 +1918,7 @@ if (!doNotTrack) {
 <h1 id="more-expressive">More expressive</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1923,7 +1930,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">betweenL</span> <span class="o">=</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">betweenL</span> <span class="o">=</span> 
     <span class="p">[</span><span class="n">lowVal</span><span class="p">,</span> <span class="n">highVal</span><span class="p">]</span>
     <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">val</span><span class="p">)</span>
     <span class="p">{</span> <span class="k">return</span> <span class="n">lowVal</span> <span class="o">&lt;=</span> <span class="n">val</span> <span class="o">&amp;&amp;</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="n">highVal</span><span class="p">;</span> <span class="p">};</span>
@@ -1946,7 +1953,7 @@ if (!doNotTrack) {
 <p>Polymorphic function objects: this takes use of bind object&rsquo;s perfect forwarding ability</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1959,7 +1966,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PolyWidget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PolyWidget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
     <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
@@ -1975,10 +1982,10 @@ if (!doNotTrack) {
 </div><p>In C++14, simply do this combining lambda with <code>auto</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">boundPW</span> <span class="o">=</span> <span class="p">[</span><span class="n">pw</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span> <span class="p">{</span> <span class="n">pw</span><span class="p">(</span><span class="n">param</span><span class="p">);</span> <span class="p">};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">boundPW</span> <span class="o">=</span> <span class="p">[</span><span class="n">pw</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span> <span class="p">{</span> <span class="n">pw</span><span class="p">(</span><span class="n">param</span><span class="p">);</span> <span class="p">};</span>
 </code></pre></td></tr></table>
 </div>
 </div></li>
@@ -3493,7 +3500,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

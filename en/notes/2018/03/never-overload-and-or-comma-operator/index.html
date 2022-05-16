@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1773,21 +1780,21 @@ if (!doNotTrack) {
 <p>The operators associated with short-circuit evaluation are <code>||</code> and <code>&amp;&amp;</code>, which C++ allows us to customize for user-defined types. However, once we overloading the functions <code>operator&amp;&amp;</code> and <code>operator||</code> (at the global scope or on a  per-class basis), we are replacing short-circuit semantics with <em>function call</em> semantics, ending up changing the rules of the game quite radically. For example, after we overload <code>operator&amp;&amp;</code>, the following code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="n">expression1</span> <span class="o">&amp;&amp;</span> <span class="n">expression2</span><span class="p">)</span>  <span class="p">...</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="n">expression1</span> <span class="o">&amp;&amp;</span> <span class="n">expression2</span><span class="p">)</span>  <span class="p">...</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>looks to compilers like one of these:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="n">expression1</span><span class="p">.</span><span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">expression2</span><span class="p">))</span> <span class="p">...</span> <span class="c1">// when operator&amp;&amp; is a member function
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">if</span> <span class="p">(</span><span class="n">expression1</span><span class="p">.</span><span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">expression2</span><span class="p">))</span> <span class="p">...</span> <span class="c1">// when operator&amp;&amp; is a member function
 </span><span class="c1"></span>
 <span class="k">if</span> <span class="p">(</span><span class="k">operator</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="n">expression1</span><span class="p">,</span> <span class="n">expression2</span><span class="p">))</span> <span class="p">...</span> <span class="c1">// when operator&amp;&amp; is a global function
 </span></code></pre></td></tr></table>
@@ -1802,7 +1809,7 @@ if (!doNotTrack) {
 <p>The comma operator is used for <em>expressions</em>, and we&rsquo;re most likely to run across it in the update part of a <code>for</code> loop:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1815,7 +1822,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">reverse</span><span class="p">(</span><span class="kt">char</span> <span class="n">s</span><span class="p">[])</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">reverse</span><span class="p">(</span><span class="kt">char</span> <span class="n">s</span><span class="p">[])</span> 
 <span class="p">{</span>
     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
     <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">;</span>
@@ -3455,7 +3462,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

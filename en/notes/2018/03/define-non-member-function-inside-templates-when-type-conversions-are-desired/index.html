@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1771,7 +1778,7 @@ if (!doNotTrack) {
 <p>If we want  to do implicit type conversion on all arguments, we should use non-member functions (item 24). Now we want a templatized version of <code>Rational</code> class to support the same mixed-mode arithmetic as shown in item 24, and the code could start like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1786,7 +1793,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Rational</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">numerator</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">// see item 20 for why params are passed by ref
@@ -1804,11 +1811,11 @@ if (!doNotTrack) {
 </div><p>However, this simple update to templatized version will not compile for following code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">oneHalf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">oneHalf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 <span class="n">Rational</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>  <span class="c1">// error! won&#39;t compile
 </span></code></pre></td></tr></table>
 </div>
@@ -1817,7 +1824,7 @@ if (!doNotTrack) {
 <p>How to declare the <code>operator*</code> properly? Notice that class templates don&rsquo;t depend on template argument deduction (this process only applies to function templates), so <code>T</code> is always known at the time the class <code>Rational&lt;T&gt;</code> is instantiated. Combine this knowledge with another fact that a <code>friend</code> declaration in a template class refers to a specific <em>function</em> (not a function <em>template</em>), so as part of the class instantiation process, the friend function will be automatically declared. Taking advantage of these 2 points, we could update the code to a new version<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1827,7 +1834,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
@@ -1839,13 +1846,13 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>  <span class="c1">// define operator* function
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>  <span class="c1">// define operator* function
 </span><span class="c1"></span><span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">lhs</span><span class="p">,</span>  
                             <span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{...}</span>
@@ -1858,7 +1865,7 @@ if (!doNotTrack) {
 <p>To solve it, the simplest thing is to put the function body into its declaration:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1873,7 +1880,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
@@ -1899,7 +1906,7 @@ if (!doNotTrack) {
 <p>Such functions as <code>operator*</code> defined inside a class are implicitly declared <code>inline</code> (item 30), so we may minimize the impact of such <code>inline</code> declarations by having <code>operator*</code> do nothing but call a helper function defined outside of the class, especially when the function body is complex.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1916,7 +1923,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Raional</span><span class="p">;</span>  <span class="c1">// declare Rational template
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Raional</span><span class="p">;</span>  <span class="c1">// declare Rational template
 </span><span class="c1"></span>
 <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>  <span class="c1">// helper template
 </span><span class="c1"></span><span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">doMultiply</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">lhs</span><span class="p">,</span>
@@ -1936,7 +1943,7 @@ if (!doNotTrack) {
 </div><p>Many compilers force us to put all template definitions in header files, so we may need to define <code>doMultiply</code> in the header as well:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1945,7 +1952,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span> 
 <span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">doMultiply</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">lhs</span><span class="p">,</span>
                              <span class="k">const</span> <span class="n">Rational</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
@@ -3476,7 +3483,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

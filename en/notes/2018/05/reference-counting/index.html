@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1771,7 +1778,7 @@ if (!doNotTrack) {
 <p>Consider a customized naive version of <code>class String;</code>: its assignment operator is implemented in a naive way:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1791,7 +1798,7 @@ if (!doNotTrack) {
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="p">);</span>
     <span class="n">String</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
@@ -1857,7 +1864,7 @@ if (!doNotTrack) {
 <p>From the picture above, we can see we need one reference count per string <em>value</em>, instead of one per string <em>object</em>. This implies a decoupling between values and reference counts, leading to our first design: nesting a <code>StringValue</code> struct in the private part of <code>String</code> class, so that all the members of <code>String</code> class get full access to this inner data structure, while everybody else get denied (except friends of the class).</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1883,7 +1890,7 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
@@ -1912,7 +1919,7 @@ if (!doNotTrack) {
 </div><p>The primary purpose of <code>StringValue</code> is to provide a place to associate a particular value with a count of the number of <code>String</code> objects sharing that value, so there&rsquo;s need to define copy constructor or assignment operator for this inner struct, and we provide the manipulation of the <code>refCount</code> field in <code>String</code> class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1953,7 +1960,7 @@ if (!doNotTrack) {
 </span><span class="lnt">39
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">initValue</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="p">);</span>
     <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
@@ -1998,7 +2005,7 @@ if (!doNotTrack) {
 <p>Now comes the troublesome one: an array-bracket operator([]), which allows individual characters within strings to be read and written:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2006,7 +2013,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// for const Strings
 </span><span class="c1"></span>    <span class="kt">char</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span> <span class="c1">// for non-const Strings
@@ -2017,13 +2024,13 @@ if (!doNotTrack) {
 </div><p>It&rsquo;s straightforward to implement the const version, because it&rsquo;s a read-only operation:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">];</span> <span class="c1">// here&#39;s no sanity checking on index, just like C++ tradition; easy to add though
 </span><span class="c1"></span><span class="p">}</span>
@@ -2032,7 +2039,7 @@ if (!doNotTrack) {
 </div><p>However, since non-const version of <code>operator[]</code> might be called to write a character, the implementation must consider more scenario to avoid modifying the value of other <code>String</code> objects that happen to be sharing the same <code>StringValue</code> object - since there&rsquo;s no way for C++ compilers to tell us whether a particular use of <code>operator[]</code> is for a read or a write, we must be pessimistic and assume <em>all</em> calls to the non-const <code>operator[]</code> are for writes (Proxy classes casn help us differentiate reads from writes, see MECpp item 30.)</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2044,7 +2051,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">char</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">char</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="c1">// if sharing a value with other String obj.
 </span><span class="c1"></span>    <span class="c1">// break off a separate copy of the value
@@ -2061,12 +2068,12 @@ if (!doNotTrack) {
 <p>Consider this code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&#34;Hello&#34;</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&#34;Hello&#34;</span><span class="p">;</span>
 <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">s1</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
 <span class="n">Stirng</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>
 </code></pre></td></tr></table>
@@ -2081,16 +2088,16 @@ if (!doNotTrack) {
 </code></pre><p>Now there is a dangerous situation, where pointer <code>p</code> modifies both <code>s1</code> and <code>s2</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="sc">&#39;x&#39;</span><span class="p">;</span>  <span class="c1">// modifies both s1 and s2
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="sc">&#39;x&#39;</span><span class="p">;</span>  <span class="c1">// modifies both s1 and s2
 </span></code></pre></td></tr></table>
 </div>
 </div><p>To eliminate the problem, we add a flag to each <code>StringValue</code> object indicating whether that object is shareable. Initially, the flag is set to <code>true</code> (indicating shareable), but turn it off whenever the non-const <code>operator[]</code> is invoked on the value represented by that object (once the flag is set to <code>false</code>, it stays that way forever).</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2131,7 +2138,7 @@ if (!doNotTrack) {
 </span><span class="lnt">39
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">struct</span> <span class="nc">StirngValue</span> <span class="p">{</span>
         <span class="n">size_t</span> <span class="n">refCount</span><span class="p">;</span>
@@ -2181,7 +2188,7 @@ if (!doNotTrack) {
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2200,7 +2207,7 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RCObject</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RCObject</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">RCObject</span><span class="p">();</span>
     <span class="n">RCObject</span><span class="p">(</span><span class="k">const</span> <span class="n">RCObject</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
@@ -2221,7 +2228,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2247,7 +2254,7 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RCObject</span><span class="o">::</span><span class="n">RCObject</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RCObject</span><span class="o">::</span><span class="n">RCObject</span><span class="p">()</span>
 <span class="o">:</span> <span class="n">refCount</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">shareable</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{}</span>
 
 <span class="n">RCObject</span><span class="o">::</span><span class="n">RCObject</span><span class="p">(</span><span class="k">const</span> <span class="n">RCObject</span><span class="o">&amp;</span><span class="p">)</span>
@@ -2283,7 +2290,7 @@ if (!doNotTrack) {
 <p>Now taking advantage of this new reference-counting base class, we modify <code>StringValue</code> to inherit its reference counting capabilities from <code>RCObject</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2305,7 +2312,7 @@ if (!doNotTrack) {
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="k">struct</span> <span class="nc">StringValue</span><span class="o">:</span> <span class="k">public</span> <span class="n">RCObject</span> <span class="p">{</span>
         <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
@@ -2333,7 +2340,7 @@ if (!doNotTrack) {
 <p>To remove such manual works, we introduce <em>smart pointer</em> for help:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2352,7 +2359,7 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// template class for smart pointers-to-T object. T must
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// template class for smart pointers-to-T object. T must
 </span><span class="c1">// support the RCObject interface, typically by inheriting from RCObject
 </span><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">RCPtr</span> <span class="p">{</span>
@@ -2373,7 +2380,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2424,7 +2431,7 @@ if (!doNotTrack) {
 </span><span class="lnt">49
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="n">RCPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">RCPtr</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">realPtr</span><span class="p">)</span><span class="o">:</span> <span class="n">pointee</span><span class="p">(</span><span class="n">realPtr</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">init</span><span class="p">();</span>
@@ -2481,14 +2488,14 @@ if (!doNotTrack) {
 </ol>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span><span class="o">::</span><span class="n">StringValue</span><span class="o">::</span><span class="n">StirngValue</span><span class="p">(</span><span class="k">const</span> <span class="n">StringValue</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span><span class="o">::</span><span class="n">StringValue</span><span class="o">::</span><span class="n">StirngValue</span><span class="p">(</span><span class="k">const</span> <span class="n">StringValue</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
     <span class="n">strcpy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rhs</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
@@ -2512,7 +2519,7 @@ if (!doNotTrack) {
 </code></pre><p>The class declaration looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2564,7 +2571,7 @@ if (!doNotTrack) {
 </span><span class="lnt">50
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">RCPtr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">RCPtr</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">realPtr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
@@ -2620,7 +2627,7 @@ if (!doNotTrack) {
 <p>Now here is all the implementation:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2646,7 +2653,7 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RCObject</span><span class="o">::</span><span class="n">RCObject</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">RCObject</span><span class="o">::</span><span class="n">RCObject</span><span class="p">()</span>
 <span class="o">:</span> <span class="n">refCount</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">shareable</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{}</span>
 
 <span class="n">RCObject</span><span class="o">::</span><span class="n">RCObject</span><span class="p">(</span><span class="k">const</span> <span class="n">RCObject</span><span class="o">&amp;</span><span class="p">)</span>
@@ -2674,7 +2681,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2719,7 +2726,7 @@ if (!doNotTrack) {
 </span><span class="lnt">43
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="kt">void</span> <span class="n">RCPtr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">init</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">pointee</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
@@ -2766,7 +2773,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2782,7 +2789,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">String</span><span class="o">::</span><span class="n">StringValue</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">initValue</span><span class="p">)</span> <span class="c1">// ctor and deep copy ctor share this same init function
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">String</span><span class="o">::</span><span class="n">StringValue</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">initValue</span><span class="p">)</span> <span class="c1">// ctor and deep copy ctor share this same init function
 </span><span class="c1"></span><span class="p">{</span>
     <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">strlen</span><span class="p">(</span><span class="n">initValue</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
     <span class="n">strcpy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">initValue</span><span class="p">);</span>
@@ -2800,7 +2807,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2816,7 +2823,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span><span class="o">::</span><span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">initValue</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span><span class="o">::</span><span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">initValue</span><span class="p">)</span>
 <span class="o">:</span> <span class="n">value</span><span class="p">(</span><span class="k">new</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">initValue</span><span class="p">))</span> <span class="p">{}</span>
 
 <span class="k">const</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
@@ -2852,7 +2859,7 @@ if (!doNotTrack) {
 </code></pre><p>Since here <code>CountHolder</code> is just an implementation detial of <code>RCIPtr</code>, we can simply nested it inside <code>RCIPtr</code>, just as how <code>StringValue</code> relates with <code>String</code>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2923,7 +2930,7 @@ if (!doNotTrack) {
 </span><span class="lnt">69
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">RCIPtr</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">RCIPtr</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">realPtr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
@@ -2997,7 +3004,7 @@ if (!doNotTrack) {
 </div><p>Then, for a library class <code>Widget</code> with following interface:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3010,7 +3017,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Widget</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>
     <span class="n">Widget</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
@@ -3026,7 +3033,7 @@ if (!doNotTrack) {
 </div><p>We can implementing wrapper <code>RCWidget</code> by simply forwarding the call through underlying <code>RCIPtr</code> to a <code>Widget</code>object:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -3043,7 +3050,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RCWidget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">RCWidget</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">RCWidget</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span><span class="o">:</span> <span class="n">value</span><span class="p">(</span><span class="k">new</span> <span class="n">Widget</span><span class="p">(</span><span class="n">size</span><span class="p">))</span> <span class="p">{}</span>
 
@@ -4582,7 +4589,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

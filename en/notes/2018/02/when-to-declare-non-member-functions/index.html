@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1770,7 +1777,7 @@ if (!doNotTrack) {
 <p>Having classes support implicit type conversions is generally a bad idea. One good and common exception to the rule is when creating numerical types, for example, we want to allow implicit conversions from integers to user-defined rationals type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1781,7 +1788,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Rational</span><span class="p">(</span><span class="kt">int</span> <span class="n">numerator</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>    <span class="c1">// ctor is deliberately not explicit, 
 </span><span class="c1"></span>             <span class="kt">int</span> <span class="n">denominator</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// allowing implicit int-to-Rational conversion
@@ -1795,14 +1802,14 @@ if (!doNotTrack) {
 </div><p>We&rsquo;d like to support arithmetic operation of multiplication, and one way is to declare it as a member function of <code>Rational</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="k">const</span> <span class="n">Rational</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// return const: item 3; taking a reference-to-const as argument: item 20, 21
@@ -1812,14 +1819,14 @@ if (!doNotTrack) {
 </div><p>This design is fine to multiply rationals with rationals:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span> <span class="nf">oneEighth</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Rational</span> <span class="nf">oneEighth</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
 <span class="n">Rational</span> <span class="nf">oneHalf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 
 <span class="n">Rational</span> <span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="n">oneEighth</span><span class="p">;</span>  <span class="c1">// fine
@@ -1829,22 +1836,22 @@ if (!doNotTrack) {
 </div><p>However, for mixed-mode operations, where <code>Rational</code>s is multiplied with <code>int</code>s, there will be a potential error:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>  <span class="c1">// fine
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>  <span class="c1">// fine
 </span><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">oneHalf</span><span class="p">;</span>  <span class="c1">// error!
 </span></code></pre></td></tr></table>
 </div>
 </div><p>This problem is clearer for analysis when we rewrite the last two examples in their equivalent functional form:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span><span class="p">.</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>   <span class="c1">// fine
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span><span class="p">.</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>   <span class="c1">// fine
 </span><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="mf">2.</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">oneHalf</span><span class="p">);</span>   <span class="c1">// error!
 </span></code></pre></td></tr></table>
 </div>
@@ -1852,11 +1859,11 @@ if (!doNotTrack) {
 the object oneHalf is an instance of a class that contains an <code>operator*</code> taking a <code>Rational</code> as its argument. Compilers know we&rsquo;re passing an <code>int</code> and that the function requires a <code>Rational</code>, and they also know they can conjure up a suitable <code>Rational</code> by implicit type conversion - calling the <code>Rational</code> constructor with the <code>int</code> we provided, so compilers will happily call that function as if it had been written like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">Rational</span> <span class="nf">temp</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="c1">// create a temporary Rational object from 2
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">Rational</span> <span class="nf">temp</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="c1">// create a temporary Rational object from 2
 </span><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="n">temp</span><span class="p">;</span>  <span class="c1">// same as oneHalf.operator*(temp);
 </span></code></pre></td></tr></table>
 </div>
@@ -1866,16 +1873,16 @@ it turns out that parameters are eligible for implicit type conversion <em>only 
 <p>In fact, when compilers fail to find a matching member function, they will also look for non-member <code>operator*</code>s (i.e., ones at namespace or global scope) that can be called like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">result</span> <span class="o">=</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">oneHalf</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">result</span> <span class="o">=</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">oneHalf</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>And this is exactly what we want if we&rsquo;d like to support mixed-mode arithmetic: make <code>opeartor*</code> a non-member function, thus allowing compilers to perform implicit type conversions on <em>all</em> arguments:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1891,7 +1898,7 @@ it turns out that parameters are eligible for implicit type conversion <em>only 
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
     <span class="p">...</span>     <span class="c1">// contains no operator*
 </span><span class="c1"></span><span class="p">};</span>
 <span class="k">const</span> <span class="n">Rational</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>  <span class="c1">// now a non-member function
@@ -3419,7 +3426,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1790,7 +1797,7 @@ if (!doNotTrack) {
 <p>Let&rsquo;s see a typical usecase for private inheritance. Suppose we want to periodically examine the the internal status of class <code>Widget</code>, and we&rsquo;d like to reuse the following utility class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1798,7 +1805,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Timer</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Timer</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">explicit</span> <span class="n">Timer</span><span class="p">(</span><span class="kt">int</span> <span class="n">tickFrequency</span><span class="p">);</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">onTick</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// automatically called for each tick
@@ -1810,13 +1817,13 @@ if (!doNotTrack) {
 <p>Public inheritance is not a valid option here. Instead, we inherit privately:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">private</span> <span class="n">Timer</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">private</span> <span class="n">Timer</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">onTick</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// look at Widget usage data, etc.
 </span><span class="c1"></span><span class="p">};</span>
@@ -1827,7 +1834,7 @@ if (!doNotTrack) {
 <p>This is a nice design, but it&rsquo;s worth noting that private inheritance isn&rsquo;t strictly necessary - we could use composition instead:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1839,7 +1846,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="k">class</span> <span class="nc">WidgetTimer</span><span class="o">:</span> <span class="k">public</span> <span class="n">Timer</span> <span class="p">{</span>
     <span class="k">public</span><span class="o">:</span>
@@ -1860,7 +1867,7 @@ if (!doNotTrack) {
 <p>The edge case, as the name suggests, is edgy indeed: it applies only when we&rsquo;re dealing with a class that has no data in it: no non-static data members; no virtual functions (which introduces <code>vptr</code> to each object, item 7); and no virual base classes (which also incurs a size overhead, item 40). Conceptually, such an <em>empty</em> class should use no space, but C++ requires that freestanding objects must have non-zero size for some technical reasons. That being said,</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1869,7 +1876,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Empty</span> <span class="p">{};</span> <span class="c1">// has no data, so obj. should use no memory
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Empty</span> <span class="p">{};</span> <span class="c1">// has no data, so obj. should use no memory
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">HoldsAnInt</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
@@ -1882,13 +1889,13 @@ if (!doNotTrack) {
 <p>Now comes the point of using private inheritance: rather than containing &ldquo;freestanding&rdquo; objects that can not have zero size, we could inherit from <code>Empty</code> type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">HoldsAnInt</span><span class="o">:</span> <span class="k">private</span> <span class="n">Empty</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">HoldsAnInt</span><span class="o">:</span> <span class="k">private</span> <span class="n">Empty</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>
     <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
 <span class="p">};</span>
@@ -3430,7 +3437,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

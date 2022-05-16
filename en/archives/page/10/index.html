@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="website">
 <meta property="og:description" content="Archive Page">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1719,6 +1726,16 @@ if (!doNotTrack) {
           <span class="archive__meta" data-ani="true">
             
               <span class="archive__type">notes</span>
+              <span class="archive__date">Jan 31</span>
+            
+          </span>
+          <a href="https://nianze.ml/en/notes/2018/01/copy-all-parts-of-an-object/" class="archive__title" data-title-wrap="wrap" data-dir="ltr">Item-12 Copy all parts of an object</a>        
+        </li>
+        
+        <li class="archive__li" data-dir="ltr">
+          <span class="archive__meta" data-ani="true">
+            
+              <span class="archive__type">notes</span>
               <span class="archive__date">Jan 30</span>
             
           </span>
@@ -1913,16 +1930,6 @@ if (!doNotTrack) {
             
           </span>
           <a href="https://nianze.ml/en/notes/2016/substring-template/" class="archive__title" data-title-wrap="wrap" data-dir="ltr">Substring type problem&#39;s template</a>        
-        </li>
-        
-        <li class="archive__li" data-dir="ltr">
-          <span class="archive__meta" data-ani="true">
-            
-              <span class="archive__type">notes</span>
-              <span class="archive__date">Nov 6</span>
-            
-          </span>
-          <a href="https://nianze.ml/en/notes/2016/invalid-parentheses/" class="archive__title" data-title-wrap="wrap" data-dir="ltr">Remove Invalid Parentheses</a>        
         </li>
         
       </ul>
@@ -2197,7 +2204,7 @@ if (!doNotTrack) {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

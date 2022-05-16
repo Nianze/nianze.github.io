@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,7 +1779,7 @@ if (!doNotTrack) {
 <p>Sometimes when we cross from Object-oriented C++ to Template C++ (item 1), inheritance seem to stop working. For example, we&rsquo;d like to log some information for the <code>sendMsg</code> function in base class <code>MsgSender</code>, so we make following derived class <code>LoggingMsgSender</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1816,7 +1823,7 @@ if (!doNotTrack) {
 </span><span class="lnt">42
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">CompanyA</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">CompanyA</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="kt">void</span> <span class="n">sendClearText</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">);</span>
@@ -1868,7 +1875,7 @@ if (!doNotTrack) {
 <p>However, the code above will not compile, because, by default, compilers will not look for the function <code>sendClear</code> in the base class. The behavior seems to break our expected inheritance concept from Object-oriented world, but compilers do this for a good reason: they will not know what the base class <code>MsgSender&lt;Company&gt;</code> really looks like until when <code>LoggingMsgSender</code> is instantiated, so it is possible that there&rsquo;s a special template parameter class <code>CompanyC</code> that, instead of providing function <code>sendClearText</code>, only supports <code>sendEncrypted</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1876,7 +1883,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">CompanyZ</span> <span class="p">{</span>  <span class="c1">// this class offers no sendClearText Fucntion
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">CompanyZ</span> <span class="p">{</span>  <span class="c1">// this class offers no sendClearText Fucntion
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="kt">void</span> <span class="n">sendEncrypted</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">);</span>
@@ -1887,14 +1894,14 @@ if (!doNotTrack) {
 </div><p>In this case, <code>sendClear</code> function in <code>MsgSender</code> base class will make no sense. To rectify the problem, we can create a specialized version of <code>MsgSender</code> for <code>CompanyZ</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;&gt;</span>  <span class="c1">// signifies this is neither a template nor a standalone class
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;&gt;</span>  <span class="c1">// signifies this is neither a template nor a standalone class
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">MsgSender</span><span class="o">&lt;</span><span class="n">CompanyZ</span><span class="o">&gt;</span> <span class="p">{</span> <span class="c1">// but a total specialization of MsgSender
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="p">...</span> <span class="c1">// the same as the general template, except sendCleartext is omitted
@@ -1907,7 +1914,7 @@ if (!doNotTrack) {
 <h2 id="1-call-with-this-">1. Call with &ldquo;this-&gt;&rdquo;</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1921,7 +1928,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Company</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Company</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">LoggingMsgSender</span><span class="o">:</span> <span class="k">public</span> <span class="n">MsgSender</span><span class="o">&lt;</span><span class="n">Company</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span> <span class="c1">// ctor, dtor, etc.
@@ -1939,7 +1946,7 @@ if (!doNotTrack) {
 <p>This is the same trick we use in item 33, which explains how <code>using</code> declaration brings hidden base class names into a derived class&rsquo;s scope<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1954,7 +1961,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Company</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Company</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">LoggingMsgSender</span><span class="o">:</span> <span class="k">public</span> <span class="n">MsgSender</span><span class="o">&lt;</span><span class="n">Company</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">using</span> <span class="n">MsgSender</span><span class="o">&lt;</span><span class="n">Company</span><span class="o">&gt;::</span><span class="n">sendClear</span><span class="p">;</span>  <span class="c1">// tell compilers to assume that sendClear is in the base class
@@ -1972,7 +1979,7 @@ if (!doNotTrack) {
 </div><h2 id="3-explicitly-specify-the-base-class-qualification">3. Explicitly specify the base class qualification</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1986,7 +1993,7 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Company</span><span class="o">&gt;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Company</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">LoggingMsgSender</span><span class="o">:</span> <span class="k">public</span> <span class="n">MsgSender</span><span class="o">&lt;</span><span class="n">Company</span><span class="o">&gt;</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span> <span class="c1">// ctor, dtor, etc.
@@ -2005,7 +2012,7 @@ if (!doNotTrack) {
 <p>From a name visibility point of view, each of these approaches does the same thing: it promises  compilers that any subsequent specializations of the base class template will support the interface  offered by the general template. However, if the promise turns out to be unfounded, the subsequent compilation will still diagnose invalid references to base class members and reveal the truth:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2013,7 +2020,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">LoggingMsgSender</span><span class="o">&lt;</span><span class="n">CompanyZ</span><span class="o">&gt;</span> <span class="n">zMsgSender</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">LoggingMsgSender</span><span class="o">&lt;</span><span class="n">CompanyZ</span><span class="o">&gt;</span> <span class="n">zMsgSender</span><span class="p">;</span>
 
 <span class="n">MsgInfo</span> <span class="n">msgData</span><span class="p">;</span>
 <span class="p">...</span> <span class="c1">// put info in msgData
@@ -3546,7 +3553,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

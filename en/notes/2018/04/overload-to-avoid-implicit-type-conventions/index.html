@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1770,7 +1777,7 @@ if (!doNotTrack) {
 <p>Consider following code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1780,7 +1787,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPInt</span> <span class="p">{</span>  <span class="c1">// unlimited precision integers
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">UPInt</span> <span class="p">{</span>  <span class="c1">// unlimited precision integers
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="n">UPInt</span><span class="p">();</span>
     <span class="n">UPInt</span><span class="p">(</span><span class="kt">int</span> <span class="n">value</span><span class="p">);</span>
@@ -1793,13 +1800,13 @@ if (!doNotTrack) {
 </div><p>And following statements:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">UPInt</span> <span class="n">upi1</span><span class="p">,</span> <span class="n">upi2</span><span class="p">;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">UPInt</span> <span class="n">upi1</span><span class="p">,</span> <span class="n">upi2</span><span class="p">;</span>
 
 <span class="n">UPInt</span> <span class="n">upi3</span> <span class="o">=</span> <span class="n">upi1</span> <span class="o">+</span> <span class="mi">10</span><span class="p">;</span>
 <span class="n">UPInt</span> <span class="n">upi4</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">upi2</span><span class="p">;</span>
@@ -1809,13 +1816,13 @@ if (!doNotTrack) {
 <p>It is convenient to have compilers perform such kinds of conversions, but the we do pay the cost of implicit type conversion. If we want to eliminate this cost, we cancel the type conversions by function overloading;</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">UPInt</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">UPInt</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">UPInt</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">UPInt</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">UPInt</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">UPInt</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
 <span class="k">const</span> <span class="n">UPInt</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="k">const</span> <span class="n">UPInt</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
 <span class="k">const</span> <span class="n">UPInt</span> <span class="k">operator</span><span class="o">+</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="k">const</span> <span class="n">UPInt</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
 <span class="p">...</span>
@@ -3326,7 +3333,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

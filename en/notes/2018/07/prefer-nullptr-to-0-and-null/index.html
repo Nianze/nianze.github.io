@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1773,7 +1780,7 @@ if (!doNotTrack) {
 <h4 id="overloading">Overloading</h4>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1782,7 +1789,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
 <span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="kt">bool</span><span class="p">);</span>
 <span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">);</span>
 
@@ -1795,7 +1802,7 @@ if (!doNotTrack) {
 <p>Inside a template, if an <code>int</code> or <code>NULL</code> (which is <code>int</code>-like type) is being passed to a function that requires a pointer, type errors occur:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1818,7 +1825,7 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// call these only then approriate mutix is locked
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// call these only then approriate mutix is locked
 </span><span class="c1"></span><span class="kt">int</span> <span class="nf">f1</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw</span><span class="p">);</span>
 <span class="kt">int</span> <span class="nf">f2</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">upw</span><span class="p">);</span>
 <span class="kt">bool</span> <span class="nf">f3</span><span class="p">(</span><span class="n">Widget</span><span class="o">*</span> <span class="n">pw</span><span class="p">);</span>
@@ -1846,13 +1853,13 @@ if (!doNotTrack) {
 <p>Using 0, the return type may not be obvious, is it an integral type or a pointer type?</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">findRecord</span><span class="p">(</span><span class="cm">/* args. */</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">findRecord</span><span class="p">(</span><span class="cm">/* args. */</span><span class="p">);</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
 <span class="p">}</span>
@@ -1861,13 +1868,13 @@ if (!doNotTrack) {
 </div><p>There&rsquo;s no ambiguity when using <code>nullptr</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">findRecord</span><span class="p">(</span> <span class="cm">/* args */</span> <span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">findRecord</span><span class="p">(</span> <span class="cm">/* args */</span> <span class="p">);</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">...</span>
 <span class="p">}</span>
@@ -3399,7 +3406,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

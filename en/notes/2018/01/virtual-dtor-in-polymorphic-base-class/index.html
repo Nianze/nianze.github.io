@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1773,13 +1780,13 @@ if (!doNotTrack) {
 <p>Sometimes we may want to create an <em>abstract</em> class (which contains pure <em>virtual</em> functions) but don&rsquo;t have any pure virtual functions in mind, we may simply make a pure <em>virtual</em> destructor:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">AWOV</span> <span class="p">{</span>  <span class="c1">// &#34;Abstract w/o Virtuals&#34;
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">AWOV</span> <span class="p">{</span>  <span class="c1">// &#34;Abstract w/o Virtuals&#34;
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="o">~</span><span class="n">AWOV</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// declare pure virtual destructor
 </span><span class="c1"></span><span class="p">};</span>
@@ -1788,17 +1795,17 @@ if (!doNotTrack) {
 </div><p>Since <code>AWOV</code> has a pure virtual function, it&rsquo;s abstract as we wish while also benifits us with not worrying about the derived class destructor problem at the same time, but there&rsquo;s one twist: <strong>a definition of the pure virtual destructor must still be provided:</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">AWOV</span><span class="o">::~</span><span class="n">AWOV</span><span class="p">()</span> <span class="p">{}</span>  <span class="c1">// definition of pure virtual destructor
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">AWOV</span><span class="o">::~</span><span class="n">AWOV</span><span class="p">()</span> <span class="p">{}</span>  <span class="c1">// definition of pure virtual destructor
 </span></code></pre></td></tr></table>
 </div>
 </div><p>Otherwise the linking will complain, because compilers will generate a call from derived classes' destructors to each base class, all the way up to <code>~AWOV</code>, yet the body of base class destructor function can&rsquo;t be found.</p>
 <p>However, not all base classes are designed to be used polymorphically. For classes not designed to be base classes (std::string, STL container types such as vector, list, set, etc.) or not designed to be used polymorphically (item 6, <code>Uncopyable</code> class), we should not declare <em>virtual</em> destructors. Here is an example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1807,7 +1814,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span> <span class="c1">// a 2D point
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span> <span class="c1">// a 2D point
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="n">Point</span><span class="p">(</span><span class="kt">int</span> <span class="n">xCoord</span><span class="p">,</span> <span class="kt">int</span> <span class="n">yCoord</span><span class="p">);</span>
     <span class="o">~</span><span class="n">Point</span><span class="p">();</span>
@@ -3321,7 +3328,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

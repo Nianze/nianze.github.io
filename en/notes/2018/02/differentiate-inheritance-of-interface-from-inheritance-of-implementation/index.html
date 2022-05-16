@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1777,7 +1784,7 @@ if (!doNotTrack) {
 <p>To show the implementation differences above, we can define following classes for an example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1788,7 +1795,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>  <span class="c1">// abstract class
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>  <span class="c1">// abstract class
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">draw</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// pure virtual function, draws the current obj.
 </span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">error</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">);</span> <span class="c1">// impure virtual function, called by member functions if they need to report an error
@@ -1814,13 +1821,13 @@ if (!doNotTrack) {
 <p>Incidentally, C++ allows us to provide an implementation for <code>Shape::draw</code> (example: pure virtual destructor in item 7). However, the only way to call it would be to qualify the call with the class name:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Shape</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Shape</span><span class="p">;</span>  <span class="c1">// error! Shape is abstract
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Shape</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Shape</span><span class="p">;</span>  <span class="c1">// error! Shape is abstract
 </span><span class="c1"></span><span class="n">Shape</span> <span class="o">*</span><span class="n">ps1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rectangle</span><span class="p">;</span>  <span class="c1">// fine
 </span><span class="c1"></span><span class="n">ps1</span><span class="o">-&gt;</span><span class="n">draw</span><span class="p">();</span>  <span class="c1">// call Rectangle::draw
 </span><span class="c1"></span><span class="n">ps1</span><span class="o">-&gt;</span><span class="n">Shape</span><span class="o">::</span><span class="n">draw</span><span class="p">();</span> <span class="c1">// call Shape::draw
@@ -1837,7 +1844,7 @@ if (!doNotTrack) {
 <p>However, in the perspective of class design, there&rsquo;s a potential danger to allow simple virtual functions to specify both a function interface and a default implementation. That is: a derived class is allowed to inherit the default implementation without <strong>explicitly</strong> saying that it wanted to. For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1854,7 +1861,7 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Airport</span> <span class="p">{...};</span> <span class="c1">// represents airports
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Airport</span> <span class="p">{...};</span> <span class="c1">// represents airports
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">Airplane</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
@@ -1876,7 +1883,7 @@ if (!doNotTrack) {
 <p>To make our design more foolproof, we may separate functions for providing interface and default implementation, such as below:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1888,7 +1895,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Airplane</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Airplane</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">fly</span><span class="p">(</span><span class="k">const</span> <span class="n">Airport</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">...</span>
@@ -1902,7 +1909,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1910,7 +1917,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelA</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelA</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">fly</span><span class="p">(</span><span class="k">const</span> <span class="n">Airport</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">)</span>
     <span class="p">{</span> <span class="n">defaultFly</span><span class="p">(</span><span class="n">destination</span><span class="p">);</span> <span class="p">}</span>
@@ -1920,7 +1927,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1932,7 +1939,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelB</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelB</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">;</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">fly</span><span class="p">(</span><span class="n">Airport</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">);</span>
     <span class="p">...</span>
@@ -1948,7 +1955,7 @@ if (!doNotTrack) {
 <p>Some people may feel this design is redundant, arguing that this will polllute the class namespace with a proliferation of closely related function names. Then we may take advantage of the fact that pure virtual functions, which insists on redeclaring in concrete derived classes, may also have implementations of their own:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1960,7 +1967,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Airplane</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Airplane</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">fly</span><span class="p">(</span><span class="k">const</span> <span class="n">Airport</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">...</span>
@@ -1974,7 +1981,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1982,7 +1989,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelA</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelA</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="n">fly</span><span class="p">(</span><span class="k">const</span> <span class="n">Airport</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">)</span>
     <span class="p">{</span> <span class="n">Airplane</span><span class="o">::</span><span class="n">fly</span><span class="p">(</span><span class="n">destination</span><span class="p">);</span> <span class="p">}</span>
@@ -1992,7 +1999,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2004,7 +2011,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelB</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ModelB</span><span class="o">:</span> <span class="k">public</span> <span class="n">Airplane</span> <span class="p">{</span>
 <span class="k">public</span><span class="p">;</span>
     <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">fly</span><span class="p">(</span><span class="n">Airport</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">);</span>
     <span class="p">...</span>
@@ -3546,7 +3553,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

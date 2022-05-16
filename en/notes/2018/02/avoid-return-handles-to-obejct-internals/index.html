@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1777,7 +1784,7 @@ if (!doNotTrack) {
 Suppose we&rsquo;re working with a rectangle class, represented by its upper left corner and lower right corner. To keep a <code>Rectangle</code> object small, we decide that the corner points should be stored in an auxiliary struct that the <code>Rectangle</code> points to:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1787,7 +1794,7 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>  <span class="c1">// class representing points
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Point</span> <span class="p">{</span>  <span class="c1">// class representing points
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="n">Point</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
     <span class="p">...</span>
@@ -1799,13 +1806,13 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">RectData</span> <span class="p">{</span>  <span class="c1">// Rectangle corner point data
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">RectData</span> <span class="p">{</span>  <span class="c1">// Rectangle corner point data
 </span><span class="c1"></span>    <span class="n">Point</span> <span class="n">ulhc</span><span class="p">;</span>    <span class="c1">// &#34;upper left-hand corner&#34;
 </span><span class="c1"></span>    <span class="n">Point</span> <span class="n">lrhc</span><span class="p">;</span>    <span class="c1">// &#34;lower right-hand corner&#34;
 </span><span class="c1"></span><span class="p">}</span>
@@ -1813,7 +1820,7 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1824,7 +1831,7 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rectangle</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rectangle</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="n">Point</span><span class="o">&amp;</span> <span class="n">upperLeft</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-&gt;</span><span class="n">ulhc</span><span class="p">;</span> <span class="p">}</span>
     <span class="n">Point</span><span class="o">&amp;</span> <span class="n">lowerRight</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-&gt;</span><span class="n">lrhc</span><span class="p">;</span> <span class="p">}</span>
@@ -1844,13 +1851,13 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 <p>on the other side, returning handles to private internal data lets callers be able to modify that internal data:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Point</span> <span class="nf">coord1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Point</span> <span class="nf">coord1</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 <span class="n">Point</span> <span class="nf">coord3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
 <span class="k">const</span> <span class="n">Rectangle</span> <span class="nf">rec</span><span class="p">(</span><span class="n">coord1</span><span class="p">,</span> <span class="n">coord2</span><span class="p">);</span> <span class="c1">// rec is a const rectangle from (0,0) to (100,100)
 </span><span class="c1"></span><span class="n">rec</span><span class="p">.</span><span class="n">upperLeft</span><span class="p">().</span><span class="n">setX</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span> <span class="c1">// now (50,0) to (100,100)
@@ -1863,7 +1870,7 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 <p>You may think the two risks above may be eliminated by applying <code>const</code> to the return types:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1872,7 +1879,7 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rectangle</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Rectangle</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="k">const</span> <span class="n">Point</span><span class="o">&amp;</span> <span class="n">upperLeft</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pData</span><span class="o">-&gt;</span><span class="n">ulhc</span><span class="p">;</span> <span class="p">}</span>
@@ -1888,23 +1895,23 @@ Suppose we&rsquo;re working with a rectangle class, represented by its upper lef
 <p>In fact, function return values are the most common source of dangling handles. Consider a function that returns the bounding box for a GUI object in the form of a rectangle:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GUIObject</span> <span class="p">{...};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">GUIObject</span> <span class="p">{...};</span>
 <span class="k">const</span> <span class="n">Rectangle</span> <span class="nf">boundingBox</span><span class="p">(</span><span class="k">const</span> <span class="n">GUIObject</span><span class="o">&amp;</span> <span class="n">obj</span><span class="p">);</span> <span class="c1">// returns a rectangle by value; see item 3 for why return type is const
 </span></code></pre></td></tr></table>
 </div>
 </div><p>If client use this function like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">GUIObject</span> <span class="o">*</span><span class="n">pgo</span><span class="p">;</span>  <span class="c1">// make pgo point to some GUIObject
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">GUIObject</span> <span class="o">*</span><span class="n">pgo</span><span class="p">;</span>  <span class="c1">// make pgo point to some GUIObject
 </span><span class="c1"></span><span class="p">...</span>
 <span class="k">const</span> <span class="n">Point</span> <span class="o">*</span><span class="n">pUpperLeft</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">(</span><span class="o">*</span><span class="n">pgo</span><span class="p">).</span><span class="n">upperLeft</span><span class="p">());</span> <span class="c1">// get a ptr to the upper left point of its bounding box
 </span></code></pre></td></tr></table>
@@ -3417,7 +3424,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

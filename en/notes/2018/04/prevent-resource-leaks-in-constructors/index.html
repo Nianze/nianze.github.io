@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,7 +1779,7 @@ if (!doNotTrack) {
 <p>Suppose we want to develop a software for a multimedia address book that might hold information of a person&rsquo;s name, address, phone numbers, a picture of the person and, the sound of their voice:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1804,7 +1811,7 @@ if (!doNotTrack) {
 </span><span class="lnt">30
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Image</span> <span class="p">{</span>  <span class="c1">// for holding image data
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Image</span> <span class="p">{</span>  <span class="c1">// for holding image data
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="n">Image</span> <span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">imageDataFileName</span><span class="p">);</span>
     <span class="p">...</span>
@@ -1840,7 +1847,7 @@ if (!doNotTrack) {
 <p>A straightforward implementation for constructor and destructor:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1862,7 +1869,7 @@ if (!doNotTrack) {
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">BookEntry</span><span class="o">::</span><span class="n">BookEntry</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">BookEntry</span><span class="o">::</span><span class="n">BookEntry</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">address</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">imageFileName</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">audioClipFileName</span><span class="p">)</span>
@@ -1893,7 +1900,7 @@ if (!doNotTrack) {
 <p>Note that adding <code>try...catch</code> outside of the <code>BookEntry</code> constructor does not help:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1908,7 +1915,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">testBookEntryClass</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">testBookEntryClass</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="n">BookEntry</span> <span class="o">*</span><span class="n">pb</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">try</span> <span class="p">{</span>
@@ -1927,7 +1934,7 @@ if (!doNotTrack) {
 <h1 id="workable-but-inelegant-implementation">Workable (but inelegant) implementation</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1950,7 +1957,7 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">BookEntry</span><span class="o">::</span><span class="n">BookEntry</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">BookEntry</span><span class="o">::</span><span class="n">BookEntry</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">address</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">imageFileName</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">audioClipFileName</span><span class="p">)</span>
@@ -1977,7 +1984,7 @@ if (!doNotTrack) {
 <p>Considering code duplication, we may move the common resource cleanup code into a private helper funciton and have both the constructor and the destructor call it:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2013,7 +2020,7 @@ if (!doNotTrack) {
 </span><span class="lnt">34
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span> <span class="c1">// as before
 </span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
@@ -2054,7 +2061,7 @@ if (!doNotTrack) {
 <p>What if <code>BookEntry</code> class interface is designed differently, with <code>theImage</code> and <code>theAudioClip</code> defined as <code>constant</code> pointers, which must be initialized via the member initialization lists:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2064,7 +2071,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
@@ -2078,7 +2085,7 @@ if (!doNotTrack) {
 <p>We may be tempted to initit <code>theImage</code> and <code>theAudioClip</code> like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2093,7 +2100,7 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// an implementation that may leak resources if an exception is thrown
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// an implementation that may leak resources if an exception is thrown
 </span><span class="c1"></span><span class="n">BookEntry</span><span class="o">::</span><span class="n">BookEntry</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">address</span><span class="p">,</span>
                      <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">imageFileName</span><span class="p">,</span>
@@ -2113,7 +2120,7 @@ if (!doNotTrack) {
 <p>In order to add <code>try</code> and <code>catch</code> to perform cleanup tasks in a member initialization list, we may consider put them inside private member functions that return pointers:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2156,7 +2163,7 @@ if (!doNotTrack) {
 </span><span class="lnt">41
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
@@ -2208,7 +2215,7 @@ if (!doNotTrack) {
 <p>Since the resource here is of pointer types, we can use smart pointers to manage them. Take <code>auto_ptr</code> for example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2234,7 +2241,7 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">BookEntry</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
@@ -3777,7 +3784,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

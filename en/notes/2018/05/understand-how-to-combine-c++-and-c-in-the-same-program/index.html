@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1783,12 +1790,12 @@ if (!doNotTrack) {
 <p>For example, when we write this in C++:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">drawLine</span><span class="p">(</span><span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="p">);</span> <span class="c1">// suppose this is mangled into xyzzy
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">drawLine</span><span class="p">(</span><span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="p">);</span> <span class="c1">// suppose this is mangled into xyzzy
 </span><span class="c1"></span><span class="p">...</span>
 <span class="n">drawLine</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>  <span class="c1">// call to unmangled function name in source code
 </span></code></pre></td></tr></table>
@@ -1796,21 +1803,21 @@ if (!doNotTrack) {
 </div><p>Then the statement will be translated by the C++ compiler into the mangled version of that function, so the object file conbtains a function call that corresponds to this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">xyzzy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>  <span class="c1">// call to mangled function name
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">xyzzy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">);</span>  <span class="c1">// call to mangled function name
 </span></code></pre></td></tr></table>
 </div>
 </div><p>However, if <code>drawLine</code> is a C function, the object file (or archive or dynamically linked library, etc.) that contains the compiled version of <code>drawLine</code> contains a function called <code>drawLine</code> - no name mangling occurs. When trying to link mixed style object files together, we may get an error, because the linker is looking for a function called <code>xyzzy</code>, and there is no such function.</p>
 <p>To solve this problem, we tell C++ compilers not to mangle certain function names:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">extern</span> <span class="s">&#34;C&#34;</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">extern</span> <span class="s">&#34;C&#34;</span>
 <span class="kt">void</span> <span class="n">drawLine</span><span class="p">(</span><span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
@@ -1818,7 +1825,7 @@ if (!doNotTrack) {
 <p>For a slew of functions whose names don&rsquo;t need mangling, we enclose them in curly braces. For header files we want to share by both C++ and C, we take advantage of preprocessor symbol &ldquo;__cplusplus&rdquo;, which is defined only for C++ compilations:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1830,7 +1837,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#ifdef __cplusplus
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#ifdef __cplusplus
 </span><span class="cp"></span><span class="k">extern</span> <span class="s">&#34;C&#34;</span> <span class="p">{</span>
 <span class="cp">#endif
 </span><span class="cp"></span>    <span class="kt">void</span> <span class="nf">drawLine</span><span class="p">(</span><span class="kt">int</span> <span class="n">x1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="p">);</span>
@@ -1847,7 +1854,7 @@ if (!doNotTrack) {
 <p>The implementation of static initialization as well as static destruction is usually achieved by compilers by inserting a call to a special compiler-written function at the beginning of <code>main</code>, which takes care of static initialization (similarly with static destruction):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1857,7 +1864,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
 <span class="p">{</span>
     <span class="n">performStaticInitialization</span><span class="p">();</span> <span class="c1">// generated by the compiler
 </span><span class="c1"></span>
@@ -1871,7 +1878,7 @@ if (!doNotTrack) {
 <p>If most of a program is in C and C++ is only a support library, it would make more sense to write <code>main</code> in C. Nevertheless, in case of static objects in C++ library (if it doesn&rsquo;t now, it probably will in the future, see MECpp item 32), so it&rsquo;s still a good idea to write <code>main</code> in C++: simply call the C version <code>realMain</code> in a wrapper <code>main</code> in C++:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1880,7 +1887,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">extern</span> <span class="s">&#34;C&#34;</span> 
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">extern</span> <span class="s">&#34;C&#34;</span> 
 <span class="kt">int</span> <span class="n">realMain</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]);</span> <span class="c1">// implement this function in C
 </span><span class="c1"></span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="c1">// write this in C++
@@ -1894,10 +1901,10 @@ if (!doNotTrack) {
 <p>Sometimes this is easier said than done, because some functions are not in the standard library, or not available in the uniform implementation on different computing platforms, making it hard to judge the correct deallocation operation:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">char</span> <span class="o">*</span> <span class="nf">strdup</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">ps</span><span class="p">);</span> <span class="c1">// return a copy of the string pointed to by ps
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">char</span> <span class="o">*</span> <span class="nf">strdup</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">ps</span><span class="p">);</span> <span class="c1">// return a copy of the string pointed to by ps
 </span></code></pre></td></tr></table>
 </div>
 </div><p>If the <code>strdup</code> is from a C library, we need to call <code>free</code>; if it was written for a C++ library, we should call <code>delete</code>. If we can&rsquo;t make sure, then simply avoid calling such functions.</p>
@@ -3420,7 +3427,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

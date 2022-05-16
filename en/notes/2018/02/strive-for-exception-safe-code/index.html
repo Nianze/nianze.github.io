@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1783,7 +1790,7 @@ if (!doNotTrack) {
 <p>With all these terminologies bear in mind, let&rsquo;s see an example representing exception-unsafe style. Suppose there&rsquo;s a class for GUI menus with background images, and it will be used in a threaded environment, so it has a mutex for concurrency control:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1794,7 +1801,7 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PrettyMenu</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PrettyMenu</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="kt">void</span> <span class="n">changeBackGround</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">);</span> <span class="c1">// change background image
@@ -1807,7 +1814,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1817,7 +1824,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>   <span class="c1">// acquire mutex (item 14)
 </span><span class="c1"></span>    <span class="k">delete</span> <span class="n">bgImage</span><span class="p">;</span> <span class="c1">// get rid of old background
@@ -1833,7 +1840,7 @@ if (!doNotTrack) {
 <p>To address the resource leak issue, we can use objects to manage resources (item 13), and take advantage of <code>Lock</code> class to ensure that mutexes are released in a timely fashion (item 14):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1842,7 +1849,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>   <span class="c1">// item 14: acquire mutex and ensure its later release
 </span><span class="c1"></span>    <span class="k">delete</span> <span class="n">bgImage</span><span class="p">;</span> 
@@ -1869,14 +1876,14 @@ if (!doNotTrack) {
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PrettyMenu</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">PrettyMenu</span> <span class="p">{</span>
     <span class="p">...</span>
     <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Imgae</span><span class="o">&gt;</span> <span class="n">bgImage</span><span class="p">;</span>
     <span class="p">...</span>
@@ -1885,7 +1892,7 @@ if (!doNotTrack) {
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1894,7 +1901,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>
     <span class="n">bgImage</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">Image</span><span class="p">(</span><span class="n">imgSrc</span><span class="p">));</span> <span class="c1">// replace bgImage&#39;s internal pointer with the
@@ -1924,7 +1931,7 @@ Make a copy of the object we want to modify, then make all needed changes to the
 <p>The strategy is usually implemented by putting all the per-object data from the &ldquo;real&rdquo; object into a separate implementation object, then giving the real object a pointer to its implementation object (know as the &ldquo;pimpl idiom&rdquo;, item 31). For <code>PrettyMenu</code>, it would look something like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1937,7 +1944,7 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">PMImpl</span> <span class="p">{</span>  <span class="c1">// PMIpml = &#34;PrettyMenu Impl.&#34;
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">struct</span> <span class="nc">PMImpl</span> <span class="p">{</span>  <span class="c1">// PMIpml = &#34;PrettyMenu Impl.&#34;
 </span><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Image</span><span class="o">&gt;</span> <span class="n">bgImage</span><span class="p">;</span> 
     <span class="kt">int</span> <span class="n">imageChanges</span><span class="p">;</span> 
 <span class="p">};</span>
@@ -1952,7 +1959,7 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1964,7 +1971,7 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="n">PrettyMenu</span><span class="o">::</span><span class="n">changeBackground</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="o">&amp;</span> <span class="n">imgSrc</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">;</span>  <span class="c1">// item 25
 </span><span class="c1"></span>    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>  <span class="c1">// acquire the mutex
@@ -1983,7 +1990,7 @@ Make a copy of the object we want to modify, then make all needed changes to the
 <p>Suppose <code>someFunc</code> uses copy-and-<code>swap</code> and includes calls to two other functions, <code>f1</code> and <code>f2</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1992,7 +1999,7 @@ Make a copy of the object we want to modify, then make all needed changes to the
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="p">...</span>    <span class="c1">// make copy of local state
 </span><span class="c1"></span>    <span class="n">f1</span><span class="p">();</span>
@@ -3532,7 +3539,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

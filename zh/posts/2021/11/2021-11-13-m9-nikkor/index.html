@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1999,13 +2006,12 @@ if (!doNotTrack) {
     </figcaption>
   
 </figure>
-<p>据说这枚镜头在当年非常有名，最早是朝鲜战争时期因为生活杂志战地记者David Douglas Duncan选择<a href="https://www.life.com/history/korean-war-photos-david-douglas-duncan/">使用它</a>而在记者圈打响了<a href="http://leicaphilia.com/leica-celebrates-the-man-responsible-for-the-rise-of-nikon/">Nikkor LTM的名气</a>，也间接说明其可靠的做工和成像的素质。<a href="https://www.moma.org/collection/works/49767">上图</a>则是Robert Frank拿着这枚镜头在街上拍照的样子（脖上挂着的那只好像是Nikkor 8.5cm），他的代表作<a href="https://www.lensculture.com/articles/robert-frank-the-americans">The Americans</a>里很多照片就是拿这枚<br />
-Nikkor镜头拍的。我在上一篇<a href="https://nianze.ml/zh/posts/2021/10/2021-10-22-normal-lens-compare/">标头小乱斗</a>里也有稍稍提到Nikkor 5cm 1.4 LTM在胶片上的体验，非常不错。</p>
+<p>据说这枚镜头在当年非常有名，最早是朝鲜战争时期因为生活杂志战地记者David Douglas Duncan选择<a href="https://www.life.com/history/korean-war-photos-david-douglas-duncan/">使用它</a>而在记者圈打响了<a href="http://leicaphilia.com/leica-celebrates-the-man-responsible-for-the-rise-of-nikon/">Nikkor LTM的名气</a>，也间接说明其可靠的做工和成像的素质。<a href="https://www.moma.org/collection/works/49767">上图</a>则是Robert Frank拿着这枚镜头在街上拍照的样子（脖上挂着的那只好像是Nikkor 8.5cm），他的代表作<a href="https://www.lensculture.com/articles/robert-frank-the-americans">The Americans</a>里很多照片就是拿这枚Nikkor镜头拍的。我在上一篇<a href="https://nianze.ml/zh/posts/2021/10/2021-10-22-normal-lens-compare/">标头小乱斗</a>里也有稍稍提到Nikkor 5cm 1.4 LTM在胶片上的体验，非常不错。</p>
 <figure >
   
   
   
-    <img data-src="/images/2021/10/22/rf_nikkor.jpg" alt="↑镜头nikkor 50 1.4 ltm" data-caption="↑镜头nikkor 50 1.4 ltm" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
+    <img data-src="/images/2021/10/22/rf_nikkor.jpg" alt="↑镜头nikkor-s.c. 5cm 1.4 ltm" data-caption="↑镜头nikkor-s.c. 5cm 1.4 ltm" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='' height='' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload" style="width:;height:;"/>
   
 
   
@@ -2013,7 +2019,7 @@ Nikkor镜头拍的。我在上一篇<a href="https://nianze.ml/zh/posts/2021/10/
     <figcaption style="text-align: ">
       <strong>机身Hexar RF</strong>:
       
-      ↑镜头nikkor 50 1.4 ltm
+      ↑镜头nikkor-s.c. 5cm 1.4 ltm
       
         
         
@@ -3895,7 +3901,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

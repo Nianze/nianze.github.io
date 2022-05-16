@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1770,7 +1777,7 @@ if (!doNotTrack) {
 <p>Consider what should be done to create a resource-managing class for DBConnection class below:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1778,7 +1785,7 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConnection</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConnection</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="k">static</span> <span class="n">DBConnection</span> <span class="n">creast</span><span class="p">();</span>  <span class="c1">// return DBConnection obj
@@ -1789,7 +1796,7 @@ if (!doNotTrack) {
 </div><p>To ensure clients don&rsquo;t forget to call <code>close()</code> on DBConnection objects, we may want to put <code>close()</code> inside the destructor of managing class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1801,7 +1808,7 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConn</span> <span class="p">{</span>    <span class="c1">// class to manage DBConnection object
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConn</span> <span class="p">{</span>    <span class="c1">// class to manage DBConnection object
 </span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="o">~</span><span class="n">DBConn</span><span class="p">()</span>     <span class="c1">// make sure database connections are closed
@@ -1819,7 +1826,7 @@ if (!doNotTrack) {
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1829,7 +1836,7 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">::~</span><span class="n">DBConn</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">::~</span><span class="n">DBConn</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span> <span class="p">}</span>
     <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
@@ -1845,7 +1852,7 @@ if (!doNotTrack) {
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1854,7 +1861,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">::~</span><span class="n">DBConn</span><span class="p">()</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">DBConn</span><span class="o">::~</span><span class="n">DBConn</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span> <span class="p">}</span>
     <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
@@ -1867,7 +1874,7 @@ if (!doNotTrack) {
 <p>A better strategy is to design <code>DBConn</code>&rsquo;s interface so that its clients have an opportunity to handle the possible exception by themselves:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1893,7 +1900,7 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConn</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">DBConn</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
     <span class="p">...</span>
     <span class="kt">void</span> <span class="n">close</span><span class="p">()</span>         <span class="c1">// new interface for clients
@@ -3428,7 +3435,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

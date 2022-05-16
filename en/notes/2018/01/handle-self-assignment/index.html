@@ -663,6 +663,12 @@
     
     var enableSearch = JSON.parse("true");
     
+    var searchDistance = JSON.parse("null");
+    
+    var searchThreshold = JSON.parse("null");
+    
+    var searchContent = JSON.parse("null");
+    
     var enableSearchHighlight = JSON.parse("true");
     
     var searchResultPosition = JSON.parse("null");
@@ -686,12 +692,13 @@
         xhr.onload = function () {
           if (xhr.status === 200) {
             fuse = new Fuse(JSON.parse(xhr.response.toString('utf-8')), {
-              keys: sectionType.includes('publication') ? ['title', 'abstract'] : ['title', 'description', 'content'],
+              keys: sectionType.includes('publication') ? ['title', 'abstract'] : 
+                searchContent ? ['title', 'description', 'content'] : ['title', 'description'],
               includeMatches: enableSearchHighlight,
               shouldSort: true, 
-              threshold: 0.4, 
+              threshold: searchThreshold ? searchThreshold : 0.4, 
               location: 0, 
-              distance: 100, 
+              distance: searchDistance ? searchDistance : 100, 
               maxPatternLength: 32,
               minMatchCharLength: 1,
               isCaseSensitive: false, 
@@ -1341,7 +1348,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.86.0" />
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1770,11 +1777,11 @@ if (!doNotTrack) {
 <p>When operator= applies on more than one object, two or more of the objects may be the same:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="c1">// potential assignment to self
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="c1">// potential assignment to self
 </span><span class="c1"></span><span class="o">*</span><span class="n">px</span> <span class="o">=</span> <span class="o">*</span><span class="n">py</span><span class="p">;</span>   <span class="c1">// potential assignment to self
 </span></code></pre></td></tr></table>
 </div>
@@ -1782,7 +1789,7 @@ if (!doNotTrack) {
 <p>When trying to manage resources manually rather than to take advantage of resource-managing objects (item 13, item 14), it is possible to accidentally release a resource before being done using it:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1798,7 +1805,7 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Bitmap</span><span class="p">{...};</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Bitmap</span><span class="p">{...};</span>
 <span class="k">class</span> <span class="nc">Widget</span><span class="p">{</span>
     <span class="p">...</span>
 <span class="k">private</span><span class="o">:</span>
@@ -1824,7 +1831,7 @@ if (!doNotTrack) {
 <h4 id="1-identity-test">1. Identity test</h4>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1833,7 +1840,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="c1">// test: if a self-assignment, do nothing
 </span><span class="c1"></span>    <span class="k">delete</span> <span class="n">pb</span><span class="p">;</span>
@@ -1846,7 +1853,7 @@ if (!doNotTrack) {
 <h4 id="2-careful-reorder">2. Careful reorder</h4>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1855,7 +1862,7 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">Bitmap</span> <span class="o">*</span><span class="n">pOrig</span> <span class="o">=</span> <span class="n">pb</span><span class="p">;</span>  <span class="c1">// remember original pb
 </span><span class="c1"></span>    <span class="n">pb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">rhs</span><span class="p">.</span><span class="n">pb</span><span class="p">);</span> <span class="c1">// point pb to a copy of rhs&#39; bitmap
@@ -1870,7 +1877,7 @@ if (!doNotTrack) {
 <p>This is an alternative way to the above careful reordering technique, which is closely associated with exception safety (item 29).</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1883,7 +1890,7 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
     <span class="p">...</span>
     <span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span> <span class="c1">// exchange *this&#39;s and rhs&#39;s data; see item 29 for details
 </span><span class="c1"></span><span class="p">};</span>
@@ -1899,14 +1906,14 @@ if (!doNotTrack) {
 </div><p>A variation taking advantage of the fact that passing by value makes a copy of it (item 20):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Widget</span> <span class="n">rhs</span><span class="p">)</span>  <span class="c1">// pass by value, rhs is a copy of the object passed in
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Widget</span> <span class="n">rhs</span><span class="p">)</span>  <span class="c1">// pass by value, rhs is a copy of the object passed in
 </span><span class="c1"></span><span class="p">{</span>
     <span class="n">swap</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>         <span class="c1">// swap *this&#39;s data with the copy&#39;s
 </span><span class="c1"></span>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
@@ -3429,7 +3436,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2021, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2022, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>
