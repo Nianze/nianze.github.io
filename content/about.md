@@ -59,16 +59,20 @@ My current gears:
     * iPhone SE 2
     * Leica SL
     * Leica M9
+    * Fujifilm X-Pro1
     * Konica Hexar RF
     * Nikon FE2
     * Rolleiflex 3.5E Planar
 * Lenses
     * For Leica M-mount:
         * Zeiss Distagon T* 35mm f/1.4 ZM
+        * Voigtländer Nokton Classic 40mm f/1.4 SC VM
         * Voigtländer Nokton 50mm f/1.2 Aspherical VM
         * Nikkor-S.C. 5cm f/1.4 LTM
+        * Nikkor-P.C. 8.5cm f/2 LTM
     * For Nikon F-mount (with DKL-to-F adapter):
         * Schneider-Kreuznach Retina-Curtagon 28mm f/4
+        * Nikon Nikkor-S 35mm f/2.8 Non AI
         * Voigtländer Septon 50mm f/2
         * Schneider-Kreuznach Retina-Xenon 50mm f/1.9
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s

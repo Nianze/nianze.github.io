@@ -28,8 +28,8 @@ WEEKCNT=$(( (d2 - d1) / 86400 / 7 + 1))
 
 sed -i '' "s|title:.*|title: \"[Weekly-$WEEKCNT] $(date +'%Y.%m.%d')\"|" $POST
 sed -i '' "s|title:.*|title: \"[Weekly-$WEEKCNT] $(date +'%Y.%m.%d')\"|" $POST_ZH
-sed -i '' "s|featured_image:.*|featured_image: $IMGDATEPATH\/???.JPG|" $POST
-sed -i '' "s|featured_image:.*|featured_image: $IMGDATEPATH\/???.JPG|" $POST_ZH
+sed -i '' "s|featured_image:.*|featured_image: $IMGDATEPATH\/???.jpg|" $POST
+sed -i '' "s|featured_image:.*|featured_image: $IMGDATEPATH\/???.jpg|" $POST_ZH
 lf=$'\n'
 sed -i '' "s|<!--more-->|Weekly visual project - $(date +'%Y/%m/%d')\\$lf&|" $POST
 sed -i '' "s|<!--more-->|Weekly visual project - $(date +'%Y/%m/%d')\\$lf&|" $POST_ZH
