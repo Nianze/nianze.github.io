@@ -62,6 +62,7 @@ My current gears:
     * Fujifilm X-Pro1
     * Konica Hexar RF
     * Nikon FE2
+    * Nikon F3HP
     * Rolleiflex 3.5E Planar
 * Lenses
     * For Leica M-mount:
@@ -75,6 +76,7 @@ My current gears:
         * Nikon Nikkor-S 35mm f/2.8 Non AI
         * Voigtländer Septon 50mm f/2
         * Schneider-Kreuznach Retina-Xenon 50mm f/1.9
+        * Leica Summicron-R 50mm F/2 Version 1
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
         * Voigtlander Super Dynarex 135mm f/4
 * Others:
