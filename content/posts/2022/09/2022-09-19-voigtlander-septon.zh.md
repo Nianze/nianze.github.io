@@ -12,7 +12,7 @@ tags:
 - film
 - chinese
 slug: "Voigtlander Septon"
-featured_image: 2022/09/19/septon.jpg
+featured_image: 2022/09/19/fe2_septon_in_hand.JPG
 ---
 
 _西德制造，小巧精致，爱不释手。_
