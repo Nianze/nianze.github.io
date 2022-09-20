@@ -99,7 +99,7 @@ Septon拿来拍彩色其实很好看。颜色过渡很自然，配合柔顺的�
 
 ## 黑白
 
-黑白都用的Arista EDU 100在拍，这卷颗粒感很强，其实不太能表现出镜头原本的细腻感。
+黑白贪便宜都用的Arista EDU 100在拍，这卷颗粒感很强，高光还极其容易过曝，很垃圾。其实不太能表现出镜头原本的细腻感。
 
 {{< img src="/gallery/film/2022/09/06/arista_100_septon-0031-positive.jpg" title="Arista EDU 100" caption="↑Septon" >}}
 {{< img src="/gallery/film/2022/09/06/arista_edu_100-7-positive.jpg" title="Arista EDU 100" caption="↑Septon" >}}
