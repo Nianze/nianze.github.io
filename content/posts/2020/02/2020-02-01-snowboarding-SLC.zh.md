@@ -1,6 +1,8 @@
 ---
 title: "盐湖城单板四日游"
 date: 2020-02-01
+series:
+- sports
 categories:
 - travel
 tags:
