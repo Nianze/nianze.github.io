@@ -1,6 +1,8 @@
 ---
 title: "My first fracture"
 date: 2023-01-24
+series:
+- sports
 categories:
 - thoughts
 tags:

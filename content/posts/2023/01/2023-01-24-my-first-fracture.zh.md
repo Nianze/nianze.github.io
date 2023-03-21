@@ -1,6 +1,8 @@
 ---
 title: "记第一次骨裂"
 date: 2023-01-24
+series:
+- sports
 categories:
 - thoughts
 tags:
