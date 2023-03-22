@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1781,23 +1781,23 @@ if (!doNotTrack) {
 <p>A reference must <em>always</em> refer to some object, which implies that references must be initialized:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">string</span><span class="o">&amp;</span> <span class="n">rs</span><span class="p">;</span> <span class="c1">// error! References must be initialized
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span><span class="p">;</span> <span class="c1">// valid but risky uninitialized pointer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">string</span> <span class="nf">s</span><span class="p">(</span><span class="s">&#34;abc&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">string</span><span class="o">&amp;</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span> <span class="c1">// fine
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">string</span><span class="o">&amp;</span> <span class="n">rs</span><span class="p">;</span> <span class="c1">// error! References must be initialized
+</span><span class="c1"></span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span><span class="p">;</span> <span class="c1">// valid but risky uninitialized pointer
+</span><span class="c1"></span><span class="n">string</span> <span class="nf">s</span><span class="p">(</span><span class="s">&#34;abc&#34;</span><span class="p">);</span>
+<span class="n">string</span><span class="o">&amp;</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span> <span class="c1">// fine
+</span></code></pre></td></tr></table>
 </div>
 </div><p>Having known this, if we have a variable whose purpose is to refer to another object, but it is possible that there might be no object to refer to, we should make the variable a pointer; on the other hand, if the design requires that the variable must always refer to a non-null object, we choose the reference.</p>
 <p>As an implication, reference&rsquo;s never-nullable property save us from the burden of testing the validity before using it:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1810,24 +1810,24 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">printRefDouble</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span> <span class="n">rd</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">rd</span><span class="p">;</span> <span class="c1">// no need to test rd.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">printPointDouble</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">pd</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">pd</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// check for null pointer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">printRefDouble</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="o">&amp;</span> <span class="n">rd</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">rd</span><span class="p">;</span> <span class="c1">// no need to test rd.
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">printPointDouble</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">pd</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">pd</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// check for null pointer
+</span><span class="c1"></span>        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><h1 id="no-reassignment-for-reference">No reassignment for reference</h1>
 <p>Another difference is that we can reassign pointers to refer to different objects, while reference <em>always</em> refers to the one it is initialized:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1837,15 +1837,15 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">string</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&#34;Nancy&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">string</span> <span class="nf">s2</span><span class="p">(</span><span class="s">&#34;Clancy&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">string</span><span class="o">&amp;</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>  <span class="c1">// rs refers to s1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>  <span class="c1">// ps points to s1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="n">rs</span> <span class="o">=</span> <span class="n">s2</span><span class="p">;</span>   <span class="c1">// rs  still refers to s1, but s1&#39;s value updates to &#34;Clancy&#34;, equiv. to *ps = s2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">ps</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">;</span>  <span class="c1">// ps now points to s2, s1 remains unchanged
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">string</span> <span class="nf">s1</span><span class="p">(</span><span class="s">&#34;Nancy&#34;</span><span class="p">);</span>
+<span class="n">string</span> <span class="nf">s2</span><span class="p">(</span><span class="s">&#34;Clancy&#34;</span><span class="p">);</span>
+
+<span class="n">string</span><span class="o">&amp;</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>  <span class="c1">// rs refers to s1
+</span><span class="c1"></span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>  <span class="c1">// ps points to s1
+</span><span class="c1"></span>
+<span class="n">rs</span> <span class="o">=</span> <span class="n">s2</span><span class="p">;</span>   <span class="c1">// rs  still refers to s1, but s1&#39;s value updates to &#34;Clancy&#34;, equiv. to *ps = s2
+</span><span class="c1"></span><span class="n">ps</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">s2</span><span class="p">;</span>  <span class="c1">// ps now points to s2, s1 remains unchanged
+</span></code></pre></td></tr></table>
 </div>
 </div><p>In general, use pointers when</p>
 <ul>
@@ -1857,22 +1857,22 @@ if (!doNotTrack) {
 <p>Another situation to prefer reference is when we&rsquo;re implementing certain operators such as <code>operator[]</code>, which needs to return something that can be used as the target of an assignment:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">v</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>  <span class="c1">// the target of this assignment is the return value of operator[]
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">v</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>  <span class="c1">// the target of this assignment is the return value of operator[]
+</span></code></pre></td></tr></table>
 </div>
 </div><p>If <code>operator[]</code> returned a pointer, last statement would be changed to this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="o">*</span><span class="n">v</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>This makes <code>v</code> look like a vector of pointers, which it&rsquo;s not. Thus we may prefer using a reference as the return type of <code>operator[]</code> (for an exception, see MECpp-item 30).</p>
     </article>
@@ -2319,7 +2319,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
