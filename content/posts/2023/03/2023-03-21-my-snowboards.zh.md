@@ -12,6 +12,9 @@ slug: "my previous snowboards"
 featured_image: 2023/03/21/skating.jpg
 ---
 
+You get old because you quit skating.
+<!--more-->
+
 这个雪季在盐湖城住了六周，基本天天滑雪。但明明带了两块单板过去（一块pow板一块park板），却发现自己3/4的时间都在滑双板。于是明白，在freestyle里，比起单板代表的style，我更爱双板给我的free。由于精力有限，决定以后冬天主攻双板自由式，单板就不专门在公园里练trick了，只拿来滑粉雪刷大山。到了夏天专练双翘滑板🛹就好。料想以后也不会频繁更新单板了，浅列一下用过的单板，权当纪念。
 
 ## Lib Tech Jamie Lynn Dagmar
