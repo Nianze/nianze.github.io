@@ -21,6 +21,7 @@ featured_image: 2023/03/21/skating.jpg
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_0282.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_0282.jpeg" title="板面" caption="👆" >}}
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_0281.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_0281.jpeg" title="板底" caption="👆" >}}
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_6218.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_6218.jpeg" title="第一次去Brighton" caption="👆" >}}
+{{< img src="/images/2023/03/21/lib_tech_jld/IMG_6304.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_6304.jpeg" title="第一次体验大粉雪" caption="👆" >}}
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_5356.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_5456.jpeg" title="第一次滑bowl" caption="👆" >}}
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_0200.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_0200.jpeg" title="刷小树林" caption="👆" >}}
 
@@ -50,11 +51,12 @@ featured_image: 2023/03/21/skating.jpg
 
 2021-2022年，第三个雪季，由于在杰克逊洞刷粉雪体验太好了，决定专门入一块粉雪板。本来看中了Korua Shape家的一众姨妈巾板，偶然发现Yes家这块Hybrid在打折就又入了一块Yes。依然是Camber板型，不过是direction板，板头很大增加浮力，binding mount靠后，让重心自然向后靠方便滑粉雪的时候板头翘起。边刃用了Yes家的tapered underbite，增加了道内抓雪刻滑的能力（但由于板头较大，刻滑起来没有greats那么自然，伏地贴滑时需要调整重心更靠前一点）。
 
-
 {{< img src="/images/2023/03/21/yes_hybrid/IMG_2333.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_2333.jpeg" title="同时入了Union Falcor的固定器" caption="👆" >}}
 
 {{< img src="/images/2023/03/21/yes_hybrid/IMG_1293.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1293.jpeg" title="带着这块板去Aspen爬Highland Bowl，板挂背包上准备爬山" caption="👆" >}}
-{{< img src="/images/2023/03/21/yes_hybrid/IMG_1400.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1400.jpeg" title="登顶" caption="👆" >}}
+{{< img src="/images/2023/03/21/yes_hybrid/IMG_1264.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1264.jpeg" title="Highland bowl" caption="👆" >}}
+{{< img src="/images/2023/03/21/yes_hybrid/IMG_1267.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1267.jpeg" title="Highland bowl从入口开始爬大概20分钟登顶" caption="👆" >}}
+{{< img src="/images/2023/03/21/yes_hybrid/IMG_1400.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1400.jpeg" title="登顶，风景绝美" caption="👆" >}}
 {{< img src="/images/2023/03/21/yes_hybrid/IMG_1428.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1428.jpeg" title="准备穿上板冲bowl" caption="👆" >}}
 
 {{< img src="/images/2023/03/21/yes_hybrid/IMG_2459.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_2459.jpeg" title="去年的全家福，两块双板分别是Armada ARV 96（全山公园板）和Rossignol Experience 84（道内刻滑蘑菇板）。" caption="👆" >}}
@@ -65,13 +67,14 @@ featured_image: 2023/03/21/skating.jpg
 
 {{< img src="/images/2023/03/21/season_nexus/IMG_1624.jpeg" thumbnail="/images/2023/03/21/season_nexus/IMG_1624.jpeg" title="纯色设计还是耐看的" caption="👆" >}}
 
-## 双板
+## Armada ARV 96
 
 其实2022年从西部大雪山回来，只是因为觉得美东太冰了，想在没下雪的周末也可以在纽约周边的冰山活动下，就随意买了2017款的Rossignol Experience 84当全山板来练习用。上个雪季带着这块板滑了几天盐湖城，在已经会单板换刃，了解了靠刃刹车的原理后，其实上双板的第一天我就大概摸到了平行转弯的平衡点和施力点。一开始由于潜意识还是会重心后靠，双板滑得相当累，但大概用双板滑了3个雪日后，总算逐渐找到了重心向前压然后平行转弯的滑法，虽然上下半身依然没分离，姿势很不优雅。
 
 考虑到西部的雪量，84的腰宽依然有点不够用，便在2022年雪季末又入了一块Armada ARV 96。22/23雪季大概六十个雪日里，大部分时间我其实都在滑这副ARV 96。一开始是找上下半身分离的感觉，以及适应不同雪道和雪量下重心的位置（大pow里滑这副park ski真的得很后坐），然后在蘑菇小树林里穿梭来增加控板和走线的能力，现在总算滑得没那么丑了。目前只能上中跳台，抓最简单的safety做最基础180，想要做rodeo和mute grab还得继续在蹦床上多练练。
 
+{{< img src="/images/2023/03/21/ski/IMG_9185.jpeg" thumbnail="/images/2023/03/21/ski/IMG_9185.jpeg" title="在Alta第一次学会用ski滑大粉雪" caption="👆" >}}
+{{< img src="/images/2023/03/21/ski/snow_king.JPG" thumbnail="/images/2023/03/21/ski/snow_king.JPG" title="Snowbasin总是大雾" caption="👆" >}}
 {{< img src="/images/2023/03/21/ski/IMG_1594.JPG" thumbnail="/images/2023/03/21/ski/IMG_1594.JPG" title="Copper的Union Peak山顶" caption="👆" >}}
-
 {{< img src="/images/2023/03/21/ski/IMG_1549.jpeg" thumbnail="/images/2023/03/21/ski/IMG_1549.jpeg" title="Aspen Snowmass浅抓个板" caption="👆" >}}
 
