@@ -19,7 +19,7 @@ You get old because you quit skating.
 
 ## Lib Tech Jamie Lynn Dagmar
 
-2019-2020年第一个雪季，买的第一块单板，便是这块Lib Tech JLD。这块板使用了Lib Tech家C2的版型，跟Burton的flying v以及之后大火的Orch很像，都是以rocker为主前后脚再带一点camber的混合设计。边刃也用上了波浪型的magne-traction增加刻划稳定性。现在来看，这块板宽容度比较高，蛮适合新手练习。但由于是rocker版型，刻滑的时候会不太稳。从前后刃推坡到灵活换刃，这块板见证了我单板最初的进步。
+2019-2020年第一个雪季，买的第一块单板，便是这块Lib Tech JLD。这块板使用了Lib Tech家C2的版型，跟Burton的flying V以及近两年大火的Orca很像，都是以rocker为主前后脚再带一点camber的混合设计。边刃也用上了波浪型的magne-traction增加刻划稳定性。现在来看，这块板宽容度比较高，蛮适合新手练习。但由于是rocker版型，刻滑的时候会不太稳。从前后刃推坡到灵活换刃，这块板见证了我单板最初的进步。
 
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_0282.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_0282.jpeg" title="板面" caption="👆" >}}
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_0281.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_0281.jpeg" title="板底" caption="👆" >}}
