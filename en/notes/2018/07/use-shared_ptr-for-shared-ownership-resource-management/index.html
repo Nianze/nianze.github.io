@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
+<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
+<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.110.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1805,7 +1805,7 @@ if (!doNotTrack) {
 <li><code>std::shared_ptr</code> is designed only for pointers to single objects, and can&rsquo;t work with arrays, unlike <code>std::unique_ptr</code></li>
 </ul>
 <p>Basically, this is how a <code>std::shared_ptr&lt;T&gt;</code> object looks like in the memory:</p>
-<pre><code> std::shared_ptr&lt;T&gt;
+<pre tabindex="0"><code> std::shared_ptr&lt;T&gt;
 ┌──────────────────────┐   ┌──────────┐
 │      Ptr to T        ├──&gt;│ T Object │
 ├──────────────────────┤   └──────────┘
@@ -1820,11 +1820,10 @@ if (!doNotTrack) {
                            │ (e.g., custom deleter,│
                            │   allocator, etc.)    │
                            └───────────────────────┘
-
 </code></pre><p>It is worth noting that <code>std::shared_ptr</code> design is more flexible than <code>std::unique_ptr</code> in the aspect of specifying custom deleters, because, unlike <code>std::unique_ptr</code>, the type of the deleter is not part of the type of the <code>std::shared_ptr</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1835,16 +1834,16 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">customDeleter1</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw</span><span class="p">)</span> <span class="p">{...};</span>
-<span class="k">auto</span> <span class="n">customDeleter2</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw</span><span class="p">)</span> <span class="p">{...};</span>
-
-<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="p">,</span> <span class="k">decltype</span><span class="p">(</span><span class="n">customDeleter1</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">upw1</span><span class="p">(</span><span class="k">new</span> <span class="n">Widget</span><span class="p">,</span> <span class="n">customDeleter1</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="p">,</span> <span class="k">decltype</span><span class="p">(</span><span class="n">customDeleter2</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">upw2</span><span class="p">(</span><span class="k">new</span> <span class="n">Widget</span><span class="p">,</span> <span class="n">customDeleter1</span><span class="p">);</span>
-
-<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw1</span> <span class="p">(</span><span class="k">new</span> <span class="n">widget</span><span class="p">,</span> <span class="n">customDeleter1</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw2</span> <span class="p">(</span><span class="k">new</span> <span class="n">widget</span><span class="p">,</span> <span class="n">customDeleter2</span><span class="p">);</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&gt;</span> <span class="n">vpw</span> <span class="p">{</span> <span class="n">spw1</span><span class="p">,</span> <span class="n">spw2</span> <span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">customDeleter1</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw</span><span class="p">)</span> <span class="p">{...};</span>
+</span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">customDeleter2</span> <span class="o">=</span> <span class="p">[](</span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw</span><span class="p">)</span> <span class="p">{...};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="p">,</span> <span class="k">decltype</span><span class="p">(</span><span class="n">customDeleter1</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">upw1</span><span class="p">(</span><span class="k">new</span> <span class="n">Widget</span><span class="p">,</span> <span class="n">customDeleter1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="p">,</span> <span class="k">decltype</span><span class="p">(</span><span class="n">customDeleter2</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">upw2</span><span class="p">(</span><span class="k">new</span> <span class="n">Widget</span><span class="p">,</span> <span class="n">customDeleter1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw1</span> <span class="p">(</span><span class="k">new</span> <span class="n">widget</span><span class="p">,</span> <span class="n">customDeleter1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw2</span> <span class="p">(</span><span class="k">new</span> <span class="n">widget</span><span class="p">,</span> <span class="n">customDeleter2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&gt;</span> <span class="n">vpw</span> <span class="p">{</span> <span class="n">spw1</span><span class="p">,</span> <span class="n">spw2</span> <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Apart from placing <code>spw1</code> and <code>spw2</code> in the same container, we could also assign one to another, or pass them into a function taking a parameter of type <code>std::shared_ptr&lt;Widget&gt;</code>. None of these things can be done with <code>std::unique_ptr</code>s, since their types differ due to different custom deleters.</p>
 <h1 id="avoid-multiple-control-blocks-from-this-pointer">Avoid multiple control blocks from <code>this</code> pointer</h1>
@@ -1863,7 +1862,7 @@ if (!doNotTrack) {
 <p>Even though we remember the rule to restrict the creation of <code>std::shared_ptr</code> from raw pointers, we might surprisingly create multiple control blocks through the <code>this</code> pointer, which is also a raw pointer. For example, <code>Widget</code> has a member function <code>void processing();</code>, and we use a vector to keep track of <code>Widget</code>s that have been processed. A reasonable-looking approach looks like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1878,26 +1877,26 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&gt;</span> <span class="n">processedWidgets</span><span class="p">;</span>
-<span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="p">...</span>
-    <span class="kt">void</span> <span class="n">process</span><span class="p">();</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">process</span><span class="p">(){</span>
-    <span class="p">...</span>
-    <span class="n">processedWidgets</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>  <span class="c1">// add current Widget to list of processed Widgets
-</span><span class="c1"></span>    <span class="p">...</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&gt;</span> <span class="n">processedWidgets</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">process</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">process</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">processedWidgets</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>  <span class="c1">// add current Widget to list of processed Widgets
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>This code will compiler, but it has potential danger: <code>process()</code> passes raw pointer <code>this</code> to a container of <code>std::shared_ptr</code>, resulting to a new control block for pointed-to <code>Widget</code>(<code>*this</code>); as long as there are <code>std::shared_ptr</code>s outside the <code>process()</code> that already point to that <code>Widget</code>, undefined behavior shows up.</p>
 <p>Here, we want a class managed by <code>std::shared_ptr</code>s to be able to safely create a <code>std::shared_ptr</code> from a <code>this</code> pointer without creating multiple control blocks. The solution is to inherit from a base class template  <code>std::enable_shared_from_this</code>, which contains a member function <code>shared_from_this()</code>, which points to the same object as the <code>this</code> pointer. We can use this function to create a <code>std::shared_ptr</code> worring about creating a new control block.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1912,20 +1911,20 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_shared_from_this</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="p">...</span>
-    <span class="kt">void</span> <span class="n">process</span><span class="p">();</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">process</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="p">...</span>
-    <span class="n">processedWidgets</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">shared_from_this</span><span class="p">());</span>
-    <span class="p">...</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_shared_from_this</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">process</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">processedWidgets</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">shared_from_this</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Two points worth noting:</p>
 <ol>
@@ -1935,7 +1934,7 @@ if (!doNotTrack) {
 <p>To prevent invoking <code>shared_from_this()</code> before a <code>std::shared_ptr</code> points to the object, classes inheriting from <code>std::enable_shared_from_this</code> often declare their constructors <code>private</code> and provide factory functions returning  <code>std::shared_ptr</code>s to clients:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1947,17 +1946,17 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_shared_from_this</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="k">public</span><span class="p">;</span>
-    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
-    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="n">Ts</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">params</span><span class="p">);</span>
-    <span class="p">...</span>
-    <span class="kt">void</span> <span class="n">process</span><span class="p">();</span> <span class="c1">// as before
-</span><span class="c1"></span>    <span class="p">...</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="p">...</span> <span class="c1">// ctors
-</span><span class="c1"></span><span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">enable_shared_from_this</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="n">Ts</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">params</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">process</span><span class="p">();</span> <span class="c1">// as before
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span> <span class="c1">// ctors
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div>
     </article>
@@ -2404,7 +2403,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
+<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
