@@ -62,7 +62,7 @@ You get old because you quit skating.
 {{< img src="/images/2023/03/21/yes_hybrid/IMG_1400.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1400.jpeg" title="登顶，风景绝美" caption="👆" >}}
 {{< img src="/images/2023/03/21/yes_hybrid/IMG_1428.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_1428.jpeg" title="准备穿上板冲bowl" caption="👆" >}}
 
-{{< img src="/images/2023/03/21/yes_hybrid/IMG_2459.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_2459.jpeg" title="去年的全家福，两块双板分别是Armada ARV 96（全山公园板）和Rossignol Experience 84（道内刻滑蘑菇板）。" caption="👆" >}}
+{{< img src="/images/2023/03/21/yes_hybrid/IMG_2459.jpeg" thumbnail="/images/2023/03/21/yes_greats_2/IMG_2459.jpeg" title="去年的全家福，两块双板分别是Armada ARV 96（全山公园板）和Rossignol Experience 84（入门用道内刻滑蘑菇板）。" caption="👆" >}}
 
 ## Season Nexus
 
