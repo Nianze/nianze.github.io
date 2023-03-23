@@ -1,5 +1,5 @@
 ---
-title: "回顾一下滑过的单板们"
+title: "吸了四年白色鸦片，来浅浅回顾一下滑过的单板们"
 date: 2023-03-21T00:41:08-04:00
 series:
 - sports
@@ -19,7 +19,7 @@ You get old because you quit skating.
 
 ## Lib Tech Jamie Lynn Dagmar
 
-2019-2020年第一个雪季，买的第一块单板，便是这块Lib Tech JLD。这块板使用了Lib Tech家C2的版型，跟Burton的flying V以及近两年大火的Orca很像，都是以rocker为主前后脚再带一点camber的混合设计。边刃也用上了波浪型的magne-traction增加刻划稳定性。现在来看，这块板宽容度比较高，蛮适合新手练习。但由于是rocker版型，刻滑的时候会不太稳。从前后刃推坡到灵活换刃，这块板见证了我单板最初的进步。
+2019-2020年第一个雪季，买的第一块单板，便是这块Lib Tech JLD。这块板使用了Lib Tech家C2的版型，跟Burton的flying V以及近两年大火的Orca很像，都是以rocker为主前后脚再带一点camber的混合设计。边刃也用上了波浪型的magne-traction增加刻滑稳定性。现在来看，这块板宽容度比较高，蛮适合新手练习。但由于是rocker版型，刻滑的时候会不太稳。从前后刃推坡到灵活换刃，这块板见证了我单板最初的进步。
 
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_0282.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_0282.jpeg" title="板面" caption="👆" >}}
 {{< img src="/images/2023/03/21/lib_tech_jld/IMG_0281.jpeg" thumbnail="/images/2023/03/21/lib_tech_jld/IMG_0281.jpeg" title="板底" caption="👆" >}}
@@ -81,3 +81,11 @@ You get old because you quit skating.
 {{< img src="/images/2023/03/21/ski/IMG_1594.JPG" thumbnail="/images/2023/03/21/ski/IMG_1594.JPG" title="Copper的Union Peak山顶" caption="👆" >}}
 {{< img src="/images/2023/03/21/ski/IMG_1549.jpeg" thumbnail="/images/2023/03/21/ski/IMG_1549.jpeg" title="Aspen Snowmass浅抓个板" caption="👆" >}}
 
+## To be continued
+
+最近略研究了下，发现Capita家的2024款有两款新品（Aeronaut和Mega Death）似乎挺不错。双板这边，也对Armada BDog和Vishnu Wet的这两款板子比较有好感，希望有机会来试试，再精进下呲杆和butter动作。
+
+{{< img src="/images/2023/03/21/more/aeronaut.png" thumbnail="/images/2023/03/21/more/aeronaut.png" title="Capita Aeronaut" caption="👆" >}}
+{{< img src="/images/2023/03/21/more/MegaDeath.webp" thumbnail="/images/2023/03/21/more/MegaDeath.webp" title="Capita Mega Death" caption="👆" >}}
+{{< img src="/images/2023/03/21/more/bdog.png" thumbnail="/images/2023/03/21/more/bdog.png" title="Armada BDog" caption="👆" >}}
+{{< img src="/images/2023/03/21/more/vishnu_wet.jpg" thumbnail="/images/2023/03/21/more/vishnu_wet.jpg" title="Vishnu Wet" caption="👆" >}}
