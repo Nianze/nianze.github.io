@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1778,15 +1778,15 @@ if (!doNotTrack) {
 <p>With only one curious exception, <code>auto</code> type deduction <em>is</em> template type deduction. In the case of general function template form and its general function call:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">ParamType</span> <span class="n">param</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">f</span><span class="p">(</span><span class="n">expr</span><span class="p">);</span>  <span class="c1">// general call
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">ParamType</span> <span class="n">param</span><span class="p">);</span>
+<span class="n">f</span><span class="p">(</span><span class="n">expr</span><span class="p">);</span>  <span class="c1">// general call
+</span></code></pre></td></tr></table>
 </div>
 </div><p>compilers use <code>expr</code> to deduce types for <code>T</code> and <code>ParamType</code>. Similarly, in the case where a variable is declared using <code>auto</code>, <code>auto</code> plays the role of <code>T</code>, and the type specifier for the variable acts as <code>ParamType</code>.</p>
 <p>Therefore, there are also three cases based on the type specifier:</p>
@@ -1798,7 +1798,7 @@ if (!doNotTrack) {
 <p>For example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1814,59 +1814,59 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>  <span class="c1">// case 3. type specifier is simply auto by itself.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="k">auto</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// case 3. type specifier is const auto.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">rx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// case 1. type specifier is const auto&amp;. 
-</span></span></span><span class="line"><span class="cl"><span class="c1">// case 2:
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">uref1</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// x is int and lvalue, so uref1&#39;s type is int&amp;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">uref2</span> <span class="o">=</span> <span class="n">cx</span><span class="p">;</span> <span class="c1">// cx is const int and lvalue, so uref2&#39;s type is const int&amp;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">uref3</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span> <span class="c1">// 27 is int and rvlue, so uref3&#39;s type is int&amp;&amp;
-</span></span></span><span class="line"><span class="cl"><span class="c1">// array and function names decay into pointers for non-ref type specifiers:
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">char</span> <span class="n">name</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;R. N. Briggs&#34;</span><span class="p">;</span> <span class="c1">// name&#39;s type is const char [13]
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">arr1</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>  <span class="c1">// arr1&#39;s type is const char*
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">arr2</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>  <span class="c1">// arr2&#39;s type is const char (&amp;)[13]
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">);</span> <span class="c1">// someFunc is a function, type is void(int, double)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">func1</span> <span class="o">=</span> <span class="n">someFunc</span><span class="p">;</span> <span class="c1">// func1&#39;s type is void (*)(int, double)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">func2</span> <span class="o">=</span> <span class="n">someFunc</span><span class="p">;</span> <span class="c1">// func2&#39;s type is void (&amp;)(int, double)
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>  <span class="c1">// case 3. type specifier is simply auto by itself.
+</span><span class="c1"></span><span class="k">const</span> <span class="k">auto</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// case 3. type specifier is const auto.
+</span><span class="c1"></span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">rx</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// case 1. type specifier is const auto&amp;. 
+</span><span class="c1">// case 2:
+</span><span class="c1"></span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">uref1</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// x is int and lvalue, so uref1&#39;s type is int&amp;
+</span><span class="c1"></span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">uref2</span> <span class="o">=</span> <span class="n">cx</span><span class="p">;</span> <span class="c1">// cx is const int and lvalue, so uref2&#39;s type is const int&amp;
+</span><span class="c1"></span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">uref3</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span> <span class="c1">// 27 is int and rvlue, so uref3&#39;s type is int&amp;&amp;
+</span><span class="c1">// array and function names decay into pointers for non-ref type specifiers:
+</span><span class="c1"></span><span class="k">const</span> <span class="kt">char</span> <span class="n">name</span><span class="p">[]</span> <span class="o">=</span> <span class="s">&#34;R. N. Briggs&#34;</span><span class="p">;</span> <span class="c1">// name&#39;s type is const char [13]
+</span><span class="c1"></span><span class="k">auto</span> <span class="n">arr1</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>  <span class="c1">// arr1&#39;s type is const char*
+</span><span class="c1"></span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">arr2</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span>  <span class="c1">// arr2&#39;s type is const char (&amp;)[13]
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">someFunc</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="p">);</span> <span class="c1">// someFunc is a function, type is void(int, double)
+</span><span class="c1"></span><span class="k">auto</span> <span class="n">func1</span> <span class="o">=</span> <span class="n">someFunc</span><span class="p">;</span> <span class="c1">// func1&#39;s type is void (*)(int, double)
+</span><span class="c1"></span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">func2</span> <span class="o">=</span> <span class="n">someFunc</span><span class="p">;</span> <span class="c1">// func2&#39;s type is void (&amp;)(int, double)
+</span></code></pre></td></tr></table>
 </div>
 </div><h4 id="exception-uniform-initialization">Exception: uniform initialization</h4>
 <p>C++98 provides two syntactic choices when we want to declare an int with an initial value:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x1</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">x2</span><span class="p">(</span><span class="mi">27</span><span class="p">);</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">x1</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">x2</span><span class="p">(</span><span class="mi">27</span><span class="p">);</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>By introducing uniform initialization, C++11 adds these two forms:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x3</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x4</span><span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">x3</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="n">x4</span><span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>As EMCpp 5 explains, there are advantages to declare variables using <code>auto</code>, so we may prefer:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">x1</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>  <span class="c1">// type is int, value is 27
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="nf">x2</span><span class="p">(</span><span class="mi">27</span><span class="p">);</span>   <span class="c1">// ditto
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">x3</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>  <span class="c1">// type is std::initializer_list&lt;int&gt;, value is {27}
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">x4</span><span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>  <span class="c1">// ditto
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">x1</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>  <span class="c1">// type is int, value is 27
+</span><span class="c1"></span><span class="k">auto</span> <span class="nf">x2</span><span class="p">(</span><span class="mi">27</span><span class="p">);</span>   <span class="c1">// ditto
+</span><span class="c1"></span><span class="k">auto</span> <span class="n">x3</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>  <span class="c1">// type is std::initializer_list&lt;int&gt;, value is {27}
+</span><span class="c1"></span><span class="k">auto</span> <span class="n">x4</span><span class="p">{</span> <span class="mi">27</span> <span class="p">};</span>  <span class="c1">// ditto
+</span></code></pre></td></tr></table>
 </div>
 </div><p>However, after this modification, while the first two statements do declare a variable of type <code>int</code> with value 27, the second two actually declare a variable of type <code>std::initializer_list&lt;int&gt;</code> containing a single element with value 27.</p>
 <p>In fact, when an auto-declared variable is initialized with a braced initializer, <code>auto</code> will assume that the braced initilizer represents a <code>std::initializer_list</code>, which itself is a template for some type <code>T</code>, so there are actually two kinds of type deduction taking place:</p>
@@ -1877,7 +1877,7 @@ if (!doNotTrack) {
 <p><strong>The only real difference between <code>auto</code> and template type deduction is the assumption that a braced initializer represents a <code>std::initializer_list</code>.</strong> This lead to some interesting results:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1888,22 +1888,22 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">9</span> <span class="p">};</span>  <span class="c1">// x&#39;s type is std::initializer_list&lt;int&gt;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">f1</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">f1</span><span class="p">({</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">9</span> <span class="p">});</span>  <span class="c1">// error! can&#39;t deduce type for T. Do not recognise the type for braced initializer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">f2</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">initList</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">f</span><span class="p">({</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">9</span> <span class="p">});</span>  <span class="c1">// T deduced as T, and initList&#39;s type is std::initializer_list&lt;int&gt;
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">9</span> <span class="p">};</span>  <span class="c1">// x&#39;s type is std::initializer_list&lt;int&gt;
+</span><span class="c1"></span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">f1</span><span class="p">(</span><span class="n">T</span> <span class="n">param</span><span class="p">);</span>
+<span class="n">f1</span><span class="p">({</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">9</span> <span class="p">});</span>  <span class="c1">// error! can&#39;t deduce type for T. Do not recognise the type for braced initializer
+</span><span class="c1"></span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="n">f2</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">initList</span><span class="p">);</span>
+<span class="n">f</span><span class="p">({</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">9</span> <span class="p">});</span>  <span class="c1">// T deduced as T, and initList&#39;s type is std::initializer_list&lt;int&gt;
+</span></code></pre></td></tr></table>
 </div>
 </div><h4 id="more-exceptions-in-c14">More exceptions in C++14</h4>
 <p>C++14 permits to use <code>auto</code> as a function&rsquo;s return type as well as in lambda parameter declarations. However, these uses of <code>auto</code> employ <em>tamplate type deduction</em>, not <code>auto</code> type deduction - so a braced initializer won&rsquo;t imply the type of <code>std::initializer_list</code> automatically, and following statement won&rsquo;t compile:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1917,19 +1917,19 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// auto in return type
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="nf">createInitList</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">};</span>  <span class="c1">// error: can&#39;t deduce type for { 1, 2, 3 }
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// auto in a parameter type specification in a C++14 lambda
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">resetV</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">v</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">newValue</span><span class="p">)</span> <span class="p">{</span> <span class="n">v</span> <span class="o">=</span> <span class="n">newValue</span><span class="p">;</span> <span class="p">};</span>  <span class="c1">// C++14 lambda, second auto is in parameter list
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="n">resetV</span><span class="p">({</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">});</span> <span class="c1">// error: can&#39;t deduce type for { 1, 2, 3 }
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// auto in return type
+</span><span class="c1"></span><span class="k">auto</span> <span class="nf">createInitList</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">};</span>  <span class="c1">// error: can&#39;t deduce type for { 1, 2, 3 }
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// auto in a parameter type specification in a C++14 lambda
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="k">auto</span> <span class="n">resetV</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">v</span><span class="p">](</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">newValue</span><span class="p">)</span> <span class="p">{</span> <span class="n">v</span> <span class="o">=</span> <span class="n">newValue</span><span class="p">;</span> <span class="p">};</span>  <span class="c1">// C++14 lambda, second auto is in parameter list
+</span><span class="c1"></span><span class="p">...</span>
+<span class="n">resetV</span><span class="p">({</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">});</span> <span class="c1">// error: can&#39;t deduce type for { 1, 2, 3 }
+</span></code></pre></td></tr></table>
 </div>
 </div>
     </article>
@@ -2376,7 +2376,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
