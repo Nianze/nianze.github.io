@@ -13,8 +13,8 @@ comments: false
 {{< boxmd >}}
 ### Bloomberg LP 
 >**May 2017 - Today** 
-Full stack software developer
-Building Trader Access Manager service that manages user privileges for Bloomberg terminal clients
+Software engineer
+Work in Bloomberg Asset and Investment Manager.
 
 ### Oracle Corp.
 >May 2016 - Aug. 2016
@@ -56,36 +56,47 @@ Virtualizing static fields in 3rd-party Java library during runtime to improve m
 My current gears:
 
 * Cameras: 
-    * iPhone SE 2
-    * Leica SL
+    * iPhone 14 Pro
+    * Leica SL Typ 601
     * Leica M9
-    * Fujifilm X-Pro1
+    * Leica X Typ 113
+    * Leica M3
     * Konica Hexar RF
     * Nikon FE2
-    * Nikon F3HP
+    * Pentax MZ-5N/ZX-5N
     * Rolleiflex 3.5E Planar
 * Lenses
     * For Leica M-mount:
         * Zeiss Distagon T* 35mm f/1.4 ZM
         * Voigtländer Nokton Classic 40mm f/1.4 SC VM
-        * Voigtländer Nokton 50mm f/1.2 Aspherical VM
+        * Leica Summilux-M 50mm f/1.4 Pre-ASPH
+        * Tokyo Kogaku Topcor-S 5cm F2
         * Nikkor-S.C. 5cm f/1.4 LTM
         * Nikkor-P.C. 8.5cm f/2 LTM
-    * For Nikon F-mount (with DKL-to-F adapter):
-        * Schneider-Kreuznach Retina-Curtagon 28mm f/4
-        * Nikon Nikkor-S 35mm f/2.8 Non AI
-        * Voigtländer Septon 50mm f/2
-        * Schneider-Kreuznach Retina-Xenon 50mm f/1.9
-        * Leica Summicron-R 50mm F/2 Version 1
+    * For Nikon F-mount:
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
+        * Leica Summicron-R 50mm F/2 E43 Ver.1 (mod to F mount)
+    * For Pentax K-mount (with DKL-to-K adapter):
+        * SMC Pentax-FA 43mm F1.9 Limited (made in Japan)
+    * DKL mount (with DKL-to-F and DKL-to-K adapter):
+        * Schneider-Kreuznach Retina-Curtagon 28mm f/4
+        * Schneider-Kreuznach Curtagon 35mm f/2.8
+        * Schneider-Kreuznach Xenon 50mm f/1.9
+        * Schneider-Kreuznach Retina-Tele-Arton 85mm f/4
+        * Voigtländer Septon 50mm f/2
         * Voigtlander Super Dynarex 135mm f/4
+    * Enlarging Lens in L39:
+        * Schneider-Kreuznach Componon-S 50mm F/2.8
+        * Schneider-Kreuznach Componon-S 80mm f/4
+
 * Others:
+    * Durst M 600 Photo Enlarger
     * LightPix Labs FlashQ Q20II
     * Nikon COOLSCAN IV ED (LS-40 ED)
 
 Some of my photos:
 
-* [Flickr](https://www.flickr.com/photos/129774362@N07/)
 * [Instagram](https://www.instagram.com/eznain/)
+* [Flickr](https://www.flickr.com/photos/129774362@N07/)
 * [Weekly Visual Project](/en/gallery/)
 {{< /boxmd >}}

@@ -16,7 +16,7 @@ tags:
 - chinese
 - E46
 slug: "2023 06 22 new normal lenses"
-featured_image: 2023/06/22T02:49:58/04:00.JPG
+featured_image: 2023/06/22/?.jpg
 draft: true
 ---
 
