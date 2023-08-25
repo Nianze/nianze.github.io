@@ -59,12 +59,13 @@ My current gears:
     * iPhone 14 Pro
     * Leica SL Typ 601
     * Leica M9
-    * Leica X Typ 113
+    * Leica X (Typ 113) Edition Moncler
     * Leica M3
     * Konica Hexar RF
     * Nikon FE2
-    * Pentax MZ-5N/ZX-5N
-    * Rolleiflex 3.5E Planar
+    * Pentax ZX-5N(MZ-5N)
+    * Rolleiflex 3.5F (model 3) with 6 elements Zeiss Planar lens
+    * Rolleiflex 2.8C with Schneider-Kreuznach Xenotar lens 
 * Lenses
     * For Leica M-mount:
         * Zeiss Distagon T* 35mm f/1.4 ZM
@@ -75,7 +76,7 @@ My current gears:
         * Nikkor-P.C. 8.5cm f/2 LTM
     * For Nikon F-mount:
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
-        * Leica Summicron-R 50mm F/2 E43 Ver.1 (mod to F mount)
+        * Leica Summicron-R 50mm F/2 E43 Ver.1 (mod. to F mount)
     * For Pentax K-mount (with DKL-to-K adapter):
         * SMC Pentax-FA 43mm F1.9 Limited (made in Japan)
     * DKL mount (with DKL-to-F and DKL-to-K adapter):
@@ -85,7 +86,7 @@ My current gears:
         * Schneider-Kreuznach Retina-Tele-Arton 85mm f/4
         * Voigtländer Septon 50mm f/2
         * Voigtlander Super Dynarex 135mm f/4
-    * Enlarging Lens in L39:
+    * Enlarging Lens in L39 mount:
         * Schneider-Kreuznach Componon-S 50mm F/2.8
         * Schneider-Kreuznach Componon-S 80mm f/4
 
