@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1780,7 +1780,7 @@ if (!doNotTrack) {
 <p>In order to catch by pointer, programmers need to define exception objects in a way that <strong>guarantees the objects exist</strong> after control leaves the <code>throw</code> site. Global and static objects work fine, but it&rsquo;s easy for programmers to forget the constraint:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1789,19 +1789,19 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exception</span> <span class="n">ex</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">...</span>
-</span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="o">&amp;</span><span class="n">ex</span><span class="p">;</span>   <span class="c1">// throw a pointer to an object 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>          <span class="c1">// that&#39;s about to be destroyed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">exception</span> <span class="n">ex</span><span class="p">;</span>
+    <span class="p">...</span>
+    <span class="k">throw</span> <span class="o">&amp;</span><span class="n">ex</span><span class="p">;</span>   <span class="c1">// throw a pointer to an object 
+</span><span class="c1"></span>    <span class="p">...</span>          <span class="c1">// that&#39;s about to be destroyed
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>An alternative is to throw a pointer to a new heap object:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1809,13 +1809,13 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="p">...</span>
-</span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="k">new</span> <span class="n">exception</span><span class="p">;</span> <span class="c1">// throw a pointer to a new heap-based object 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// hopefully the objerator new will not itself throw any exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">someFunction</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="p">...</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="n">exception</span><span class="p">;</span> <span class="c1">// throw a pointer to a new heap-based object 
+</span><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// hopefully the objerator new will not itself throw any exception
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>This design will make a hard time for authors of <code>catch</code> clauses: <strong>to delete or not to delete</strong> the pointer they receive? In the <code>catch</code> site, we can&rsquo;t tell if an exception object is allocated on the heap or defined as a global (or static) object.</p>
 <p>Furthermore, catch-by-pointer runs <strong>contrary to the convention</strong> of the language: the four standard exception<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> - <code>bad_alloc</code>, <code>bad_cast</code>, <code>bad_typeid</code>, and <code>bad_exception</code> are all objects, rather than pointers to objefts, so we have to catch them by value or by reference.</p>
@@ -1831,7 +1831,7 @@ if (!doNotTrack) {
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn:1">
+<li id="fn:1" role="doc-endnote">
 <p><code>bad_alloc</code>: thrown when <code>operator new</code> can&rsquo;t satisfy a memory request (MECpp item 8); <code>bad_cast</code>: thrown when a <code>dynamic_cast</code> to a reference fails (MECpp item 2); <code>bad_typeid</code>: thrown when <code>typeid</code> is applied to a dereferenced null pointer; and <code>bad_exception</code>: available for unexpected exceptions (MECpp item 14)&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
@@ -2280,7 +2280,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
