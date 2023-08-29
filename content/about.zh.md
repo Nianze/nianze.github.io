@@ -53,32 +53,32 @@ Virtualizing static fields in 3rd-party Java library during runtime to improve m
 
 ### Photography
 
-My current gears:
+I shoot, develop, and enlarge films in my own apartment (established a simple darkroom in my bathroom), and I like collecting vintage film cameras and lenses. Below is my current gears:
 
-* Cameras: 
-    * iPhone 14 Pro
+* Digital cameras:
     * Leica SL Typ 601
     * Leica M9
-    * Leica X (Typ 113) Edition Moncler
+    * Leica X Typ 113 Edition Moncler
+* Film cameras: 
     * Leica M3
     * Konica Hexar RF
     * Nikon FE2
     * Pentax ZX-5N(MZ-5N)
-    * Rolleiflex 3.5F (model 3) with 6 elements Zeiss Planar lens
+    * Rolleiflex 3.5F type 3 with Zeiss Planar lens (6 elements)
     * Rolleiflex 2.8C with Schneider-Kreuznach Xenotar lens 
 * Lenses
     * For Leica M-mount:
         * Zeiss Distagon T* 35mm f/1.4 ZM
         * Voigtländer Nokton Classic 40mm f/1.4 SC VM
         * Leica Summilux-M 50mm f/1.4 Pre-ASPH
-        * Tokyo Kogaku Topcor-S 5cm F2
+        * Tokyo Kogaku Topcor-S 5cm f/2
         * Nikkor-S.C. 5cm f/1.4 LTM
         * Nikkor-P.C. 8.5cm f/2 LTM
     * For Nikon F-mount:
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
-        * Leica Summicron-R 50mm F/2 E43 Ver.1 (mod. to F mount)
-    * For Pentax K-mount (with DKL-to-K adapter):
-        * SMC Pentax-FA 43mm F1.9 Limited (made in Japan)
+        * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F mount)
+    * For Pentax K-mount:
+        * SMC Pentax-FA 43mm f/1.9 Limited (made in Japan)
     * DKL mount (with DKL-to-F and DKL-to-K adapter):
         * Schneider-Kreuznach Retina-Curtagon 28mm f/4
         * Schneider-Kreuznach Curtagon 35mm f/2.8
@@ -87,9 +87,8 @@ My current gears:
         * Voigtländer Septon 50mm f/2
         * Voigtlander Super Dynarex 135mm f/4
     * Enlarging Lens in L39 mount:
-        * Schneider-Kreuznach Componon-S 50mm F/2.8
+        * Schneider-Kreuznach Componon-S 50mm f/2.8
         * Schneider-Kreuznach Componon-S 80mm f/4
-
 * Others:
     * Durst M 600 Photo Enlarger
     * LightPix Labs FlashQ Q20II
