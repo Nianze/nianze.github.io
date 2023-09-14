@@ -44,7 +44,7 @@ featured_image: 2023/09/14/rolleiflex28-35.JPG
 
 禄莱这个坑，很深，但这么折腾下来，还是庆幸找到了满意的机子。进一步的玩法，就是拍立得后背的加成了。
 
-[^1]: 参见[@Alice Simulans]的这两篇文章： [蔡司Planar 80/2.8（For Rolleiflex 2.8）相关专利介绍](https://mp.weixin.qq.com/s/O_IIU4ogb9TQSV8qFhgcng)和[施耐德Xenotar 80/2.8专利介绍（For Rolleiflex 2.8）](https://mp.weixin.qq.com/s/Dm8vjtjoeoWC_0J-gnhp1w)
+[^1]: 参见[@Alice Simulans](https://www.zhihu.com/people/alice-simulans-36)的这两篇文章： [蔡司Planar 80/2.8（For Rolleiflex 2.8）相关专利介绍](https://mp.weixin.qq.com/s/O_IIU4ogb9TQSV8qFhgcng)和[施耐德Xenotar 80/2.8专利介绍（For Rolleiflex 2.8）](https://mp.weixin.qq.com/s/Dm8vjtjoeoWC_0J-gnhp1w)
 
 ## 样片
 
