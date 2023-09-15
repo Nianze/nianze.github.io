@@ -34,7 +34,7 @@ featured_image: 2023/09/14/rolleiflex28-35.JPG
 
 最喜欢的果然还是这台配了蔡司planar的3.5F：后期type 3版，带六枚镜片，查序列号大概是1965年生产的。因为刚经过Jimmy的保养，机械手感比我之前入的另一台没保养过的六枚玉3.5F好了太多，测光也很准，拍起照来体验感拉满。
 
-{{< img src="/images/2023/09/14/rolleiflex-zeiss.JPG" title="禄莱3.5F的金色镀膜" caption="👆" >}}
+{{< img src="/images/2023/09/14/rolleiflex-zeiss.JPG" title="禄莱3.5F的琥珀色镀膜" caption="👆" >}}
 
 值得一提的是F这一代的官方皮套设计很用心，是可拆卸顶盖，挂在脖子上时就不用担心像前几代那样打开的盖子到处晃了。
 
@@ -44,7 +44,6 @@ featured_image: 2023/09/14/rolleiflex28-35.JPG
 另一台1955年左右生产的2.8C纯粹是因为想凑齐施耐德的xenotar镜头，且2.8C是最后一代拥有十叶光圈的机型，收小光圈的话焦外光斑会更圆润。施耐德这枚xenotar论素质貌似是不及蔡司planar 2.8的[^1]，但说起来很怪，实际拍照片，尤其是黑白胶片的时候，我其实更偏爱用施耐德出片（所谓“玄学”加成）。而且不知不觉中收了超多施耐德的镜头，dkl里面的Curtagon 28mm f/4，Curtagon 35mm f/2.8，Xenon 50mm f/1.9，Tele-Arton 85mm f/4，放大头我也都用的施耐德（Componon-S 50mm F/2.8和80mm f/4）。施耐德真是便宜大碗又玄学的存在。
 
 {{< img src="/images/2023/09/14/rolleiflex28-apertures.JPG" title="2.8C的十叶光圈" caption="👆" >}}
-
 
 由于禄莱2.8C没有测光，最近一直在找合适的冷靴配件来挂测光表，发现Reveni lab的这款遮光罩就很方便挂一个测光表在侧面，拿来给我的2.8C用简直完美。遮光罩3D打印的，做工不错。有一定弹性不容易断。从加拿大邮寄来美国也不贵。
 
