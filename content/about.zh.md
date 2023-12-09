@@ -63,7 +63,8 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
     * Leica M3
     * Konica Hexar RF
     * Nikon FE2
-    * Pentax ZX-5N(MZ-5N)
+    * Pentax ZX-5N(aka MZ-5N, with another MZ-M as for repair parts)
+    * Pentax LX
     * Rolleiflex 3.5F type 3 with Zeiss Planar lens (6 elements)
     * Rolleiflex 2.8C with Schneider-Kreuznach Xenotar lens 
 * Lenses
@@ -82,7 +83,10 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F mount)
     * Pentax K-mount:
         * SMC Pentax-FA 43mm f/1.9 Limited (made in Japan)
-    * DKL mount (with DKL-to-F and DKL-to-K adapter):
+        * SMC Pentax-FA 77mm f/1.8 Limited
+    * M42 mount:
+        * Carl Zeiss Ultron 50mm f/1.8
+    * DKL mount (with DKL-to-M42, DKL-to-F and DKL-to-K adapters):
         * Schneider-Kreuznach Retina-Curtagon 28mm f/4
         * Schneider-Kreuznach Curtagon 35mm f/2.8
         * Schneider-Kreuznach Xenon 50mm f/1.9
