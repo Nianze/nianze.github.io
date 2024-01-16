@@ -68,19 +68,19 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
     * Rolleiflex 3.5F type 3 with Zeiss Planar lens (6 elements)
     * Rolleiflex 2.8C with Schneider-Kreuznach Xenotar lens 
 * Lenses
-    * Leica thread mount for enlargers:
+    * Leica L39 for enlargers:
         * Schneider-Kreuznach Componon-S 50mm f/2.8
         * Schneider-Kreuznach Componon-S 80mm f/4
-    * Leica M-mount:
+    * Leica L39/M/R mount:
         * Zeiss Distagon T* 35mm f/1.4 ZM
         * Voigtländer Nokton Classic 40mm f/1.4 SC VM
         * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH)
         * Tokyo Kogaku Topcor-S 5cm f/2 LTM
         * Nikkor-S.C. 5cm f/1.4 LTM
         * Nikkor-P.C. 8.5cm f/2 LTM
+        * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F or K mount)
     * Nikon F-mount:
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
-        * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F mount)
     * Pentax K-mount:
         * SMC Pentax-FA 43mm f/1.9 Limited (made in Japan)
         * SMC Pentax-FA 77mm f/1.8 Limited
@@ -92,7 +92,7 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * Schneider-Kreuznach Xenon 50mm f/1.9
         * Schneider-Kreuznach Retina-Tele-Arton 85mm f/4
         * Voigtländer Septon 50mm f/2
-        * Voigtlander Super Dynarex 135mm f/4
+        * Rodenstock Retina-Rotelar 135mm f/4
 * Others:
     * Durst M 600 Photo Enlarger
     * LightPix Labs FlashQ Q20II
