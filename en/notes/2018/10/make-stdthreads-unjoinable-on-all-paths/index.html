@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1798,7 +1798,7 @@ if (!doNotTrack) {
 <p>The Standardization Committee decided this program termination behavior just to tell us that we need to ensure a <code>std::thread</code> object is made unjoinable on every path out of the scope in which it&rsquo;s defined. That is, we can use <em>RAII</em> technique to take care of that.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1824,36 +1824,36 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ThreadRAII</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">    <span class="k">enum</span> <span class="k">class</span> <span class="nc">DtorAction</span> <span class="p">{</span> <span class="n">join</span><span class="p">,</span> <span class="n">detach</span> <span class="p">};</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">ThreadRAII</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&amp;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">DtorAction</span> <span class="n">a</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="n">action</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">t</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="p">{}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">ThreadRAII</span> 
-</span></span><span class="line"><span class="cl">    <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">action</span> <span class="o">==</span> <span class="n">DtorAction</span><span class="o">::</span><span class="n">join</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                <span class="n">t</span><span class="p">.</span><span class="n">detach</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">            <span class="p">}</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">ThreadRAII</span><span class="p">(</span><span class="n">ThreadRAII</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span> <span class="c1">// explicitly requesting the default move operations
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">ThreadRAII</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">ThreadRAII</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>  <span class="c1">// since customized destructor prevent compiler-generated ones
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&amp;</span> <span class="n">get</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">;</span> <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">DtorAction</span> <span class="n">action</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">};</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">ThreadRAII</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">enum</span> <span class="k">class</span> <span class="nc">DtorAction</span> <span class="p">{</span> <span class="n">join</span><span class="p">,</span> <span class="n">detach</span> <span class="p">};</span>
+
+    <span class="n">ThreadRAII</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&amp;&amp;</span> <span class="n">t</span><span class="p">,</span> <span class="n">DtorAction</span> <span class="n">a</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">action</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">t</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="p">{}</span>
+
+    <span class="o">~</span><span class="n">ThreadRAII</span> 
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">action</span> <span class="o">==</span> <span class="n">DtorAction</span><span class="o">::</span><span class="n">join</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">t</span><span class="p">.</span><span class="n">detach</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">ThreadRAII</span><span class="p">(</span><span class="n">ThreadRAII</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span> <span class="c1">// explicitly requesting the default move operations
+</span><span class="c1"></span>    <span class="n">ThreadRAII</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">ThreadRAII</span><span class="o">&amp;&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>  <span class="c1">// since customized destructor prevent compiler-generated ones
+</span><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&amp;</span> <span class="n">get</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">t</span><span class="p">;</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">DtorAction</span> <span class="n">action</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="kr">thread</span> <span class="n">t</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>A few points:</p>
 <ul>
 <li><code>std::thread</code> objects aren&rsquo;t copyable, so we accepts only <code>std::thread</code> rvalues</li>
-<li>The parameter order in the constructor is designed to be intuitive to callers, but the member initialization list is designed to match the order of the data members&rsquo; declarations, in which we put the <code>std::thread</code> object last in case the <code>std::thread</code> depends on other data members.</li>
+<li>The parameter order in the constructor is designed to be intuitive to callers, but the member initialization list is designed to match the order of the data members' declarations, in which we put the <code>std::thread</code> object last in case the <code>std::thread</code> depends on other data members.</li>
 <li><code>get</code> is provided to access the underlying <code>std::thread</code> object so that we gain the full <code>std::thread</code> interface for free</li>
 <li>A check to make sure the <code>t</code> is joinable in destructor is necessary in case that clients used <code>get</code> to acquire <code>t</code> and then did a move from <code>t</code> or called <code>join</code> or <code>detach</code> on <code>t</code>, making <code>t</code> unjoinable.</li>
 <li>If in the client code there are simultaneous calls trying to invoke two member functions (the destructor and something else) on one object at the same time, there is a race: between execution of <code>t.joinable()</code> and invocation of <code>join</code> or <code>detach</code>, another thread could render <code>t</code> unjoinable.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
@@ -1861,7 +1861,7 @@ if (!doNotTrack) {
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn:1">
+<li id="fn:1" role="doc-endnote">
 <p>In general, simultaneous member function calls on a single object are safe only if all are to <code>cont</code> member functions.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
@@ -2310,7 +2310,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
@@ -3369,7 +3369,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2023, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2024, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

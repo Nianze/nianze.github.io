@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1825,7 +1825,7 @@ if (!doNotTrack) {
 <p>Writing a custom memory manager that almost works is pretty easy, but writing one that works <em>well</em> is a lot harder. For example, here&rsquo;s a quick first pass at a global <code>operator new</code> that facilitates the detection of under- and overruns.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1845,25 +1845,25 @@ if (!doNotTrack) {
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">signature</span> <span class="o">=</span> <span class="mh">0xDEADBEEF</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">Byte</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// this code has several flaws
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">size_t</span> <span class="n">realSize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span> <span class="c1">// increase size of request so 2 signatures will also fit inside
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="o">*</span><span class="n">pMem</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">realSize</span><span class="p">);</span> <span class="c1">// call malloc to get the actual memory
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">pMem</span><span class="p">)</span> <span class="k">throw</span> <span class="n">bad_alloc</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// write signature into first and last parts of the memory
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">*</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pMem</span><span class="p">))</span> <span class="o">=</span> <span class="n">signature</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">*</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Byte</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pMem</span><span class="p">)</span><span class="o">+</span><span class="n">realSize</span><span class="o">-</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)))</span> <span class="o">=</span> <span class="n">signature</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// return a pointer to the memory just past the first signature
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Byte</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pMem</span><span class="p">)</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">signature</span> <span class="o">=</span> <span class="mh">0xDEADBEEF</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">Byte</span><span class="p">;</span>
+
+<span class="c1">// this code has several flaws
+</span><span class="c1"></span><span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+    <span class="n">size_t</span> <span class="n">realSize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span> <span class="c1">// increase size of request so 2 signatures will also fit inside
+</span><span class="c1"></span>    <span class="kt">void</span> <span class="o">*</span><span class="n">pMem</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">realSize</span><span class="p">);</span> <span class="c1">// call malloc to get the actual memory
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">pMem</span><span class="p">)</span> <span class="k">throw</span> <span class="n">bad_alloc</span><span class="p">();</span>
+    <span class="c1">// write signature into first and last parts of the memory
+</span><span class="c1"></span>    <span class="o">*</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pMem</span><span class="p">))</span> <span class="o">=</span> <span class="n">signature</span><span class="p">;</span>
+    <span class="o">*</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Byte</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pMem</span><span class="p">)</span><span class="o">+</span><span class="n">realSize</span><span class="o">-</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)))</span> <span class="o">=</span> <span class="n">signature</span><span class="p">;</span>
+    <span class="c1">// return a pointer to the memory just past the first signature
+</span><span class="c1"></span>    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Byte</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pMem</span><span class="p">)</span> <span class="o">+</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>One obvious shortcoming of this <code>operator new</code> is its failure to adhere to the C++ conventions for <code>operator new</code> - item 51 explains that all <code>operator new</code> should contain a loop calling a new-handling function, but this one above doesn&rsquo;t.</p>
 <p>Another subtle issue is <em>alignment</em>: C++ requires that all <code>operator new</code> and <code>malloc</code> return pointers that are suitably aligned for <em>any</em> data type. In this version of <code>operator new</code>, we&rsquo;re returning a pointer we got from malloc <em>offset by the size of an int</em>. If we are running on a manchine where <code>int</code>s were four bytes in size but <code>double</code>s were required to be eight-byte aligned, we&rsquo;d probably return a pointer with improper alignment when <code>operator new</code> is called to get enough memory for a <code>double</code>.</p>
@@ -2320,7 +2320,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
@@ -3379,7 +3379,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2023, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2024, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

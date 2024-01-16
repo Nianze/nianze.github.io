@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1777,11 +1777,11 @@ if (!doNotTrack) {
       <p>C++14 introduces generic lambdas, which use <code>auto</code> in their parameter specifications.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span> <span class="n">x</span><span class="p">){</span> <span class="k">return</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="p">};</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span> <span class="n">x</span><span class="p">){</span> <span class="k">return</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="p">};</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>If we want to perfect-fowrad a parameter <code>x</code> to <code>normalize</code>, we make two changes:</p>
 <ol>
@@ -1790,11 +1790,11 @@ if (!doNotTrack) {
 </ol>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">){</span> <span class="k">return</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">));</span> <span class="p">};</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="n">x</span><span class="p">){</span> <span class="k">return</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">));</span> <span class="p">};</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>As a fact of <code>decltype(x)</code>:</p>
 <ul>
@@ -1805,60 +1805,60 @@ if (!doNotTrack) {
 <p>Thanks to reference-collapsing rule, even though rvalue convention is broken here, the collapsing result is still the same. Say the <code>T</code> in the implementation of <code>std::forward</code> below is instantiated as <code>Widget&amp;&amp;</code>, an rvalue reference type:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>                         <span class="c1">// in namespace
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">forward</span><span class="p">(</span><span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">param</span><span class="p">)</span>    <span class="c1">// std
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>  <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&amp;&amp;&gt;</span><span class="p">(</span><span class="n">param</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>                         <span class="c1">// in namespace
+</span><span class="c1"></span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">forward</span><span class="p">(</span><span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">param</span><span class="p">)</span>    <span class="c1">// std
+</span><span class="c1"></span><span class="p">{</span>  <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&amp;&amp;&gt;</span><span class="p">(</span><span class="n">param</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>and we get this before reference collapsing:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="o">&amp;&amp;</span> <span class="n">forward</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span>         <span class="c1">// instantiation of
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>                                          <span class="c1">// std::forward when 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="o">&amp;&amp;&gt;</span><span class="p">(</span><span class="n">param</span><span class="p">);</span>       <span class="c1">// T is Widget&amp;&amp; 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="o">&amp;&amp;</span> <span class="n">forward</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span>         <span class="c1">// instantiation of
+</span><span class="c1"></span><span class="p">{</span>                                          <span class="c1">// std::forward when 
+</span><span class="c1"></span>    <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="o">&amp;&amp;&gt;</span><span class="p">(</span><span class="n">param</span><span class="p">);</span>       <span class="c1">// T is Widget&amp;&amp; 
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>After reference collapsing:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="n">forward</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span>         <span class="c1">// instantiation of
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>                                       <span class="c1">// std::forward when 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&amp;&amp;&gt;</span><span class="p">(</span><span class="n">param</span><span class="p">);</span>       <span class="c1">// T is Widget&amp;&amp; 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="n">forward</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">param</span><span class="p">)</span>         <span class="c1">// instantiation of
+</span><span class="c1"></span><span class="p">{</span>                                       <span class="c1">// std::forward when 
+</span><span class="c1"></span>    <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&amp;&amp;&gt;</span><span class="p">(</span><span class="n">param</span><span class="p">);</span>       <span class="c1">// T is Widget&amp;&amp; 
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>This is exactly what we expect.</p>
 <h4 id="variadic-parameters">Variadic parameters</h4>
 <p>For more than a single parameter, using following format:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">xs</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">         <span class="p">{</span> <span class="k">return</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">xs</span><span class="p">)...);</span> <span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="p">[](</span><span class="k">auto</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">xs</span><span class="p">)</span>
+         <span class="p">{</span> <span class="k">return</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">xs</span><span class="p">)...);</span> <span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div>
     </article>
@@ -2305,7 +2305,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
@@ -3376,7 +3376,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2023, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2024, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

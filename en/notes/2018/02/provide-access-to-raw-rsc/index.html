@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1779,24 +1779,24 @@ if (!doNotTrack) {
 <p>From time to time, some APIs require access to raw resources, so it is a good habit to design the resource-managing classes in such a way that it provides access to raw resources. For example, suppose there&rsquo;s a function we&rsquo;d like to use with <code>Investment</code> objects, which is managed by smart pointer:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">daysHeld</span><span class="p">(</span><span class="k">const</span> <span class="n">Investment</span> <span class="o">*</span><span class="n">pi</span><span class="p">);</span>  <span class="c1">// return number of days investment has been held
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// item 13
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">daysHeld</span><span class="p">(</span><span class="k">const</span> <span class="n">Investment</span> <span class="o">*</span><span class="n">pi</span><span class="p">);</span>  <span class="c1">// return number of days investment has been held
+</span><span class="c1"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// item 13
+</span></code></pre></td></tr></table>
 </div>
 </div><p>Since <code>dayHeld</code> wants a raw <code>Investment*</code> pointer, if passing an object of type <code>tr1::shared_ptr&lt;Investment&gt;</code>, the code won&rsquo;t compile:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">ind</span> <span class="n">days</span> <span class="o">=</span> <span class="n">daysHeld</span><span class="p">(</span><span class="n">pInv</span><span class="p">);</span>  <span class="c1">// error
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ind</span> <span class="n">days</span> <span class="o">=</span> <span class="n">daysHeld</span><span class="p">(</span><span class="n">pInv</span><span class="p">);</span>  <span class="c1">// error
+</span></code></pre></td></tr></table>
 </div>
 </div><p>We need to find a way to get the access to the raw resources, and generally there are two ways:</p>
 <ol>
@@ -1807,20 +1807,20 @@ if (!doNotTrack) {
 <p>Pointer dereferencing operators (<code>operator-&gt;</code> and <code>operator*</code>) are implicit conversion to the underlying raw pointers, which is virtually provided by all smart pointer classes. Suppose there&rsquo;s a member function <code>bool isTaxFree()</code> inside the class <code>Investment</code>, and we can access the member function like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">taxable1</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">pInv</span><span class="o">-&gt;</span><span class="n">isTaxFree</span><span class="p">());</span>  <span class="c1">// access resource via operator-&gt;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">taxable2</span> <span class="o">=</span> <span class="o">!</span><span class="p">((</span><span class="o">*</span><span class="n">pInv</span><span class="p">).</span><span class="n">isTaxFree</span><span class="p">());</span>  <span class="c1">// access resource via operator*
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="n">taxable1</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">pInv</span><span class="o">-&gt;</span><span class="n">isTaxFree</span><span class="p">());</span>  <span class="c1">// access resource via operator-&gt;
+</span><span class="c1"></span>
+<span class="kt">bool</span> <span class="n">taxable2</span> <span class="o">=</span> <span class="o">!</span><span class="p">((</span><span class="o">*</span><span class="n">pInv</span><span class="p">).</span><span class="n">isTaxFree</span><span class="p">());</span>  <span class="c1">// access resource via operator*
+</span></code></pre></td></tr></table>
 </div>
 </div><p>When it is necessary to get at the raw resource inside an RAII object, another way of conversion is through an <em>implicit conversion function</em>. Consider following RAII class for fonts:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1837,27 +1837,27 @@ if (!doNotTrack) {
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">FontHandle</span> <span class="nf">getFont</span><span class="p">();</span>  <span class="c1">// from C API
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">releaseFont</span><span class="p">(</span><span class="n">FontHandle</span> <span class="n">fh</span><span class="p">);</span>  <span class="c1">// from the same C API
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Font</span> <span class="p">{</span>   <span class="c1">// self-defined RAII class
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">Font</span><span class="p">(</span><span class="n">FontHanlde</span> <span class="n">fh</span><span class="p">)</span>  <span class="c1">// acquire resource
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">:</span> <span class="n">f</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>                       <span class="c1">// use pass-by-value because the C API does
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{}</span>
-</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">Font</span><span class="p">()</span> <span class="p">{</span> <span class="n">releaseFont</span><span class="p">(</span><span class="n">f</span><span class="p">);</span> <span class="p">}</span>   <span class="c1">// release resource
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="k">operator</span> <span class="nf">FontHandle</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">f</span><span class="p">;}</span>  <span class="c1">// implicit conversion function
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">FontHandle</span> <span class="n">f</span><span class="p">;</span>                 <span class="c1">// the raw font resource
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">FontHandle</span> <span class="nf">getFont</span><span class="p">();</span>  <span class="c1">// from C API
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">releaseFont</span><span class="p">(</span><span class="n">FontHandle</span> <span class="n">fh</span><span class="p">);</span>  <span class="c1">// from the same C API
+</span><span class="c1"></span>
+<span class="k">class</span> <span class="nc">Font</span> <span class="p">{</span>   <span class="c1">// self-defined RAII class
+</span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+    <span class="k">explicit</span> <span class="n">Font</span><span class="p">(</span><span class="n">FontHanlde</span> <span class="n">fh</span><span class="p">)</span>  <span class="c1">// acquire resource
+</span><span class="c1"></span>    <span class="o">:</span> <span class="n">f</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>                       <span class="c1">// use pass-by-value because the C API does
+</span><span class="c1"></span>    <span class="p">{}</span>
+    <span class="o">~</span><span class="n">Font</span><span class="p">()</span> <span class="p">{</span> <span class="n">releaseFont</span><span class="p">(</span><span class="n">f</span><span class="p">);</span> <span class="p">}</span>   <span class="c1">// release resource
+</span><span class="c1"></span>
+<span class="k">operator</span> <span class="nf">FontHandle</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span><span class="k">return</span> <span class="n">f</span><span class="p">;}</span>  <span class="c1">// implicit conversion function
+</span><span class="c1"></span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">FontHandle</span> <span class="n">f</span><span class="p">;</span>                 <span class="c1">// the raw font resource
+</span><span class="c1"></span><span class="p">};</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>This makes calling into the following C API easy and natural:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1865,34 +1865,34 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">changeFontSize</span><span class="p">(</span><span class="n">FontHandle</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newSize</span><span class="p">);</span>  <span class="c1">// the C API
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="n">Font</span> <span class="nf">f</span><span class="p">(</span><span class="n">getFont</span><span class="p">());</span>
-</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">newFontSize</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="n">changeFontSize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">newFontSize</span><span class="p">);</span>  <span class="c1">// implicitly convert Font to FontHandle
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">changeFontSize</span><span class="p">(</span><span class="n">FontHandle</span> <span class="n">f</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newSize</span><span class="p">);</span>  <span class="c1">// the C API
+</span><span class="c1"></span>
+<span class="n">Font</span> <span class="nf">f</span><span class="p">(</span><span class="n">getFont</span><span class="p">());</span>
+<span class="kt">int</span> <span class="n">newFontSize</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">changeFontSize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">newFontSize</span><span class="p">);</span>  <span class="c1">// implicitly convert Font to FontHandle
+</span></code></pre></td></tr></table>
 </div>
 </div><p>However, the downsize is that implicit conversions increase the chance of errors - a <code>FontHandle</code> may be created when a <code>Font</code> is really intended:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Font</span> <span class="nf">f1</span><span class="p">(</span><span class="n">getFont</span><span class="p">());</span>
-</span></span><span class="line"><span class="cl"><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="n">FontHandle</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">f1</span><span class="p">;</span>  <span class="c1">// meant to copy a Font object but implicitly converted f1 into 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                     <span class="c1">// FontHandle, and copied the underlying resource
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Font</span> <span class="nf">f1</span><span class="p">(</span><span class="n">getFont</span><span class="p">());</span>
+<span class="p">...</span>
+<span class="n">FontHandle</span> <span class="n">f2</span> <span class="o">=</span> <span class="n">f1</span><span class="p">;</span>  <span class="c1">// meant to copy a Font object but implicitly converted f1 into 
+</span><span class="c1"></span>                     <span class="c1">// FontHandle, and copied the underlying resource
+</span></code></pre></td></tr></table>
 </div>
 </div><h1 id="explicit-conversion">Explicit conversion</h1>
 <p>In order to avoid unintended implicit conversion, an explicit conversion function like <code>get</code> is a preferable path. We can exchange the implicit convertion function to following explicit one:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1902,15 +1902,15 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Font</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="n">FontHandle</span> <span class="n">get</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">f</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// explicit conversion function
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="p">};</span>
-</span></span><span class="line"><span class="cl"><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="c1">// and use it like this:
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">changeFontSize</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">newFontSize</span><span class="p">);</span> <span class="c1">// explicitly convert Font to FontHandle
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Font</span> <span class="p">{</span>
+<span class="p">...</span>
+<span class="n">FontHandle</span> <span class="n">get</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">f</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// explicit conversion function
+</span><span class="c1"></span><span class="p">...</span>
+<span class="p">};</span>
+<span class="p">...</span>
+<span class="c1">// and use it like this:
+</span><span class="c1"></span><span class="n">changeFontSize</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">newFontSize</span><span class="p">);</span> <span class="c1">// explicitly convert Font to FontHandle
+</span></code></pre></td></tr></table>
 </div>
 </div><p>Both explicit conversion and implicit conversion make sense, and the preference depends on the specific task and the circumstances in which the RAII class performs, as long as one adheres to item 18&rsquo;s advice: to make interfaces easy to use correctly and hard to use incorrectly.</p>
     </article>
@@ -2357,7 +2357,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
@@ -3421,7 +3421,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2023, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2024, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>

@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1779,7 +1779,7 @@ if (!doNotTrack) {
 <p>As a fact, <code>std::weak_ptr</code> isn&rsquo;t a standalone smart pointer, but an augmentation of <code>std::shared_ptr</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1787,40 +1787,40 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">spw</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span><span class="p">();</span> <span class="c1">// reference count (RC) is 1 after spw is constructed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">wpw</span><span class="p">(</span><span class="n">spw</span><span class="p">);</span>   <span class="c1">// RC remains 1 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="n">spw</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span> <span class="c1">// RC becomes 0, Widget gets destroyed, wpw dangles
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">wpw</span><span class="p">.</span><span class="n">exipred</span><span class="p">())</span> <span class="p">...</span>  <span class="c1">// true
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">spw</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span><span class="p">();</span> <span class="c1">// reference count (RC) is 1 after spw is constructed
+</span><span class="c1"></span><span class="p">...</span>
+<span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">wpw</span><span class="p">(</span><span class="n">spw</span><span class="p">);</span>   <span class="c1">// RC remains 1 
+</span><span class="c1"></span><span class="p">...</span>
+<span class="n">spw</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span> <span class="c1">// RC becomes 0, Widget gets destroyed, wpw dangles
+</span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">wpw</span><span class="p">.</span><span class="n">exipred</span><span class="p">())</span> <span class="p">...</span>  <span class="c1">// true
+</span></code></pre></td></tr></table>
 </div>
 </div><p>Usually, the purpose of creating a <code>std::weak_ptr</code> is to check the dangling <code>std::weak_ptr</code> (when the related control block has zero-value reference count), and if it hasn&rsquo;t expired, we may access the object it points to. Separating the check and the dereference would introduce a race condition, so we need an atomic operation to check and access the object at the same time. There are two ways to do this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">spw1</span> <span class="o">=</span> <span class="n">wpw</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>  <span class="c1">// spw1 type is shared_ptr&lt;Widget&gt;; if wpw&#39;s expired, spw1 is null
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw2</span><span class="p">(</span><span class="n">wpw</span><span class="p">);</span>  <span class="c1">// if wpw&#39;s expired, throw std::bad_weak_ptr
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">auto</span> <span class="n">spw1</span> <span class="o">=</span> <span class="n">wpw</span><span class="p">.</span><span class="n">lock</span><span class="p">();</span>  <span class="c1">// spw1 type is shared_ptr&lt;Widget&gt;; if wpw&#39;s expired, spw1 is null
+</span><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw2</span><span class="p">(</span><span class="n">wpw</span><span class="p">);</span>  <span class="c1">// if wpw&#39;s expired, throw std::bad_weak_ptr
+</span></code></pre></td></tr></table>
 </div>
 </div><p>There are at least three use cases for <code>std::weak_ptr</code>.</p>
 <h4 id="caching">Caching</h4>
 <p>Given a factory function returning <code>std::unique_ptr</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&gt;</span> <span class="n">loadWidget</span><span class="p">(</span><span class="n">WidgetID</span> <span class="n">id</span><span class="p">);</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&gt;</span> <span class="n">loadWidget</span><span class="p">(</span><span class="n">WidgetID</span> <span class="n">id</span><span class="p">);</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>We might consider wrap a cache layer on top of <code>loadWidget</code> due to considerations such as expensive database I/O cost or frequent queries from clients. A quick-and-dirty implementation using <code>std::weak_ptr</code> may fit the requirement<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1833,18 +1833,18 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&gt;</span> <span class="n">fastLoadWidget</span><span class="p">(</span><span class="n">WidgetID</span> <span class="n">id</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">WidgetID</span><span class="p">,</span> 
-</span></span><span class="line"><span class="cl">                              <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&gt;&gt;</span> <span class="n">cache</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">objPtr</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="n">id</span><span class="p">].</span><span class="n">lock</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">objPtr</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">objPtr</span> <span class="o">=</span> <span class="n">loadWidget</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">cache</span><span class="p">[</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">objPtr</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">objPtr</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&gt;</span> <span class="n">fastLoadWidget</span><span class="p">(</span><span class="n">WidgetID</span> <span class="n">id</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">WidgetID</span><span class="p">,</span> 
+                              <span class="n">std</span><span class="o">::</span><span class="n">weak_ptr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&gt;&gt;</span> <span class="n">cache</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">objPtr</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="n">id</span><span class="p">].</span><span class="n">lock</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">objPtr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">objPtr</span> <span class="o">=</span> <span class="n">loadWidget</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="n">cache</span><span class="p">[</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">objPtr</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">objPtr</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><h4 id="observer-list">Observer list</h4>
 <p>In the Observer design pattern, there are two components:</p>
@@ -1859,13 +1859,13 @@ if (!doNotTrack) {
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn:1">
+<li id="fn:1" role="doc-endnote">
 <p>A potential refinement is to remove the expired cache, since right now the cache accumulate <code>std::weak_ptr</code> corresponding to <code>Widget</code>s that are no longer in use (and have therefore been destroyed).&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:2">
+<li id="fn:2" role="doc-endnote">
 <p>Children have a shorter lifetime than their parent node, so there&rsquo;s no risk of a child node dereferencing a dangling parent pointer.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
-<li id="fn:3">
+<li id="fn:3" role="doc-endnote">
 <p>Two <code>std::shared_ptr</code>s point to each other wil prevent both from being destroyed: even if both object are unreachable from other program data structures, each will have a reference count of one.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
@@ -2314,7 +2314,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
@@ -3385,7 +3385,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
 
                     
-                        ©2023, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
+                        ©2024, All Rights Reserved<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> CC BY-SA</a>
                     
                 
             </p>
