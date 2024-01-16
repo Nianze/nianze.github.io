@@ -53,5 +53,4 @@ Tronnier博士的集大成之作，现代一众高素质反望远结构镜头的
 {{< img src="/images/2024/01/15/sample-9.jpg" title="样片" caption="👆" >}}
 {{< img src="/images/2024/01/15/sample-10.jpg" title="样片" caption="👆" >}}
 {{< img src="/images/2024/01/15/sample-11.jpg" title="样片" caption="👆" >}}
-{{< img src="/images/2024/01/15/sample-12.jpg" title="样片" caption="👆" >}}
 {{< img src="/images/2024/01/15/sample-13.jpg" title="样片" caption="👆" >}}
