@@ -58,7 +58,7 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
 * Digital cameras:
     * Leica SL Typ 601
     * Leica M9
-    * Leica X Typ 113 Edition Moncler
+    * Fujifilm X100V
 * Film cameras: 
     * Leica M3
     * Konica Hexar RF
