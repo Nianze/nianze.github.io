@@ -77,6 +77,9 @@ featured_image: 2023/09/14/rolleiflex28-35.JPG
 {{< img src="/images/2023/09/14/sample-3.JPG" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-4.jpg" title="" caption="👆" >}}
 
+{{< img src="/images/2023/09/14/rolleiflex_28_c-1.jpg" title="2.8C acros" caption="👆" >}}
+{{< img src="/images/2023/09/14/rolleiflex_28_c-2.jpg" title="2.8C acros" caption="👆" >}}
+
 ### 彩负
 
 其中彩色负片是我在家自己冲洗的，温度控制误差和药剂复用过期问题导致颜色会有点偏，权当看个氛围感吧。
@@ -84,7 +87,7 @@ featured_image: 2023/09/14/rolleiflex28-35.JPG
 {{< img src="/images/2023/09/14/sample-5.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-6.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-7.jpg" title="" caption="👆" >}}
-{{< img src="/images/2023/09/14/sample-8.jpg" title="" caption="👆" >}}
+{{< img src="/images/2023/09/14/sample-1.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-9.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-10.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-11.jpg" title="" caption="👆" >}}
