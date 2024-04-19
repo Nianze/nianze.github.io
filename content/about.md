@@ -63,7 +63,7 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
     * Leica M3
     * Konica Hexar RF
     * Nikon FE2
-    * Pentax ZX-5N(aka MZ-5N, with another MZ-M as for repair parts)
+    * Pentax ZX-5N(aka MZ-5N, with another broken MZ-M for repair parts replacement)
     * Pentax LX
     * Rolleiflex 3.5F type 3 with Zeiss Planar lens (6 elements)
     * Rolleiflex 2.8C with Schneider-Kreuznach Xenotar lens 
