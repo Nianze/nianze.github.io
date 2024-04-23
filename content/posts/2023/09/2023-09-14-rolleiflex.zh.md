@@ -87,7 +87,6 @@ featured_image: 2023/09/14/rolleiflex28-35.JPG
 {{< img src="/images/2023/09/14/sample-5.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-6.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-7.jpg" title="" caption="👆" >}}
-{{< img src="/images/2023/09/14/sample-1.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-9.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-10.jpg" title="" caption="👆" >}}
 {{< img src="/images/2023/09/14/sample-11.jpg" title="" caption="👆" >}}
