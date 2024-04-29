@@ -59,7 +59,7 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
     * Leica SL Typ 601
     * Leica CL
     * Leica M9
-* Film cameras: 
+* Film cameras:
     * Leica M3
     * Konica Hexar RF
     * Nikon FE2
@@ -79,7 +79,6 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH)
         * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F or K mount)
         * Nikkor-P.C. 8.5cm f/2 LTM
-
     * Nikon F-mount:
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
     * Pentax K-mount:
