@@ -57,8 +57,8 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
 
 * Digital cameras:
     * Leica SL Typ 601
+    * Leica CL
     * Leica M9
-    * Fujifilm X100V
 * Film cameras: 
     * Leica M3
     * Konica Hexar RF
@@ -72,13 +72,14 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * Schneider-Kreuznach Componon-S 50mm f/2.8
         * Schneider-Kreuznach Componon-S 80mm f/4
     * Leica L39/M/R mount:
+        * Zeiss Biogon T* 25mm f/2.8 ZM
         * Zeiss Distagon T* 35mm f/1.4 ZM
         * Voigtländer Nokton Classic 40mm f/1.4 SC VM
-        * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH)
         * Tokyo Kogaku Topcor-S 5cm f/2 LTM
-        * Nikkor-S.C. 5cm f/1.4 LTM
-        * Nikkor-P.C. 8.5cm f/2 LTM
+        * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH)
         * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F or K mount)
+        * Nikkor-P.C. 8.5cm f/2 LTM
+
     * Nikon F-mount:
         * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
     * Pentax K-mount:
