@@ -74,9 +74,9 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
     * Leica L39/M/R mount:
         * Zeiss Biogon T* 25mm f/2.8 ZM
         * Zeiss Distagon T* 35mm f/1.4 ZM
-        * Voigtländer Nokton Classic 40mm f/1.4 SC VM
+        * Rollei Sonnar HFT 40mm f/2.8 LTM
         * Tokyo Kogaku Topcor-S 5cm f/2 LTM
-        * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH)
+        * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH, Ver.3)
         * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F or K mount)
         * Nikkor-P.C. 8.5cm f/2 LTM
     * Nikon F-mount:
