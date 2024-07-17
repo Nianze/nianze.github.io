@@ -56,7 +56,7 @@ Virtualizing static fields in 3rd-party Java library during runtime to improve m
 I shoot, develop, and enlarge films in my own apartment (established a simple darkroom in my bathroom), and I like collecting vintage film cameras and lenses. Below is my current gears:
 
 * Digital cameras:
-    * Leica SL Typ 601
+    * Leica SL (Typ 601)
     * Leica CL
     * Leica M9
 * Film cameras:
@@ -75,7 +75,6 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * Zeiss Biogon T* 25mm f/2.8 ZM
         * Zeiss Distagon T* 35mm f/1.4 ZM
         * Rollei Sonnar HFT 40mm f/2.8 LTM
-        * Tokyo Kogaku Topcor-S 5cm f/2 LTM
         * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH, Ver.3)
         * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to F or K mount)
         * Nikkor-P.C. 8.5cm f/2 LTM
