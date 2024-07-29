@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
+<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
+<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.83.1" />
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1780,37 +1780,37 @@ if (!doNotTrack) {
 <h1 id="reference-counting">Reference Counting</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">String</span> <span class="p">{...};</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&#34;Hello&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>  <span class="c1">// call String copy ctor
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{...};</span>
+
+<span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="s">&#34;Hello&#34;</span><span class="p">;</span>
+
+<span class="n">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>  <span class="c1">// call String copy ctor
+</span></code></pre></td></tr></table>
 </div>
 </div><p>The lazy approach: instead of giving <code>s2</code> a copy of <code>s1</code>&rsquo;s value, we have <code>s2</code> share <code>s1</code>&rsquo;s value to save the cost of a call to <code>new</code> and the expense of copying anything, until any one is modified (i.e., <code>s2.convertToUpperCase();</code> will change only <code>s2</code>&rsquo;s value by making a private copy of shared value before modification). Refer to MECpp item 29 for implementation details.</p>
 <h1 id="distinguishing-reads-from-writes">Distinguishing Reads from Writes</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>  <span class="c1">// read
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;x&#39;</span><span class="p">;</span>    <span class="c1">// write
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>  <span class="c1">// read
+</span><span class="c1"></span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;x&#39;</span><span class="p">;</span>    <span class="c1">// write
+</span></code></pre></td></tr></table>
 </div>
 </div><p>For <code>operator[]</code>, we&rsquo;d like to distinguish the read call from the write so that a reference-counted string reading is cheap. In order to determine whether <code>operator[]</code> has been called in a read or in a write context, we use lazy evaluation and proxy classes as described in MECpp item 30.</p>
 <h1 id="lazy-fetching">Lazy Fetching</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+<pre class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1842,37 +1842,37 @@ if (!doNotTrack) {
 </span><span class="lnt">30
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">LargeObject</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">LargeObject</span><span class="p">(</span><span class="n">ObjectID</span> <span class="n">id</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">field1</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">field2</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="nf">field3</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">field4</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">ObjectID</span> <span class="n">oid</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">mutable</span> <span class="n">string</span> <span class="o">*</span><span class="n">field1Value</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">mutable</span> <span class="kt">int</span> <span class="o">*</span><span class="n">field2Value</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">mutable</span> <span class="kt">double</span> <span class="o">*</span><span class="n">field3Value</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">mutable</span> <span class="n">string</span> <span class="o">*</span><span class="n">field4Value</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">...</span>    
-</span></span><span class="line"><span class="cl"><span class="p">};</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">LargeObject</span><span class="o">::</span><span class="n">LargeObject</span><span class="p">(</span><span class="n">ObjectID</span> <span class="n">id</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="n">oid</span><span class="p">(</span><span class="n">id</span><span class="p">),</span> <span class="n">field1Value</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">field2Value</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">field3Value</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">field4Value</span><span class="p">(</span><span class="mi">0</span><span class="p">)...</span>
-</span></span><span class="line"><span class="cl"><span class="p">{}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">LargeObject</span><span class="o">::</span><span class="n">field1</span><span class="p">()</span> <span class="k">const</span>
-</span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">field1Value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">read</span> <span class="n">the</span> <span class="n">data</span> <span class="k">for</span> <span class="n">field</span> <span class="mi">1</span> <span class="n">from</span> <span class="n">the</span> <span class="n">database</span>
-</span></span><span class="line"><span class="cl">        <span class="n">and</span> <span class="n">make</span> <span class="n">field1Value</span> <span class="n">point</span> <span class="n">to</span> <span class="n">it</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="n">field1Value</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">LargeObject</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">LargeObject</span><span class="p">(</span><span class="n">ObjectID</span> <span class="n">id</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">field1</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="nf">field2</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="nf">field3</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">field4</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="p">...</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">ObjectID</span> <span class="n">oid</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="n">string</span> <span class="o">*</span><span class="n">field1Value</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="kt">int</span> <span class="o">*</span><span class="n">field2Value</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="kt">double</span> <span class="o">*</span><span class="n">field3Value</span><span class="p">;</span>
+    <span class="k">mutable</span> <span class="n">string</span> <span class="o">*</span><span class="n">field4Value</span><span class="p">;</span>
+    <span class="p">...</span>    
+<span class="p">};</span>
+
+<span class="n">LargeObject</span><span class="o">::</span><span class="n">LargeObject</span><span class="p">(</span><span class="n">ObjectID</span> <span class="n">id</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">oid</span><span class="p">(</span><span class="n">id</span><span class="p">),</span> <span class="n">field1Value</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">field2Value</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">field3Value</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">field4Value</span><span class="p">(</span><span class="mi">0</span><span class="p">)...</span>
+<span class="p">{}</span>
+
+<span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span> <span class="n">LargeObject</span><span class="o">::</span><span class="n">field1</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">field1Value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">read</span> <span class="n">the</span> <span class="n">data</span> <span class="k">for</span> <span class="n">field</span> <span class="mi">1</span> <span class="n">from</span> <span class="n">the</span> <span class="n">database</span>
+        <span class="n">and</span> <span class="n">make</span> <span class="n">field1Value</span> <span class="n">point</span> <span class="n">to</span> <span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">*</span><span class="n">field1Value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>Because <code>LargeObject</code> instances are big, getting all the data at once is a costly database operation. The lazy approach to this problem is to create only a skeleton of an object, without reading any data from disk when a <code>LargeObject</code> instance is created. Each field in the object is represented as a pointer to the necessary data, initialized as null pointers, which signify fields that have not yet been read from the database.</p>
 <p>Since null pointers may need to be initialized to point to real data from inside any member function, including <code>const</code> member functions like <code>field1</code>, we declare the pointer fields <code>mutable</code> to tell compilers that they can be modified inside any member function.</p>
@@ -1880,7 +1880,7 @@ if (!doNotTrack) {
 <h1 id="lazy-expression-evaluation">Lazy Expression Evaluation</h1>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1889,26 +1889,26 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Matrix</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m1</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>  <span class="c1">// a 1000 by 1000 matrix
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m2</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>  <span class="c1">// a 1000 by 1000 matrix
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
-</span></span><span class="line"><span class="cl"><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span> <span class="o">+</span> <span class="n">m2</span><span class="p">;</span>
-</span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Matrix</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m1</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>  <span class="c1">// a 1000 by 1000 matrix
+</span><span class="c1"></span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m2</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>  <span class="c1">// a 1000 by 1000 matrix
+</span><span class="c1"></span><span class="p">...</span>
+<span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span> <span class="o">+</span> <span class="n">m2</span><span class="p">;</span>
+</code></pre></td></tr></table>
 </div>
 </div><p>Instead of compute and return the sum of <code>m1</code> and <code>m2</code> (which cost 1,000,000 additions and corresponding memory allocation), lazy evaluation sets up a data structure inside <code>m3</code> indicating that <code>m3</code>&rsquo;s value is the sum of <code>m1</code> and <code>m2</code> (which may just consisting of two pointers to each of <code>m1</code> and <code>m2</code> and an enum indicating the additional operation). In most scenarios, we need only <em>part</em> of a computation (i.e., <code>cout &lt;&lt; m3[4];</code> instead of <code>cout &lt;&lt; m3;</code>), so laziness generally pays off.</p>
 <p>However, due to these dependencies between values, there are extra maintainence to notice: when one of the matrices on which <code>m3</code> is dependent is to be modified, we have to make sure the correctness:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
+<pre class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span> <span class="o">+</span> <span class="n">m2</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">m1</span> <span class="o">=</span> <span class="n">m4</span><span class="p">;</span> <span class="c1">// m3 is the sum of m2 and the old value of m1
-</span></span></span></code></pre></td></tr></table>
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">m3</span> <span class="o">=</span> <span class="n">m1</span> <span class="o">+</span> <span class="n">m2</span><span class="p">;</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="n">m4</span><span class="p">;</span> <span class="c1">// m3 is the sum of m2 and the old value of m1
+</span></code></pre></td></tr></table>
 </div>
 </div><p>Inside the <code>Matrix&lt;int&gt;</code> assignment opertaor, we might compute <code>m3</code>&rsquo;s value prior to changing <code>m1</code> or we may take a copy of the old value of <code>m1</code> and make <code>m3</code> dependent on that.</p>
 <p>Those extra mentainence efforts often ends up saving significant amounts of time and space during program runs, which is a payoff that justifies the lazy evaluation.</p>
@@ -2356,7 +2356,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
+<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
