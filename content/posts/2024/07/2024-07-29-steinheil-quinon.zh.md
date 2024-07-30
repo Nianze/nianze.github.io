@@ -64,7 +64,7 @@ M42口镜头可以很方便转接在宾得K口相机上。我选择挂在LX上�
 对于相同光学结构的Quinon和Xenon，我在家用无反（徕卡SL）小测了下：
 
 {{< img src="/images/2024/07/29/compare/color-quinon-xenon.png" title="对焦在灯上，这张主要看颜色和明暗过渡" caption="左边Quinon颜色更暖一点，画面明暗过渡更平缓；右边Xenon画面有明显的青绿色，这层绿色来自阳光下的窗户玻璃，被很好的记录下来，表现出施耐德“真水无香”的写实能力" >}}
-{{< img src="/images/2024/07/29/compare/bokeh-quinon-xenon.png" title="对焦在音响上，这张看焦外" caption="左边Quinon焦外柔和；右边Xenon有很明显的窗框边界" >}}
+{{< img src="/images/2024/07/29/compare/bokeh-quinon-xenon.png" title="对焦在音箱上，这张看焦外" caption="左边Quinon焦外柔和；右边Xenon有很明显的窗框边界" >}}
 {{< img src="/images/2024/07/29/compare/sharp-quinon-xenon.png" title="中心放大，这张看锐度" caption="其实都足够锐，放大后依然可以看到，左边Quinon拍的黄色音箱颜色会更浓郁一些，右边Xenon颜色更素一点" >}}
 
 总的来说，我不太严谨的结论是，
