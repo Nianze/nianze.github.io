@@ -75,10 +75,8 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * Zeiss Biogon T* 25mm f/2.8 ZM
         * Zeiss Distagon T* 35mm f/1.4 ZM
         * Rollei Sonnar HFT 40mm f/2.8 LTM
-        * Leica Summilux-M 50mm f/1.4 (E46, Pre-ASPH, Ver.3)
+        * Leica Summilux-M 50mm f/1.4 (E43 v2, made in 1962)
         * Nikkor-P.C. 8.5cm f/2 LTM
-    * Nikon F-mount:
-        * Nikon Micro-NIKKOR 55mm f/2.8 AI-s
     * M42 thread mount:
         * Carl Zeiss Ultron 50mm f/1.8
         * Steinheil München Quinon 55mm f/1.9
