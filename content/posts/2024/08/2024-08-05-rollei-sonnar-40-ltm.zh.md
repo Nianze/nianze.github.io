@@ -68,15 +68,18 @@ featured_image: 2024/08/05/m3-rollei.jpg
 
 带着禄莱40和M3试拍了一卷HP5。依然是自己分装的带划痕卷+过期药水手冲。
 
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0013-positive.JPG" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0027-positive.JPG" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0031-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0006-positive.jpg" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0013-positive.jpg" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0015-positive.jpg" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0021-positive.jpg" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0027-positive.jpg" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0031-positive.jpg" title="" caption="" >}}
 
 ## 数码
 
 {{< img src="/images/2024/08/05/m9-rollei.jpeg" title="搭配M9" caption="钢灰色配银白色也是很搭" >}}
 
-一直很喜欢徕卡M9配sonnar头呈现的效果。之前挂ZM 50 f1.5和Nikkor-sc 5cm f1.4 ltm，最近就换成这枚rollei 40 2.8了。用原厂转接环的话取景器里出现的是50mm框线，但40mm其实更接近35mm的框线，可以靠更换第三方转接环来更改框线。
+一直很喜欢徕卡M9配sonnar头呈现的效果。之前挂ZM 50 f1.5和Nikkor-sc 5cm f1.4 ltm，最近就换成这枚rollei 40 2.8了，以下都是原图直出JPG缩图至30%大小。用原厂转接环的话在M9取景器里出现的是50mm框线，但40mm其实更接近35mm的框线，可以靠更换第三方转接环来更改框线。
 
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009694.JPG" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009710.JPG" title="" caption="" >}}
@@ -84,6 +87,12 @@ featured_image: 2024/08/05/m3-rollei.jpg
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009734.JPG" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009735.JPG" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009736.JPG" title="" caption="" >}}
+
+{{< img src="/images/2024/08/05/sample/leicaM9_rollei_40_28_hft-1009610.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/leicaM9_rollei_40_28_hft-1009615.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/leicaM9_rollei_40_28_hft-1009618.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/leicaM9_rollei_40_28_hft-1009620.JPG" title="" caption="" >}}
+
 
 # 参考
 
