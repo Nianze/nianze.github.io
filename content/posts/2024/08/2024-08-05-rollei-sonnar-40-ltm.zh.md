@@ -56,7 +56,7 @@ featured_image: 2024/08/05/m3-rollei.jpg
 
 {{< img src="/images/2024/08/05/mtf_crvs.jpeg" title="镜头结构" caption="附MTF曲线" >}}
 
-禄莱35RF发售时，配套镜头就是这枚40 2.8 HFT，据说第一批次的套头只生产了380枚银色和50枚黑色[^2]。之后日本市场内部又专为这枚sonnar头单独生产了几个批次[^3]，生产总量可能在千枚(~万枚?)级别[^4]。镜身虽然刻着Made In Germany,但应该只是确善能制造后在德国组装，造型非常接近同期的福伦达Color Skopar 50 2.5 LTM，至少镜头自带的短遮光罩是可以互换的。虽然只有2.8的最大光圈，但这枚镜头有十片光圈叶，配合sonnar结构的焦外渲染，散景还是相当舒服的(小光圈的另一个好处是没有了ZM50 1.5焦点漂移的问题)。HFT镀膜出来的颜色不错，配上小巧的镜身，当个随身机出门扫街非常合适。
+禄莱35RF发售时，配套镜头就是这枚40 2.8 HFT，据说第一批次的套头只生产了380枚银色和50枚黑色[^2]。之后日本市场内部又专为这枚sonnar头单独生产了几个批次[^3]，生产总量可能在千枚(~万枚?)级别[^4]。镜身虽然刻着Made In Germany,但应该只是确善能制造后在德国组装，造型非常接近同期的福伦达Color Skopar 50 2.5 LTM，至少镜头自带的短遮光罩是可以互换的。虽然只有2.8的最大光圈，但这枚镜头有十片光圈叶，配合sonnar结构的焦外渲染，散景还是相当舒服的(小光圈的另一个好处是没有了ZM50 1.5焦点漂移的问题)。HFT镀膜出来的颜色不错，反差适中[^5]，配上小巧的镜身，当个随身机出门扫街非常合适。
 
 {{< img src="/images/2024/08/05/cl-rollei-1.jpg" title="搭配CL" caption="蓝紫色的HFT镀膜" >}}
 
@@ -91,3 +91,4 @@ featured_image: 2024/08/05/m3-rollei.jpg
 [^2]: [Lens-DB.com](https://lens-db.com/rollei-hft-sonnar-40mm-f28-lsm-2002/)
 [^3]: [Rollei 40mm f/2.8 HFT Sonnar LTM — Rollei 35s under digitization](https://medium.com/rokkorxblog/rollei-40mm-f-2-8-1d6b8e0ca368)
 [^4]: [serial numbers](https://rangefinderforum.com/threads/rollei-sonnar-40mm-serial-numbers.123716/post-4260874)
+[^5]: [short-rollei-40mm-28-sonnar-review](https://www.l-camera-forum.com/topic/381224-short-rollei-40mm-28-sonnar-review/)
