@@ -68,12 +68,12 @@ featured_image: 2024/08/05/m3-rollei.jpg
 
 带着禄莱40和M3试拍了一卷HP5。依然是自己分装的带划痕卷+过期药水手冲。
 
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0006-positive.jpg" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0013-positive.jpg" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0015-positive.jpg" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0021-positive.jpg" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0027-positive.jpg" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0031-positive.jpg" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0006-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0013-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0015-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0021-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0027-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0031-positive.JPG" title="" caption="" >}}
 
 ## 数码
 
