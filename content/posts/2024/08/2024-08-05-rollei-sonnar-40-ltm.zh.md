@@ -79,7 +79,7 @@ featured_image: 2024/08/05/m3-rollei.jpg
 
 {{< img src="/images/2024/08/05/m9-rollei.jpeg" title="搭配M9" caption="钢灰色配银白色也是很搭" >}}
 
-一直很喜欢徕卡M9配sonnar头呈现的效果。之前挂ZM 50 f1.5和Nikkor-sc 5cm f1.4 ltm，最近就换成这枚rollei 40 2.8了，以下都是原图直出JPG缩图至30%大小。用原厂转接环的话在M9取景器里出现的是50mm框线，但40mm其实更接近35mm的框线，可以靠更换第三方转接环来更改框线。
+一直很喜欢徕卡M9配sonnar头呈现的效果。之前挂ZM 50 f1.5和Nikkor-sc 5cm f1.4 ltm，最近就换成这枚rollei 40 2.8了。用原厂转接环的话在M9取景器里出现的是50mm框线，但40mm其实更接近35mm的框线，可以靠更换第三方转接环来更改框线。以下都是M9原图直出JPG缩图至30%大小。
 
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009694.JPG" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009710.JPG" title="" caption="" >}}
