@@ -11,8 +11,6 @@ comments: false
 I shoot, develop, and enlarge films in my own apartment (established a simple darkroom in my bathroom), and I like collecting vintage film cameras and lenses. Below is my current gears:
 
 * Digital cameras:
-    * Leica SL (Typ 601)
-    * Leica CL
     * Leica M9
 * Film cameras:
     * Leica M3
