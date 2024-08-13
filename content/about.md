@@ -15,7 +15,6 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
 * Film cameras:
     * Leica M3
     * Konica Hexar RF
-    * Nikon FE2
     * Pentax ZX-5N(aka MZ-5N, with another broken MZ-M for repair parts replacement)
     * Pentax LX
     * Rolleiflex 3.5F type 3 with Zeiss Planar lens (6 elements)
