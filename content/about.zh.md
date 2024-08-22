@@ -37,10 +37,7 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * SMC Pentax-FA 77mm f/1.8 Limited
         * Leica Summicron-R 50mm f/2 E43 Ver.1 (mod. to K mount w/ Leitax adapter)
     * DKL mount (adapt to Nikon/Pentax SLR):
-        * Schneider-Kreuznach Retina-Curtagon 28mm f/4
-        * Schneider-Kreuznach Curtagon 35mm f/2.8
         * Voigtländer Septon 50mm f/2
-        * Schneider-Kreuznach Retina-Tele-Arton 85mm f/4
         * Rodenstock Retina-Rotelar 135mm f/4
 * Others:
     * Durst M 600 Photo Enlarger
