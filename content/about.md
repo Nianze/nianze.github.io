@@ -26,7 +26,7 @@ I shoot, develop, and enlarge films in my own apartment (established a simple da
         * Schneider-Kreuznach Componon-S 80mm f/4
     * Leica M-mount:
         * Zeiss Biogon T* 25mm f/2.8 ZM
-        * Nokton Vintage Line 35mm f/1.5 Aspherical Type I VM
+        * Voigtländer Nokton Vintage Line 35mm f/1.5 Aspherical Type I VM
         * Rollei Sonnar HFT 40mm f/2.8 LTM
         * Leica Summilux-M 50mm f/1.4 (E43 v2, made in 1962)
         * Nikkor-P.C. 8.5cm f/2 LTM
