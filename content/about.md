@@ -14,7 +14,7 @@ I shoot, develop, and enlarge films in my apartment (established a simple darkro
     * Leica M9
     * Leica M11
 * Film cameras:
-    * Leica M3
+    * Leica M3 (made in 1959/6)
     * Konica Hexar RF
     * Pentax ZX-5N(aka MZ-5N, with another broken MZ-M for repair parts replacement)
     * Pentax LX
