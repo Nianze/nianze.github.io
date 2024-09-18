@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
+<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
+<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.110.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1787,7 +1787,7 @@ if (!doNotTrack) {
 <p>We can use <code>auto_ptr</code> to manage a class <code>Investment</code> that comes with a factory function (item 7) without worrying about resource leak:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1796,14 +1796,14 @@ if (!doNotTrack) {
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Investment</span><span class="o">*</span> <span class="nf">createInvestment</span><span class="p">();</span>  <span class="c1">// factory function, return ptr to dynamically allocated object
-</span><span class="c1"></span>
-<span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> 
-<span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// call factory function
-</span><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// use pInv like a pointer
-</span><span class="c1"></span><span class="p">}</span>        <span class="c1">// automatically delete pInv via auto_ptr&#39;s dtor
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Investment</span><span class="o">*</span> <span class="nf">createInvestment</span><span class="p">();</span>  <span class="c1">// factory function, return ptr to dynamically allocated object
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span> 
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// call factory function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// use pInv like a pointer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>        <span class="c1">// automatically delete pInv via auto_ptr&#39;s dtor
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>There are two critical aspects worth noting:</p>
 <ol>
@@ -1813,25 +1813,25 @@ if (!doNotTrack) {
 <p>Pay attention to the limitation of <code>auto_ptr</code>: its <strong>sole ownership of the resource policy</strong> requires that copying <code>auto_ptr</code>s via copy constructor or copy assignment operator sets them to null:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv1</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// pInv1 points to the object returned from the factory function
-</span><span class="c1"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv2</span><span class="p">(</span><span class="n">pInv1</span><span class="p">);</span>  <span class="c1">// pInv2 now points to the object; pInv1 is null 
-</span><span class="c1"></span>
-<span class="n">pInv1</span> <span class="o">=</span> <span class="n">pInv2</span><span class="p">;</span>  <span class="c1">// pInv1 points to the object, and pInv2 is null now
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv1</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// pInv1 points to the object returned from the factory function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv2</span><span class="p">(</span><span class="n">pInv1</span><span class="p">);</span>  <span class="c1">// pInv2 now points to the object; pInv1 is null 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">pInv1</span> <span class="o">=</span> <span class="n">pInv2</span><span class="p">;</span>  <span class="c1">// pInv1 points to the object, and pInv2 is null now
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="2-shared_ptr">2. <code>shared_ptr</code></h1>
 <p>An alternative <strong>RAII</strong> object, <code>shared_ptr</code>, is an RCSP(reference-counting smart pointer), which is a smart pointer that keeps track of how many objects point to a particular resource and automatically deletes  the resource when nobody is pointing to it any longer. The code above is almost the same as with <code>shared_ptr</code>, but copying behavior is much more natural:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1845,32 +1845,32 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// call factory function
-</span><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// use pInv as before
-</span><span class="c1"></span>
-    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv1</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// pInv1 points to the object returned from createInvestment
-</span><span class="c1"></span>
-    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv2</span><span class="p">(</span><span class="n">pInv1</span><span class="p">);</span> <span class="c1">// both pInv1 and pInv2 now point to the object
-</span><span class="c1"></span>
-    <span class="n">pInv1</span> <span class="o">=</span> <span class="n">pInv2</span><span class="p">;</span>  <span class="c1">// nothing has changed
-</span><span class="c1"></span>
-<span class="p">}</span>        <span class="c1">// automatically delete pInv via shared_ptr&#39;s dtor
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">f</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// call factory function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>  <span class="c1">// use pInv as before
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv1</span><span class="p">(</span><span class="n">createInvestment</span><span class="p">());</span> <span class="c1">// pInv1 points to the object returned from createInvestment
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Investment</span><span class="o">&gt;</span> <span class="n">pInv2</span><span class="p">(</span><span class="n">pInv1</span><span class="p">);</span> <span class="c1">// both pInv1 and pInv2 now point to the object
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">pInv1</span> <span class="o">=</span> <span class="n">pInv2</span><span class="p">;</span>  <span class="c1">// nothing has changed
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>        <span class="c1">// automatically delete pInv via shared_ptr&#39;s dtor
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>There is more information on <code>tr1::shared_ptr</code> in item 14, item 18, and item 54. For now, another point worth noting is that, since both <code>auto_ptr</code> and <code>tr1::shared_ptr</code> use <code>delete</code> in their destructors rather than <code>delete []</code> (item 16), it is a bad idea to wrap dynamically allocated arrays with <code>auto_ptr</code> or <code>tr1::shared_ptr</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pStr</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span> <span class="c1">// wrong delete form will be used, bad idea!
-</span><span class="c1"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pInt</span><span class="p">(</span><span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="mi">1024</span><span class="p">]);</span> <span class="c1">// same problem
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">auto_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">pStr</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span> <span class="c1">// wrong delete form will be used, bad idea!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pInt</span><span class="p">(</span><span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="mi">1024</span><span class="p">]);</span> <span class="c1">// same problem
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Since having <code>createInvestment</code> returning a raw pointer type is error-prone, we&rsquo;ll see in item 18 that an interface modification is preferred.</p>
     </article>
@@ -2317,7 +2317,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
+<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
