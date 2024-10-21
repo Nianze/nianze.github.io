@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
+<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
+<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.112.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1403,32 +1403,6 @@
 </script>
 
     
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 
 
 
@@ -1778,7 +1752,7 @@ if (!doNotTrack) {
 <!-- toc -->
 <h1 id="redesign-concrete-base-classes-to-abstract-ones">Redesign concrete base classes to abstract ones</h1>
 <p>If we have two concrete classes C1 and C2 and we&rsquo;d like C2 to publicly inherit from C1, we should transform that two-class hierarchy into a three-class hierarchy by creating a new class A and having both C1 and C2 publicly inherit from it:</p>
-<pre><code>initial idea  |             the transformed hierarchy
+<pre tabindex="0"><code>initial idea  |             the transformed hierarchy
 ┌─────────┐   |                    ┌─────┐
 │   C1    │   |                    │  A  │
 └─────────┘   |                    └─────┘
@@ -1787,7 +1761,7 @@ if (!doNotTrack) {
 │   C1    │   |              │ C1 │      │ C2 │
 └─────────┘   |              └────┘      └────┘
 </code></pre><p>For example, we create a software dealing with animals, with two kinds of animals - lizards and chickens - require special handling:</p>
-<pre><code>                    ┌──────────┐
+<pre tabindex="0"><code>                    ┌──────────┐
                     │  Animal  │
                     └──────────┘
    public inheritance ↗     ↖ public inheritance
@@ -1797,7 +1771,7 @@ if (!doNotTrack) {
 </code></pre><p>The <code>Animal</code> class embodies the features shared by all the creatures, and the <code>Lizerd</code> and <code>Chicken</code> classes specialize <code>Animal</code> in their own ways:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1816,29 +1790,29 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Animal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">Animal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Chicken</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">Chicken</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Chicken</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Chicken</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Chicken</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Chicken</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Now consider what happens for assignment operation:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1846,13 +1820,13 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Lizard</span> <span class="n">liz1</span><span class="p">;</span>
-<span class="n">Lizard</span> <span class="n">liz2</span><span class="p">;</span>
-<span class="n">Animal</span> <span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz1</span><span class="p">;</span>
-<span class="n">Animal</span> <span class="o">*</span><span class="n">pAni2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz2</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">*</span><span class="n">pAni2</span><span class="p">;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Lizard</span> <span class="n">liz1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Lizard</span> <span class="n">liz2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Animal</span> <span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Animal</span> <span class="o">*</span><span class="n">pAni2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">*</span><span class="n">pAni2</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>The two problems here:</p>
 <ol>
@@ -1862,7 +1836,7 @@ if (!doNotTrack) {
 <h2 id="solution-1-virtual-functions">Solution 1: virtual functions</h2>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1881,29 +1855,29 @@ if (!doNotTrack) {
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Animal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Chicken</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="n">Chicken</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Chicken</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="n">Chicken</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>We can customize the return value of the virtual assignment operators here, but the rules of C++ force us to declare identical <em>parameter</em> types for a virtual function in every class in which it is declared, leading to the problem that the assignment operator for the <code>Lizard</code> and <code>Chicken</code> must be prepared to accept <em>any</em> kind of <code>Animal</code> object on the right-hand side of an assignment:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1914,21 +1888,21 @@ if (!doNotTrack) {
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Lizard</span> <span class="n">liz</span><span class="p">;</span>
-<span class="n">Chicken</span> <span class="n">chick</span><span class="p">;</span>
-
-<span class="n">Animal</span> <span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz</span><span class="p">;</span>
-<span class="n">Animal</span> <span class="o">*</span><span class="n">pAni2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">chick</span><span class="p">;</span>
-
-<span class="p">...</span>
-
-<span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">*</span><span class="n">pAni2</span><span class="p">;</span> <span class="c1">// assign a chicken to a lizard!
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Lizard</span> <span class="n">liz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Chicken</span> <span class="n">chick</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Animal</span> <span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Animal</span> <span class="o">*</span><span class="n">pAni2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">chick</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">*</span><span class="n">pAni2</span><span class="p">;</span> <span class="c1">// assign a chicken to a lizard!
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>By making <code>Animal</code>&rsquo;s assignment operator virtual, we opened the door to such mixed-type operations. To only allow the same type assignment in virtual assignment operation, we have to make distinctions the types at runtime:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1936,20 +1910,20 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">Lizard</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="c1">// make sure rhs is really a lizard
-</span><span class="c1"></span>    <span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs_liz</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span> <span class="c1">// proceed with a normal assignment of rhs_liz to *this
-</span><span class="c1"></span><span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">Lizard</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// make sure rhs is really a lizard
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs_liz</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span> <span class="c1">// proceed with a normal assignment of rhs_liz to *this
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>In this case, we have to worry about <code>std::bad_cast</code> exceptions thrown by <code>dynamic_cast</code> when <code>rhs</code> is not a <code>Lizard</code>, while paying for extra runtime check cost for valid assignment cases, as well as the harder to maintain code.</p>
 <h2 id="solution-2-adding-another-function">Solution 2: adding another function</h2>
 <p>If we don&rsquo;t want to pay for the complexity or cost of a <code>dynamic_cast</code> in the case of valid assignment, we add to <code>Lizard</code> the conventional assignment operator:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1962,22 +1936,22 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// add this
-</span><span class="c1"></span>    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">Lizard</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">));</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">Animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>  <span class="c1">// add this
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">Lizard</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -1987,15 +1961,15 @@ if (!doNotTrack) {
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Lizard</span> <span class="n">liz1</span><span class="p">,</span> <span class="n">liz2</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="n">liz1</span> <span class="o">=</span> <span class="n">liz2</span><span class="p">;</span>   <span class="c1">// calls operator= taking a const Lizard&amp;
-</span><span class="c1"></span>
-<span class="n">Animal</span> <span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz1</span><span class="p">;</span>
-<span class="n">Animal</span> <span class="o">*</span><span class="n">pAni2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz2</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">*</span><span class="n">pAni2</span><span class="p">;</span>  <span class="c1">// calls operator= taking a const Animal&amp;
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Lizard</span> <span class="n">liz1</span><span class="p">,</span> <span class="n">liz2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">liz1</span> <span class="o">=</span> <span class="n">liz2</span><span class="p">;</span>   <span class="c1">// calls operator= taking a const Lizard&amp;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="n">Animal</span> <span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">Animal</span> <span class="o">*</span><span class="n">pAni2</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">liz2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="n">pAni1</span> <span class="o">=</span> <span class="o">*</span><span class="n">pAni2</span><span class="p">;</span>  <span class="c1">// calls operator= taking a const Animal&amp;
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Still, clients of <code>Lizard</code> and <code>Chicken</code> have to be prepared to catch <code>bad_cast</code> exceptions and do something sensible with them each time they perform an assignment, which most programmers are unwilling to do.</p>
 <h2 id="solution-3-making-partial-assignment-illegal">Solution 3: making partial assignment illegal</h2>
@@ -2008,7 +1982,7 @@ if (!doNotTrack) {
 <p>Assignment operator in derived classes are responsible for calling assignment operators in their base classes, but a private <code>Animal::operator=</code> makes it impossible to implement the <code>Lizard::operator=</code> and <code>Chicken::operator=</code> correctly to assign the <code>Animal</code> part of <code>*this</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -2016,13 +1990,13 @@ if (!doNotTrack) {
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">Lizard</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-    <span class="n">Animal</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span> <span class="c1">// can&#39;t call private Animal::operator=
-</span><span class="c1"></span>    <span class="p">...</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">Lizard</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span> <span class="c1">// can&#39;t call private Animal::operator=
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div></li>
 </ol>
@@ -2031,7 +2005,7 @@ if (!doNotTrack) {
 <p>Because our orignimal design for the system presupposed that <code>Animal</code> objects were necessary, we can not abstract <code>Animal</code> class. Instead, we create a new class - <code>AbstractAnimal</code> that consists of the common features of <code>Animal</code>, <code>Lizard</code>, and <code>Chicken</code>, and we make <em>that</em> class abstract by making its destructor a pure virtual function<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2057,31 +2031,31 @@ if (!doNotTrack) {
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">AbstractAnimal</span> <span class="p">{</span>
-<span class="k">protected</span><span class="o">:</span>
-    <span class="n">AbstractAnimal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">AbstractAnimal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">AbstractAnimal</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// still need to impl. the destructor even it&#39;s a pure virtual function
-</span><span class="c1"></span>    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Animal</span><span class="o">:</span> <span class="k">public</span> <span class="n">AbstractAnimal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">Animal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">AbstractAnimal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">Chicken</span><span class="o">:</span> <span class="k">public</span> <span class="n">AbstractAnimal</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">Chicken</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Chicken</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">AbstractAnimal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">protected</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">AbstractAnimal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">AbstractAnimal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="o">~</span><span class="n">AbstractAnimal</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// still need to impl. the destructor even it&#39;s a pure virtual function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Animal</span><span class="o">:</span> <span class="k">public</span> <span class="n">AbstractAnimal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Animal</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lizard</span><span class="o">:</span> <span class="k">public</span> <span class="n">AbstractAnimal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Lizard</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Lizard</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Chicken</span><span class="o">:</span> <span class="k">public</span> <span class="n">AbstractAnimal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Chicken</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Chicken</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>This design gives us everything:</p>
 <ul>
@@ -2104,7 +2078,7 @@ if (!doNotTrack) {
 <p>Implement the new class in terms of the library class we&rsquo;d like to inherit from: having an object of the library class as a data member, then reimplement the library class&rsquo;s interface in the new class - this requires to update the class each time the library vendor updates our dependent library classes, and we also give up the ability to redefine virtual functions declared in the library class (we can&rsquo;t redefine virtual functions unless we inherit them):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2126,27 +2100,27 @@ if (!doNotTrack) {
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">resize</span><span class="p">(</span><span class="kt">int</span> <span class="n">newWidth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newHeight</span><span class="p">);</span>
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">repaint</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-
-    <span class="kt">int</span> <span class="nf">width</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="nf">height</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="k">class</span> <span class="nc">SpecialWindow</span> <span class="p">{</span> <span class="c1">// class we wanted to have inherit from Window
-</span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="p">...</span>
-    <span class="kt">int</span> <span class="n">width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">w</span><span class="p">.</span><span class="n">width</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// pass through nonvirtual functions
-</span><span class="c1"></span>    <span class="kt">int</span> <span class="nf">height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">w</span><span class="p">.</span><span class="n">height</span><span class="p">();</span> <span class="p">}</span>
-
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">resize</span><span class="p">(</span><span class="kt">int</span> <span class="n">newWidth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newHeight</span><span class="p">);</span> <span class="c1">// new impl. of &#34;inherited&#34; virtual functions
-</span><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">repaint</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Window</span> <span class="n">w</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Window</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">resize</span><span class="p">(</span><span class="kt">int</span> <span class="n">newWidth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newHeight</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">repaint</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">width</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">height</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SpecialWindow</span> <span class="p">{</span> <span class="c1">// class we wanted to have inherit from Window
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">w</span><span class="p">.</span><span class="n">width</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// pass through nonvirtual functions
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="nf">height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">w</span><span class="p">.</span><span class="n">height</span><span class="p">();</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">resize</span><span class="p">(</span><span class="kt">int</span> <span class="n">newWidth</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newHeight</span><span class="p">);</span> <span class="c1">// new impl. of &#34;inherited&#34; virtual functions
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">repaint</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Window</span> <span class="n">w</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div></li>
 <li>
@@ -2156,7 +2130,7 @@ if (!doNotTrack) {
 <div class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn:1" role="doc-endnote">
+<li id="fn:1">
 <p>Declaring a function pure virtual doesn&rsquo;t mean it has no implementation, it means: 1. the current class is abstract, and 2 any concrete class inheriting from the current class must declare the function as a &ldquo;normal&rdquo; virtual function (i.e., without the &ldquo;=0&rdquo;).&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
@@ -2605,7 +2579,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
+<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 

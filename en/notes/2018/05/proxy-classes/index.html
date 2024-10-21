@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
+<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
+<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.112.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1403,32 +1403,6 @@
 </script>
 
     
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 
 
 
@@ -1780,21 +1754,21 @@ if (!doNotTrack) {
 <p>Consider this statement:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="n">data</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">20</span><span class="p">];</span>
-<span class="p">...</span>
-<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">6</span><span class="p">];</span> <span class="c1">// fine
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">data</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">20</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">6</span><span class="p">];</span> <span class="c1">// fine
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>We want to create a general 2D array supporting operations such as <code>data[3][6]</code>. However, there&rsquo;s no such thing as a <code>operator[][]</code> in C++. The reason it is legal to write code above that appears to use <code>operator[][]</code> is because the variable <code>data</code> is not really a two-dimensinal array at all, but a 10-element one-dimensional array, each element of which is itself a 20-element array. So the expression <code>data[3][6]</code> really means <code>(data[3])[6]</code> - the seventh element of the array that is the fourth element of <code>data</code>.</p>
 <p>Playing the same trick as above, we can define our <code>Array2D</code> class by overloading <code>operator[]</code> to return an object of a new class, <code>Array1D</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1809,33 +1783,33 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
-<span class="k">class</span> <span class="nc">Array2D</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">class</span> <span class="nc">Array1D</span> <span class="p">{</span>
-    <span class="k">public</span><span class="o">:</span>
-        <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
-        <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-    <span class="p">};</span>
-
-    <span class="n">Array1D</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
-    <span class="k">const</span> <span class="n">Array1D</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Array2D</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Array1D</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Array1D</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">Array1D</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Then it is legal to write code like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Array2D</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-<span class="p">...</span>
-<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">6</span><span class="p">];</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Array2D</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">6</span><span class="p">];</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Conceptually intances of <code>Array1D</code> class (which is a <em>proxy class</em>) do not exist for clients of <code>Array2D</code>. Such clients program as if they were using real, live two-dimensional arrays.</p>
 <h1 id="distinguishing-reads-from-writes-via-operator">Distinguishing Reads from Writes via operator[]</h1>
@@ -1849,7 +1823,7 @@ if (!doNotTrack) {
 <p>The solution: we <em>delay</em> our lvalue-vs-rvalue actions until we see how the result of <code>operator[]</code> is used - by using proxy class to postpone our decision until <em>after</em> <code>operator[]</code> has returned (lazy evaluation, see MECpp item 7):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1872,28 +1846,28 @@ if (!doNotTrack) {
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>   <span class="c1">// reference-counted strings
-</span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-
-    <span class="k">class</span> <span class="nc">CharProxy</span> <span class="p">{</span>   <span class="c1">// proxy fro string chars
-</span><span class="c1"></span>    <span class="k">public</span><span class="o">:</span>
-        <span class="n">CharProxy</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">);</span>  <span class="c1">// creation
-</span><span class="c1"></span>        <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span> <span class="c1">// lvalue uses
-</span><span class="c1"></span>        <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">);</span>  <span class="c1">// lvalue uses
-</span><span class="c1"></span>        <span class="k">operator</span> <span class="nf">char</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// rvalue uses
-</span><span class="c1"></span>    <span class="k">private</span><span class="o">:</span>
-        <span class="n">String</span><span class="o">&amp;</span> <span class="n">theString</span><span class="p">;</span>  <span class="c1">// string this proxy pertains to        
-</span><span class="c1"></span>        <span class="kt">int</span> <span class="n">charIndex</span><span class="p">;</span>  <span class="c1">// char within that string this proxy stands for
-</span><span class="c1"></span>    <span class="p">};</span>
-
-    <span class="k">const</span> <span class="n">CharProxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// for const Strings
-</span><span class="c1"></span>    <span class="n">CharProxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>  <span class="c1">// for non-const Strings
-</span><span class="c1"></span>    <span class="p">...</span>
-    <span class="k">friend</span> <span class="k">class</span> <span class="nc">CharProxy</span><span class="p">;</span> <span class="c1">// CharProxy need access to private data member: value
-</span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
-    <span class="n">RCPtr</span><span class="o">&lt;</span><span class="n">StringValue</span><span class="o">&gt;</span> <span class="n">value</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>   <span class="c1">// reference-counted strings
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">CharProxy</span> <span class="p">{</span>   <span class="c1">// proxy fro string chars
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CharProxy</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">);</span>  <span class="c1">// creation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span> <span class="c1">// lvalue uses
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">);</span>  <span class="c1">// lvalue uses
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">operator</span> <span class="nf">char</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// rvalue uses
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span><span class="o">&amp;</span> <span class="n">theString</span><span class="p">;</span>  <span class="c1">// string this proxy pertains to        
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kt">int</span> <span class="n">charIndex</span><span class="p">;</span>  <span class="c1">// char within that string this proxy stands for
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">CharProxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// for const Strings
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">CharProxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>  <span class="c1">// for non-const Strings
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">friend</span> <span class="k">class</span> <span class="nc">CharProxy</span><span class="p">;</span> <span class="c1">// CharProxy need access to private data member: value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">RCPtr</span><span class="o">&lt;</span><span class="n">StringValue</span><span class="o">&gt;</span> <span class="n">value</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Now let&rsquo;s see how it works. Given reference-counted stirngs using proxies above <code>String s1, s2;</code>,</p>
 <h2 id="for-rvalue-usage">For rvalue usage</h2>
@@ -1905,7 +1879,7 @@ if (!doNotTrack) {
 <p>Now that we know exactly the context in which caller invokes the <code>operator[]</code>, it is easy to implement them:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1919,23 +1893,23 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
-<span class="p">{</span>
-    <span class="c1">// return a const proxy
-</span><span class="c1"></span>    <span class="c1">// Because CharProxy::operator= isn&#39;t a const member function,
-</span><span class="c1"></span>    <span class="c1">// the returned proxies can&#39;t be used as the target of assignment, and this behavior is exactly what we want for const version of operator[]
-</span><span class="c1"></span>    <span class="k">return</span> <span class="nf">CharProxy</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">),</span> <span class="n">index</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="nf">CharProxy</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">,</span> <span class="n">index</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">const</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// return a const proxy
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Because CharProxy::operator= isn&#39;t a const member function,
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// the returned proxies can&#39;t be used as the target of assignment, and this behavior is exactly what we want for const version of operator[]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="nf">CharProxy</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">),</span> <span class="n">index</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span> <span class="n">String</span><span class="o">::</span><span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">CharProxy</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">,</span> <span class="n">index</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1965,35 +1939,35 @@ if (!doNotTrack) {
 </span><span class="lnt">28
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="n">CharProxy</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
-<span class="o">:</span> <span class="n">theString</span><span class="p">(</span><span class="n">str</span><span class="p">),</span> <span class="n">charIndex</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="p">{}</span>
-
-<span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span> <span class="kt">char</span><span class="p">()</span> <span class="k">const</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">];</span>
-<span class="p">}</span>
-
-<span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">isShared</span><span class="p">())</span>
-    <span class="p">{</span>
-        <span class="n">theString</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]</span> <span class="o">=</span> 
-        <span class="n">rhs</span><span class="p">.</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">];</span>
-    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">isShared</span><span class="p">())</span>
-    <span class="p">{</span>
-        <span class="n">theString</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
-    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="n">CharProxy</span><span class="p">(</span><span class="n">String</span><span class="o">&amp;</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="n">theString</span><span class="p">(</span><span class="n">str</span><span class="p">),</span> <span class="n">charIndex</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span> <span class="kt">char</span><span class="p">()</span> <span class="k">const</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">isShared</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">theString</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]</span> <span class="o">=</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">rhs</span><span class="p">.</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">&amp;</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">isShared</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">theString</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="preventing-implicit-conversions-in-single-argument-constructor">Preventing implicit conversions in single-argument constructor</h1>
 <p>Refer to MECpp item 5.</p>
@@ -2004,7 +1978,7 @@ if (!doNotTrack) {
 <p>In general, taking the address of a proxy yields a different type of pointer than does taking the address of a real object. Thus, the statement <code>char *p = &amp;s1[1];</code> will cause error. To eliminate the problem, we&rsquo;ll have to overload the address-of operators for <code>CharProxy</code> class:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2016,21 +1990,21 @@ if (!doNotTrack) {
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="p">...</span>
-    <span class="k">class</span> <span class="nc">CharProxy</span> <span class="p">{</span>
-        <span class="kt">char</span> <span class="o">*</span> <span class="k">operator</span><span class="o">&amp;</span><span class="p">();</span>
-        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-        <span class="p">...</span>
-    <span class="p">};</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">CharProxy</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">char</span> <span class="o">*</span> <span class="k">operator</span><span class="o">&amp;</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2045,20 +2019,20 @@ if (!doNotTrack) {
 </span><span class="lnt">13
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="k">return</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]);</span>
-<span class="p">}</span>
-<span class="kt">char</span> <span class="o">*</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">isShared</span><span class="p">())</span>
-    <span class="p">{</span>
-        <span class="n">theString</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">markUnshareable</span><span class="p">();</span> 
-    <span class="k">return</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]);</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kt">char</span> <span class="o">*</span> <span class="n">String</span><span class="o">::</span><span class="n">CharProxy</span><span class="o">::</span><span class="k">operator</span><span class="o">&amp;</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">isShared</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">theString</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">markUnshareable</span><span class="p">();</span> 
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">theString</span><span class="p">.</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">charIndex</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div></li>
 <li>
@@ -2066,7 +2040,7 @@ if (!doNotTrack) {
 <p>If we have a template for reference-counted arrays that use proxy classes to distringuish lvalue and rvalue invocations of operator[]:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -2082,33 +2056,33 @@ if (!doNotTrack) {
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
-<span class="k">class</span> <span class="nc">Array</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">class</span> <span class="nc">Proxy</span> <span class="p">{</span>
-    <span class="k">public</span><span class="o">:</span>
-        <span class="n">Proxy</span><span class="p">(</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
-        <span class="n">Proxy</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
-        <span class="k">operator</span> <span class="nf">T</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-        <span class="p">...</span>
-    <span class="p">};</span>
-    <span class="k">const</span> <span class="n">Proxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
-    <span class="n">Proxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
-    <span class="p">...</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Array</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Proxy</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Proxy</span><span class="p">(</span><span class="n">Array</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Proxy</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">operator</span> <span class="nf">T</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">...</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">Proxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Proxy</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">...</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Then for <code>Array&lt;int&gt; intArray;</code>, we can&rsquo;t make statement such as <code>intArray[5] += 5;</code> or <code>++intArray[5];</code>, since <code>operator+=</code> and <code>operator++</code> is not defined for proxy objects. To solve this problem, we have to define each of these functions for the <code>Array&lt;T&gt;::Proxy</code>, which, unfortunately, is a lot of work.</p>
 <p>Similarly, we can&rsquo;t invoke member functions on real objects through  proxies. For an array taking <code>Rational</code> as elements (<code>Array&lt;Rational&gt; array;</code>), there is no way to invoke <code>Rational</code>&rsquo;s member function like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">array</span><span class="p">[</span><span class="mi">4</span><span class="p">].</span><span class="n">numerator</span><span class="p">();</span>  <span class="c1">// error!
-</span><span class="c1"></span><span class="kt">int</span> <span class="n">denom</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="mi">22</span><span class="p">].</span><span class="n">denominator</span><span class="p">();</span>  <span class="c1">// error!
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">array</span><span class="p">[</span><span class="mi">4</span><span class="p">].</span><span class="n">numerator</span><span class="p">();</span>  <span class="c1">// error!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="n">denom</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="mi">22</span><span class="p">].</span><span class="n">denominator</span><span class="p">();</span>  <span class="c1">// error!
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>The solution is similar: we need to overload these functions so that they also apply to proxies.</p>
 </li>
@@ -2116,15 +2090,15 @@ if (!doNotTrack) {
 <p>Passed to functions taking references to non-const objects</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">swap</span><span class="p">(</span><span class="kt">char</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">);</span>
-<span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#34;+C+&#34;</span><span class="p">;</span>
-<span class="n">swap</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>  <span class="c1">// won&#39;t compile
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">swap</span><span class="p">(</span><span class="kt">char</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#34;+C+&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">swap</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>  <span class="c1">// won&#39;t compile
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>A <code>CharProxy</code> may be implicitly converted into a <code>char</code>, but there is no conversion function to a <code>char&amp;</code>. Further more, the <code>char</code> to which it may be converted can&rsquo;t be bound to swap&rsquo;s <code>char&amp;</code> parameters, because that <code>char</code> is a temporary object (<code>operator char</code> returns by value,) and, as MECpp item 19 explains, temporary objects are refused to be bound to non-const reference parameters.</p>
 </li>
@@ -2577,7 +2551,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
+<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 

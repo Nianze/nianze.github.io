@@ -18,9 +18,9 @@
 
 <script defer src="/js/lazysizes.min.fb649fcae62177dfe63e67081ddceb830b5ce1f05a4184e9bbb7d87ac4b8f4e5.js"></script>
 
-<script defer src="/js/helper/getParents.min.ccd45f158c1b17849307ba913a72beac239c410f2b6e648496a79842da84e55b.js"></script>
+<script defer src="/js/helper/getParents.min.086022fb02d7a1517e33c2670bffb976b3e80bcacd9caeee0c6a586064f20e42.js"></script>
 
-<script defer src="/js/helper/fadeinout.min.1d13d3e810c3940e80cbba6216a1c76fbf42b5431fc83537ea6997863802362b.js"></script>
+<script defer src="/js/helper/fadeinout.min.3ce954c8aea3b69cc5e6f734d8273ba4cd48d3a7987dbdca145849bc4b8fc296.js"></script>
 
 <script defer src="/js/helper/closest.min.js"></script>
   
@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.83.1" />
+<meta name="generator" content="Hugo 0.112.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1403,32 +1403,6 @@
 </script>
 
     
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-71584380-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-
 
 
 
@@ -1785,20 +1759,20 @@ if (!doNotTrack) {
 <p>In some cases, it makes no sense to allow RAII objects to be copied, so we should prohibit it. As explained in item 6, we declare the copying operations <code>private</code> without definition. A good example is class <code>Mutex</code>, which is synchronization primitives and comes with two functions <code>lock</code> and <code>unlock</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span>   <span class="c1">// lock mutex pointed to by pm
-</span><span class="c1"></span>
-<span class="kt">void</span> <span class="nf">unlock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span> <span class="c1">// unlock the mutex
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span>   <span class="c1">// lock mutex pointed to by pm
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">unlock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span> <span class="c1">// unlock the mutex
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>We should not forget to unlock a <code>Mutex</code> we&rsquo;ve locked, and it rarely makes sense to have &ldquo;copies&rdquo; of synchronization privitives, so we can create an uncopyable class to manage the locks:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1811,23 +1785,23 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Lock</span><span class="o">:</span> <span class="k">private</span> <span class="n">Uncopyable</span> <span class="p">{</span> <span class="c1">// prohibit copying, see item 6
-</span><span class="c1"></span><span class="k">public</span><span class="o">:</span>
-    <span class="k">explicit</span> <span class="n">Lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">)</span>
-    <span class="o">:</span> <span class="n">mutexPtr</span><span class="p">(</span><span class="n">pm</span><span class="p">)</span>
-    <span class="p">{</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// acquire resource
-</span><span class="c1"></span>
-    <span class="o">~</span><span class="n">Lock</span><span class="p">()</span> <span class="p">{</span> <span class="n">unlock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// release resource
-</span><span class="c1"></span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">Mutex</span> <span class="o">*</span><span class="n">mutexPtr</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lock</span><span class="o">:</span> <span class="k">private</span> <span class="n">Uncopyable</span> <span class="p">{</span> <span class="c1">// prohibit copying, see item 6
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">Lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="n">mutexPtr</span><span class="p">(</span><span class="n">pm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// acquire resource
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">Lock</span><span class="p">()</span> <span class="p">{</span> <span class="n">unlock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// release resource
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Mutex</span> <span class="o">*</span><span class="n">mutexPtr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>And we can use <code>Lock</code> in the conventional RAII fashion:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1841,26 +1815,26 @@ if (!doNotTrack) {
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">Mutex</span> <span class="n">m</span><span class="p">;</span>  <span class="c1">// define the mutex
-</span><span class="c1"></span><span class="p">...</span>
-
-
-
-<span class="p">{</span>                  <span class="c1">// create block to define critical section
-</span><span class="c1"></span>    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>   <span class="c1">// lock the mutex
-</span><span class="c1"></span>    <span class="p">...</span>            <span class="c1">// perform critical section operations
-</span><span class="c1"></span>
-    <span class="c1">// Lock ml2(ml);  this is prohibited behavior!
-</span><span class="c1"></span><span class="p">}</span>                  <span class="c1">// automatically unlock mutex at end of block
-</span><span class="c1"></span> 
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Mutex</span> <span class="n">m</span><span class="p">;</span>  <span class="c1">// define the mutex
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">{</span>                  <span class="c1">// create block to define critical section
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>   <span class="c1">// lock the mutex
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>            <span class="c1">// perform critical section operations
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Lock ml2(ml);  this is prohibited behavior!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>                  <span class="c1">// automatically unlock mutex at end of block
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span> 
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="2-reference-count-the-underlying-resource">2. Reference-count the underlying resource</h1>
 <p>Sometimes it&rsquo;s desirable to hold on to a resource until the last object using it has been destroyed. We could implement reference-counting copying behavior by containing a <code>tr1::shared_ptr</code> data member, but in some cases we may have to customize the behavior when the reference count goes to zero, for the default behavior is to call <code>delete</code>.</p>
 <p>The way we customize <code>tr1::shared_ptr</code> is to specify a &ldquo;deleter&rdquo; - a function or function object to be called when the reference count goes to zero (<code>auto_ptr</code> does not give us this privilege), which is an optional second parameter to the <code>tr1::shared_ptr</code> constructor:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -1873,18 +1847,18 @@ if (!doNotTrack) {
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Lock</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="k">explicit</span> <span class="n">Lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span>  <span class="c1">// init shared_ptr with the Mutex
-</span><span class="c1"></span>    <span class="o">:</span> <span class="n">mutexPtr</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">unlock</span><span class="p">)</span>     <span class="c1">// to point to and the unlock func as the deleter
-</span><span class="c1"></span>    <span class="p">{</span>
-        <span class="n">lock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>  <span class="c1">// see item 15 for info on &#34;get&#34;
-</span><span class="c1"></span>    <span class="p">}</span>
-
-<span class="k">private</span><span class="o">:</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Mutex</span><span class="o">&gt;</span> <span class="n">mutexPtr</span><span class="p">;</span>  <span class="c1">// use shared_ptr instead of raw pointer
-</span><span class="c1"></span><span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lock</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">Lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span>  <span class="c1">// init shared_ptr with the Mutex
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">:</span> <span class="n">mutexPtr</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">unlock</span><span class="p">)</span>     <span class="c1">// to point to and the unlock func as the deleter
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">lock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>  <span class="c1">// see item 15 for info on &#34;get&#34;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Mutex</span><span class="o">&gt;</span> <span class="n">mutexPtr</span><span class="p">;</span>  <span class="c1">// use shared_ptr instead of raw pointer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Since a class&rsquo;s destructor (both user-defined ones and compilter-generated ones) automatically invokes the destructors of the class&rsquo;s non-static data members, there&rsquo;s no need to declare a destructor for class <code>Lock</code> explicitly (item 5). We simply rely on the default compilter-generated behavior, and that&rsquo;s enough.</p>
 <h1 id="3-copy-the-underlying-resource">3. Copy the underlying resource</h1>
@@ -2336,7 +2310,7 @@ if (!doNotTrack) {
 </div>
 
 
-<script defer src="/js/swipe.min.989e074dfb92ce7f57a92c1df7027f88b53c50a54fd9ad450a673a64aa91bfa4.js"></script>
+<script defer src="/js/swipe.min.feb438efb7ca009ecd7fc2ac3ad2fced4840990b2798d81f87137f2dc6281f05.js"></script>
 
 <script defer src="/js/micromodal.min.de01b44b2f383056bbcaf6ee921fd385d79108ec1129afd0eb2f3f5a07e11f45.js"></script>
 
