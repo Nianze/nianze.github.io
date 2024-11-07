@@ -20,6 +20,9 @@ rm -rf public/*
 echo "Generating site"
 hugo
 
+echo "remove .DS_Store"
+find . -name ".DS_Store" -print -delete
+
 echo "Updating gh-pages branch"
 cd public && git add --all && git commit -m "Publishing to gh-pages (publish.sh)"
 
