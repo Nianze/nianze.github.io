@@ -12,10 +12,12 @@ I shoot, develop, and enlarge films in my apartment (established a simple darkro
 
 * Digital cameras:
     * Leica M9
+    * Leica Q2
+    * Leica SL
 * Film cameras:
     * Leica M3 (made in 1959/6)
     * Konica Hexar RF
-    * Pentax ZX-5N(aka MZ-5N, with another broken MZ-M for repair parts replacement)
+    * Pentax ZX-5N (aka MZ-5N)
     * Pentax LX
     * Rolleiflex 3.5F type 3 with Zeiss Planar lens (6 elements, made in 1961)
     * Rolleiflex 2.8C with Schneider-Kreuznach Xenotar lens (made in 1953)
