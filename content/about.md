@@ -11,9 +11,8 @@ comments: false
 I shoot, develop, and enlarge films in my apartment (established a simple darkroom in the bathroom), and I like collecting vintage film cameras and lenses. Below is my current collection:
 
 * Digital cameras:
-    * Leica M9
-    * Leica Q2
-    * Leica SL
+    * Leica M9-P (silver)
+    * Leica CL (silver)
 * Film cameras:
     * Leica M3 (made in 1959/6)
     * Konica Hexar RF
