@@ -83,7 +83,7 @@ featured_image: 2024/08/05/m3-rollei.jpg
 
 {{< img src="/images/2024/08/05/m9p-rollei.JPG" title="搭配M9P" caption="绝配还得是M9P" >}}
 
-一直很喜欢徕卡M9配Sonnar头呈现的效果。之前挂ZM 50mm f1.5和Nikkor-sc 5cm f1.4 LTM，最近就换成这枚Rollei 40mm f2.8了。原厂自带了一枚50mm框线版LTM转M口转接环，但我出门一般会换成35mm框线版的LTM转接环：其实M4-P之后所有包含六组框线的徕卡M机，35mm框线在2米开外的等效焦距比起35mm其实反而会更接近40mm（估计大致在38mm），所以拿35mm框线来给40mm镜头取景正正好。以下都是M9原图直出JPG缩图至30%大小。
+一直很喜欢徕卡M9配Sonnar头呈现的效果。之前挂ZM 50mm f1.5和Nikkor-sc 5cm f1.4 LTM，最近就换成这枚Rollei 40mm f2.8了。原厂自带了一枚50mm框线版LTM转M口转接环，但我出门一般会换成35mm框线版的LTM转接环：对于自M4-P其包含六组框线的徕卡M机，35mm框线在2米开外的等效焦距比起35mm其实反而会更接近40mm（估计大致在38mm），所以拿35mm框线来给40mm镜头取景正正好。以下都是M9原图直出JPG缩图至30%大小。
 
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009694.JPG" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009710.JPG" title="" caption="" >}}
