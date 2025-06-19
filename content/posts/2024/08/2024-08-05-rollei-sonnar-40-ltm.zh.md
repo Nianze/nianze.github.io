@@ -11,7 +11,7 @@ tags:
 - LTM
 - sonnar
 - chinese
-slug: "Rollei Sonnar 40 Ltm"
+slug: "Rollei Sonnar 40 LTM"
 featured_image: 2024/08/05/m3-rollei.jpg
 ---
 
@@ -28,11 +28,9 @@ featured_image: 2024/08/05/m3-rollei.jpg
 
 {{< img src="/images/2024/08/05/Grafik_JoostSchmidt_und_CL.jpeg" title="少即是多" caption="徕卡CL包豪斯限量款" >}}
 
-
 禄来靠双反起家，所向披靡大杀四方。奠定双反机型设计模板的禄莱福来Rolleiflex，始终被模仿，从未被超越（提一嘴玛米亚双反：C330近摄有创新但剑走偏锋不够优雅），在不停迭代中于3.5f和2.8f这一代达到巅峰，机械设计复杂精密堪比钟表，给我一种蒸汽朋克的复杂美感。拆开禄莱双反的前面板，看着里面复杂的齿轮结构，我会突然想起西班牙塞维利亚的阿尔卡萨皇宫（《权力的游戏》里多恩家族夏季行宫的取景地）里，墙面上密密麻麻繁复炫目的三维几何装饰结构。禄莱创始人源自福伦达，所以继承了这种复杂审美取向倒也不意外（福伦达的机械设计则不仅复杂，更是反人体工学）。
 
 {{< img src="/images/2024/08/05/real-alcazar-sevilla-2.jpg" title="阿尔卡萨皇宫的墙面" caption="穆德哈尔以及文艺复兴风格" >}}
-
 
 所以，当我得知，有这么一枚小巧的禄莱镜头，可以接在徕卡的机身上，徕上加莱，双份的快乐，自然不可错过。
 
@@ -54,13 +52,13 @@ featured_image: 2024/08/05/m3-rollei.jpg
 
 这三枚镜头大有来头：
 
-- 40mm镜头，如前文所述，来自禄莱35S上的伸缩头，且传闻使用的就是当年造禄莱35S用剩下的德产玻璃制作；
+- 40mm镜头，如前文所述，来自禄莱35S上的伸缩头，且传闻使用的就是当年造禄莱35S用剩下的德产库存玻璃制作；
 - 50mm标头，源于上世纪70-90年代禄莱造单反时期的QBM口Rollei 50mm f/1.8 Planar HFT：该镜头参考了[蔡司凹玉Zeiss Ultron 50mm f/1.8]({{< ref "/posts/2024/01/2024-01-15-zeiss-ultron.zh.md" >}})的设计，结构也是7片6组的双高斯，同期同工厂生产的Voigtlander Color Ultron 50mm f/1.8也是这个结构。产量少，没什么讨论度（我网上甚至没搜到相关的图片）。毕竟M口50mm牛头太多了，这枚QBM口的套机头，素质都比不过康泰时CY口的T* 50/1.7，更别说前代的凹玉，体积估计也不小，确实没竞争力；
 - 最后一枚80mm，同样稀有，来自禄莱2.8系列双反相机搭载的那枚中画幅蔡司Planar镜头，出射光瞳与像面的距离很远，可以把后半段整组拧下来更换为官方出的F口后组配件，直接拧在尼康F口单反上用，很有意思！
 
 {{< img src="/images/2024/08/05/mtf_crvs.jpeg" title="镜头结构" caption="附MTF曲线" >}}
 
-禄莱35RF发售时，配套镜头就是这枚40 2.8 HFT，据说第一批次的套头只生产了380枚银色和50枚黑色[^2]。之后日本市场内部又专为这枚sonnar头单独生产了几个批次[^3]，生产总量可能在千枚(~万枚?)级别[^4]。镜身刻着Made In Germany，但应该只是确善能制造机械件后在德国组装，造型非常接近同期的福伦达Color Skopar 50 2.5 LTM（至少镜头自带的短遮光罩是可以互换的）。虽然只有2.8的最大光圈，但这枚镜头有十片光圈叶，配合sonnar结构的焦外渲染，散景还是相当舒服的(小光圈的另一个好处是没有了ZM50 1.5焦点漂移的问题)。HFT镀膜出来的颜色相当不错，反差适中[^5]，配上小巧的镜身，当个随身机出门扫街非常合适。
+禄莱35RF发售时，配套镜头就是这枚40 2.8 HFT，据说第一批次的套头只生产了380枚银色和50枚黑色[^2]。之后日本市场内部又专为这枚sonnar头单独生产了几个批次[^3]，生产总量可能在千枚(~万枚?)级别[^4]。镜身刻着Made In Germany，但应该只是确善能制造机械件后在德国组装，造型非常接近同期的福伦达Color Skopar 50 2.5 LTM（至少镜头自带的短遮光罩是可以互换的）。虽然只有2.8的最大光圈，但这枚镜头有十片光圈叶，配合sonnar结构的焦外渲染，散景还是相当舒服的(小光圈的另一个好处是没有了ZM50 1.5焦点漂移的问题)。比起原版的禄来35S，M口机身黄斑联动加持下的这枚Rollei 40/2.8再也不受估焦的限制，全开光圈也能精确合焦，大大增加了可玩性。再加上HFT镀膜出来的颜色相当不错，反差适中[^5]，配上小巧的镜身，当个随身机出门扫街非常合适。
 
 {{< img src="/images/2024/08/05/cl-rollei-1.jpg" title="搭配CL" caption="蓝紫色的HFT镀膜" >}}
 
@@ -73,17 +71,19 @@ featured_image: 2024/08/05/m3-rollei.jpg
 带着禄莱40和M3试拍了一卷HP5。依然是自己分装的带划痕卷+过期药水手冲。
 
 {{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0006-positive.JPG" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0013-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0013-positive.jpg" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0015-positive.JPG" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0021-positive.JPG" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0027-positive.JPG" title="" caption="" >}}
-{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0031-positive.JPG" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0027-positive.jpg" title="" caption="" >}}
+{{< img src="/images/2024/08/05/sample/Leica_M3_Rollei_sonnar_40_28_HFT-0031-positive.jpg" title="" caption="" >}}
 
 ## 数码
 
-{{< img src="/images/2024/08/05/m9-rollei.jpeg" title="搭配M9" caption="钢灰色配银白色也是很搭" >}}
+{{< img src="/images/2024/08/05/m9-rollei.jpeg" title="搭配M9" caption="M9的钢灰色配银白色镜头也搭" >}}
 
-一直很喜欢徕卡M9配sonnar头呈现的效果。之前挂ZM 50 f1.5和Nikkor-sc 5cm f1.4 ltm，最近就换成这枚rollei 40 2.8了。用原厂转接环的话在M9取景器里出现的是50mm框线，但40mm其实更接近35mm的框线，可以靠更换第三方转接环来更改框线。以下都是M9原图直出JPG缩图至30%大小。
+{{< img src="/images/2024/08/05/m9p-rollei.JPG" title="搭配M9P" caption="绝配还得是M9P" >}}
+
+一直很喜欢徕卡M9配Sonnar头呈现的效果。之前挂ZM 50mm f1.5和Nikkor-sc 5cm f1.4 LTM，最近就换成这枚Rollei 40mm f2.8了。原厂自带了一枚50mm框线版LTM转M口转接环，但我出门一般会换成35mm框线版的LTM转接环：其实M4-P之后所有包含六组框线的徕卡M机，35mm框线在2米开外的等效焦距比起35mm其实反而会更接近40mm（估计大致在38mm），所以拿35mm框线来给40mm镜头取景正正好。以下都是M9原图直出JPG缩图至30%大小。
 
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009694.JPG" title="" caption="" >}}
 {{< img src="/images/2024/08/05/sample/leica_m9_rollei_sonnar_40_28_hft-1009710.JPG" title="" caption="" >}}
