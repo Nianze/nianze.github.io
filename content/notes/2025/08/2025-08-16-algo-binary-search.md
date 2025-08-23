@@ -12,6 +12,9 @@ slug: "Algo Review binary search"
 featured_image: 2025/08/16/bs.jpg
 ---
 
+A review on binary search algorithm.
+<!--more-->
+
 # Mindset model
 
 In binary search, key points:
