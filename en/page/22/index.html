@@ -1338,9 +1338,9 @@
 <meta name="description" content="Nzo&#39;s Blog" />
 
 
-<meta name="created" content="2025-08-16T02:45:44-0400">
-<meta name="modified" content="2025-08-16T02:45:44-0400">
-<meta property="article:published_time" content="2025-08-16T02:45:44-0400">
+<meta name="created" content="2025-08-23T00:19:31-0400">
+<meta name="modified" content="2025-08-23T00:19:31-0400">
+<meta property="article:published_time" content="2025-08-23T00:19:31-0400">
 
 <meta name="author" content="Nzo">
 
@@ -1408,7 +1408,160 @@
 
 
 
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" onerror="loadBusuanziFallback()"></script>
+  
+  
+  <script>
+    
+    var enableLocalCounter = JSON.parse("true");
+    var busuanziLoaded = false;
+    
+    
+    function updateAllCounters() {
+      
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+      
+      if (uvElem && uvElem.textContent === '...') {
+        uvElem.textContent = 'Loading...';
+      }
+      if (pvElem && pvElem.textContent === '...') {
+        pvElem.textContent = 'Loading...';
+      }
+      if (pagePvElem && pagePvElem.textContent === '...') {
+        pagePvElem.textContent = 'Loading...';
+      }
+    }
+    
+    function loadBusuanziFallback() {
+      console.log('Primary busuanzi CDN failed, trying fallback...');
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/busuanzi@2.3.0/busuanzi.pure.mini.js';
+      script.async = true;
+      script.onerror = function() {
+        console.log('Fallback busuanzi CDN also failed');
+        if (enableLocalCounter) {
+          console.log('Using local counter as fallback');
+          useLocalCounter();
+        } else {
+          
+          document.querySelectorAll('.busuanzi__item--number').forEach(function(elem) {
+            elem.textContent = 'N/A';
+          });
+          var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+          if (pagePvElem) {
+            pagePvElem.textContent = 'N/A';
+          }
+        }
+      };
+      script.onload = function() {
+        console.log('Fallback busuanzi CDN loaded successfully');
+        busuanziLoaded = true;
+      };
+      document.head.appendChild(script);
+    }
+    
+    
+    function useLocalCounter() {
+      console.log('Initializing local counter system...');
+      
+      
+      var sitePV = localStorage.getItem('site_pv') || 0;
+      var siteUV = localStorage.getItem('site_uv') || 0;
+      
+      
+      sitePV = parseInt(sitePV) + 1;
+      localStorage.setItem('site_pv', sitePV);
+      
+      
+      var lastVisit = localStorage.getItem('last_visit');
+      var today = new Date().toDateString();
+      if (lastVisit !== today) {
+        siteUV = parseInt(siteUV) + 1;
+        localStorage.setItem('site_uv', siteUV);
+        localStorage.setItem('last_visit', today);
+      }
+      
+      
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      
+      if (uvElem) {
+        uvElem.textContent = siteUV;
+        uvElem.title = 'Local counter (unique visitors)';
+      }
+      if (pvElem) {
+        pvElem.textContent = sitePV;
+        pvElem.title = 'Local counter (page views)';
+      }
+      
+      
+      var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+      if (pagePvElem) {
+        
+        var pageUrl = window.location.pathname;
+        var pageKey = 'page_pv_' + btoa(pageUrl).replace(/[^a-zA-Z0-9]/g, '');
+        var pagePV = localStorage.getItem(pageKey) || 0;
+        pagePV = parseInt(pagePV) + 1;
+        localStorage.setItem(pageKey, pagePV);
+        
+        pagePvElem.textContent = pagePV;
+        pagePvElem.title = 'Local counter (page views)';
+      }
+    }
+    
+    
+    setTimeout(function() {
+      if (typeof busuanzi === 'undefined' && !busuanziLoaded) {
+        console.log('Busuanzi not loaded, trying fallback...');
+        loadBusuanziFallback();
+      } else {
+        console.log('Busuanzi loaded successfully');
+        busuanziLoaded = true;
+      }
+    }, 3000);
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      updateAllCounters();
+      
+      
+      setTimeout(function() {
+        var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+        if (pagePvElem && pagePvElem.textContent === '...' && !busuanziLoaded) {
+          
+          loadBusuanziFallback();
+        }
+      }, 2000);
+    });
+    
+    
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1 && node.id === 'busuanzi_value_page_pv') {
+              if (node.textContent === '...' && !busuanziLoaded) {
+                setTimeout(function() {
+                  if (node.textContent === '...') {
+                    loadBusuanziFallback();
+                  }
+                }, 1000);
+              }
+            }
+          });
+        }
+      });
+    });
+    
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  </script>
 
     
 </head>
@@ -1706,6 +1859,36 @@
                 
   <article class="summary-card" data-ani="true">
   <header>
+    <h5 class="title h5"><a href='https://nianze.github.io/en/notes/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/'>[EMCpp]Item-36 Specify std::launch::async if Asynchronicity Is Essential</a> </h5>
+    <h6 class="subtitle caption">
+      <time title="Written At" dir="ltr">📅Oct 1, 2018 </time> 
+       
+      <span title="Reading Time" dir="ltr"> &middot; ☕ 4 min read</span>
+      
+    </h6>
+  </header>
+  <div class="summary-card__content">
+    <div class="summary-card__text p2">
+      
+      <p>The flexibility that default policy for <code>std::async</code> permits both async and sync task execution leads to uncertainty when accessing <code>thread_locals</code>, implies that the task may never execute, and affects program logic for timeout-based <code>wait</code> calls.</p>
+      
+    </div>
+    
+    <div class="summary-card__image-wrapper">
+      <a href="https://nianze.github.io/en/notes/2018/10/specify-stdlaunchasync-if-asynchronicity-is-essential/">
+        <img data-src="/images/2018/2018-10/01.gif" alt="2018/2018-10/01.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
+      </a>
+    </div>
+    
+  </div>
+  <hr />
+</article>
+
+
+            
+                
+  <article class="summary-card" data-ani="true">
+  <header>
     <h5 class="title h5"><a href='https://nianze.github.io/en/notes/2018/08/prefer-task-based-programming-to-thread-based/'>[EMCpp]Item-35 Prefer Task-Based Programming to Thread-Based</a> </h5>
     <h6 class="subtitle caption">
       <time title="Written At" dir="ltr">📅Aug 28, 2018 </time> 
@@ -1814,36 +1997,6 @@
     <div class="summary-card__image-wrapper">
       <a href="https://nianze.github.io/en/notes/2018/08/use-init-capture-to-move-objects-into-closures/">
         <img data-src="/images/2018/2018-08/22.gif" alt="2018/2018-08/22.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-
-            
-                
-  <article class="summary-card" data-ani="true">
-  <header>
-    <h5 class="title h5"><a href='https://nianze.github.io/en/notes/2018/08/avoid-default-capture-modes/'>[EMCpp]Item-31 Avoid Default Capture Modes</a> </h5>
-    <h6 class="subtitle caption">
-      <time title="Written At" dir="ltr">📅Aug 21, 2018 </time> 
-       
-      <span title="Reading Time" dir="ltr"> &middot; ☕ 3 min read</span>
-      
-    </h6>
-  </header>
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>Default by-reference capture can lead to dangling references; default by-value capture is susceptible to dangling pointers, while misleadingly susggests the lambdas are self-contained.</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="https://nianze.github.io/en/notes/2018/08/avoid-default-capture-modes/">
-        <img data-src="/images/2018/2018-08/21.gif" alt="2018/2018-08/21.gif" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
       </a>
     </div>
     
@@ -2209,6 +2362,22 @@
 
         
         <section class="sidebar-recent">
+            <a href="/en/gallery/" class="sidebar-recent__title p2">Gallery</a>
+            <ul class="sidebar-recent__ul">
+                
+                    <li>
+                        <a href="/en/gallery/digital/" class="sidebar-recent__a p2">Digital</a>
+                    </li>
+                
+                    <li>
+                        <a href="/en/gallery/film/" class="sidebar-recent__a p2">Film</a>
+                    </li>
+                
+            </ul>
+        </section>
+        <hr class="hr-fade sidebar-hr" />
+        
+        <section class="sidebar-recent">
             <a href="/en/notes/" class="sidebar-recent__title p2">Notes</a>
             <ul class="sidebar-recent__ul">
                 
@@ -2230,22 +2399,6 @@
                 
                     <li>
                         <a href="/en/notes/2020/04/electronic-music-for-performance-featuring-nicolas-collins/" class="sidebar-recent__a p2">Computer Music Study 4: Electronic Music for Performance ft. Nicolas Collins</a>
-                    </li>
-                
-            </ul>
-        </section>
-        <hr class="hr-fade sidebar-hr" />
-        
-        <section class="sidebar-recent">
-            <a href="/en/gallery/" class="sidebar-recent__title p2">Gallery</a>
-            <ul class="sidebar-recent__ul">
-                
-                    <li>
-                        <a href="/en/gallery/digital/" class="sidebar-recent__a p2">Digital</a>
-                    </li>
-                
-                    <li>
-                        <a href="/en/gallery/film/" class="sidebar-recent__a p2">Film</a>
                     </li>
                 
             </ul>
@@ -2582,7 +2735,7 @@
                         street photography
                     </span>
                     <span class="taxo__num" dir="auto">
-                        87
+                        88
                     </span>
                 </a>
             </span>
@@ -2686,7 +2839,7 @@
                         visual
                     </span>
                     <span class="taxo__num" dir="auto">
-                        88
+                        89
                     </span>
                 </a>
             </span>
@@ -2777,7 +2930,7 @@
                         weekly
                     </span>
                     <span class="taxo__num" dir="auto">
-                        87
+                        88
                     </span>
                 </a>
             </span>
@@ -3057,6 +3210,52 @@
     
 
   </div>
+  
+  
+  <script>
+    
+    setTimeout(function() {
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      
+      if (uvElem && uvElem.textContent === '...') {
+        uvElem.textContent = 'Loading...';
+      }
+      if (pvElem && pvElem.textContent === '...') {
+        pvElem.textContent = 'Loading...';
+      }
+      
+      
+      setTimeout(function() {
+        if (uvElem && (uvElem.textContent === 'Loading...' || uvElem.textContent === '...')) {
+          uvElem.textContent = 'N/A';
+          uvElem.title = 'Counter service unavailable';
+        }
+        if (pvElem && (pvElem.textContent === 'Loading...' || pvElem.textContent === '...')) {
+          pvElem.textContent = 'N/A';
+          pvElem.title = 'Counter service unavailable';
+        }
+      }, 5000);
+    }, 2000);
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+        if (pagePvElem && pagePvElem.textContent === '...') {
+          pagePvElem.textContent = 'Loading...';
+          
+          
+          setTimeout(function() {
+            if (pagePvElem.textContent === 'Loading...') {
+              pagePvElem.textContent = 'N/A';
+              pagePvElem.title = 'Counter service unavailable';
+            }
+          }, 3000);
+        }
+      }, 1000);
+    });
+  </script>
 
                 
             <p class="caption">

@@ -1336,9 +1336,9 @@
 <meta name="description" content="刀心水の胡言乱语" />
 
 
-<meta name="created" content="2025-07-21T00:00:00&#43;0000">
-<meta name="modified" content="2025-07-21T00:00:00&#43;0000">
-<meta property="article:published_time" content="2025-07-21T00:00:00&#43;0000">
+<meta name="created" content="2025-08-23T00:19:31-0400">
+<meta name="modified" content="2025-08-23T00:19:31-0400">
+<meta property="article:published_time" content="2025-08-23T00:19:31-0400">
 
 <meta name="author" content="刀心水">
 
@@ -1406,7 +1406,160 @@
 
 
 
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" onerror="loadBusuanziFallback()"></script>
+  
+  
+  <script>
+    
+    var enableLocalCounter = JSON.parse("false");
+    var busuanziLoaded = false;
+    
+    
+    function updateAllCounters() {
+      
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+      
+      if (uvElem && uvElem.textContent === '...') {
+        uvElem.textContent = 'Loading...';
+      }
+      if (pvElem && pvElem.textContent === '...') {
+        pvElem.textContent = 'Loading...';
+      }
+      if (pagePvElem && pagePvElem.textContent === '...') {
+        pagePvElem.textContent = 'Loading...';
+      }
+    }
+    
+    function loadBusuanziFallback() {
+      console.log('Primary busuanzi CDN failed, trying fallback...');
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/busuanzi@2.3.0/busuanzi.pure.mini.js';
+      script.async = true;
+      script.onerror = function() {
+        console.log('Fallback busuanzi CDN also failed');
+        if (enableLocalCounter) {
+          console.log('Using local counter as fallback');
+          useLocalCounter();
+        } else {
+          
+          document.querySelectorAll('.busuanzi__item--number').forEach(function(elem) {
+            elem.textContent = 'N/A';
+          });
+          var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+          if (pagePvElem) {
+            pagePvElem.textContent = 'N/A';
+          }
+        }
+      };
+      script.onload = function() {
+        console.log('Fallback busuanzi CDN loaded successfully');
+        busuanziLoaded = true;
+      };
+      document.head.appendChild(script);
+    }
+    
+    
+    function useLocalCounter() {
+      console.log('Initializing local counter system...');
+      
+      
+      var sitePV = localStorage.getItem('site_pv') || 0;
+      var siteUV = localStorage.getItem('site_uv') || 0;
+      
+      
+      sitePV = parseInt(sitePV) + 1;
+      localStorage.setItem('site_pv', sitePV);
+      
+      
+      var lastVisit = localStorage.getItem('last_visit');
+      var today = new Date().toDateString();
+      if (lastVisit !== today) {
+        siteUV = parseInt(siteUV) + 1;
+        localStorage.setItem('site_uv', siteUV);
+        localStorage.setItem('last_visit', today);
+      }
+      
+      
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      
+      if (uvElem) {
+        uvElem.textContent = siteUV;
+        uvElem.title = 'Local counter (unique visitors)';
+      }
+      if (pvElem) {
+        pvElem.textContent = sitePV;
+        pvElem.title = 'Local counter (page views)';
+      }
+      
+      
+      var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+      if (pagePvElem) {
+        
+        var pageUrl = window.location.pathname;
+        var pageKey = 'page_pv_' + btoa(pageUrl).replace(/[^a-zA-Z0-9]/g, '');
+        var pagePV = localStorage.getItem(pageKey) || 0;
+        pagePV = parseInt(pagePV) + 1;
+        localStorage.setItem(pageKey, pagePV);
+        
+        pagePvElem.textContent = pagePV;
+        pagePvElem.title = 'Local counter (page views)';
+      }
+    }
+    
+    
+    setTimeout(function() {
+      if (typeof busuanzi === 'undefined' && !busuanziLoaded) {
+        console.log('Busuanzi not loaded, trying fallback...');
+        loadBusuanziFallback();
+      } else {
+        console.log('Busuanzi loaded successfully');
+        busuanziLoaded = true;
+      }
+    }, 3000);
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      updateAllCounters();
+      
+      
+      setTimeout(function() {
+        var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+        if (pagePvElem && pagePvElem.textContent === '...' && !busuanziLoaded) {
+          
+          loadBusuanziFallback();
+        }
+      }, 2000);
+    });
+    
+    
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1 && node.id === 'busuanzi_value_page_pv') {
+              if (node.textContent === '...' && !busuanziLoaded) {
+                setTimeout(function() {
+                  if (node.textContent === '...') {
+                    loadBusuanziFallback();
+                  }
+                }, 1000);
+              }
+            }
+          });
+        }
+      });
+    });
+    
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  </script>
 
     
 </head>
@@ -1724,6 +1877,36 @@
         
   <article class="summary-card" data-ani="true">
   <header>
+    <h5 class="title h5"><a href='https://nianze.github.io/zh/gallery/digital/2021/05/15/2021-05-15-weekly-visual-project/'>2021.05.15 Governors Island</a> </h5>
+    <h6 class="subtitle caption">
+      <time title="创建日期" dir="ltr">📅2021年05月15日 </time> 
+       
+      <span title="阅读时长" dir="ltr"> &middot; ☕ 1 分钟</span>
+      
+    </h6>
+  </header>
+  <div class="summary-card__content">
+    <div class="summary-card__text p2">
+      
+      <p>公寓楼下坐一号线直达South Ferry Station，花$2.75坐NYC Ferry的船，就可以来到Governors Island散步。感觉是个练滑板🛹的好地方。</p>
+      
+    </div>
+    
+    <div class="summary-card__image-wrapper">
+      <a href="https://nianze.github.io/zh/gallery/digital/2021/05/15/2021-05-15-weekly-visual-project/">
+        <img data-src="/images/2021/05/15/scooter.jpg" alt="2021/05/15/scooter.jpg" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
+      </a>
+    </div>
+    
+  </div>
+  <hr />
+</article>
+
+
+      
+        
+  <article class="summary-card" data-ani="true">
+  <header>
     <h5 class="title h5"><a href='https://nianze.github.io/zh/gallery/digital/2021/04/11/2021-04-10-weekly-visual-project/'>2021.04.10 春江水暖鹅先知</a> </h5>
     <h6 class="subtitle caption">
       <time title="创建日期" dir="ltr">📅2021年04月11日 </time> 
@@ -1841,36 +2024,6 @@
 
 
       
-        
-  <article class="summary-card" data-ani="true">
-  <header>
-    <h5 class="title h5"><a href='https://nianze.github.io/zh/gallery/film/2020/10/05/2020-10-05-film-visual-project/'>最近的一些胶片</a> </h5>
-    <h6 class="subtitle caption">
-      <time title="创建日期" dir="ltr">📅2020年10月05日 </time> 
-       
-      <span title="阅读时长" dir="ltr"> &middot; ☕ 1 分钟</span>
-      
-    </h6>
-  </header>
-  <div class="summary-card__content">
-    <div class="summary-card__text p2">
-      
-      <p>Weekly visual project - 2020/10/05</p>
-      
-    </div>
-    
-    <div class="summary-card__image-wrapper">
-      <a href="https://nianze.github.io/zh/gallery/film/2020/10/05/2020-10-05-film-visual-project/">
-        <img data-src="/images/2020/10/05/scan0001.jpg" alt="2020/10/05/scan0001.jpg" src="data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath fill='%23aaa' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1zm-4.44-6.19l-2.35 3.02-1.56-1.88c-.2-.25-.58-.24-.78.01l-1.74 2.23c-.26.33-.02.81.39.81h8.98c.41 0 .65-.47.4-.8l-2.55-3.39c-.19-.26-.59-.26-.79 0z'/%3E%3C/svg%3E" class="lazyload summary-card__image" data-ani="true"/>
-      </a>
-    </div>
-    
-  </div>
-  <hr />
-</article>
-
-
-      
       
 
 
@@ -1961,12 +2114,15 @@
     
       
       
+    
+      
+      
         <li class="disabled"><a name="">&hellip;</a></li>
       
     
       
       
-        <li ><a href="/zh/categories/visual/page/23/">23</a></li>
+        <li ><a href="/zh/categories/visual/page/24/">24</a></li>
       
     
   </ul>
@@ -2016,6 +2172,10 @@
     
         
         <li class="sidebar-recent">
+            <a href="/zh/gallery/digital/2025/08/23/2025-08-23-weekly-visual-project/" class="sidebar-recent__title p1">Casual shots with Leica T</a>
+        </li>
+        
+        <li class="sidebar-recent">
             <a href="/zh/posts/2025/07/2025-07-21-leica-t-typ-701/" class="sidebar-recent__title p1">徕卡T:开山之作</a>
         </li>
         
@@ -2029,10 +2189,6 @@
         
         <li class="sidebar-recent">
             <a href="/zh/posts/2025/06/2025-06-18-pentax-k1-ii/" class="sidebar-recent__title p1">宾得Pentax K-1ii：富士的四分之一</a>
-        </li>
-        
-        <li class="sidebar-recent">
-            <a href="/zh/gallery/digital/2025/06/15/2025-06-15-weekly-visual-project/" class="sidebar-recent__title p1">[Weekly] 2025.06.15</a>
         </li>
         
         <hr class="hr-fade sidebar-hr" />
@@ -2784,7 +2940,7 @@
                         street photography
                     </span>
                     <span class="taxo__num" dir="auto">
-                        87
+                        88
                     </span>
                 </a>
             </span>
@@ -3031,7 +3187,7 @@
                         visual
                     </span>
                     <span class="taxo__num" dir="auto">
-                        115
+                        116
                     </span>
                 </a>
             </span>
@@ -3122,7 +3278,7 @@
                         weekly
                     </span>
                     <span class="taxo__num" dir="auto">
-                        86
+                        87
                     </span>
                 </a>
             </span>
@@ -3390,6 +3546,52 @@
     
 
   </div>
+  
+  
+  <script>
+    
+    setTimeout(function() {
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      
+      if (uvElem && uvElem.textContent === '...') {
+        uvElem.textContent = 'Loading...';
+      }
+      if (pvElem && pvElem.textContent === '...') {
+        pvElem.textContent = 'Loading...';
+      }
+      
+      
+      setTimeout(function() {
+        if (uvElem && (uvElem.textContent === 'Loading...' || uvElem.textContent === '...')) {
+          uvElem.textContent = 'N/A';
+          uvElem.title = 'Counter service unavailable';
+        }
+        if (pvElem && (pvElem.textContent === 'Loading...' || pvElem.textContent === '...')) {
+          pvElem.textContent = 'N/A';
+          pvElem.title = 'Counter service unavailable';
+        }
+      }, 5000);
+    }, 2000);
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+        if (pagePvElem && pagePvElem.textContent === '...') {
+          pagePvElem.textContent = 'Loading...';
+          
+          
+          setTimeout(function() {
+            if (pagePvElem.textContent === 'Loading...') {
+              pagePvElem.textContent = 'N/A';
+              pagePvElem.title = 'Counter service unavailable';
+            }
+          }, 3000);
+        }
+      }, 1000);
+    });
+  </script>
 
                 
             <p class="caption">

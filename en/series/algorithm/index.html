@@ -1406,7 +1406,160 @@
 
 
 
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" onerror="loadBusuanziFallback()"></script>
+  
+  
+  <script>
+    
+    var enableLocalCounter = JSON.parse("true");
+    var busuanziLoaded = false;
+    
+    
+    function updateAllCounters() {
+      
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+      
+      if (uvElem && uvElem.textContent === '...') {
+        uvElem.textContent = 'Loading...';
+      }
+      if (pvElem && pvElem.textContent === '...') {
+        pvElem.textContent = 'Loading...';
+      }
+      if (pagePvElem && pagePvElem.textContent === '...') {
+        pagePvElem.textContent = 'Loading...';
+      }
+    }
+    
+    function loadBusuanziFallback() {
+      console.log('Primary busuanzi CDN failed, trying fallback...');
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/busuanzi@2.3.0/busuanzi.pure.mini.js';
+      script.async = true;
+      script.onerror = function() {
+        console.log('Fallback busuanzi CDN also failed');
+        if (enableLocalCounter) {
+          console.log('Using local counter as fallback');
+          useLocalCounter();
+        } else {
+          
+          document.querySelectorAll('.busuanzi__item--number').forEach(function(elem) {
+            elem.textContent = 'N/A';
+          });
+          var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+          if (pagePvElem) {
+            pagePvElem.textContent = 'N/A';
+          }
+        }
+      };
+      script.onload = function() {
+        console.log('Fallback busuanzi CDN loaded successfully');
+        busuanziLoaded = true;
+      };
+      document.head.appendChild(script);
+    }
+    
+    
+    function useLocalCounter() {
+      console.log('Initializing local counter system...');
+      
+      
+      var sitePV = localStorage.getItem('site_pv') || 0;
+      var siteUV = localStorage.getItem('site_uv') || 0;
+      
+      
+      sitePV = parseInt(sitePV) + 1;
+      localStorage.setItem('site_pv', sitePV);
+      
+      
+      var lastVisit = localStorage.getItem('last_visit');
+      var today = new Date().toDateString();
+      if (lastVisit !== today) {
+        siteUV = parseInt(siteUV) + 1;
+        localStorage.setItem('site_uv', siteUV);
+        localStorage.setItem('last_visit', today);
+      }
+      
+      
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      
+      if (uvElem) {
+        uvElem.textContent = siteUV;
+        uvElem.title = 'Local counter (unique visitors)';
+      }
+      if (pvElem) {
+        pvElem.textContent = sitePV;
+        pvElem.title = 'Local counter (page views)';
+      }
+      
+      
+      var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+      if (pagePvElem) {
+        
+        var pageUrl = window.location.pathname;
+        var pageKey = 'page_pv_' + btoa(pageUrl).replace(/[^a-zA-Z0-9]/g, '');
+        var pagePV = localStorage.getItem(pageKey) || 0;
+        pagePV = parseInt(pagePV) + 1;
+        localStorage.setItem(pageKey, pagePV);
+        
+        pagePvElem.textContent = pagePV;
+        pagePvElem.title = 'Local counter (page views)';
+      }
+    }
+    
+    
+    setTimeout(function() {
+      if (typeof busuanzi === 'undefined' && !busuanziLoaded) {
+        console.log('Busuanzi not loaded, trying fallback...');
+        loadBusuanziFallback();
+      } else {
+        console.log('Busuanzi loaded successfully');
+        busuanziLoaded = true;
+      }
+    }, 3000);
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      updateAllCounters();
+      
+      
+      setTimeout(function() {
+        var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+        if (pagePvElem && pagePvElem.textContent === '...' && !busuanziLoaded) {
+          
+          loadBusuanziFallback();
+        }
+      }, 2000);
+    });
+    
+    
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(function(node) {
+            if (node.nodeType === 1 && node.id === 'busuanzi_value_page_pv') {
+              if (node.textContent === '...' && !busuanziLoaded) {
+                setTimeout(function() {
+                  if (node.textContent === '...') {
+                    loadBusuanziFallback();
+                  }
+                }, 1000);
+              }
+            }
+          });
+        }
+      });
+    });
+    
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  </script>
 
     
 </head>
@@ -1735,8 +1888,7 @@
   <div class="summary-card__content">
     <div class="summary-card__text p2">
       
-      Mindset model In binary search, key points:
-if right is defined as len(nums) - 1, then search space is between [left, right] termination condition: while (left &lt;= right) in each shrinking iteration: left = mid + 1 and right = mid - 1 final state: left == right + 1 if right is defined as len(nums), then search space is between [left, right) termination condition: while (left &lt; right) in each shrinking iteration: left = mid + 1 but right = mid final state: left == right for left bound searching, right = mid (-1) if f(mid) == target, return left (this will be immediate ceiling item if target is not in f(x)) for right bound searching, left = mid + 1 if f(mid) == target, return left - 1 (this will be immediate floor item if target is not in f(x)) 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 # monotone function def f(x: int) -&gt; int: pass # binary search to get target def binary_search(nums: List[int], target: int) -&gt; int: if len(nums) == 0: return -1 left = .
+      <p>A review on binary search algorithm.</p>
       
     </div>
     
@@ -2258,7 +2410,7 @@ if right is defined as len(nums) - 1, then search space is between [left, right]
                         street photography
                     </span>
                     <span class="taxo__num" dir="auto">
-                        87
+                        88
                     </span>
                 </a>
             </span>
@@ -2362,7 +2514,7 @@ if right is defined as len(nums) - 1, then search space is between [left, right]
                         visual
                     </span>
                     <span class="taxo__num" dir="auto">
-                        88
+                        89
                     </span>
                 </a>
             </span>
@@ -2453,7 +2605,7 @@ if right is defined as len(nums) - 1, then search space is between [left, right]
                         weekly
                     </span>
                     <span class="taxo__num" dir="auto">
-                        87
+                        88
                     </span>
                 </a>
             </span>
@@ -2707,6 +2859,52 @@ if right is defined as len(nums) - 1, then search space is between [left, right]
     
 
   </div>
+  
+  
+  <script>
+    
+    setTimeout(function() {
+      var uvElem = document.getElementById('busuanzi_value_site_uv');
+      var pvElem = document.getElementById('busuanzi_value_site_pv');
+      
+      if (uvElem && uvElem.textContent === '...') {
+        uvElem.textContent = 'Loading...';
+      }
+      if (pvElem && pvElem.textContent === '...') {
+        pvElem.textContent = 'Loading...';
+      }
+      
+      
+      setTimeout(function() {
+        if (uvElem && (uvElem.textContent === 'Loading...' || uvElem.textContent === '...')) {
+          uvElem.textContent = 'N/A';
+          uvElem.title = 'Counter service unavailable';
+        }
+        if (pvElem && (pvElem.textContent === 'Loading...' || pvElem.textContent === '...')) {
+          pvElem.textContent = 'N/A';
+          pvElem.title = 'Counter service unavailable';
+        }
+      }, 5000);
+    }, 2000);
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        var pagePvElem = document.getElementById('busuanzi_value_page_pv');
+        if (pagePvElem && pagePvElem.textContent === '...') {
+          pagePvElem.textContent = 'Loading...';
+          
+          
+          setTimeout(function() {
+            if (pagePvElem.textContent === 'Loading...') {
+              pagePvElem.textContent = 'N/A';
+              pagePvElem.title = 'Counter service unavailable';
+            }
+          }, 3000);
+        }
+      }, 1000);
+    });
+  </script>
 
                 
             <p class="caption">
