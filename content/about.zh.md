@@ -14,6 +14,7 @@ I shoot, develop, and enlarge films in my apartment (established a simple darkro
     * Leica M9-P (silver)
     * Leica CL (silver)
     * Pentax K-1 Mark II
+    * Ricoh GR III HDF
 * Film cameras:
     * Leica M3 (made in 1959/6)
     * Pentax ZX-5N (aka MZ-5N)
@@ -45,4 +46,5 @@ I shoot, develop, and enlarge films in my apartment (established a simple darkro
 * Others:
     * Durst M 600 Photo Enlarger
     * LightPix Labs FlashQ Q20II
+    * PENTAX AF 201FG
     * Nikon COOLSCAN IV ED (LS-40 ED)
