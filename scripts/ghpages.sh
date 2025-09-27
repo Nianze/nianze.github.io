@@ -6,16 +6,16 @@ then
     exit 1;
 fi
 
-# echo "Deleting old publication"
-# rm -rf public
-# mkdir public
-# rm -rf .git/worktrees/public/
+echo "Deleting old publication"
+rm -rf public
+mkdir public
+rm -rf .git/worktrees/public/
 
-# echo "Checking out gh-pages branch into public"
-# git worktree add -B gh-pages public origin/gh-pages
+echo "Checking out gh-pages branch into public"
+git worktree add -B gh-pages public origin/gh-pages
 
-# echo "Removing existing files"
-# rm -rf public/*
+echo "Removing existing files"
+rm -rf public/*
 
 echo "Generating site"
 hugo
