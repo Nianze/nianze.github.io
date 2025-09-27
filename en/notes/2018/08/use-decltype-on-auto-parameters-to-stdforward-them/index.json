@@ -1,0 +1,14 @@
+{
+  "title": "[EMCpp]Item-33 Use decltype on auto&& parameters to std::forward them",
+  "content": "C++14 introduces generic lambdas, which use auto in their parameter specifications.\n1 auto f = [](auto x){ return normalize(x); }; If we want to perfect-fowrad a parameter x to normalize, we make two changes:\nuse universal reference auto\u0026amp;\u0026amp; apply decltype on parameter to specify the correct type for type argument of std::forward 1 auto f = [](auto\u0026amp;\u0026amp; x){ return normalize(std::forward\u0026lt;decltype(x)\u0026gt;(x)); }; As a fact of decltype(x):\nif x is bound to an lvalue, it will yield an lvalue refernece; if x is bound to an rvalue, it will yield an rvalue reference Actually, the result of decltype(x) doesn\u0026rsquo;t follow the convention of std::forward, where it dictates that the type argument be an lvalue reference to indicate an lvalue and a non-reference to indicate an rvalue.\nThanks to reference-collapsing rule, even though rvalue convention is broken here, the collapsing result is still the same. Say the T in the implementation of std::forward below is instantiated as Widget\u0026amp;\u0026amp;, an rvalue reference type:\n1 2 3 4 template\u0026lt;typename T\u0026gt; // in namespace T\u0026amp;\u0026amp; forward(remove_reference_t\u0026lt;T\u0026gt;\u0026amp; param) // std { return static_cast\u0026lt;T\u0026amp;\u0026amp;\u0026gt;(param); } and we get this before reference collapsing:\n1 2 3 4 Widget\u0026amp;\u0026amp; \u0026amp;\u0026amp; forward(Widget\u0026amp; param) // instantiation of { // std::forward when static_cast\u0026lt;Widget\u0026amp;\u0026amp; \u0026amp;\u0026amp;\u0026gt;(param); // T is Widget\u0026amp;\u0026amp; } After reference collapsing:\n1 2 3 4 Widget\u0026amp;\u0026amp; forward(Widget\u0026amp; param) // instantiation of { // std::forward when static_cast\u0026lt;Widget\u0026amp;\u0026amp;\u0026gt;(param); // T is Widget\u0026amp;\u0026amp; } This is exactly what we expect.\nVariadic parameters For more than a single parameter, using following format:\n1 2 auto f = [](auto\u0026amp;\u0026amp;... xs) { return normalize(std::forward\u0026lt;decltype(xs)\u0026gt;(xs)...); } ",
+  "summary": "C++14 introduces generic lambdas, which use auto in their parameter specifications.\n",
+  "date": "2018-08-23T21:44:29-04:00",
+  "lastmod": "2018-08-23T21:44:29-04:00",
+  "permalink": "https://nianze.github.io/en/notes/2018/08/use-decltype-on-auto-parameters-to-stdforward-them/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}

@@ -1,0 +1,14 @@
+{
+  "title": "[EMCpp]Item-29 Assume Move Operations Are Not Present Not Cheap, and Not Used",
+  "content": "There are several scenarios in which C++11\u0026rsquo;s move semantics do us no good:\nNo move operations: the object to be moved from fails to offer move operations. The move request thus becomes a copy request Move not faster: the object to be moved from has move operations that are no faster than its copy operations1 Move not usable: the context in which the moving would take place requires a move operation that emits no exceptions, but that operation isn\u0026rsquo;t declared noexcept Source object is lvalue: with very few exceptions (e.g., item 25), only rvlaues may be used as the source of a move operation For example, std::vector, conceptually, holds only a pointer to the heap memory storing the contents of the container, so it is possible to move the contents of an entire container in constant time; however, for std::array, the data is stored directly in the std::array object, so the move operation runs in linear time. Similar analysis applies to std::string when the small string optimization (SSO) occcurs.\u0026#160;\u0026#x21a9;\u0026#xfe0e;\n",
+  "summary": "There are several scenarios in which C++11\u0026rsquo;s move semantics do us no good:\n",
+  "date": "2018-08-18T15:15:12-04:00",
+  "lastmod": "2018-08-18T15:15:12-04:00",
+  "permalink": "https://nianze.github.io/en/notes/2018/08/assume-move-operations-are-not-present-not-cheap-not-used/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}

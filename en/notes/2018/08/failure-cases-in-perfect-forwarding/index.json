@@ -1,0 +1,14 @@
+{
+  "title": "[EMCpp]Item-30 Failure Cases in Perfect Forwarding",
+  "content": "Perfect forwarding fails when template type deduction fails or when it deduces the wrong type.\nGenerally, forwarding means passing parameters that are references so that we can work with the originally-passed-in objects in another function, while perfect forwarding means we will use universal references to keep track of salient characteristics such as lvalue-ness/rvalue-ness, const-ness, volatile-ness, etc.\nThe definition of failure is: given a target function f, and a forwarding function fwd, perfect forwarding fails if calling f with a particular argument does one thing, but calling fwd with the same argument does something difference:\n1 2 3 4 5 6 7 8 f( expression ); fwd( expression ); template\u0026lt;typename T\u0026gt; void fwd(T\u0026amp;\u0026amp; param) // accept any argument { f(std::forward\u0026lt;T\u0026gt;(param)); } Following kinds of arguments will lead to perfect forwarding failure:\nbraced initializers: passing a braced initializer to a function template parameter that’s not declared to be a std::initializer_list is decreed to be a “non-deduced context,” as the Standard puts it null pointers expressed as 0 or NULL: refer to the explanation in EMCpp item 8 declaration-only integral const static data members: since compilers perform const propagation on such members\u0026rsquo; values, there\u0026rsquo;s no memory allocation procedure for them, no address associated with them, and thus no pointers/references, ending up with a linking error. template and overloaded function names: f\u0026rsquo;s declaration lets compilers figure out the required vertion of overload/template instantiation to be passed, but it\u0026rsquo;s impossible for compilers to determine which version should be passed to fwd bitfields: \u0026ldquo;A non-const reference shall not be bound to a bit-field,\u0026rdquo; as C++ standard condemns ",
+  "summary": "Perfect forwarding fails when template type deduction fails or when it deduces the wrong type.\n",
+  "date": "2018-08-19T16:10:34-04:00",
+  "lastmod": "2018-08-19T16:10:34-04:00",
+  "permalink": "https://nianze.github.io/en/notes/2018/08/failure-cases-in-perfect-forwarding/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}

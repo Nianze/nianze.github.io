@@ -1,0 +1,14 @@
+{
+  "title": "Binary search basic",
+  "content": "What should be noted when doing binary search.\nBS search - search for first or last target\u0026rsquo;s position Key points\nstart + 1 \u0026lt; end -\u0026gt; avoid never-end loop start + (end - start) / 2 -\u0026gt; avoid stack overflow nums[mid] judgement depends on the purpose: start = mid; for case of \u0026ldquo;return last position\u0026rdquo; end = mid; for case of \u0026ldquo;return first position\u0026rdquo; return mid; for case of \u0026ldquo;return any position\u0026rdquo; After the while loop, start + 1 = end, there may are 5 possible scenarios: target \u0026lt; nums[start], now start == 0 target == nums[start] nums[start] \u0026lt; target \u0026lt; nums[end] `target == A[end] nums[end] \u0026lt; target, now end = nums.length - 1; Binary search template: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 public class Solution { /** * @return first occurrence position of the target */ int findPosition(int[] nums, int target) { if (nums == null || nums.length == 0) { return -1; }\tint start = 0, end = nums.length - 1; while (start + 1 \u0026lt; end) { int mid = start + (end - start) / 2; if (nums[mid] == target) { end = mid; // for case of \u0026#34;return first position\u0026#34; //start = mid; for case of \u0026#34;return last position\u0026#34; //return mid; for case of \u0026#34;return any position\u0026#34; } else if (nums[mid] \u0026lt; target) { start = mid; } else if (nums[mid] \u0026gt; target) { end = mid; } }\t// exchange the position of two [if statement] if want to return last postion if (nums[start] == target) { return start; } if (nums[end] == target) { return end; } // target strictly between {A[start-1], A[start]} // or strictly between {A[start], A[end]} // or strictly between {A[end, A[end+1]} return -1; } } Note 1: It\u0026rsquo;s a good habit to always to include trivial test case at first line: 1 2 3 if (nums == null || nums.length == 0) { return -1; } Note 2: Remember to consider all the corner case at the end: 1 2 3 if (target \u0026lt;= start) { return ??; } if (target \u0026lt;= end) { return ??; } return ???; // corner case! ",
+  "summary": "What should be noted when doing binary search.\n",
+  "date": "2016-08-05T00:00:00Z",
+  "lastmod": "2016-08-05T00:00:00Z",
+  "permalink": "https://nianze.github.io/en/notes/2016/binary-search/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["algorithm"],
+  "categories": ["coding"],
+  "series": ["algorithm"]
+}

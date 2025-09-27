@@ -1,0 +1,14 @@
+{
+  "title": "Item-10 Have assignment operators return a reference to *this",
+  "content": "As title suggests.\nAssignment is able to chain together:\n1 2 int x,y,z; x = y = z = 15; // chain of assignment Basically, the chain is parsed from right to left, so the result of the updated z is assigned to y, then the result of the second assignment (the updated y) is assigned to x:\n1 x = (y = (z = 15)); In order to achieve this, we need to implement the assignment operators (as well as +=, -=, *=, etc) in the following convention, where we make the assignment return a reference to its left-hand argument:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 class Widget { public: ... Widget\u0026amp; operator=(const Widget\u0026amp; rhs) // return type is a reference to the current class { ... return *this; // return the left-hand object } Widget\u0026amp; operator=(int rhs) { ... return *this; // even if the right-hand side parameter type is unconventional // we can still apply this convention } Widget\u0026amp; operator+=(const Widget\u0026amp; rhs) { ... return *this; } ... }; ",
+  "summary": "As title suggests.\n",
+  "date": "2018-01-29T18:17:34-05:00",
+  "lastmod": "2018-01-29T18:17:34-05:00",
+  "permalink": "https://nianze.github.io/en/notes/2018/01/have-assignment-op-return-a-ref/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}

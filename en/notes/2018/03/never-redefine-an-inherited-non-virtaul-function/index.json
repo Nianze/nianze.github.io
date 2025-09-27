@@ -1,0 +1,14 @@
+{
+  "title": "Item-36 Never redefine an inherited non-virtaul function",
+  "content": "A generalized basic rule from item 7.\nSuppose we have an inheritance hierarchy defined like this:\n1 2 3 4 5 6 7 8 9 10 11 class B { public: void mf(); ... }; class D: public B { public: void mf(); // hide B::mf ... }; According to item 33, this will lead to following behavior:\n1 2 3 4 5 6 D x; // x is an object of type D B *pB = \u0026amp;x; // get pointer to x D *pD = \u0026amp;x; // get pointer to x pB-\u0026gt;mf(); // calls B::mf pD-\u0026gt;mf(); // calls D::mf The reason for this two-faced behavior if that non-virtual functions like B::mf and D::mf are statically bound (item 37), which means that non-virtual functions invoked through pB will always be those defined for class B, even if pB points to an object of a class derived from B. This mismatched behavior exhibits inconsistent behavior, since any given D object may act like either a B or a D (depending on the pointer type) when mf is called.\nOn the other hand, virtual functions are dynamically bound (item 37), so if mf were a virtual function, a call to mf through either pB or pD would result in an invocation of D::mf, because pB and pD really point to is an object of type D.\nWorse than the inconsistent behavior problem in the real world, the example above basically shows a contradiction in class design, theoretically:\npublic inheritance means is-a (item 32), so everything that applies to B object also applies to D object a non-virtual function in the base class establishes an invariant over specialization that classes derived from B must inherit both the interface and the implementation (item 34), and mf is such an non-virtual function in B As long as we redefine the mf, an inherited non-virtual function, one of the conditions above will break, leading to two solutions: either make the mf virtual, or change the class relationship from \u0026lsquo;is-a\u0026rsquo; to something else.\nIn fact, this is exactly the same argument in item 7, which exlains why destructors in polymophic base classes should be virtual. In essence, item 7 is nothing more than a special case of this item.\n",
+  "summary": "A generalized basic rule from item 7.\n",
+  "date": "2018-03-01T20:22:17-05:00",
+  "lastmod": "2018-03-01T20:22:17-05:00",
+  "permalink": "https://nianze.github.io/en/notes/2018/03/never-redefine-an-inherited-non-virtaul-function/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}

@@ -1,0 +1,14 @@
+{
+  "title": "[MECpp]Item-11 Prevent Exceptions From Leaving Destructors",
+  "content": "Keep exceptions from propagating out of destructors to prevent C++ calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.\nDestructor is called in two situations:\nwhen an object is destroyed under \u0026ldquo;normal\u0026rdquo; conditions, e.g., when it goes out of scope, or is explicitly deleted. when an object is destroyed by the exception-handling mechanism during the stackunwinding part of exception propagation. According to C++:\nWhen control leaves a destructor due to an exception while another exception is active, C++ calls the termiante function immediately, and any remaining local objects may not get a chance to be destroyed.\nFor example, consider a Session class that will record object creations and destructions:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 class Session { public: Session(); ~Session(); ... private: static void logCreation(Session *objAddr); static void logDestruction(Session *objAddr); }; Session::~Session() { logDestruction(this); } Because there\u0026rsquo;s no try...catch statement, any exception inside the destructor will be propagated to the caller of the destructor. Thus once logDestructoin throws an exception during a special case when the destructor itself is called due to some other exception, the terminate function would automatically be invoked. So we prefer this design:\n1 2 3 4 5 6 7 Session::~Session() { try { logDestruction(this); } catch (...) {} // do nothing! } The point here is that the catch block shouldn\u0026rsquo;t hold any statement that has potential of throwing exception, and its only purpose here is to prevent exception thrown from logDestruction from propagating beyond Session\u0026rsquo;s destructor. Another good reason of catching the exception and prevent the propagation is to make sure the destructor will run to completion, so that any leftover cleanup code after the exception-thrown statement is able to run properly, without being interrupted by the excpetion propagation.\n",
+  "summary": "Keep exceptions from propagating out of destructors to prevent C++ calling terminate during the statck-unwinding part of exception propagation and ensure that every neccessary cleanup is accomplished.\n",
+  "date": "2018-04-03T10:54:39-04:00",
+  "lastmod": "2018-04-03T10:54:39-04:00",
+  "permalink": "https://nianze.github.io/en/notes/2018/04/prevent-exceptions-from-leaving-destructors/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}

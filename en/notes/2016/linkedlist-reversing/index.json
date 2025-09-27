@@ -1,0 +1,14 @@
+{
+  "title": "LinkedList reversing",
+  "content": "Summary on LinkedList reversing.\nStarter Special case: LC206 reverse all the nodes in one pass: 1 2 3 4 5 6 7 8 9 10 public ListNode reverseList(ListNode head) { ListNode newHead = null; while (head != null) { ListNode next = head.next; head.next = newHead; newHead = head; head = next; } return newHead; } General case: LC92 reverse nodes from position m to n 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 public ListNode reverseBetween(ListNode head, int m, int n) { ListNode dummy = new ListNode(0); dummy.next = head; ListNode pre = dummy, end, cur; for (int i = 0; i \u0026lt; m-1; i++) { pre = pre.next; } end = pre.next; cur = end.next; for (int i = 0; i \u0026lt; n - m; i++) { end.next = cur.next; cur.next = pre.next; pre.next = cur; cur = end.next; } return dummy.next; } Main dish: LC25 Reverse Nodes in k-Groups 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 /** * Reverse a link list between pre and next exclusively * e.g.: * 0-\u0026gt;1-\u0026gt;2-\u0026gt;3-\u0026gt;4-\u0026gt;5-\u0026gt;6 * | | * pre next * * after call pre = reverse(pre, next): * 0-\u0026gt;3-\u0026gt;2-\u0026gt;1-\u0026gt;4-\u0026gt;5-\u0026gt;6 * | | * pre next * @param pre * @param next * @return the precedence of parameter next */ private static ListNode reverse(ListNode pre, ListNode next) { ListNode end = pre.next, cur = end.next; while (cur != next) { end.next = cur.next; cur.next = pre.next; pre.next = cur; cur = end.next; } return end; } public ListNode reverseKGroup(ListNode head, int k) { if (head == null || k == 1) return head; ListNode dummy = new ListNode(0); dummy.next = head; ListNode pre = dummy; int i = 0; while (head != null) { head = head.next; if (++i % k == 0) pre = reverse(pre, head); } return dummy.next; } /** * Note: the while loop is the same as following process, which is easier to understand: * while(head != null){ * i++; * if(i % k ==0){ * pre = reverse(pre, head.next); * head = pre.next; * }else { * head = head.next; * } * } */ } ",
+  "summary": "Summary on LinkedList reversing.\n",
+  "date": "2016-11-11T00:00:00Z",
+  "lastmod": "2016-11-11T00:00:00Z",
+  "permalink": "https://nianze.github.io/en/notes/2016/linkedlist-reversing/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["algorithm"],
+  "categories": ["coding"],
+  "series": ["algorithm"]
+}

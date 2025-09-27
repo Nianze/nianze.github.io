@@ -1,0 +1,14 @@
+{
+  "title": "[MECpp]Item-21 Overload to Avoid Implicit Type Conventions",
+  "content": "Overloading to avoid temporaries.\nConsider following code:\n1 2 3 4 5 6 7 8 class UPInt { // unlimited precision integers public: UPInt(); UPInt(int value); ... }; const UPInt operator+(const UPInt\u0026amp; lhs, const UPInt\u0026amp; rhs); And following statements:\n1 2 3 4 UPInt upi1, upi2; UPInt upi3 = upi1 + 10; UPInt upi4 = 10 + upi2; These statements succeed by the creation of temporary objects to convert the integer 10 into UPInts (MECpp item 19).\nIt is convenient to have compilers perform such kinds of conversions, but the we do pay the cost of implicit type conversion. If we want to eliminate this cost, we cancel the type conversions by function overloading;\n1 2 3 4 const UPInt operator+(const UPInt\u0026amp; lhs, const UPInt\u0026amp; rhs); const UPInt operator+(const UPInt\u0026amp; lhs, int); const UPInt operator+(int, const UPInt\u0026amp; rhs); ... Notice that const UPInt operator+(int, int); is not allowed: C++ rules that every overloaded operator must take at leas one argument of a user-defined type. int isn\u0026rsquo;t a user-defined type, so we can\u0026rsquo;t overload this operator+ in this form.\nStill, before doing such optimizations, it\u0026rsquo;s important to follow the 80-20 rule (MECpp item 16) to make sure it will make a noticeable improvement in the overall efficiency of the programs.\n",
+  "summary": "Overloading to avoid temporaries.\n",
+  "date": "2018-04-17T15:42:12-04:00",
+  "lastmod": "2018-04-17T15:42:12-04:00",
+  "permalink": "https://nianze.github.io/en/notes/2018/04/overload-to-avoid-implicit-type-conventions/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}

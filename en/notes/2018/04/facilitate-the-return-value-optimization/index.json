@@ -1,0 +1,14 @@
+{
+  "title": "[MECpp]Item-20 Facilitate the Return Value Optimization",
+  "content": "Take use of the return value optimization in compilers.\nSome functions (such as operator*) have to return objects:\nif returning pointers, the caller is responsible to delete the pointer, which usually leads to resource leaks. if returning references, then we\u0026rsquo;re returning a reference to a local object, which no longer exists when the caller has it. Although we can\u0026rsquo;t eliminate by-value returns from functions that require them, we can still reduce the cost of returning objects: by the help of compilers, we can eliminate the cost of the temporaries by returning constructor arguments instead of objects:\n1 2 3 4 5 const Rational operator*(const Rational\u0026amp; lhs, const Rational\u0026amp; rhs) { return Rational(lhs.numerator() * rhs.numerator(), lhs.denominator() * rhs.denominator()); } Here we\u0026rsquo;re creating an anonymous temporary Rational object through a constructor expression, ant it is this temporary object the function is copying for its return value. When we use this efficient version of operator* under the use case below:\n1 2 3 4 Rational a = 10; Rational b(1, 2); Rational c = a * b; // operator* is called The rules for C++ allow compilers to optimize such anonymous temporary objects out of existence by constructing the temporary inside the memory allotted for the object c. Thus, if compilers do this optimization, both the temporary inside operator* and the temporary returned by operator* are eliminated, and we only pay for one constructor call - the one to create c.\nFurther more, we can eliminate the overhead of the call to operator* by declaring this function inline:\n1 2 3 4 5 6 // most efficient way to write a function returning an object inline const Rational operator*(const Rational\u0026amp; lhs, const Rational\u0026amp; rhs) { return Rational(lhs.numerator() * rhs.numerator(), lhs.denominator() * rhs.denominator()); } ",
+  "summary": "Take use of the return value optimization in compilers.\n",
+  "date": "2018-04-16T00:00:00Z",
+  "lastmod": "2018-04-16T00:00:00Z",
+  "permalink": "https://nianze.github.io/en/notes/2018/04/facilitate-the-return-value-optimization/",
+  "type": "notes",
+  "kind": "page",
+  "section": "notes",
+  "tags": ["technique","cpp"],
+  "categories": ["coding"],
+  "series": ["effective c++"]
+}
