@@ -11,10 +11,10 @@ comments: false
 I like shooting, developing, and enlarging films in the my darkroom (bathroom). Below is my collection of cameras and lenses:
 
 * Digital cameras:
-    * Leica M9-P
-    * Leica CL
-    * Pentax K-1 Mark II
     * Ricoh GR IIIx HDF
+    * Leica CL
+    * Leica M9-P
+    * Pentax K-1 Mark II
 * Film cameras:
     * Leica M3 (made in 1959/6)
     * Pentax ZX-5N (aka MZ-5N)
@@ -39,8 +39,8 @@ I like shooting, developing, and enlarging films in the my darkroom (bathroom). 
         * SMC Pentax-FA 31mm f/1.8 Limited
         * SMC Pentax-FA 43mm f/1.9 Limited (made in Japan)
         * SMC Pentax-FA 77mm f/1.8 Limited
-        * Leica Summicron-R 50mm f/2 E43 Ver.1 (made in 1974, mod. to K mount)
-    * DKL mount (adaptable to Pentax K-mount):
+    * Adaptable to PK-mount:
+        * Leica Summicron-R 50mm f/2 E43 Ver.1 (made in 1974)
         * Voigtländer Septon 50mm f/2 (made in 1965)
         * Rodenstock Retina-Rotelar 135mm f/4 (made in 1957)
 * Others:
