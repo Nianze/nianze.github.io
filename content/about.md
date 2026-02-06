@@ -8,13 +8,13 @@ showSocial: false
 comments: false
 ---
 
-I shoot, develop, and enlarge films in my apartment (established a simple darkroom in the bathroom), and I like collecting vintage film cameras and lenses. Below is my current collection:
+I like shooting, developing, and enlarging films in the my darkroom (bathroom). Below is my collection of cameras and lenses:
 
 * Digital cameras:
-    * Leica M9-P (silver)
-    * Leica CL (silver)
+    * Leica M9-P
+    * Leica CL
     * Pentax K-1 Mark II
-    * Ricoh GR III HDF
+    * Ricoh GR IIIx HDF
 * Film cameras:
     * Leica M3 (made in 1959/6)
     * Pentax ZX-5N (aka MZ-5N)
@@ -28,7 +28,6 @@ I shoot, develop, and enlarge films in my apartment (established a simple darkro
     * Leica L-mount:
         * Leica Vario-Elmar-T 18-56mm f/3.5-5.6 ASPH
     * Leica M-mount:
-        * Zeiss Biogon T* 25mm f/2.8 ZM
         * Rollei Sonnar HFT 40mm f/2.8 LTM
         * Leica Summilux-M 50mm f/1.4 (E43 v2, made in 1962)
         * Nikkor-P.C. 8.5cm f/2 LTM (made in 1951)
@@ -41,11 +40,10 @@ I shoot, develop, and enlarge films in my apartment (established a simple darkro
         * SMC Pentax-FA 43mm f/1.9 Limited (made in Japan)
         * SMC Pentax-FA 77mm f/1.8 Limited
         * Leica Summicron-R 50mm f/2 E43 Ver.1 (made in 1974, mod. to K mount)
-    * DKL mount (adaptable to Pentax SLR):
+    * DKL mount (adaptable to Pentax K-mount):
         * Voigtländer Septon 50mm f/2 (made in 1965)
         * Rodenstock Retina-Rotelar 135mm f/4 (made in 1957)
 * Others:
     * Durst M 600 Photo Enlarger
-    * LightPix Labs FlashQ Q20II
     * PENTAX AF 201FG
     * Nikon COOLSCAN IV ED (LS-40 ED)
