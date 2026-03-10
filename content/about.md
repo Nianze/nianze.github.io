@@ -28,6 +28,7 @@ I like shooting, developing, and enlarging films in the my darkroom (bathroom). 
     * Leica L-mount:
         * Leica Vario-Elmar-T 18-56mm f/3.5-5.6 ASPH
     * Leica M-mount:
+        * Canon 28mm f/2.8 LTM
         * Rollei Sonnar HFT 40mm f/2.8 LTM
         * Leica Summilux-M 50mm f/1.4 (E43 v2, made in 1962)
         * Nikkor-P.C. 8.5cm f/2 LTM (made in 1951)
