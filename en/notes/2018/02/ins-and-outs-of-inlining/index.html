@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1783,7 +1783,7 @@
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">age</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">theAge</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// an implicit inline request
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">theAge</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
@@ -1802,8 +1802,8 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>   <span class="c1">// an explicit inline
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">inline</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="c1">// request:: std::max is preceded by &#34;inline&#34;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">b</span> <span class="p">:</span> <span class="n">a</span><span class="p">;}</span>
+</span></span></span><span class="line"><span class="cl"><span class="kr">inline</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="c1">// request:: std::max is preceded by &#34;inline&#34;
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span> <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="o">?</span> <span class="nl">b</span> <span class="p">:</span> <span class="n">a</span><span class="p">;}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>It&rsquo;s true that both template and inline functions are typically defined in header files, but this doesn&rsquo;t mean that function templates must be inline. In fact, template instantiation is independent of inlining:</p>
@@ -1835,10 +1835,10 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kr">inline</span> <span class="kt">void</span> <span class="nf">f</span><span class="p">(){...}</span> <span class="c1">// assume compilers are willing to inline calls to f
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">pf</span><span class="p">)()</span> <span class="o">=</span> <span class="n">f</span><span class="p">;</span>    <span class="c1">// pf points to f
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
+</span></span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">pf</span><span class="p">)()</span> <span class="o">=</span> <span class="n">f</span><span class="p">;</span>    <span class="c1">// pf points to f
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="n">f</span><span class="p">();</span>                 <span class="c1">// this call will be inlined, for it&#39;s a &#34;normal&#34; call
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">pf</span><span class="p">();</span>                <span class="c1">// this call probably won&#39;t be, for it&#39;s through a function pointer
+</span></span></span><span class="line"><span class="cl"><span class="n">pf</span><span class="p">();</span>                <span class="c1">// this call probably won&#39;t be, for it&#39;s through a function pointer
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="inline-constructors-and-destructors">Inline constructors and destructors?</h2>
@@ -1858,7 +1858,7 @@
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">bm1</span><span class="p">,</span> <span class="n">bm2</span><span class="p">;</span>  <span class="c1">// base members 1 and 2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1875,15 +1875,16 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Derived</span><span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Derived</span><span class="p">(){}</span>   <span class="c1">// Derived&#39;s ctor is empty, or is it?
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dm1</span><span class="p">,</span> <span class="n">dm2</span><span class="p">,</span> <span class="n">dm3</span><span class="p">;</span>  <span class="c1">// derived members 1,2,3
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The constructor of <code>Derived</code> seems empty, so it may seem a good candidate for inlining. But looks can be deceiving:</p>
 <blockquote>
-<p>C++ makes various guarantees about object construction and corresponding destruction. To name a few: when we create an object, each base class of and each data member in that object is automatically constructed; if an exception is thrown during construction, any parts of the object that have already been fully constructed are automatically destroyed. Similar but reverse process will occur when an object is destroyed.</p></blockquote>
+<p>C++ makes various guarantees about object construction and corresponding destruction. To name a few: when we create an object, each base class of and each data member in that object is automatically constructed; if an exception is thrown during construction, any parts of the object that have already been fully constructed are automatically destroyed. Similar but reverse process will occur when an object is destroyed.</p>
+</blockquote>
 <p>Therefore, in the example above, extra code will be generated by compilers and added into the empty <code>Derived</code> constructor in order to offer those guarantees, ending up with some code equivalent to the following conceptual implementation (the real one will certainly be more sophisticated):</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1915,29 +1916,29 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Derived</span><span class="o">::</span><span class="n">Derived</span><span class="p">()</span>  <span class="c1">// conceptual impl. of &#34;empty&#34; Derived ctor
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Base</span><span class="o">::</span><span class="n">Base</span><span class="p">();</span>  <span class="c1">// init. Base part
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span> <span class="n">dm1</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">();</span> <span class="p">}</span> <span class="c1">// try to construct dm1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>       <span class="c1">// if it throws
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Base</span><span class="o">::~</span><span class="n">Base</span><span class="p">();</span>  <span class="c1">// destroy base class part and
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">throw</span><span class="p">;</span>          <span class="c1">// propagate the exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>       <span class="c1">// if it throws
+</span></span></span><span class="line"><span class="cl">        <span class="n">Base</span><span class="o">::~</span><span class="n">Base</span><span class="p">();</span>  <span class="c1">// destroy base class part and
+</span></span></span><span class="line"><span class="cl">        <span class="k">throw</span><span class="p">;</span>          <span class="c1">// propagate the exception
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span> <span class="n">dm2</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">();}</span> <span class="c1">// try to construct dm2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>                      <span class="c1">// if it throws
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">dm1</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">();</span>   <span class="c1">// destroy dm1,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Base</span><span class="o">::~</span><span class="n">Base</span><span class="p">();</span>                <span class="c1">// destroy base class part
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">throw</span><span class="p">;</span>                        <span class="c1">// and propagate the exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>                      <span class="c1">// if it throws
+</span></span></span><span class="line"><span class="cl">        <span class="n">dm1</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">();</span>   <span class="c1">// destroy dm1,
+</span></span></span><span class="line"><span class="cl">        <span class="n">Base</span><span class="o">::~</span><span class="n">Base</span><span class="p">();</span>                <span class="c1">// destroy base class part
+</span></span></span><span class="line"><span class="cl">        <span class="k">throw</span><span class="p">;</span>                        <span class="c1">// and propagate the exception
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span> <span class="n">dm3</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">();}</span>  <span class="c1">// try to construct dm3
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>                       <span class="c1">// if it throws
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">dm1</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">();</span>    <span class="c1">// destroy dm1,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">dm1</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">();</span>    <span class="c1">// destroy dm2,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">Base</span><span class="o">::~</span><span class="n">Base</span><span class="p">();</span>                 <span class="c1">// destroy base class part
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">throw</span><span class="p">;</span>                         <span class="c1">// and propagate the exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>                       <span class="c1">// if it throws
+</span></span></span><span class="line"><span class="cl">        <span class="n">dm1</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">();</span>    <span class="c1">// destroy dm1,
+</span></span></span><span class="line"><span class="cl">        <span class="n">dm1</span><span class="p">.</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">();</span>    <span class="c1">// destroy dm2,
+</span></span></span><span class="line"><span class="cl">        <span class="n">Base</span><span class="o">::~</span><span class="n">Base</span><span class="p">();</span>                 <span class="c1">// destroy base class part
+</span></span></span><span class="line"><span class="cl">        <span class="k">throw</span><span class="p">;</span>                         <span class="c1">// and propagate the exception
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -3325,9 +3326,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3338,10 +3339,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1755,7 +1755,8 @@
 <!-- toc -->
 <p>We can use <code>auto_ptr</code> and <code>tr1::shared_ptr</code> to manage heap-based resources, as introduced in item 13. However, not all resources are heap-based, and for such resources, we need to create our own resource-managing classes to deal with a general question:</p>
 <blockquote>
-<p>what should happen when an RAII object is copied?</p></blockquote>
+<p>what should happen when an RAII object is copied?</p>
+</blockquote>
 <p>Mostly, there are 4 possibal choices:</p>
 <h1 id="1-prohibit-copying">1. Prohibit copying</h1>
 <p>In some cases, it makes no sense to allow RAII objects to be copied, so we should prohibit it. As explained in item 6, we declare the copying operations <code>private</code> without definition. A good example is class <code>Mutex</code>, which is synchronization primitives and comes with two functions <code>lock</code> and <code>unlock</code>:</p>
@@ -1767,7 +1768,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span>   <span class="c1">// lock mutex pointed to by pm
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">unlock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span> <span class="c1">// unlock the mutex
 </span></span></span></code></pre></td></tr></table>
 </div>
@@ -1788,13 +1789,13 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lock</span><span class="o">:</span> <span class="k">private</span> <span class="n">Uncopyable</span> <span class="p">{</span> <span class="c1">// prohibit copying, see item 6
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">Lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="n">mutexPtr</span><span class="p">(</span><span class="n">pm</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// acquire resource
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">Lock</span><span class="p">()</span> <span class="p">{</span> <span class="n">unlock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// release resource
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Mutex</span> <span class="o">*</span><span class="n">mutexPtr</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
@@ -1818,17 +1819,17 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Mutex</span> <span class="n">m</span><span class="p">;</span>  <span class="c1">// define the mutex
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="p">{</span>                  <span class="c1">// create block to define critical section
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>   <span class="c1">// lock the mutex
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>            <span class="c1">// perform critical section operations
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">Lock</span> <span class="nf">ml</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m</span><span class="p">);</span>   <span class="c1">// lock the mutex
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>            <span class="c1">// perform critical section operations
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">// Lock ml2(ml);  this is prohibited behavior!
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>                  <span class="c1">// automatically unlock mutex at end of block
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span> 
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>                  <span class="c1">// automatically unlock mutex at end of block
+</span></span></span><span class="line"><span class="cl"> 
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="2-reference-count-the-underlying-resource">2. Reference-count the underlying resource</h1>
@@ -1852,14 +1853,14 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Lock</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">Lock</span><span class="p">(</span><span class="n">Mutex</span> <span class="o">*</span><span class="n">pm</span><span class="p">);</span>  <span class="c1">// init shared_ptr with the Mutex
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">:</span> <span class="n">mutexPtr</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">unlock</span><span class="p">)</span>     <span class="c1">// to point to and the unlock func as the deleter
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="n">mutexPtr</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span> <span class="n">unlock</span><span class="p">)</span>     <span class="c1">// to point to and the unlock func as the deleter
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">lock</span><span class="p">(</span><span class="n">mutexPtr</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>  <span class="c1">// see item 15 for info on &#34;get&#34;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">tr1</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Mutex</span><span class="o">&gt;</span> <span class="n">mutexPtr</span><span class="p">;</span>  <span class="c1">// use shared_ptr instead of raw pointer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Since a class&rsquo;s destructor (both user-defined ones and compilter-generated ones) automatically invokes the destructors of the class&rsquo;s non-static data members, there&rsquo;s no need to declare a destructor for class <code>Lock</code> explicitly (item 5). We simply rely on the default compilter-generated behavior, and that&rsquo;s enough.</p>
@@ -3219,9 +3220,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3232,10 +3233,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

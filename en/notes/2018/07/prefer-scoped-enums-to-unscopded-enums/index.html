@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1762,7 +1762,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">enum</span> <span class="nc">Color</span> <span class="p">{</span> <span class="n">black</span><span class="p">,</span> <span class="n">white</span><span class="p">,</span> <span class="n">red</span> <span class="p">};</span> <span class="c1">// black, white, red are in same scope as Color
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">white</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// error! white already declared in this scope
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">white</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// error! white already declared in this scope
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>As their new C++11 counterparts, by adding a <code>class</code> in declaration, <em>scoped</em> <code>enum</code>s don&rsquo;t leak names:</p>
@@ -1776,8 +1776,8 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Color</span> <span class="p">{</span> <span class="n">black</span><span class="p">,</span> <span class="n">white</span><span class="p">,</span> <span class="n">red</span> <span class="p">};</span>
 </span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">white</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// fine. no other &#34;whate&#34; in scope
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Color</span> <span class="n">c</span> <span class="o">=</span> <span class="n">white</span><span class="p">;</span> <span class="c1">// error
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">;</span> <span class="c1">// fine, type of c is Color
+</span></span></span><span class="line"><span class="cl"><span class="n">Color</span> <span class="n">c</span> <span class="o">=</span> <span class="n">white</span><span class="p">;</span> <span class="c1">// error
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">white</span><span class="p">;</span> <span class="c1">// fine, type of c is Color
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="implicit-conversion">Implicit conversion</h1>
@@ -1794,10 +1794,10 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Color</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Color</span><span class="o">::</span><span class="n">red</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="n">primeFactors</span><span class="p">(</span><span class="nl">std</span><span class="p">:</span><span class="n">size_t</span> <span class="n">x</span><span class="p">);</span> <span class="c1">// func. returning prime factors of x
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="mf">14.5</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// error! can&#39;t compare Color and double
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span> <span class="n">factors</span> <span class="o">=</span> <span class="n">primeFactors</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>  <span class="c1">// error! can&#39;t pass Color to function expecting std::size_t
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">factors</span> <span class="o">=</span> <span class="n">primeFactors</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>  <span class="c1">// error! can&#39;t pass Color to function expecting std::size_t
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Instead, in order to convert typefrom <code>Color</code> to a different type, we need a cast:</p>
@@ -1809,7 +1809,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">14.5</span> <span class="p">)</span> <span class="p">{</span>  <span class="c1">// odd code, but valid
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span> <span class="n">factors</span> <span class="o">=</span> <span class="n">primeFactors</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c</span><span class="p">));</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">factors</span> <span class="o">=</span> <span class="n">primeFactors</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">c</span><span class="p">));</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1831,7 +1831,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Status</span><span class="p">;</span> <span class="c1">// forward declaration
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">continueProcessing</span><span class="p">(</span><span class="n">Status</span> <span class="n">s</span><span class="p">);</span> <span class="c1">// use of fwd-declared enum
+</span></span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">continueProcessing</span><span class="p">(</span><span class="n">Status</span> <span class="n">s</span><span class="p">);</span> <span class="c1">// use of fwd-declared enum
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>With the help of forward declaration, the header containing the declarations requires no recompilation if <code>Status</code>&rsquo;s definition is revised. Furthermore, it is also possible that <code>continueProcessing</code>&rsquo;s implementation need not be recompiled<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>.</p>
@@ -1846,9 +1846,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">using</span> <span class="n">UserInfo</span> <span class="o">=</span>            <span class="c1">// type alias
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="c1">// name
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>               <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="c1">// email
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>               <span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="c1">// reputation
+</span></span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="c1">// name
+</span></span></span><span class="line"><span class="cl">               <span class="n">std</span><span class="o">::</span><span class="n">string</span>  <span class="c1">// email
+</span></span></span><span class="line"><span class="cl">               <span class="n">std</span><span class="o">::</span><span class="n">size_t</span><span class="o">&gt;</span> <span class="c1">// reputation
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>To get field value, using an unscoped <code>enum</code> to associate names with field numbers may be helpful:</p>
@@ -1892,7 +1892,7 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">E</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="k">constexpr</span> <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">underlying_type</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;::</span><span class="k">typename</span> <span class="c1">// see item 9 for info on type traits
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">toUType</span><span class="p">(</span><span class="n">E</span> <span class="n">enumerator</span><span class="p">)</span> <span class="k">noexcept</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">toUType</span><span class="p">(</span><span class="n">E</span> <span class="n">enumerator</span><span class="p">)</span> <span class="k">noexcept</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">underlying_type</span><span class="o">&lt;</span><span class="n">E</span><span class="o">&gt;::</span><span class="n">type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumerator</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -3287,9 +3287,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3300,10 +3300,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

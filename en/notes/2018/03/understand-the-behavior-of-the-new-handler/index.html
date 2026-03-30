@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1796,7 +1796,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// new handler to install
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">outOfMem</span><span class="p">()</span>
+</span></span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">outOfMem</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;Unable to satisfy request for memory</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">about</span><span class="p">();</span>
@@ -1840,14 +1840,14 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">NewHandlerHolder</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">NewHandlerHolder</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">nh</span><span class="p">)</span> <span class="c1">// aquire the original new-handler
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">:</span><span class="n">handler</span><span class="p">(</span><span class="n">nh</span><span class="p">)</span> <span class="p">{}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="o">:</span><span class="n">handler</span><span class="p">(</span><span class="n">nh</span><span class="p">)</span> <span class="p">{}</span>
 </span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">NewHandlerHolder</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="n">handler</span><span class="p">);</span> <span class="p">}</span>  <span class="c1">// release the original new-handler
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">handler</span><span class="p">;</span>  <span class="c1">// remember the original new-handler
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">NewHandlerHolder</span><span class="p">(</span><span class="k">const</span> <span class="n">NewHandlerHolder</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">// prevent copying see item 14
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">NewHandlerHolder</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">NewHandlerHolder</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">// prevent copying see item 14
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">NewHandlerHolder</span><span class="p">(</span><span class="k">const</span> <span class="n">NewHandlerHolder</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">// prevent copying see item 14
+</span></span></span><span class="line"><span class="cl">    <span class="n">NewHandlerHolder</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">NewHandlerHolder</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">// prevent copying see item 14
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Since the behavior of setting a class-specific new-handler is the same regardless of the class, we can reuse the setting procedure by creating a &ldquo;mixin-style&rdquo; base class (i.e., a base class that&rsquo;s designed to allow derived classes to inherit a single specific capability), so that each derived class not only inherits the <code>set_new_handler</code> and <code>operator new</code> functions from the base class, but also gets a different class-specific <code>new-handler</code> from the template.</p>
@@ -1865,12 +1865,12 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>      <span class="c1">// &#34;mixin-style&#34; base class 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">class</span> <span class="nc">NewHandlerSupport</span> <span class="p">{</span> <span class="c1">// for class-specific set_new_handler support
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">NewHandlerSupport</span> <span class="p">{</span> <span class="c1">// for class-specific set_new_handler support
+</span></span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">set_new_handler</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">p</span><span class="p">)</span> <span class="k">throw</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">void</span><span class="o">*</span> <span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span> <span class="c1">// other versions of op. new - see item 52
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">currentHandler</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
@@ -1908,9 +1908,9 @@
 </span></span><span class="line"><span class="cl"><span class="kt">void</span><span class="o">*</span> <span class="n">NewHandlerSupport</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">throw</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bad_alloc</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">NewHandlerHolder</span> <span class="nf">h</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="n">currentHandler</span><span class="p">));</span> <span class="c1">// install new-handler
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>  <span class="c1">// allocate memory or throw
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span> <span class="c1">// restore global new-handler
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>  <span class="c1">// allocate memory or throw
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="c1">// restore global new-handler
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">new_handler</span> <span class="n">NewHanderSupport</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">currentHandler</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// init.  currentHandler to null
 </span></span></span></code></pre></td></tr></table>
@@ -1927,7 +1927,7 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span><span class="o">:</span> <span class="k">public</span> <span class="n">NewHandlerSupport</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span> <span class="c1">// without declaration for set_new_handler or operator new
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>One interesting point for this design is that  <code>Widget</code> inheriting from a templatized base class that takes <code>Widget</code> itself as a type parameter, and this technique has a straightforwart name: <em>curiously recurring template pattern (CRTP)</em>.</p>
@@ -1944,11 +1944,11 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">outOfMem</span><span class="p">();</span> <span class="c1">// decl. of class-specific new-handler func.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Widget</span><span class="o">::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="n">outOfMem</span><span class="p">);</span> <span class="c1">// set outOfMem as Widget&#39;s new-handler
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span> <span class="c1">// if mem. alloc. fails, call outOfMem
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">;</span> <span class="c1">// if mem. alloc. fails, call the original global new-handler (if there is one)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Widget</span><span class="o">::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>  <span class="c1">// set the Widget-specific new-handler to nothing (null)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span>  <span class="c1">// there&#39;s no new-handling func. for Widget now, so if mem. alloc. fails, throw an exception immediately
+</span></span></span><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="n">outOfMem</span><span class="p">);</span> <span class="c1">// set outOfMem as Widget&#39;s new-handler
+</span></span></span><span class="line"><span class="cl"><span class="n">Widget</span> <span class="o">*</span><span class="n">pw1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span> <span class="c1">// if mem. alloc. fails, call outOfMem
+</span></span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">;</span> <span class="c1">// if mem. alloc. fails, call the original global new-handler (if there is one)
+</span></span></span><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">::</span><span class="n">set_new_handler</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>  <span class="c1">// set the Widget-specific new-handler to nothing (null)
+</span></span></span><span class="line"><span class="cl"><span class="n">Widget</span> <span class="o">*</span><span class="n">pw2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span>  <span class="c1">// there&#39;s no new-handling func. for Widget now, so if mem. alloc. fails, throw an exception immediately
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="traditional-failure-yields-null-alternative-for-operator-new">Traditional failure-yields-null alternative for <code>operator new</code></h1>
@@ -1964,9 +1964,9 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{...};</span>
 </span></span><span class="line"><span class="cl"><span class="n">Widget</span> <span class="o">*</span><span class="n">pw1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Widget</span><span class="p">;</span>  <span class="c1">// throws bad_alloc if allocation fails
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">pw1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// this test must fail
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Widget</span> <span class="o">*</span><span class="n">pw2</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Widget</span><span class="p">;</span> <span class="c1">// returns 0 if allocation fails
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">pw2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// this test may succeed
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">pw1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// this test must fail
+</span></span></span><span class="line"><span class="cl"><span class="n">Widget</span> <span class="o">*</span><span class="n">pw2</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nothrow</span><span class="p">)</span> <span class="n">Widget</span><span class="p">;</span> <span class="c1">// returns 0 if allocation fails
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">pw2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// this test may succeed
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>However, using <code>new (std::nothrow) Widget</code> only guarantees that <code>operator new</code> won&rsquo;t throw, not the whole expression: after the nothrow versoin of <code>operator new</code> succeeds to allocate enough memory for a <code>Widget</code> object, and then the <code>Widget</code> constructor is called, chances are that the <code>Widget</code> constructor might itself new up some memory and throw, and then the exception will be propagated as usual.</p>
@@ -3332,9 +3332,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3345,10 +3345,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

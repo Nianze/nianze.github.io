@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1769,10 +1769,10 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Rational</span><span class="p">(</span><span class="kt">int</span> <span class="n">numerator</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>    <span class="c1">// ctor is deliberately not explicit, 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>             <span class="kt">int</span> <span class="n">denominator</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// allowing implicit int-to-Rational conversion
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="nf">numerator</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>     <span class="c1">// accessor for numerator
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="nf">denominator</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>   <span class="c1">// accessor for denominator, see item 22
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl">             <span class="kt">int</span> <span class="n">denominator</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// allowing implicit int-to-Rational conversion
+</span></span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">numerator</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>     <span class="c1">// accessor for numerator
+</span></span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">denominator</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>   <span class="c1">// accessor for denominator, see item 22
+</span></span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
@@ -1791,7 +1791,7 @@
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">Rational</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// return const: item 3; taking a reference-to-const as argument: item 20, 21
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>This design is fine to multiply rationals with rationals:</p>
@@ -1808,7 +1808,7 @@
 </span></span><span class="line"><span class="cl"><span class="n">Rational</span> <span class="nf">oneHalf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Rational</span> <span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="n">oneEighth</span><span class="p">;</span>  <span class="c1">// fine
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">*</span> <span class="n">oneEighth</span><span class="p">;</span>   <span class="c1">// fine
+</span></span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">*</span> <span class="n">oneEighth</span><span class="p">;</span>   <span class="c1">// fine
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>However, for mixed-mode operations, where <code>Rational</code>s is multiplied with <code>int</code>s, there will be a potential error:</p>
@@ -1819,7 +1819,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>  <span class="c1">// fine
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">oneHalf</span><span class="p">;</span>  <span class="c1">// error!
+</span></span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">oneHalf</span><span class="p">;</span>  <span class="c1">// error!
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>This problem is clearer for analysis when we rewrite the last two examples in their equivalent functional form:</p>
@@ -1830,7 +1830,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span><span class="p">.</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>   <span class="c1">// fine
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="mf">2.</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">oneHalf</span><span class="p">);</span>   <span class="c1">// error!
+</span></span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="mf">2.</span><span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="n">oneHalf</span><span class="p">);</span>   <span class="c1">// error!
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>For the first statement:<br />
@@ -1842,7 +1842,7 @@ the object oneHalf is an instance of a class that contains an <code>operator*</c
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">const</span> <span class="n">Rational</span> <span class="nf">temp</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="c1">// create a temporary Rational object from 2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="n">temp</span><span class="p">;</span>  <span class="c1">// same as oneHalf.operator*(temp);
+</span></span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="n">oneHalf</span> <span class="o">*</span> <span class="n">temp</span><span class="p">;</span>  <span class="c1">// same as oneHalf.operator*(temp);
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Of course, compilers are allowed to do this implicit type conversion only because a non-explicit constructor is involved. If we add keyword <code>explicit</code> before the constructor above, neither of the two mixed-type multiplication statements would compile.</p>
@@ -1878,9 +1878,9 @@ it turns out that parameters are eligible for implicit type conversion <em>only 
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Rational</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>     <span class="c1">// contains no operator*
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="n">Rational</span> <span class="k">operator</span><span class="o">*</span><span class="p">(</span><span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">lhs</span><span class="p">,</span> <span class="k">const</span> <span class="n">Rational</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>  <span class="c1">// now a non-member function
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">Rational</span><span class="p">(</span><span class="n">lhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">numerator</span><span class="p">(),</span>
 </span></span><span class="line"><span class="cl">                    <span class="n">lhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">()</span> <span class="o">*</span> <span class="n">rhs</span><span class="p">.</span><span class="n">denominator</span><span class="p">());</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -1889,16 +1889,18 @@ it turns out that parameters are eligible for implicit type conversion <em>only 
 </span></span><span class="line"><span class="cl"><span class="n">Rational</span> <span class="n">result</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="n">oneForth</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>  <span class="c1">// fine
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">result</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">oneForth</span><span class="p">;</span>  <span class="c1">// it works now
+</span></span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">oneForth</span><span class="p">;</span>  <span class="c1">// it works now
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Now comes anoter worry: should <code>operator*</code> be made a friend of the <code>Rational</code> class?<br />
 In this case, the answer is no, because <code>operator*</code> can be implemented entirely through <code>Rational</code>&rsquo;s public interface. This leads to an important observation:</p>
 <blockquote>
-<p>The opposite of a member function is a non-member function, not a frient function.</p></blockquote>
+<p>The opposite of a member function is a non-member function, not a frient function.</p>
+</blockquote>
 <p>There&rsquo;s some misunderstanding that if a function is related to a class and should not be a member (due, for example, to type conversions on all arguments), it should be a friend. This reasoning turns out to be flawed. The basic rule is to avoid friend functions whenever we can.</p>
 <blockquote>
-<p>P.S.: This item contains the truth, but it is not the whole truth. When we cross the line from Object-Oriented C++ into Template C++ (item 1), and make <code>Rational</code> a class <em>template</em> instead of a class, refer to item 46 for some new issues to consider, new ways to solve them, and new design implications.</p></blockquote>
+<p>P.S.: This item contains the truth, but it is not the whole truth. When we cross the line from Object-Oriented C++ into Template C++ (item 1), and make <code>Rational</code> a class <em>template</em> instead of a class, refer to item 46 for some new issues to consider, new ways to solve them, and new design implications.</p>
+</blockquote>
     </article>
     
     
@@ -3243,9 +3245,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3256,10 +3258,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

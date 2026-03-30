@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="刀心水の胡言乱语">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,17 +1772,17 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>   <span class="c1">// 所有交易记录的基类，含纯虚函数所以是抽象类
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Transaction</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">logTransaction</span><span class="p">()</span> <span class="k">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// 根据不同交易派生类的类型重载对应函数，此处定义为纯虚函数
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Transaction</span><span class="o">::</span><span class="n">Transaction</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="n">logTransaction</span><span class="p">();</span>   <span class="c1">// 在构造函数中触发虚函数，记录派生类的交易信息
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>对应不同交易的派生类定义如下：</p>
@@ -1803,13 +1803,13 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">BuyTransaction</span><span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">logTransaction</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// 记录买方交易信息
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SellTransaction</span><span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">logTransaction</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// 记录卖方交易信息
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>按照上述函数申明和定义，如果我们构造一个买方派生类的实例：</p>
@@ -1847,12 +1847,12 @@
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Transaction</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">init</span><span class="p">();</span> <span class="p">}</span>   <span class="c1">// 构造函数里“没有”直接触发虚函数
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">init</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="p">...</span>
 </span></span><span class="line"><span class="cl">        <span class="n">logTransaction</span><span class="p">();</span>  <span class="c1">// 但虚函数在第三方函数init()中被调用
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1860,7 +1860,8 @@
 <hr />
 <p>所以问题来了：</p>
 <blockquote>
-<p>要怎么实现根据不同派生类以多态方式自动记录交易信息的功能呢？</p></blockquote>
+<p>要怎么实现根据不同派生类以多态方式自动记录交易信息的功能呢？</p>
+</blockquote>
 <p>方法有很多。讲一个常见的：既然不可以在基类构造函数中使用派生类版本的虚函数，那就让派生类在构造实例的时候把自己的交易信息传回基类的(非虚)构造函数中：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1890,24 +1891,24 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Transaction</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">explicit</span> <span class="n">Transaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">);</span> <span class="c1">// “explicit”关键词防止隐式转换
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">logTransaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// 不再是虚函数了
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">logTransaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span> <span class="c1">// 不再是虚函数了
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Transaction</span><span class="o">::</span><span class="n">Transaction</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">logInfo</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="n">logTransaction</span><span class="p">(</span><span class="n">logInfo</span><span class="p">);</span>  <span class="c1">// 不是虚函数，放心call
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">BuyTransaction</span><span class="o">:</span> <span class="k">public</span> <span class="n">Transaction</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">BuyTransaction</span><span class="p">(</span> <span class="n">parameters</span> <span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="n">Transaction</span><span class="p">(</span><span class="n">createLogString</span><span class="p">(</span> <span class="n">parameters</span> <span class="p">))</span> <span class="c1">// 将交易信息以传参方式传给基类构造函数
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{...}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">{...}</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">createLogString</span><span class="p">(</span> <span class="n">parameters</span> <span class="p">);</span> <span class="c1">// 静态函数，杜绝使用派生类中新定义的成员变量的可能性
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>注意上述<code>createLogString()</code>函数定义为<code>static</code>可以防止出现在构造函数第一阶段（触发基类构造函数的阶段）中使用处于<code>undefine</code>状态的派生类成员变量的情形（这也正是上述第一点C++不让在基类构造函数中使用派生类虚函数的原因）。</p>
@@ -1915,7 +1916,8 @@
 <p>P.S.:<br />
 今天是周六，脑抽想试着用中文写下C++复习笔记。。。<br />
 然后发现写这篇花费的时间是之前的至少两倍，主要是寻找各种英文技术术语对应的中文翻译很心累，思维还得在英文和中文中相互转换，翻译真是个累人的活。。。<br />
-以后还是用回英文吧，省心太多。</p></blockquote>
+以后还是用回英文吧，省心太多。</p>
+</blockquote>
     </article>
     
     
@@ -3206,11 +3208,12 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
         
+        
       
+        
         
         
           
@@ -3223,6 +3226,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

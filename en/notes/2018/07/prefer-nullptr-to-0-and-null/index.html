@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1772,8 +1772,8 @@
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">f</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">f</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// calls f(int)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span> <span class="c1">// might not compile, but typically calls f(int), never calls f(void*)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">f</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span> <span class="c1">// calls f(void*)
+</span></span></span><span class="line"><span class="cl"><span class="n">f</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span> <span class="c1">// might not compile, but typically calls f(int), never calls f(void*)
+</span></span></span><span class="line"><span class="cl"><span class="n">f</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span> <span class="c1">// calls f(void*)
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="template">Template</h4>
@@ -1804,7 +1804,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// call these only then approriate mutix is locked
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="nf">f1</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw</span><span class="p">);</span>
+</span></span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">f1</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">spw</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">f2</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;</span> <span class="n">upw</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="nf">f3</span><span class="p">(</span><span class="n">Widget</span><span class="o">*</span> <span class="n">pw</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
@@ -1812,18 +1812,18 @@
 </span></span><span class="line"><span class="cl">         <span class="k">typename</span> <span class="n">MuxType</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">         <span class="k">typename</span> <span class="n">PtrType</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="n">declType</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span> <span class="n">lockAndCall</span><span class="p">(</span><span class="n">FuncType</span> <span class="n">func</span><span class="p">,</span>  <span class="c1">// C++14
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                           <span class="n">MuxType</span><span class="o">&amp;</span> <span class="n">mutex</span>
+</span></span></span><span class="line"><span class="cl">                           <span class="n">MuxType</span><span class="o">&amp;</span> <span class="n">mutex</span>
 </span></span><span class="line"><span class="cl">                           <span class="n">PtrType</span> <span class="n">ptr</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="n">MuxGuard</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">MuxGuard</span> <span class="nf">g</span><span class="p">(</span><span class="n">mutex</span><span class="p">);</span>  <span class="c1">// lock mutex for func
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="nf">func</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>   <span class="c1">// pass ptr (pointer type) to func
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>                       <span class="c1">// unlock mutex
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">func</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>   <span class="c1">// pass ptr (pointer type) to func
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>                       <span class="c1">// unlock mutex
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">f1m</span><span class="p">,</span> <span class="n">f2m</span><span class="p">,</span> <span class="n">f3m</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">result1</span> <span class="o">=</span> <span class="n">lockAndCall</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f1m</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>        <span class="c1">// error
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">result2</span> <span class="o">=</span> <span class="n">lockAndCall</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="n">f2m</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>     <span class="c1">// error
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">result3</span> <span class="o">=</span> <span class="n">lockAndCall</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">f3m</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>  <span class="c1">// fine
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">result2</span> <span class="o">=</span> <span class="n">lockAndCall</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="n">f2m</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>     <span class="c1">// error
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">result3</span> <span class="o">=</span> <span class="n">lockAndCall</span><span class="p">(</span><span class="n">f3</span><span class="p">,</span> <span class="n">f3m</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>  <span class="c1">// fine
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>In contrast, here, when <code>nullptr</code> is passed to <code>lockAndCall</code>, the type for <code>ptr</code> is deduced to be <code>std::nullptr_t</code> instead of previous <code>int</code> (or <code>int</code>-like one), and when <code>ptr</code> is passed to <code>f3</code>, there is an implicit conversion from <code>std::nullptr_t</code> to <code>Widget*</code>.</p>
@@ -3225,9 +3225,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3238,10 +3238,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

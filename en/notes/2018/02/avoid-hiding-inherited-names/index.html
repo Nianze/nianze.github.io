@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1874,10 +1874,10 @@
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">();</span>  <span class="c1">// fine, calls Derived::mf1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// error! Derived::mf1 hides Base::mf1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf2</span><span class="p">();</span>  <span class="c1">// fine, calls Base::mf2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">();</span>  <span class="c1">// fine, calls Derived::mf3
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// error! Derived::mf3 hides Base::mf3
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// error! Derived::mf1 hides Base::mf1
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf2</span><span class="p">();</span>  <span class="c1">// fine, calls Base::mf2
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">();</span>  <span class="c1">// fine, calls Derived::mf3
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// error! Derived::mf3 hides Base::mf3
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Even though the functions in the base and derived classes take different parameter types, and no matter those functions are virtual or non-virtual, the name lookup rule applies regardlessly. The rationale behind this behavior is to prevent us from accidentally inheriting overloads from distant base classes when we create a new derived class in a library or application framework. However, sometimes we <em>want</em> to inherit the overloads<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
@@ -1899,12 +1899,12 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Base</span><span class="p">{...};</span> <span class="c1">// the same
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Derived</span><span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="n">Base</span><span class="o">::</span><span class="n">mf1</span><span class="p">;</span>  <span class="c1">// make all things in Base named mf1 and mf3 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">using</span> <span class="n">Base</span><span class="o">::</span><span class="n">mf3</span><span class="p">;</span>  <span class="c1">// visible (and public) in Derived&#39;s scope
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="n">Base</span><span class="o">::</span><span class="n">mf3</span><span class="p">;</span>  <span class="c1">// visible (and public) in Derived&#39;s scope
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">mf1</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">mf3</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">mf4</span><span class="p">();</span>
@@ -1928,15 +1928,16 @@
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">();</span>  <span class="c1">// fine, calls Derived::mf1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// now ok, call Base::mf1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf2</span><span class="p">();</span>  <span class="c1">// fine, calls Base::mf2
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">();</span>  <span class="c1">// fine, calls Derived::mf3
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// now ok, call Base::mf3
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// now ok, call Base::mf1
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf2</span><span class="p">();</span>  <span class="c1">// fine, calls Base::mf2
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">();</span>  <span class="c1">// fine, calls Derived::mf3
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf3</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// now ok, call Base::mf3
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>This tells us that</p>
 <blockquote>
-<p>if we inherit from a base class with overloaded functions and we want to redefine or override only some of them, we need to include a <code>using</code> declaration for each name we&rsquo;d otherwise be hiding. If we don&rsquo;t, some of the names we&rsquo;d like to inherit will be hidden.</p></blockquote>
+<p>if we inherit from a base class with overloaded functions and we want to redefine or override only some of them, we need to include a <code>using</code> declaration for each name we&rsquo;d otherwise be hiding. If we don&rsquo;t, some of the names we&rsquo;d like to inherit will be hidden.</p>
+</blockquote>
 <p>Unser public inheritance, we always want to inherit all the functions from the base classes to follow public inheritance&rsquo;s is-a relationship between base and derived classes, which is why the <code>using</code> declarations above are in the public part of the derived class (names that are public in a base class should also be public in a publicly derived class).</p>
 <p>However, under private inherits (item 39), it can make sense to inherit only part of the functions from the base classes. A the <code>using</code> declaration won&rsquo;t do the trick here, for it makes <em>all</em> inherited functions with a given name visible in the derived class. We use a different technique: forwarding function.</p>
 <h3 id="forwarding-function">Forwarding function</h3>
@@ -1953,11 +1954,11 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Base</span><span class="p">{...};</span> <span class="c1">// the same
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Derived</span><span class="o">:</span> <span class="k">public</span> <span class="n">Base</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">mf1</span><span class="p">()</span>  <span class="c1">// forwarding function; implicitly inline, see item 30
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span> <span class="n">Base</span><span class="o">::</span><span class="n">mf1</span><span class="p">();</span> <span class="p">}</span> 
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">Base</span><span class="o">::</span><span class="n">mf1</span><span class="p">();</span> <span class="p">}</span> 
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
@@ -1975,7 +1976,7 @@
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">();</span>  <span class="c1">// fine, calls Derived::mf1
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// error! Base::mf1() is hidden
+</span></span></span><span class="line"><span class="cl"><span class="n">d</span><span class="p">.</span><span class="n">mf1</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="c1">// error! Base::mf1() is hidden
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>For ancient compilers that don&rsquo;t support <code>using</code> declarations, we also have to use forwarding function technique to import inherited names into the scope of derived classes.</p>
@@ -3345,9 +3346,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3358,10 +3359,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

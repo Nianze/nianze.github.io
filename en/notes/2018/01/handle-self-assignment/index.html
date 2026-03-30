@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1760,7 +1760,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>  <span class="c1">// potential assignment to self
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="o">*</span><span class="n">px</span> <span class="o">=</span> <span class="o">*</span><span class="n">py</span><span class="p">;</span>   <span class="c1">// potential assignment to self
+</span></span></span><span class="line"><span class="cl"><span class="o">*</span><span class="n">px</span> <span class="o">=</span> <span class="o">*</span><span class="n">py</span><span class="p">;</span>   <span class="c1">// potential assignment to self
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>This is the result of <em>aliasing</em> (having more than one way to refer to an object). In general, operations on references or pointers to multiple objects of the same type (or objects of different types derived from the same base class) need to consider that the objects might be the same.</p>
@@ -1788,15 +1788,15 @@
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Bitmap</span> <span class="o">*</span><span class="n">pb</span><span class="p">;</span>  <span class="c1">// ptr to a heap-allocated object
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">&amp;</span>
 </span></span><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>  <span class="c1">// unsafe impl. of operator=
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="n">pb</span><span class="p">;</span>                <span class="c1">// stop using cur. bitmap
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">rhs</span><span class="p">.</span><span class="n">pb</span><span class="p">);</span> <span class="c1">// start using a copy of rhs&#39;s bitmap
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>             <span class="c1">// item 10
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">pb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">rhs</span><span class="p">.</span><span class="n">pb</span><span class="p">);</span> <span class="c1">// start using a copy of rhs&#39;s bitmap
+</span></span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>             <span class="c1">// item 10
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>When <code>*this</code> (the target of the assignment) and <code>rhs</code> (the source of the assignment) are the same object, <code>delete</code> destroys both of them in the begining, resulting to the fact that <code>this</code> points to a deleted object instead of being unchanged by the assignment to self. Moreover, besides self-assignment-unsafe, this implementation of operator= is also exception-unsafe.</p>
@@ -1821,7 +1821,7 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span> <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span> <span class="c1">// test: if a self-assignment, do nothing
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">delete</span> <span class="n">pb</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="n">pb</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">pb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">rhs</span><span class="p">.</span><span class="n">pb</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -1843,9 +1843,9 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Bitmap</span> <span class="o">*</span><span class="n">pOrig</span> <span class="o">=</span> <span class="n">pb</span><span class="p">;</span>  <span class="c1">// remember original pb
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">pb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">rhs</span><span class="p">.</span><span class="n">pb</span><span class="p">);</span> <span class="c1">// point pb to a copy of rhs&#39; bitmap
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">delete</span> <span class="n">pOrig</span><span class="p">;</span>  <span class="c1">// delete the original pb
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">pb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">rhs</span><span class="p">.</span><span class="n">pb</span><span class="p">);</span> <span class="c1">// point pb to a copy of rhs&#39; bitmap
+</span></span></span><span class="line"><span class="cl">    <span class="k">delete</span> <span class="n">pOrig</span><span class="p">;</span>  <span class="c1">// delete the original pb
+</span></span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1871,13 +1871,13 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span> <span class="c1">// exchange *this&#39;s and rhs&#39;s data; see item 29 for details
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Widget</span> <span class="nf">temp</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>   <span class="c1">// make a copy
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">swap</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>         <span class="c1">// swap *this&#39;s data with the copy&#39;s
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">swap</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>         <span class="c1">// swap *this&#39;s data with the copy&#39;s
+</span></span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1892,9 +1892,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">Widget</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Widget</span> <span class="n">rhs</span><span class="p">)</span>  <span class="c1">// pass by value, rhs is a copy of the object passed in
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">swap</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>         <span class="c1">// swap *this&#39;s data with the copy&#39;s
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -3255,9 +3255,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3268,10 +3268,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

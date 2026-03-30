@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1809,7 +1809,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Widget</span> <span class="n">localWidget</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="n">localWidget</span><span class="p">;</span> <span class="c1">// throw localWidget as an exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>In this typical case where <code>localWidget</code> will go out of scope once control leaves <code>throwWidget</code>, its destructor will be called, so C++ specifies that an object thrown as an exception is copied (even if the object being thrown is not in danger of being destroyed). This mandatory copying of exception objects leads to two implication:</p>
@@ -1839,8 +1839,8 @@
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">SpecialWidget</span> <span class="n">localSpecialWidget</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">rw</span> <span class="o">=</span> <span class="n">localSpecialWidget</span> <span class="c1">// rw refers to a SpecialWidget
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">throw</span> <span class="n">rw</span><span class="p">;</span>  <span class="c1">// this throws an exception of type Widget
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="n">rw</span><span class="p">;</span>  <span class="c1">// this throws an exception of type Widget
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="rethrow">Rethrow</h3>
@@ -1861,16 +1861,16 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span>  <span class="c1">// catch Widget exceptions
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="k">throw</span><span class="p">;</span>  <span class="c1">// rethrow the exception so it continues to propagate
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span>  <span class="c1">// catch Widget exceptions
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="n">w</span><span class="p">;</span>  <span class="c1">// propagate a copy of the caught exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Here, the first block rethrows the current exception, while the second one throws a new copy of the current exception. Apart from performance cost of the additional copy operation in the second block, there&rsquo;s another suble difference: if the exception originally thrown was of type <code>SpecialWidget</code>, the first block would propagate a <code>SpecialWidget</code> exception (even though <code>w</code>&rsquo;s static type is <code>Widget</code>) and no copy is made during <code>throw;</code>, while the second <code>catch</code> block throws a <em>new</em> exception being the type of <code>Widget</code>.</p>
@@ -1894,8 +1894,8 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// catch by value
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// catch by reference
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// catch by reference-to-const
+</span></span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// catch by reference
+</span></span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">Widget</span><span class="o">&amp;</span> <span class="n">w</span><span class="p">)</span> <span class="p">...</span> <span class="c1">// catch by reference-to-const
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>A few points to note:</p>
@@ -1933,7 +1933,7 @@
 </span></span><span class="line"><span class="cl">        <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">catch</span> <span class="p">(</span><span class="kt">double</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// handle double type exceptions
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl">        <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -1956,11 +1956,11 @@ For example, <code>range_error</code>, <code>underflow_error</code>, and <code>o
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="p">)</span> <span class="p">...</span>         <span class="c1">// can catch errors of type
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">...</span>        <span class="c1">// runtime_error,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">runtime_error</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// range_error, or overflow_error
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">...</span>        <span class="c1">// runtime_error,
+</span></span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">runtime_error</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// range_error, or overflow_error
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">runtime_error</span><span class="o">*</span><span class="p">)</span> <span class="p">...</span>        <span class="c1">// can catch errors of type runtime_error*
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">runtime_error</span><span class="o">*</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// range_error*, or overflow_error*
+</span></span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">runtime_error</span><span class="o">*</span><span class="p">)</span> <span class="p">...</span>  <span class="c1">// range_error*, or overflow_error*
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1995,8 +1995,8 @@ For example, <code>range_error</code>, <code>underflow_error</code>, and <code>o
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">logic_error</span><span class="o">&amp;</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// this block will catch all logic_error exceptions
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>                    <span class="c1">// including invalid_argument exception, which is derived type
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>                    <span class="c1">// including invalid_argument exception, which is derived type
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="k">catch</span> <span class="p">(</span><span class="n">invalid_argument</span><span class="o">&amp;</span> <span class="n">ed</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -3364,9 +3364,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3377,10 +3377,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

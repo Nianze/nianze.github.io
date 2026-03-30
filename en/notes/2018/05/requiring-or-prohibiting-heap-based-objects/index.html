@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1774,13 +1774,13 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{</span> <span class="c1">// unlimited precision numbers that should only exist on the heap
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">UPNumber</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="n">UPNumber</span><span class="p">(</span><span class="kt">int</span> <span class="n">initValue</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="n">UPNumber</span><span class="p">(</span><span class="kt">double</span> <span class="n">initValue</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="n">UPNumber</span><span class="p">(</span><span class="k">const</span> <span class="n">UPNumber</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// pseudo-destructor (a const member function, because even const obj. may be destroyed)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">destroy</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">delete</span> <span class="k">this</span><span class="p">;</span> <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">destroy</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">delete</span> <span class="k">this</span><span class="p">;</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">UPNumber</span><span class="p">();</span>
@@ -1798,10 +1798,10 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">UPNumber</span> <span class="n">n</span><span class="p">;</span> <span class="c1">// error! (legal here, but illegal when n&#39;s dtor is implicitly invoked later)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">UPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UPNumber</span><span class="p">;</span> <span class="c1">// fine
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">UPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UPNumber</span><span class="p">;</span> <span class="c1">// fine
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">delete</span> <span class="n">p</span><span class="p">;</span> <span class="c1">// error! attempt to call private dtor
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">p</span><span class="o">-&gt;</span><span class="n">destroy</span><span class="p">();</span> <span class="c1">// fine
+</span></span></span><span class="line"><span class="cl"><span class="n">p</span><span class="o">-&gt;</span><span class="n">destroy</span><span class="p">();</span> <span class="c1">// fine
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="2-inheritance-and-containment-friendly">2. Inheritance-and-containment friendly</h2>
@@ -1833,8 +1833,8 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">UPNumer</span> <span class="p">{...};</span>  <span class="c1">// declare dtor protected
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">class</span> <span class="nc">NonNegativeUPNumber</span><span class="o">:</span> <span class="k">public</span> <span class="n">UPNumber</span> <span class="p">{...};</span> <span class="c1">// okay to access protected members
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">NonNegativeUPNumber</span><span class="o">:</span> <span class="k">public</span> <span class="n">UPNumber</span> <span class="p">{...};</span> <span class="c1">// okay to access protected members
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Asset</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Asset</span><span class="p">(</span><span class="kt">int</span> <span class="n">initValue</span><span class="p">);</span>
@@ -1846,7 +1846,7 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Asset</span><span class="o">::</span><span class="n">Asset</span><span class="p">(</span><span class="kt">int</span> <span class="n">initValue</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="n">value</span><span class="p">(</span><span class="k">new</span> <span class="n">UPNumber</span><span class="p">(</span><span class="n">initValue</span><span class="p">))</span> <span class="c1">// fine
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{...}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{...}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Asset</span><span class="o">::~</span><span class="n">Asset</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span> <span class="n">value</span><span class="o">-&gt;</span><span class="n">destroy</span><span class="p">();</span> <span class="p">}</span>  <span class="c1">// fine
@@ -1861,7 +1861,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">NonNegativeUPNumber</span> <span class="o">*</span><span class="n">n1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NonNegativeUPNumber</span><span class="p">;</span> <span class="c1">// on heap
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">NonNegativeUPNumber</span> <span class="n">n2</span><span class="p">;</span> <span class="c1">// not on heap
+</span></span></span><span class="line"><span class="cl"><span class="n">NonNegativeUPNumber</span> <span class="n">n2</span><span class="p">;</span> <span class="c1">// not on heap
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Sadly, there&rsquo;s no portable way to determine whether an object is on the heap, and there isn&rsquo;t even a semi-portable way that works most of the time. Detailed dicussion on this topic could be found at <a href="http://www.aristeia.com/BookErrata/M27Comments.html">Comments on Item 27 of More Effective C++</a>.</p>
@@ -1886,9 +1886,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">HeapTracked</span> <span class="p">{</span> <span class="c1">// mixin class; keeps track of ptrs returned from op. new
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">MissingAddress</span><span class="p">();</span>  <span class="c1">// exception class
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">virtual</span> <span class="o">~</span><span class="n">HeapTracked</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="o">~</span><span class="n">HeapTracked</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="k">operator</span> <span class="nf">new</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="kt">void</span> <span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">);</span>
@@ -1939,39 +1939,39 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// mandatory definition of static class member
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">list</span><span class="o">&lt;</span><span class="n">RawAddress</span><span class="o">&gt;</span> <span class="n">HeapTracked</span><span class="o">::</span><span class="n">address</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">list</span><span class="o">&lt;</span><span class="n">RawAddress</span><span class="o">&gt;</span> <span class="n">HeapTracked</span><span class="o">::</span><span class="n">address</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="c1">// tho being pure virtual, dtor still needs to be defined
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">HEapTracked</span><span class="o">::~</span><span class="n">HeapTracked</span><span class="p">()</span> <span class="p">{}</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">HEapTracked</span><span class="o">::~</span><span class="n">HeapTracked</span><span class="p">()</span> <span class="p">{}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="o">*</span> <span class="n">HeapTracked</span><span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="o">*</span><span class="n">memPtr</span> <span class="o">=</span> <span class="o">::</span><span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="n">size</span><span class="p">);</span> <span class="c1">// get the memory
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">addresses</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">memPtr</span><span class="p">);</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">addresses</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">memPtr</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">memPtr</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">HeapTracked</span><span class="o">::</span><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// gracefully handle null pointer
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">ptr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">ptr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">&lt;</span><span class="n">RawAddress</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> 
 </span></span><span class="line"><span class="cl">        <span class="n">find</span><span class="p">(</span><span class="n">addresses</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">addresses</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">ptr</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">addresses</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">addresses</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span>     <span class="c1">// remove the entry
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="o">::</span><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>  <span class="c1">// deallocate the memory
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">        <span class="o">::</span><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>  <span class="c1">// deallocate the memory
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">throw</span> <span class="nf">MissingAddress</span><span class="p">();</span>  <span class="c1">// ptr wasn&#39;t allocated by op. new. throw an exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">HeapTracked</span><span class="o">::</span><span class="n">isOnHeap</span><span class="p">()</span> <span class="k">const</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// get a pointer to the beginning of the memory occupied by *this
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">rawAddress</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">cosnt</span> <span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">rawAddress</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">cosnt</span> <span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">&lt;</span><span class="n">RawAddress</span><span class="o">&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> 
 </span></span><span class="line"><span class="cl">        <span class="n">find</span><span class="p">(</span><span class="n">addresses</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">addresses</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">rawAddress</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">addresses</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>  <span class="c1">// return whether it was found
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Note that <code>dynamic_cast</code> is applicable only to pointers to objects that have at least one virtual function, and <code>dynamic_cast</code>ing a pointer to <code>void*</code> (or <code>const void*</code> or <code>volatile void*</code> or <code>const volatile void*</code>) yields a pointer to the beginning of the memory for the object pointed to by the pointer. Here <code>dynamic_cast</code>ing <code>this</code> to <code>const void*</code> gives us a pointer to the beginning of the memory for the current object, which is the pointer previously returned by <code>HeapTracked::operator new</code> as long as the memory for the current object was allocated by <code>HeapTracked::operator new</code> in the first place.</p>
@@ -2053,8 +2053,8 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">UPNumber</span> <span class="n">n1</span><span class="p">;</span>  <span class="c1">// okay
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="n">UPNumber</span> <span class="n">n2</span><span class="p">;</span>  <span class="c1">// okay
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">UPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UPNumber</span><span class="p">;</span> <span class="c1">// error! attempt to call private operator new
+</span></span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="n">UPNumber</span> <span class="n">n2</span><span class="p">;</span>  <span class="c1">// okay
+</span></span></span><span class="line"><span class="cl"><span class="n">UPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">UPNumber</span><span class="p">;</span> <span class="c1">// error! attempt to call private operator new
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Declaring <code>operator new</code> private often also prevents <code>UPNumber</code> objects from being instantiated as base class parts of heap-based derived class objects, because <code>operator new</code> and <code>operator delete</code> are inherited, so if these functions aren&rsquo;t declared public in a derived class, that class inherits the private versions declared in its base(s):</p>
@@ -2071,13 +2071,13 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">UPNumber</span> <span class="p">{...};</span> <span class="c1">// as above
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">class</span> <span class="nc">NonNegativeUPNumber</span><span class="o">:</span> <span class="k">public</span> <span class="n">UPNumber</span> <span class="p">{</span> <span class="c1">// declares no operator new
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">NonNegativeUPNumber</span><span class="o">:</span> <span class="k">public</span> <span class="n">UPNumber</span> <span class="p">{</span> <span class="c1">// declares no operator new
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">NonNegativeUPNumber</span> <span class="n">n1</span><span class="p">;</span> <span class="c1">// okay
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">static</span> <span class="n">NonNegativeUPNumber</span> <span class="n">n2</span><span class="p">;</span> <span class="c1">// okay
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">NonNegativeUPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NonNegativeUPNumber</span><span class="p">;</span> <span class="c1">// error! attempt to call private operator new
+</span></span></span><span class="line"><span class="cl"><span class="k">static</span> <span class="n">NonNegativeUPNumber</span> <span class="n">n2</span><span class="p">;</span> <span class="c1">// okay
+</span></span></span><span class="line"><span class="cl"><span class="n">NonNegativeUPNumber</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NonNegativeUPNumber</span><span class="p">;</span> <span class="c1">// error! attempt to call private operator new
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="2-preventing-base-class-parts-instantiated-on-heap">2. Preventing base class parts instantiated on heap</h2>
@@ -2107,7 +2107,7 @@
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Asset</span> <span class="o">*</span><span class="n">pa</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Asset</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>  <span class="c1">// fine, calls Asset::operator new or ::operator new,
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                             <span class="c1">// not UPNumber::operator new
+</span></span></span><span class="line"><span class="cl">                             <span class="c1">// not UPNumber::operator new
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Just as there&rsquo;s no portable way to determine if an address is on the heap, however, there is no portable way to determine that it is not on the heap, so we can&rsquo;t throw an exception in the <code>UPNumber</code> constructors if a to-be-tested <code>UPNumber</code> object being constructed is on the heap. We&rsquo;re out of luck.</p>
@@ -3473,9 +3473,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3486,10 +3486,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1757,7 +1757,8 @@
 <h1 id="fourier-transform">Fourier transform</h1>
 <h2 id="dft-discrete-fourier-transform">DFT (Discrete Fourier transform)</h2>
 <blockquote>
-<p>Intuition: cross-correlate the signal against cosine and sine waves of different frequencies.</p></blockquote>
+<p>Intuition: cross-correlate the signal against cosine and sine waves of different frequencies.</p>
+</blockquote>
 <p>$$ X[m] = \sum_{n=0}^{N-1} x[n] \cdot (cos(2 \pi \cdot m \cdot n / N) - j \cdot sin(2 \pi \cdot m \cdot n / N)), m \in [0, N-1] $$</p>
 <p>With Euler&rsquo;s formula:</p>
 <p>$$ X[m] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j2 \pi \cdot m \cdot n / N} $$</p>
@@ -1772,7 +1773,8 @@
   
 </figure>
 <blockquote>
-<p>$m^{th}$ analysis frequency has exactly $m$ cycles over the duration of the signal $N$, and $f_m = m \cdot f_s / N$ HZ. The gap between $f_m$ and $f_{m+1}$ is called the <span style="color: #abd282">bin spacing</span></p></blockquote>
+<p>$m^{th}$ analysis frequency has exactly $m$ cycles over the duration of the signal $N$, and $f_m = m \cdot f_s / N$ HZ. The gap between $f_m$ and $f_{m+1}$ is called the <span style="color: #abd282">bin spacing</span></p>
+</blockquote>
 <h3 id="dft-symmetry">DFT symmetry</h3>
 <p>For real valued $x[n]$,</p>
 <p>$$e^{-j \cdot 2 \pi \cdot (N-m) \cdot / N} = e^{+j \cdot 2 \pi \cdot m \cdot m / N}$$</p>
@@ -1814,7 +1816,8 @@ $$X[m] = 0$$</li>
   
 </figure>
 <blockquote>
-<p>If a digital signal $x[n]$ has energy at frequencies which are not integer multiples of $f_s/N$, then this energy will leak (spread) across multiple DFT frequency bands $X[m]$</p></blockquote>
+<p>If a digital signal $x[n]$ has energy at frequencies which are not integer multiples of $f_s/N$, then this energy will leak (spread) across multiple DFT frequency bands $X[m]$</p>
+</blockquote>
 <figure >
   
   
@@ -1826,14 +1829,16 @@ $$X[m] = 0$$</li>
   
 </figure>
 <blockquote>
-<p>This is caused because such frequencies don&rsquo;t have the whole number of cycles during sampling duration, so comparing to an <strong>analisis frequency</strong> won&rsquo;t cancel out.</p></blockquote>
+<p>This is caused because such frequencies don&rsquo;t have the whole number of cycles during sampling duration, so comparing to an <strong>analisis frequency</strong> won&rsquo;t cancel out.</p>
+</blockquote>
 <p>In this situation, $X[m]$ measures not just energy associated with the $m^{th}$ analysis frequency, but has contributions from every other non-analysis frequency.</p>
 <h3 id="leakage-compensation">Leakage compensation</h3>
 <h4 id="strategy-1-have-large-n">Strategy #1: Have large N</h4>
 <p>Long signals, high sampling rate $\Rightarrow$ more analysis frequencies, smaller gaps between them</p>
 <h4 id="strategy-2-windowing">Strategy #2: Windowing</h4>
 <blockquote>
-<p>Intuition: force continuity at the edges, eliminate fractional cycles</p></blockquote>
+<p>Intuition: force continuity at the edges, eliminate fractional cycles</p>
+</blockquote>
 <p>Before taking the DFT, Multiply $x[n]$ by a <strong>window</strong>, which tapers the ends of the signal to (near) 0:<br />
 $$ x[n] \rightarrow w[n] \cdot x[n] $$</p>
 <p><strong>Result</strong>: leakage concentrates on nearby frequencies, and is reduced for distant frequencies; at the same time, analysis frequencies leak to their neighbors as well:</p>
@@ -1853,7 +1858,8 @@ $$ x[n] \rightarrow w[n] \cdot x[n] $$</p>
 <ol>
 <li>Width of the <strong>main lobe</strong>(in Hz or bins): how far does energy smear out locally</li>
 <li>Hight of the <strong>side lobe</strong>(in dB): how loud is the leakage from distant frequencies</li>
-</ol></blockquote>
+</ol>
+</blockquote>
 <figure >
   
   
@@ -1911,7 +1917,8 @@ $$ x[n] \rightarrow w[n] \cdot x[n] $$</p>
 </figure>
 <h2 id="fft-fast-fourier-transform">FFT (Fast Fourier Transform)</h2>
 <blockquote>
-<p>Idea: identify redundant calculations shared betwen different analysis frequencies, reducing time complexity from $O(N^2)$ to $O(N \cdot log(N))$</p></blockquote>
+<p>Idea: identify redundant calculations shared betwen different analysis frequencies, reducing time complexity from $O(N^2)$ to $O(N \cdot log(N))$</p>
+</blockquote>
 <ul>
 <li>FFT computes the DFT</li>
 <li>Requires signal length to be the power of 2 (1024, 2048, etc); otherwise pad up signal to the next power of 2 length</li>
@@ -1921,7 +1928,8 @@ $$ x[n] \rightarrow w[n] \cdot x[n] $$</p>
 <h2 id="definition">Definition</h2>
 <p>$$ y[n] = \sum_{k=0}^{K-1}h[k] \cdot x[n-k] = x * h $$</p>
 <blockquote>
-<p>$h$ is filter coefficients ordered from <strong>most recent</strong> ($h[0]$) to least recent ($h[K-1]$), while $x$ is ordered by increasing time $ \Rightarrow $ reversing $x$ to line up with $h$</p></blockquote>
+<p>$h$ is filter coefficients ordered from <strong>most recent</strong> ($h[0]$) to least recent ($h[K-1]$), while $x$ is ordered by increasing time $ \Rightarrow $ reversing $x$ to line up with $h$</p>
+</blockquote>
 <h2 id="modes">Modes</h2>
 <ol>
 <li>Valid: no zero-padding, $[N]*[K] \rightarrow [N-K+1]$</li>
@@ -3644,9 +3652,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3657,10 +3665,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1766,9 +1766,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// method one
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#define PI_1 3.1415926
-</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1">// method two
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">double</span> <span class="n">PI_2</span> <span class="o">=</span> <span class="mf">3.1415926</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define PI_1 3.1415926
+</span></span></span><span class="line"><span class="cl"><span class="c1">// method two
+</span></span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">double</span> <span class="n">PI_2</span> <span class="o">=</span> <span class="mf">3.1415926</span><span class="p">;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>However, since <code>PI_1</code> may be removed by preprocessor and never be seen by compilers, making it absent in the symbol table, this can be confusing during debugging if we get an error refering to 3.1415926 rather than <code>PI_1</code> (especially when <code>PI_1</code> is defined in a header file written by somebody else). Thus, instead of using a preprocessor macro, we&rsquo;d better go with <code>const</code>. Below is some tricks with <code>const</code>.</p>
@@ -1799,12 +1799,12 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// game.h
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">class</span> <span class="nc">GamePlayer</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GamePlayer</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">NUM_TURNS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>  <span class="c1">// constant declaration with initial value
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span><span class="p">;</span>          <span class="c1">// constant declaration without initial value
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">];</span>           <span class="c1">// use of constant
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">PI</span><span class="p">;</span>          <span class="c1">// constant declaration without initial value
+</span></span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">];</span>           <span class="c1">// use of constant
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1815,8 +1815,8 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// game.cpp
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">int</span> <span class="n">GamePlayer</span><span class="o">::</span><span class="n">NUM_TURNS</span><span class="p">;</span>     <span class="c1">// constant definition in impl. file
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">const</span> <span class="kt">double</span> <span class="n">GamePlayer</span><span class="o">::</span><span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>  <span class="c1">// provide initial value at definition
+</span></span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">int</span> <span class="n">GamePlayer</span><span class="o">::</span><span class="n">NUM_TURNS</span><span class="p">;</span>     <span class="c1">// constant definition in impl. file
+</span></span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="kt">double</span> <span class="n">GamePlayer</span><span class="o">::</span><span class="n">PI</span> <span class="o">=</span> <span class="mf">3.14</span><span class="p">;</span>  <span class="c1">// provide initial value at definition
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>It&rsquo;s worth noting that older compilers (primarily those written before 1995) may complain about providing initial value for static class member at the point of <em>declaration</em>. Most of time we may solve the problem by putting the initial value at <em>definition</em> time, but in the situation where we need the integral value of NUM_TURNS during compilation time (in the example above, compilers must know the size of the array during compilation), we may use a trick affectionately known as <strong>the enum hack</strong>, which takes advantage of the fact that the value of an enumerated type can be used where <code>int</code>s are expected:</p>
@@ -1831,11 +1831,11 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Game.h
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">class</span> <span class="nc">GamePlayer</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GamePlayer</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="k">enum</span> <span class="p">{</span> <span class="n">NUM_TURNS</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">};</span>          <span class="c1">// NUM_TURNS is a symbolic name for 5        
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">];</span>           <span class="c1">// fine with old compilers
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">scores</span><span class="p">[</span><span class="n">NUM_TURNS</span><span class="p">];</span>           <span class="c1">// fine with old compilers
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>There are mainly 2 reasons we may still see the enum hack today:</p>
@@ -1866,7 +1866,7 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="n">max</span><span class="p">(</span><span class="o">++</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>     <span class="c1">// a increments twice
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">max</span><span class="p">(</span><span class="o">++</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">10</span><span class="p">);</span>  <span class="c1">// a increments once
+</span></span></span><span class="line"><span class="cl"><span class="n">max</span><span class="p">(</span><span class="o">++</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="mi">10</span><span class="p">);</span>  <span class="c1">// a increments once
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Thus, we may prefer using a regular inline function that provides both predictable behavior and type-safety:</p>
@@ -3234,9 +3234,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3247,10 +3247,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

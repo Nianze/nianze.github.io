@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1767,8 +1767,8 @@
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="k">static</span> <span class="n">DBConnection</span> <span class="n">creast</span><span class="p">();</span>  <span class="c1">// return DBConnection obj
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">close</span><span class="p">();</span>                  <span class="c1">// close connection; throw an exception if closing fails
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">close</span><span class="p">();</span>                  <span class="c1">// close connection; throw an exception if closing fails
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>To ensure clients don&rsquo;t forget to call <code>close()</code> on DBConnection objects, we may want to put <code>close()</code> inside the destructor of managing class:</p>
@@ -1787,10 +1787,10 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">DBConn</span> <span class="p">{</span>    <span class="c1">// class to manage DBConnection object
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">public</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">DBConn</span><span class="p">()</span>     <span class="c1">// make sure database connections are closed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
@@ -1819,7 +1819,7 @@
 </span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="c1">// make log entry: the call to close failed;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">std</span><span class="o">::</span><span class="n">abort</span><span class="p">();</span>
+</span></span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">abort</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
@@ -1844,7 +1844,7 @@
 </span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span> <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="c1">// make log entry: the call to close failed;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1882,21 +1882,21 @@
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">close</span><span class="p">()</span>         <span class="c1">// new interface for clients
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span>                    <span class="c1">// to handle possible exception outside dtor
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span>                    <span class="c1">// to handle possible exception outside dtor
+</span></span></span><span class="line"><span class="cl">        <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">        <span class="n">closed</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>   <span class="c1">// keep track of whether db has been closed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">DBConn</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">closed</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="k">try</span> <span class="p">{</span>              <span class="c1">// close the connecton
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>    <span class="c1">// if the client didn&#39;t
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">                <span class="n">db</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>    <span class="c1">// if the client didn&#39;t
+</span></span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">        <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="c1">// make log entry: the call to close failed;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">//  terminate or swallow
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">            <span class="c1">//  terminate or swallow
+</span></span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">DBConnection</span> <span class="n">db</span><span class="p">;</span>
@@ -3254,9 +3254,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3267,10 +3267,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1769,7 +1769,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">fut1</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">f</span><span class="p">);</span> <span class="c1">// the same meaning as below
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">fut2</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">async</span> <span class="o">|</span> 
 </span></span><span class="line"><span class="cl">                       <span class="n">std</span><span class="o">::</span><span class="n">launch</span><span class="o">::</span><span class="n">deferred</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">                       <span class="n">f</span><span class="p">);</span>
@@ -1812,10 +1812,10 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">fut</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">async</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>  <span class="c1">// run f in default launch policy
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="p">(</span><span class="n">fut</span><span class="p">.</span><span class="n">wait_for</span><span class="p">(</span><span class="mi">100</span><span class="n">ms</span><span class="p">)</span> <span class="o">!=</span>      <span class="c1">// f never yield read 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">ready</span><span class="p">)</span>  <span class="c1">// when deferred
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl">       <span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">ready</span><span class="p">)</span>  <span class="c1">// when deferred
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
@@ -1846,14 +1846,14 @@
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">deferred</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span> <span class="c1">// use wait or get on fut to call f synchronously
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">fut</span><span class="p">.</span><span class="n">wait_for</span><span class="p">(</span><span class="mi">100</span><span class="n">ms</span><span class="p">)</span> <span class="o">!=</span>      <span class="c1">// f never yield read 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>           <span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">ready</span><span class="p">)</span>  <span class="c1">// when deferred
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span> 
+</span></span></span><span class="line"><span class="cl">           <span class="n">std</span><span class="o">::</span><span class="n">future_status</span><span class="o">::</span><span class="n">ready</span><span class="p">)</span>  <span class="c1">// when deferred
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span> 
 </span></span><span class="line"><span class="cl">        <span class="p">...</span> <span class="c1">// do concurrent work until it&#39;s ready
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>  <span class="c1">// fut is ready
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>In summary, using <code>std::async</code> with the default launch policy for a task is fine as long as following conditions are fulfilled:</p>
@@ -1890,7 +1890,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// C++11 version
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">F</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">F</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="kr">inline</span>
 </span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">result_of</span><span class="o">&lt;</span><span class="n">F</span><span class="p">(</span><span class="n">Ts</span><span class="p">...)</span><span class="o">&gt;::</span><span class="n">type</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="n">reallyAsync</span><span class="p">(</span><span class="n">F</span><span class="o">&amp;&amp;</span> <span class="n">f</span><span class="p">,</span> <span class="n">Ts</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">params</span><span class="p">)</span>
@@ -1918,7 +1918,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// C++14 version
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">F</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">F</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">Ts</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="kr">inline</span>
 </span></span><span class="line"><span class="cl"><span class="k">auto</span>
 </span></span><span class="line"><span class="cl"><span class="n">reallyAsync</span><span class="p">(</span><span class="n">F</span><span class="o">&amp;&amp;</span> <span class="n">f</span><span class="p">,</span> <span class="n">Ts</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">params</span><span class="p">)</span>
@@ -3286,9 +3286,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3299,10 +3299,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

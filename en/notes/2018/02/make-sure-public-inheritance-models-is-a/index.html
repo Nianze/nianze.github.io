@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1762,7 +1762,8 @@
 <p>For &ldquo;is-a&rdquo;, we should understand it in this way: if the class D (&ldquo;derived&rdquo;) <strong>publicly</strong> inherits from class B (&ldquo;base), C++ compilers will assume that every object of type D is also an object of type B, but not <em>vice versa</em>. That is, every D is-a B, but not vice versa <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
 <p>The concept of is-a sounds simple, but sometimes our intuition may mislead us. Say we want to create class <code>Square</code> and class <code>Rectangle</code>. I hear you say:</p>
 <blockquote>
-<p>Everybody knows that a square is a rectangle, but generally not vice versa</p></blockquote>
+<p>Everybody knows that a square is a rectangle, but generally not vice versa</p>
+</blockquote>
 <p>Then consider this code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1790,16 +1791,16 @@
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">setWidth</span><span class="p">(</span><span class="kt">int</span> <span class="n">newWidth</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">height</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>  <span class="c1">// return current values
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">width</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="kt">int</span> <span class="nf">width</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">makeBigger</span><span class="p">(</span><span class="n">Rectangle</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span>  <span class="c1">// function to increase r&#39;s area
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">oldHeight</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">height</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="p">.</span><span class="n">setWidth</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">+</span> <span class="mi">10</span><span class="p">);</span>  <span class="c1">// add 10 to r&#39;s width
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">assert</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">height</span><span class="p">()</span> <span class="o">==</span> <span class="n">oldHeight</span><span class="p">);</span>  <span class="c1">// assert that r&#39;s height is unchanged
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">assert</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">height</span><span class="p">()</span> <span class="o">==</span> <span class="n">oldHeight</span><span class="p">);</span>  <span class="c1">// assert that r&#39;s height is unchanged
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1818,8 +1819,8 @@
 </span></span><span class="line"><span class="cl"><span class="n">Square</span> <span class="n">s</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="n">assert</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">==</span> <span class="n">s</span><span class="p">.</span><span class="n">height</span><span class="p">());</span>  <span class="c1">// must be true for all squares
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">makeBigger</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>  <span class="c1">// by inheritance, s is-a Rectangle, so we can increase its area
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">assert</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">==</span> <span class="n">s</span><span class="p">.</span><span class="n">height</span><span class="p">());</span>  <span class="c1">// must be true for all squares
+</span></span></span><span class="line"><span class="cl"><span class="n">makeBigger</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>  <span class="c1">// by inheritance, s is-a Rectangle, so we can increase its area
+</span></span></span><span class="line"><span class="cl"><span class="n">assert</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">width</span><span class="p">()</span> <span class="o">==</span> <span class="n">s</span><span class="p">.</span><span class="n">height</span><span class="p">());</span>  <span class="c1">// must be true for all squares
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Now we face a big problem: how can we reconcile the following assertion:</p>
@@ -3182,9 +3183,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3195,10 +3196,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1788,16 +1788,16 @@
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">//int age; potential new data memberf
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Customer</span><span class="o">::</span><span class="n">Customer</span><span class="p">(</span><span class="k">const</span> <span class="n">Customer</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="o">:</span><span class="n">name</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">){}</span>    <span class="c1">// copy rhs&#39;s data
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">Customer</span><span class="o">&amp;</span> <span class="n">Customer</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Customer</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">name</span> <span class="o">=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">;</span> <span class="c1">// copy rhs&#39;s data
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>    <span class="c1">// item 10
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>    <span class="c1">// item 10
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Everything is fine here, unless there&rsquo;s more data members, such as the <code>age</code>, added into the <code>Customer</code> class. Interesting thing is that even if there&rsquo;s new data member added, compiler will most likely not complain about potential partial-copy problem if we don&rsquo;t add the data member to the copying functions and all the constructors. So we have to rely on ourselves.</p>
@@ -1862,13 +1862,13 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">PriorityCustomer</span><span class="o">::</span><span class="n">PriorityCustomer</span><span class="p">(</span><span class="k">const</span> <span class="n">PriorityCustomer</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> 
 </span></span><span class="line"><span class="cl"><span class="o">:</span> <span class="n">Cutomer</span><span class="p">(</span><span class="n">rhs</span><span class="p">),</span>          <span class="c1">// invoke vase class copy ctor
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">priority</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">priority</span><span class="p">)</span> <span class="p">{}</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">priority</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">priority</span><span class="p">)</span> <span class="p">{}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">PriorityCustomer</span><span class="o">&amp;</span> 
 </span></span><span class="line"><span class="cl"><span class="n">PriorityCustomer</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">PriorityCustomer</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Customer</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">rhs</span><span class="p">);</span>  <span class="c1">// assign base class part
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">priority</span> <span class="o">=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">priority</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">priority</span> <span class="o">=</span> <span class="n">rhs</span><span class="p">.</span><span class="n">priority</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
@@ -3227,9 +3227,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3240,10 +3240,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

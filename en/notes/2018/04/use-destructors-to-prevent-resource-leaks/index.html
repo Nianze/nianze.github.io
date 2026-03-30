@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1856,16 +1856,17 @@
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">        <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">pa</span><span class="p">;</span>   <span class="c1">// avoid resource leak when encountering exception
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">throw</span><span class="p">;</span>       <span class="c1">// propagate exception to caller
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">            <span class="k">throw</span><span class="p">;</span>       <span class="c1">// propagate exception to caller
+</span></span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">        <span class="k">delete</span> <span class="n">pa</span><span class="p">;</span>       <span class="c1">// delete pa in normal condition
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The duplication in cleanup code is annoying to write and difficult to maintain. Remember that</p>
 <blockquote>
-<p>Local objects are always destroyed when leaving a function, regardless of how that function is exited <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p></blockquote>
+<p>Local objects are always destroyed when leaving a function, regardless of how that function is exited <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+</blockquote>
 <p>So we can move the <code>delete</code> into a destructor for an object local to <code>processAdoptions</code>, which is exactly the functionaltity smart pointers in standard C++ library provide. For example, the essential of <code>auto_ptr</code> (item 13, MECpp item 28) boils down to following definition:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1883,10 +1884,10 @@
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">auto_ptr</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">auto_ptr</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">:</span> <span class="n">ptr</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">{}</span>  <span class="c1">// save ptr to object
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">~</span><span class="n">auto_ptr</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">ptr</span><span class="p">;</span> <span class="p">}</span>    <span class="c1">// delete ptr to object
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">auto_ptr</span><span class="p">()</span> <span class="p">{</span> <span class="k">delete</span> <span class="n">ptr</span><span class="p">;</span> <span class="p">}</span>    <span class="c1">// delete ptr to object
+</span></span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">T</span> <span class="o">*</span><span class="n">ptr</span><span class="p">;</span>                        <span class="c1">// raw ptr to object
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>New <code>processAdoptions</code> using an <code>auto_ptr</code> object instead of a raw pointer:</p>
@@ -1949,17 +1950,17 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// class for acquiring and releasing a window handle
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">class</span> <span class="nc">WindowHandle</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">WindowHandle</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">WindowHandle</span><span class="p">(</span><span class="n">WINDOW_HANDLE</span> <span class="n">handle</span><span class="p">)</span><span class="o">:</span> <span class="n">w</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span> <span class="p">{}</span>
 </span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">WindowHandle</span><span class="p">()</span> <span class="p">{</span> <span class="n">destroyWindow</span><span class="p">(</span><span class="n">w</span><span class="p">);</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">operator</span> <span class="nf">WINDOW_HANDLE</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">w</span><span class="p">;</span> <span class="p">}</span>  <span class="c1">// implicit convertion operator to turn a WindowHandle into a WINDOW_HANDLE
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">WINDOW_HANDLE</span> <span class="n">w</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">WindowHandle</span><span class="p">(</span><span class="k">const</span> <span class="n">WindowHandle</span><span class="o">&amp;</span><span class="p">);</span> <span class="c1">// prevent multiple copies
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">WindowHandle</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">WindowHandle</span><span class="o">&amp;</span><span class="p">);</span>  <span class="c1">// prevent multiple copies
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">};</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">WindowHandle</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">WindowHandle</span><span class="o">&amp;</span><span class="p">);</span>  <span class="c1">// prevent multiple copies
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Note that the implicit conversion operator is essential to the practical application of a <code>WindowHandle</code> object, becauce it means we can use a <code>WindowHandle</code> just about anywhere we would normally use a raw <code>WINDOW_HANDLE</code> (refer to MECpp item 5 for downsides of doing so).</p>
@@ -3337,9 +3338,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3350,10 +3351,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

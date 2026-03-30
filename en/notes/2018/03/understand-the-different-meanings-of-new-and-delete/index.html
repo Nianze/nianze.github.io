@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1778,9 +1778,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="o">*</span><span class="n">memory</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string</span><span class="p">));</span> <span class="c1">// get raw memory for a string object
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">call</span> <span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&#34;Memory Management&#34;</span><span class="p">)</span> <span class="n">on</span> <span class="o">*</span><span class="n">memory</span> <span class="c1">// init. the object in the memory. 
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                                    <span class="c1">// as programmer, directly calling the ctor is prohibited
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">stirng</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">memory</span><span class="p">);</span>  <span class="c1">// make ps point to the new object
+</span></span></span><span class="line"><span class="cl"><span class="n">call</span> <span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&#34;Memory Management&#34;</span><span class="p">)</span> <span class="n">on</span> <span class="o">*</span><span class="n">memory</span> <span class="c1">// init. the object in the memory. 
+</span></span></span><span class="line"><span class="cl">                                                    <span class="c1">// as programmer, directly calling the ctor is prohibited
+</span></span></span><span class="line"><span class="cl"><span class="n">string</span> <span class="o">*</span><span class="n">ps</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">stirng</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">memory</span><span class="p">);</span>  <span class="c1">// make ps point to the new object
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>So if we want to create an object on the heap, use the <code>new</code> operator and it both allocates memory and calls a constructor for the object.</p>
@@ -1865,7 +1865,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">ps</span><span class="o">-&gt;~</span><span class="n">string</span><span class="p">();</span>         <span class="c1">// call the object&#39;s dtor
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="n">ps</span><span class="p">);</span>   <span class="c1">// deallocate the memory the object occupied
+</span></span></span><span class="line"><span class="cl"><span class="k">operator</span> <span class="nf">delete</span><span class="p">(</span><span class="n">ps</span><span class="p">);</span>   <span class="c1">// deallocate the memory the object occupied
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Some implications:</p>
@@ -1880,7 +1880,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="o">*</span><span class="n">buffer</span> <span class="o">=</span> <span class="k">operator</span> <span class="k">new</span> <span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span> <span class="c1">// allocate enough memory to hold 50 chars, call no ctor
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">operator</span> <span class="k">delete</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span> <span class="c1">// deallocate the memory; call no dtor
 </span></span></span></code></pre></td></tr></table>
 </div>
@@ -1902,15 +1902,15 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// function to allocating and deallocating memory in shared memory
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="o">*</span> <span class="nf">mallocShared</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">);</span>
+</span></span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="o">*</span> <span class="nf">mallocShared</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">freeShared</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">memory</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="o">*</span><span class="n">sharedMemory</span> <span class="o">=</span> <span class="n">mallocShared</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Widget</span><span class="p">));</span>
 </span></span><span class="line"><span class="cl"><span class="n">Widget</span> <span class="o">*</span><span class="n">pw</span> <span class="o">=</span> <span class="n">constructWidgetInBuffer</span><span class="p">(</span><span class="n">sharedMemory</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// as above
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">delete</span> <span class="n">pw</span><span class="p">;</span> <span class="c1">// undefined! sharedMemory came from mallocShared, not operator new
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">pw</span><span class="o">-&gt;~</span><span class="n">Widget</span><span class="p">();</span>  <span class="c1">// fine. destructs the Widget pointed to by pw, no memory deallocation performed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">freeShared</span><span class="p">(</span><span class="n">pw</span><span class="p">);</span>  <span class="c1">// fine, deallocate the memory pointed to by pw, but calls no dtor
+</span></span></span><span class="line"><span class="cl"><span class="n">pw</span><span class="o">-&gt;~</span><span class="n">Widget</span><span class="p">();</span>  <span class="c1">// fine. destructs the Widget pointed to by pw, no memory deallocation performed
+</span></span></span><span class="line"><span class="cl"><span class="n">freeShared</span><span class="p">(</span><span class="n">pw</span><span class="p">);</span>  <span class="c1">// fine, deallocate the memory pointed to by pw, but calls no dtor
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="arrays">Arrays</h1>
@@ -3288,9 +3288,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3301,10 +3301,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

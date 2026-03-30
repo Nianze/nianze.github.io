@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1763,8 +1763,8 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">x1</span><span class="p">;</span>  <span class="c1">// potentially unintialized
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">x2</span><span class="p">;</span>  <span class="c1">// error! initializer required
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">x3</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// fine, x3&#39;s value is well-defined
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">x2</span><span class="p">;</span>  <span class="c1">// error! initializer required
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">x3</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// fine, x3&#39;s value is well-defined
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="avoidance-of-syntactic-verbosity">Avoidance of Syntactic Verbosity</h1>
@@ -1783,7 +1783,7 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">It</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">dwim</span><span class="p">(</span><span class="n">It</span> <span class="n">b</span><span class="p">,</span> <span class="n">It</span> <span class="n">e</span><span class="p">)</span> <span class="c1">// &#34;do what I mean&#34;. for all elements in range from b to e
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(;</span> <span class="n">b</span> <span class="o">!=</span> <span class="n">e</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">typename</span> <span class="n">std</span><span class="o">::</span><span class="n">iterator_traits</span><span class="o">&lt;</span><span class="n">It</span><span class="o">&gt;::</span><span class="n">value_type</span> <span class="n">currValue</span> <span class="o">=</span> <span class="o">*</span><span class="n">b</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="p">...</span>
@@ -1826,9 +1826,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// C++14
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">derefLess</span> <span class="o">=</span>           <span class="c1">// comparison func. for values pointed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">[](</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">,</span>     <span class="c1">// to by anything pointer-like
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">p2</span><span class="p">)</span> 
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">derefLess</span> <span class="o">=</span>           <span class="c1">// comparison func. for values pointed
+</span></span></span><span class="line"><span class="cl">    <span class="p">[](</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">p1</span><span class="p">,</span>     <span class="c1">// to by anything pointer-like
+</span></span></span><span class="line"><span class="cl">       <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">p2</span><span class="p">)</span> 
 </span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">p1</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">p2</span><span class="p">;</span> <span class="p">};</span>  
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1843,9 +1843,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// C++11 doesn&#39;t support auto for parameters to lambda, so more verbose.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">auto</span> <span class="n">derefUPLess</span> <span class="o">=</span>  <span class="c1">// comparison func. for Wdigets pointed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">[](</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span> <span class="n">p1</span><span class="p">,</span>  <span class="c1">// to by std::unique_ptr
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span> <span class="n">p2</span><span class="p">)</span>  
+</span></span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">derefUPLess</span> <span class="o">=</span>  <span class="c1">// comparison func. for Wdigets pointed
+</span></span></span><span class="line"><span class="cl">    <span class="p">[](</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span> <span class="n">p1</span><span class="p">,</span>  <span class="c1">// to by std::unique_ptr
+</span></span></span><span class="line"><span class="cl">       <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span> <span class="n">p2</span><span class="p">)</span>  
 </span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">p1</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">p2</span><span class="p">;</span> <span class="p">};</span> 
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1862,8 +1862,8 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span><span class="p">,</span> 
 </span></span><span class="line"><span class="cl">              <span class="kt">bool</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span><span class="p">)</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">derefUPLess</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span> <span class="n">p1</span><span class="p">,</span> <span class="c1">// comparison func. for Wdigets pointed
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span> <span class="n">p2</span><span class="p">)</span> <span class="c1">// to by std::unique_ptr
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                    <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">p1</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">p2</span><span class="p">;</span> <span class="p">};</span>
+</span></span></span><span class="line"><span class="cl">                     <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;&amp;</span> <span class="n">p2</span><span class="p">)</span> <span class="c1">// to by std::unique_ptr
+</span></span></span><span class="line"><span class="cl">                    <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">p1</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">p2</span><span class="p">;</span> <span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>As we can see, syntactic verbosity makes <code>auto</code> a preferred choice. Besides that, there are two more reasons to choose <code>auto</code>:</p>
@@ -3277,9 +3277,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3290,10 +3290,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

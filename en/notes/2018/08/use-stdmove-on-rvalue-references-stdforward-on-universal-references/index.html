@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1776,12 +1776,12 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Widget</span><span class="p">(</span><span class="n">Widget</span><span class="o">&amp;&amp;</span> <span class="n">rhs</span><span class="p">)</span>          <span class="c1">// rhs is rvalue reference
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">)),</span>
+</span></span></span><span class="line"><span class="cl">    <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">name</span><span class="p">)),</span>
 </span></span><span class="line"><span class="cl">      <span class="n">p</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">rhs</span><span class="p">.</span><span class="n">p</span><span class="p">))</span>
 </span></span><span class="line"><span class="cl">      <span class="p">{...}</span>
 </span></span><span class="line"><span class="cl">    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">setName</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">newName</span><span class="p">)</span>     <span class="c1">// newName is rvalue reference
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="k">private</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
@@ -1827,12 +1827,12 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">Widget</span><span class="o">::</span><span class="n">setName</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">newName</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span> <span class="c1">// compiles, but is bad!
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getWidgetName</span><span class="p">();</span>   <span class="c1">// factory function
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">Widget</span> <span class="n">w</span><span class="p">;</span>
+</span></span></span><span class="line"><span class="cl"><span class="n">Widget</span> <span class="n">w</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="k">auto</span> <span class="n">n</span> <span class="o">=</span> <span class="n">getWidgetName</span><span class="p">();</span>      <span class="c1">// n is local variable
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">w</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>                  <span class="c1">// moves n into w
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">...</span>                            <span class="c1">// n&#39;s value now unkown!
+</span></span></span><span class="line"><span class="cl"><span class="n">w</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>                  <span class="c1">// moves n into w
+</span></span></span><span class="line"><span class="cl"><span class="p">...</span>                            <span class="c1">// n&#39;s value now unkown!
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -1853,9 +1853,9 @@
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Widget</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">setName</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">newName</span><span class="p">)</span>  <span class="c1">// set from const lvalue
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">newName</span><span class="p">;</span> <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">newName</span><span class="p">;</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">setName</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;&amp;</span> <span class="n">newName</span><span class="p">)</span>      <span class="c1">// set from rvalue
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">newName</span><span class="p">);</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
@@ -1905,11 +1905,11 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="n">setSignText</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">text</span><span class="p">)</span>  <span class="c1">// text is a universal reference
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">sign</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">);</span>  <span class="c1">// use text, but do not modify it
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+</span></span></span><span class="line"><span class="cl">    <span class="k">auto</span> <span class="n">now</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="n">signHistory</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">text</span><span class="p">));</span> <span class="c1">// conditionally cast to rvalue
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The same logic applies to <code>std::move</code>, except that in rare cases, we want to call <code>std::move_if_noexcept</code> instead of <code>std::move</code> (refer to EMCpp item 14).</p>
@@ -1934,20 +1934,21 @@
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">lhs</span> <span class="o">+=</span> <span class="n">rhs</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">lhs</span><span class="p">);</span>  <span class="c1">// move lhs into return value
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="n">Fraction</span> <span class="n">reduceAndCopy</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span> <span class="n">frac</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">frac</span><span class="p">.</span><span class="n">reduce</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">frac</span><span class="p">);</span>  <span class="c1">// move rvalue into return value; copy lvalue
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h1 id="when-not-to">When not to</h1>
 <p>According to Standardization Committee, there&rsquo;s a kind of optimizatoin called <em>return value optimization (RVO)</em>:</p>
 <blockquote>
-<p>the “copying” version of makeWidget can avoid the need to copy the local variable w by constructing it in the memory alloted for the function’s return value</p></blockquote>
+<p>the “copying” version of makeWidget can avoid the need to copy the local variable w by constructing it in the memory alloted for the function’s return value</p>
+</blockquote>
 <p>Due to this optimization, we should not use <code>std::move</code> on a local object being returnd from a function that&rsquo;s returning by value so that we won&rsquo;t precluding the RVO that compilers will do for the return value.</p>
 <div class="footnotes" role="doc-endnotes">
 <hr />
@@ -3311,9 +3312,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3324,10 +3325,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">

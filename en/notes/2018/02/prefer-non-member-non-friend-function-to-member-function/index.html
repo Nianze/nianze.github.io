@@ -1349,7 +1349,7 @@
 <meta property="og:type" content="article">
 <meta property="og:description" content="Nzo&#39;s Blog">
 
-<meta name="generator" content="Hugo 0.150.0">
+<meta name="generator" content="Hugo 0.159.0">
 <meta name="msapplication-TileColor" content="#fff">
 
 <meta name="theme-color" content="#fff">
@@ -1793,7 +1793,7 @@
 </span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="n">clearEverything</span><span class="p">();</span> <span class="c1">// calls clearCache(), clearHistory(), and removeCookies()
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">...</span>
+</span></span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1822,7 +1822,8 @@
 <h1 id="encapsulation">Encapsulation</h1>
 <p>If something is encapsulated, it&rsquo;s hidden from view. The more something is encapsulated, the fewer things can see it, the fewer impact clients get affected by potential change, and the greater flexibility we have to change the inmplementation.</p>
 <blockquote>
-<p>As a coarse-grained measure of how much code can see a piese of data, we can count the number of functions that can access that data: the more functions that can access it, the less encapsulated the data.</p></blockquote>
+<p>As a coarse-grained measure of how much code can see a piese of data, we can count the number of functions that can access that data: the more functions that can access it, the less encapsulated the data.</p>
+</blockquote>
 <p>According to item 22, data members should all be private, so the number of functions that can access them is the number of member functions of the class plus the number of friend functions. Thus, given a member function <code>clearEverything()</code> (which can access not only the private data of a class, but also private functions, enums, typedefs, etc) and a non-member non-friend function <code>clearBrower()</code>, the latter yields greater encapsulation.</p>
 <p>Two more things worth noting are:</p>
 <ol>
@@ -1860,10 +1861,10 @@
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// header &#34;webbrowser.h&#34; - header for class WebBrowser itself 
 </span></span></span><span class="line"><span class="cl"><span class="c1">// as well as &#34;core&#34; WebBrowser-related functionality
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">namespace</span> <span class="n">WebBrowserStuff</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">WebBrowserStuff</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">WebBrowser</span> <span class="p">{...};</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>  <span class="c1">// &#34;core&#34; related functionality, e.g.: non-member functions almost all clients need
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1875,9 +1876,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// header &#34;webbrowserbookmarks.h&#34;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">namespace</span> <span class="n">WebBrowserStuff</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">WebBrowserStuff</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>  <span class="c1">// bookmark-related convenience functions
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
@@ -1889,9 +1890,9 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// header &#34;webbrowsercookies.h&#34;
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">namespace</span> <span class="n">WebBrowserStuff</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">WebBrowserStuff</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>  <span class="c1">// cookie-related convenience functions
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>This is exactly how the standard C++ library is organized: there are dozens of headers (e.g.: <code>&lt;vector&gt;</code>, <code>&lt;algorithm&gt;</code>, <code>&lt;memory&gt;</code>, etc.), each declaring some of the functionality in <code>std</code>. This allows clients to be compilation dependent only on the parts of the system they actually use (item 31 shows other ways to reduce compilation dependencies).</p>
@@ -3251,9 +3252,9 @@ document.addEventListener('DOMContentLoaded', function () {
   <div class="dropdown-content">
     
     
-    
       
       
+        
         
         
           
@@ -3264,10 +3265,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
       
         
+        
       
     
   </div>
 </div>
+
 
     
 <div class="footer__social">
