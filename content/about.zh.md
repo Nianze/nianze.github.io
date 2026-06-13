@@ -33,10 +33,8 @@ I like shooting, developing, and enlarging films in the my darkroom (bathroom). 
         * SMC Pentax-FA 31mm f/1.8 Limited
         * SMC Pentax-FA 43mm f/1.9 Limited (made in Japan)
         * SMC Pentax-FA 77mm f/1.8 Limited
-    * Adaptable to Pentax K-mount:
-        * Leica-R: Leica Summicron-R 50mm f/2 E43 Ver.1 (made in 1974)
-        * M42: Steinheil München Quinon 55mm f/1.9 (made in 1955)
-        * DKL: Voigtländer Septon 50mm f/2 (made in 1965)
+        * Leica Summicron-R 50mm f/2 E43 Ver.1 (made in 1974, Leitax mod)
+        * Steinheil München Quinon 55mm f/1.9 (made in 1955, M42)
     * M39 thread mount for enlargers:
         * Schneider-Kreuznach Componon-S 50mm f/2.8
         * Schneider-Kreuznach Componon-S 80mm f/4
