@@ -73,13 +73,25 @@ featured_image: 2026/07/21/mx-r50.JPG
 
 ## 黑白
 
-Ilford HP5那卷分装的时候操作失误导致都有划痕。
+Ilford HP5那卷分装的时候操作失误导致很多都有划痕。
 
 {{< img src="/images/2026/07/21/samples/pentax_lx_leica_R50_f2_ilford_hp5-0006-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
 {{< img src="/images/2026/07/21/samples/pentax_lx_leica_R50_f2_ilford_hp5-0010-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
 {{< img src="/images/2026/07/21/samples/pentax_lx_leica_R50_f2_ilford_hp5-0018-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
 {{< img src="/images/2026/07/21/samples/pentax_lx_leica_R50_f2_ilford_hp5-0021-positive-2.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
 {{< img src="/images/2026/07/21/samples/pentax_lx_leica_R50_f2_ilford_hp5-0029-positive-2.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0005-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0006-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0013-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0014-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0017-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0025-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0026-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0028-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0029-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0030-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0034-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
+{{< img src="/images/2026/07/21/samples/ilford_hp5-0036-positive.jpg" title="↑黑白胶片" caption="Ilford HP5">}}
 
 {{< img src="/images/2026/07/21/samples/arista_edu_400_summicron-r50-18-positive.jpg" title="↑黑白胶片" caption="Arista Edu 400">}}
 {{< img src="/images/2026/07/21/samples/arista_edu_400_summicron-r50-26-positive.jpg" title="↑黑白胶片" caption="Arista Edu 400">}}
