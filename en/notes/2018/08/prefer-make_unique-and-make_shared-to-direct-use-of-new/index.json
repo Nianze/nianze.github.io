@@ -12,15 +12,3 @@
   "categories": ["coding"],
   "series": ["effective c++"]
 }
-s to zero, the object is destroyed (via its destructor), but the memory it occupies will wait to be released until the control block also gets destroyed control block contains a weak count (a second reference count for std::weak_ptr); as long as the weak count is greater than zero, the control block must continue to exist if the object type is quite large and the time between destrution of the last std::shared_ptr and the last std::weak_ptr is significant, a lag occurres between when an object is destroyed and when the memory this object (and its control block) occupied is freed if memory is a concern, this lag will make us frown Due to the reasons above, we may have to give up make function and directly use new, but we also want to keep our program exception-safe. Here is a workaround, take the same processWidget for example:\n1 2 std::shared_ptr\u0026lt;Widget\u0026gt; spw(new Widget, cusDel); processWidget(std::move(spw), computePriority()); // keep arg as rvalue, so it\u0026#39;s move-enabled The std::move here is to make sure the argument we pass to processWidget is rvalue, so that expensive copy construction for a std::shared_ptr object, which involves atomic increment of its reference count, will be replaced by a move construction, which requires no reference count manipulation.\nstd::allocate_shared acts just like std::make_shared, except its first argument is an allocator object to be used for the dynamic memory allocation.\u0026#160;\u0026#x21a9;\u0026#xfe0e;\n",
-  "summary": "Compared to new, make functions eliminate source code duplication, improve exception safety, and, for std::make_shard and std::allocate_shared, generate code that\u0026rsquo;s smaller and faster.\n",
-  "date": "2018-08-02T18:45:53-04:00",
-  "lastmod": "2018-08-02T18:45:53-04:00",
-  "permalink": "https://nianze.github.io/en/notes/2018/08/prefer-make_unique-and-make_shared-to-direct-use-of-new/",
-  "type": "notes",
-  "kind": "page",
-  "section": "notes",
-  "tags": ["technique","cpp"],
-  "categories": ["coding"],
-  "series": ["effective c++"]
-}
