@@ -24,11 +24,11 @@ I like shooting, developing, and enlarging films in the my darkroom (bathroom). 
 * Lenses
     * Leica L-mount:
         * Leica Vario-Elmar-T 18-56mm f/3.5-5.6 ASPH
-    * Leica M-mount:
-        * Voigtlander Color-Skopar 28mm f/2.8 Type II
-        * Rollei Sonnar HFT 40mm f/2.8 LTM
+    * Leica L39 screw-mount & M-mount:
+        * Voigtlander Color-Skopar 28mm f/3.5 (LTM)
+        * Rollei Sonnar 40mm f/2.8 HFT (LTM)
         * Leica Summilux-M 50mm f/1.4 (E43 v2, made in 1962)
-        * Nikkor-P.C. 8.5cm f/2 LTM (made in 1951)
+        * Nikkor-P.C. 8.5cm f/2 (LTM, made in 1951)
     * Pentax K-mount:
         * SMC Pentax-FA 31mm f/1.8 Limited
         * SMC Pentax-FA 43mm f/1.9 Limited (made in Japan)
