@@ -113,7 +113,7 @@ featured_image: 2026/10/29/leica-cl-1856-1060912.jpg
 # 北意凉秋
 
 {{< img src="/images/2026/10/29/leica-cl-1856-1070575.jpg" title="第七天" caption="米兰大教堂的房顶" >}}
-{{< img src="/images/2026/10/29/leica-cl-1856-1070575.jpg" title="第八天" caption="坐火车来科莫湖（Como），在Varenna下车" >}}
+{{< img src="/images/2026/10/29/leica-cl-1856-1070624.jpg" title="第八天" caption="坐火车来科莫湖（Como），在Varenna下车" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070646.jpg" title="第八天" caption="坐渡轮来Lenno小镇" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070647.jpg" title="第八天" caption="Lenno小镇随处可见的私人小船" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070646.jpg" title="第八天" caption="坐渡轮来Lenno小镇" >}}
