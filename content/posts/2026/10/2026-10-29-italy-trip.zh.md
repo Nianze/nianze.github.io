@@ -121,8 +121,8 @@ featured_image: 2026/10/29/leica-cl-1856-1060912.jpg
 {{< img src="/images/2026/10/29/leica-cl-1856-1070681.jpg" title="第八天" caption="很多人来参观" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070683.jpg" title="第八天" caption="人工修葺的蘑菇头大树" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070684.jpg" title="第八天" caption="栏杆上也有雕塑" >}}
-{{< img src="/images/2026/10/29/leica-cl-1856-1070683.jpg" title="第八天" caption="大树" >}}
-{{< img src="/images/2026/10/29/leica-cl-1856-1070683.jpg" title="第八天" caption="私人港口的入口" >}}
+{{< img src="/images/2026/10/29/leica-cl-1856-1070690.jpg" title="第八天" caption="大树" >}}
+{{< img src="/images/2026/10/29/leica-cl-1856-1070695.jpg" title="第八天" caption="私人港口的入口" >}}
 
 # 南北差异
 
