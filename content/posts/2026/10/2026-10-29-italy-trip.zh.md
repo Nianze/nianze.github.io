@@ -116,7 +116,6 @@ featured_image: 2026/10/29/leica-cl-1856-1060912.jpg
 {{< img src="/images/2026/10/29/leica-cl-1856-1070624.jpg" title="第八天" caption="坐火车来科莫湖（Como），在Varenna下车" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070646.jpg" title="第八天" caption="坐渡轮来Lenno小镇" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070647.jpg" title="第八天" caption="Lenno小镇随处可见的私人小船" >}}
-{{< img src="/images/2026/10/29/leica-cl-1856-1070646.jpg" title="第八天" caption="坐渡轮来Lenno小镇" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070669.jpg" title="第八天" caption="参观Villa del Balbianello" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070674.jpg" title="第八天" caption="可以坐湖上Taxi直接进Villa" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070681.jpg" title="第八天" caption="很多人来参观" >}}
