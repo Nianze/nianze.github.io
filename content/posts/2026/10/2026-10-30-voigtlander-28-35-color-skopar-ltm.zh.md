@@ -22,11 +22,11 @@ featured_image: 2026/10/30/cv28-cl.JPG
 
 # 外观
 
-{{< img src="/images/2026/10/30/cv28-box.JPG" title="↑CV28 3.5 LTM" caption="优良传统：自带遮光罩和闷盖">}}
+{{< img src="/images/2026/10/30/cv28-box.JPG" title="↑曾经的优良传统" caption="自带遮光罩和闷盖">}}
 
 拆开快递，首先令人惊喜的是做工：这枚28 3.5 ltm不仅比vm 28 2.8 type ii更加小巧，做工甚至更加精良：镜身全黄铜打造，对焦环和光圈环严丝合缝，手感细腻温润。银色版镀铬，黑色版黑漆可以露铜。造型上也更有设计感，尤其体现在底部光圈刻度的台面和景深标尺的斜面（相比之下type ii那直上直下的造型就显得有些敷衍了）。
 
-{{< img src="/images/2026/10/30/cv28-specs.JPG" title="↑CV28 3.5 LTM" caption="镜头参数">}}
+{{< img src="/images/2026/10/30/cv28-specs.JPG" title="↑包装自带镜头介绍" caption="镜头参数">}}
 
 {{< img src="/images/2026/10/30/cv28-aperture-blades.JPG" title="↑10片光圈叶" caption="可以产生漂亮的星芒。第一枚镜片是凹透镜，所以这也是一枚\“凹玉\"">}}
 
