@@ -10,7 +10,7 @@ tags:
 - Voigtlander
 - chinese
 slug: "2026 10 30 Voigtlander 28 35 Color Skopar Ltm"
-featured_image: 2026/10/30/cv28-cl.JPG
+featured_image: 2026/10/30/cv28-cl-1.jpg
 ---
 
 日福最初的味道。
