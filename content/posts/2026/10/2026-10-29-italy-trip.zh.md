@@ -91,7 +91,7 @@ featured_image: 2026/10/29/leica-cl-1856-1060912.jpg
 
 # 庞贝遗址
 
-{{< img src="/images/2026/10/29/leica-cl-1856-1070315.jpg" title="第六天" caption="自驾开手动挡在崎岖狭窄的沿海山路上经常得半坡起步，好在租的这辆fiat 500够窄够短，且自带半坡起步辅助（松离合的前2秒不遛车）" >}}
+{{< img src="/images/2026/10/29/leica-cl-1856-1070315.jpg" title="第五天" caption="自驾开手动挡在崎岖狭窄的沿海山路上经常得半坡起步，好在租的这辆fiat 500够窄够短，且自带半坡起步辅助（松离合的前2秒不遛车）" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070398.jpg" title="第五天" caption="庞贝城的断壁残垣" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070403.jpg" title="第五天" caption="千年前的地板就很有装饰性" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070407.jpg" title="第五天" caption="雨过天晴的彩虹" >}}
