@@ -48,7 +48,7 @@ featured_image: 2026/10/29/leica-cl-1856-1060912.jpg
 {{< img src="/images/2026/10/29/leica-cl-1856-1060770.jpg" title="第二天" caption="城里瞎溜达，罗马斑马线" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1060778.jpg" title="第二天" caption="街边随处可见的咖啡店" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1060790.jpg" title="第二天" caption="早上天气阴，斗兽场因为马拉松比赛进不去只能绕道" >}}
-{{< img src="/images/2026/10/29/leica-cl-1856-1060795.jpg" title="第二天" caption="窄石子路配小车" >}}
+{{< img src="/images/2026/10/29/leica-cl-1856-1060795.jpg" title="第二天" caption="窄路配小车" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1060803.jpg" title="第二天" caption="斗兽场边的滑板公园" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1060811.jpg" title="第二天" caption="下午出太阳了" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1060813.jpg" title="第二天" caption="罗马市区的花坛里的马樱丹（五色梅）好艳丽" >}}
@@ -112,6 +112,8 @@ featured_image: 2026/10/29/leica-cl-1856-1060912.jpg
 
 # 北意凉秋
 
+在米兰只短短呆了两天，但明显感到北意更工业化和国际化，更靠近法国/瑞士/德国的感觉。与之相反，南意则是自由随性的感觉，更具意大利本土特色。另外米兰不愧是时尚之都，在市中心商业区随便走两步，特别容易遇到衣品在线，面容深邃，发型精致，身材高挑的疑似模子，迈着T台步伐轻盈飘过；跟南意老钱风还挺不一样的。
+
 {{< img src="/images/2026/10/29/leica-cl-1856-1070575.jpg" title="第七天" caption="米兰大教堂的房顶" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070624.jpg" title="第八天" caption="坐火车来科莫湖（Como），在Varenna下车" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070646.jpg" title="第八天" caption="坐渡轮来Lenno小镇" >}}
@@ -123,7 +125,3 @@ featured_image: 2026/10/29/leica-cl-1856-1060912.jpg
 {{< img src="/images/2026/10/29/leica-cl-1856-1070684.jpg" title="第八天" caption="栏杆上也有雕塑" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070690.jpg" title="第八天" caption="大树" >}}
 {{< img src="/images/2026/10/29/leica-cl-1856-1070695.jpg" title="第八天" caption="私人港口的入口" >}}
-
-# 南北差异
-
-在米兰只短短呆了两天，但明显感到北意更工业化更规整，更靠近法国/瑞士/德国的感觉。与之相反，南意，尤其是那不勒斯，则是“野蛮”自由的感觉。
