@@ -90,3 +90,13 @@ featured_image: 2026/10/30/cv28-cl-1.jpg
 {{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9987981.jpg" title="↑机身" caption="M9P">}}
 {{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9987984.jpg" title="↑机身" caption="M9P">}}
 {{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9987989.jpg" title="↑机身" caption="M9P">}}
+
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988019.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988021.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988030.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988031.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988038.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988044.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988048.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988053.jpg" title="↑机身" caption="M9P">}}
+{{< img src="/images/2026/10/30/leica-m9p-cv-28-35-ltm-9988055.jpg" title="↑机身" caption="M9P">}}
